@@ -1,0 +1,37 @@
+{
+  "name": "xms",
+  "version": "1.0.0",
+  "description": "Dispatch Management System",
+  "main": "server.js",
+  "engines": {
+    "node": "14.15.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahmed-khalid9199/XMS.git"
+  },
+  "author": "Ahmed Khalid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ahmed-khalid9199/XMS/issues"
+  },
+  "homepage": "https://github.com/Ahmed-khalid9199/XMS#readme",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^4.6.0",
+    "ipware": "^2.0.0",
+    "mongodb": "^4.1.0",
+    "mongoose": "^5.13.5",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.3",
+    "nodemon": "^2.0.13",
+    "socket.io": "^4.2.0"
+  }
+}

@@ -1,0 +1,32 @@
+.badge {
+  padding: 6px 11px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+}
+
+.badge-danger {
+  background-color: var(--main-color-red);
+}
+
+.badge-success {
+  background-color: var(--main-color-green);
+}
+
+.badge-primary {
+  background-color: var(--main-color-blue);
+}
+
+.badge-warning {
+  background-color: var(--second-color-orange);
+}
+.badge-appointment {
+  background-color: rgb(248, 248, 0);
+}
+.badge-unreached {
+  background-color: burlywood;
+}
+/* .badge-black {
+  background-color: black;
+} */

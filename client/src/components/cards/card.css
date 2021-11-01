@@ -1,0 +1,49 @@
+.dialer__card {
+  display: flex;
+  justify-content: flex-start !important;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 500px;
+  height: auto;
+  border-radius: var(--border-radius);
+  background-color: var(--main-bg);
+  box-shadow: var(--box-shadow);
+}
+
+.dialer__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: auto;
+  height: auto;
+  position: relative;
+  padding: 0 50px 0 50px;
+}
+.dialer__header {
+  box-sizing: border-box;
+  width: 100%;
+  height: 10vh;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  border-bottom: 2px solid rgba(119, 119, 119, 0.2);
+  padding: 20px;
+}
+
+.appointment__detail {
+  width: 100%;
+  margin: 0 10% 10% 10%;
+  height: 200vh;
+}
+
+.appointment__detail .dialer__body {
+  width: 100%;
+  height: 100%;
+}
+
+.profile__detail {
+  height: auto;
+}

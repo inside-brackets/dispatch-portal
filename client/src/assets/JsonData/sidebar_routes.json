@@ -1,0 +1,73 @@
+{
+  "sales": [
+    {
+      "display_name": "Dashboard",
+      "route": "/dashboard",
+      "icon": "bx bx-category-alt"
+    },
+    {
+      "display_name": "Appointments",
+      "route": "/appointments",
+      "icon": "bx bx-user-pin"
+    },
+    {
+      "display_name": "Spread Sheet",
+      "route": "/spread_sheet",
+      "icon": "bx bx-spreadsheet"
+    },
+    {
+      "display_name": "Dialer",
+      "route": "/dialer",
+      "icon": "bx bx-phone-outgoing"
+    }
+  ],
+  "admin": [
+    {
+      "display_name": "Dashboard",
+      "route": "/dashboard",
+      "icon": "bx bx-category-alt"
+    },
+    {
+      "display_name": "Assign Sales",
+      "route": "/assignsales",
+      "icon": "bx bx-log-in-circle"
+    },
+    {
+      "display_name": "Carriers",
+      "route": "/carriers",
+      "icon": "bx bxs-truck"
+    },
+    {
+      "display_name": "Users",
+      "route": "/users",
+      "icon": "bx bx-user"
+    },
+    {
+      "display_name": "Invoices",
+      "route": "/invoices",
+      "icon": "bx bx-paper-plane"
+    },
+    {
+      "display_name": "Expenses",
+      "route": "/expenses",
+      "icon": "bx bx-receipt"
+    },
+    {
+      "display_name": "Loads",
+      "route": "/loads",
+      "icon": "bx bx-package"
+    }
+  ],
+  "dispatch": [
+    {
+      "display_name": "Dashboard",
+      "route": "/dashboard",
+      "icon": "bx bx-category-alt"
+    },
+    {
+      "display_name": "My Trucks",
+      "route": "/mytrucks",
+      "icon": "bx bxs-truck"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+.table__row__delete {
+  text-align: center;
+  font-size: 25px;
+  color: var(--txt-color);
+}
+.table__row__edit {
+  margin-top: -10px;
+  text-align: center;
+  font-size: 25px;
+  color: var(--txt-color);
+}
+.table__row__delete:hover,
+.table__row__edit:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  color: var(--txt-white);
+}
+.table__row__delete:active {
+  opacity: 60%;
+  transform: scale(0.9);
+}
+
+.edit__class {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 50px;
+}
