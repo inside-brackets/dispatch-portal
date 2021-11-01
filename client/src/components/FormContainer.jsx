@@ -8,7 +8,7 @@ const FormContainer = ({ title, size, children }) => {
       style={{ padding: "0 0 0 100px" }}
       className="justify-content-start align-items-center vh-100 vw-100"
     >
-      <Col md={size} xs={12}>
+      <Col md={size}>
         {title ? (
           <Card>
             <Card.Body>
