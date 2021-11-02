@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Layout from "./components/layout/Layout";
 import Login from "./pages/Login";
 import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "./store/user";
 import { socket } from "./index";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,8 +20,7 @@ var sound = new Howl({
 const App = () => {
   Howler.volume(1.0);
   let history = useHistory();
-  const [notAutherized, setNotAutherized] = useState(false);
-
+  const { isAuthorized } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const notify = (msg) =>
     toast.info(msg, {
@@ -36,7 +35,7 @@ const App = () => {
 
   useEffect(() => {
     socket.on("not-listed", (msg) => {
-      setNotAutherized(true);
+      dispatch(userActions.unauthorize());
       dispatch(
         userActions.logout({
           cb: () => {
@@ -84,10 +83,10 @@ const App = () => {
           />
         </PrivateRoute>
       </Switch>
-      {notAutherized && (
+      {!isAuthorized && (
         <div style={{ position: "absolute", top: "0px", width: "100%" }}>
           <Message>
-            <center>Your computer is not autherized</center>
+            <center>Your computer is not authorized</center>
           </Message>
         </div>
       )}
