@@ -76,8 +76,6 @@ const io = new Server(httpServer, {
 });
 io.on("connection", (socket) => {
   console.log("A user connected: ", socket.id);
-  var address = socket.handshake.address;
-  console.log("New connection from " + address + ":" + address.port);
   socket.on("notify", (msg) => {
     console.log("notifyed");
     io.sockets.emit("backend-notify", msg);
