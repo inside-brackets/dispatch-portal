@@ -76,7 +76,8 @@ const io = new Server(httpServer, {
 });
 io.on("connection", (socket) => {
   console.log("A user connected: ", socket.id);
-
+  var address = socket.handshake.address;
+  console.log("New connection from " + address.address + ":" + address.port);
   socket.on("notify", (msg) => {
     console.log("notifyed");
     io.sockets.emit("backend-notify", msg);
@@ -94,7 +95,7 @@ app.all("*", (req, res, next) => {
   const ipList = getIpList();
   if (req.url.includes("whitelist")) {
     next();
-  } else if (ipList.includes(ip.replace("::ffff:", "").trim())) {
+  } else if (ipList.includes(ip)) {
     next();
   } else {
     io.sockets.emit("not-listed", "logout");
