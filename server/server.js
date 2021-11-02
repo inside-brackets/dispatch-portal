@@ -87,27 +87,29 @@ io.on("connection", (socket) => {
 });
 
 // redirecting
-// app.all("*", (req, res, next) => {
-//   var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-//   var ip_info = get_ip(req);
-//   const ipList = getIpList();
-//   console.log("req.socket.remoteAddress", req.socket.remoteAddress);
-//   console.log('req.headers["x-forwarded-for"]', req.headers["x-forwarded-for"]);
-//   console.log("ip_info.clientIp", ip_info.clientIp);
-//   console.log("req.ip", req.ip);
-//   console.log("req.ip", req.headers["client_ip"]);
+app.all("*", (req, res, next) => {
+  // var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  var ip_info = get_ip(req);
+  // const ipList = getIpList();
+  console.log("req.socket.remoteAddress", req.socket.remoteAddress);
+  console.log("req.connection.remoteaddress", req.connection.remoteaddress);
+  console.log('req.headers["x-forwarded-for"]', req.headers["x-forwarded-for"]);
+  console.log('req.headers["x-real-ip"]', req.headers["X-Real-IP"]);
+  console.log("ip_info.clientIp", ip_info.clientIp);
+  console.log("req.ip", req.ip);
+  console.log("client_ip", req.headers["client_ip"]);
 
-//   if (req.url.includes("whitelist")) {
-//     next();
-//   } else if (ipList.includes(ip.replace("::ffff:", "").trim())) {
-//     next();
-//   } else {
-//     io.sockets.emit("not-listed", "logout");
-//     res.status(401).send({
-//       message: "not white listed",
-//     });
-//   }
-// });
+  // if (req.url.includes("whitelist")) {
+  //   next();
+  // } else if (ipList.includes(ip.replace("::ffff:", "").trim())) {
+  //   next();
+  // } else {
+  //   io.sockets.emit("not-listed", "logout");
+  //   res.status(401).send({
+  //     message: "not white listed",
+  //   });
+  // }
+});
 app.post("/whitelist/:mac/:ip", (req, res) => {
   setIp(req.params.mac, req.params.ip);
   console.log("ip list", getIpList());
