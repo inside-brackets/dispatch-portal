@@ -98,7 +98,7 @@ app.all("*", (req, res, next) => {
   console.log("ip_info.clientIp", ip_info.clientIp);
   console.log("req.ip", req.ip);
   console.log("client_ip", req.headers["client_ip"]);
-
+  next();
   // if (req.url.includes("whitelist")) {
   //   next();
   // } else if (ipList.includes(ip.replace("::ffff:", "").trim())) {
