@@ -12,6 +12,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const [loadNumber, setLoadNumber] = useState(
     defaultValue ? defaultValue.load_number : ""
   );
+  const [image, setImage] = useState("");
   const [weight, setWeight] = useState(defaultValue ? defaultValue.weight : "");
   const [miles, setMiles] = useState(defaultValue ? defaultValue.miles : "");
   const [pay, setPay] = useState(defaultValue ? defaultValue.pay : "");
@@ -39,10 +40,36 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const [lstatus, setLstatus] = useState(
     defaultValue ? defaultValue.l_status : ""
   );
-  const { _id: currUserId } = useSelector((state) => state.user.user);
+  const { _id: currUserId, user_name: currUserName } = useSelector(
+    (state) => state.user.user
+  );
+  console.log("currUserName", currUserName);
   const truck = carrier.trucks.find((item) => {
     return item.truck_number.toString() === truck_number.toString();
   });
+  const uploadFileHandler = async (e) => {
+    console.log("hello world");
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    axios
+      .post(
+        `${process.env.REACT_APP_BACKEND_URL}/uploadfile/ratecons`,
+        formData,
+        config
+      )
+      .then((res) => {
+        console.log("image url", res.data);
+        setImage(res.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,7 +82,8 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         weight: weight,
         miles: miles,
         pay: pay,
-        dispatcher: currUserId,
+        ratecons: image,
+        dispatcher: { _id: currUserId, name: currUserName },
         broker: broker,
         pick_up: {
           address: pickupAddress,
@@ -105,7 +133,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         weight: weight,
         miles: miles,
         pay: pay,
-        dispatcher: currUserId,
+        dispatcher: { _id: currUserId, name: currUserName },
         broker: broker,
         pick_up: {
           address: pickupAddress,
@@ -272,6 +300,28 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             <Form.Control.Feedback type="invalid">
               Please provide a valid Drop date.
             </Form.Control.Feedback>
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group>
+            <Form.Label>Image</Form.Label>
+            <Form.Control
+              type="text"
+              name="image"
+              placeholder="Enter image url"
+              required
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+            ></Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Please provide a File.
+            </Form.Control.Feedback>
+            <Form.File
+              id="image-file"
+              label="Choose Image"
+              custom
+              onChange={uploadFileHandler}
+            ></Form.File>
           </Form.Group>
         </Row>
         {defaultValue && (

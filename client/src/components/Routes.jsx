@@ -15,6 +15,7 @@ import SpreadSheet from "../pages/sales/SpreadSheet";
 import Appointments from "../pages/sales/Appointments";
 import AppointmentDetail from "../pages/sales/AppointmentDetail";
 import TruckDetail from "../pages/dispatch/TruckDetail";
+import Invoice from "../pages/admin/Invoice";
 import Dialer from "../pages/sales/Dialer";
 // import Tickets from "../pages/sales/Tickets";
 import Profile from "../pages/Profile";
@@ -25,6 +26,7 @@ import { useDispatch } from "react-redux";
 import { salesActions } from "../store/sales";
 import useHttp from "../hooks/use-https";
 import { socket } from "..";
+import Loads from "../pages/admin/Loads";
 const Routes = () => {
   const { department } = useSelector((state) => state.user.user);
   const [refresh, setRefresh] = useState(true);
@@ -82,7 +84,8 @@ const Routes = () => {
       <Route path="/carriers" exact component={Carriers} />
       <Route path="/assignsales" exact component={AssignSales} />
       <Route path="/profile" component={Profile} />
-
+      <Route path="/loads" component={Loads} />
+      <Route path="/invoices" component={Invoice} />
       {/* <Route path="/businessstats" exact component={BusinessStats} />
       <Route path="/salary" exact component={Salary} />
       <Route path="/settings" exact component={SettingsAdmin} />

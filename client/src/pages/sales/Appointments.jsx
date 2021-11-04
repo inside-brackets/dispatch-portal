@@ -53,12 +53,11 @@ const Appointments = () => {
         </Col>
       </Row>
       <Row>
-        <Col>
-          <h5>Email:</h5>
-        </Col>
-        <Col>
+        <h5>Email:</h5>
+
+        <Row>
           <h6>{carrier.email}</h6>
-        </Col>
+        </Row>
       </Row>
       <Row>
         <Col>
@@ -69,14 +68,13 @@ const Appointments = () => {
             overflow: "hidden",
           }}
         >
-          <Row>
-            <h6
-              className="text-muted"
-              style={{
-                maxHeight: 33,
-                minHeight: 33,
-              }}
-            >
+          <Row
+            style={{
+              maxHeight: 37,
+              minHeight: 37,
+            }}
+          >
+            <h6 className="text-muted">
               {carrier.comment.length >= 62
                 ? `${carrier.comment
                     .substring(0, Math.min(carrier.comment.length, 62))
@@ -130,7 +128,7 @@ const Appointments = () => {
                 className="my-card"
                 style={{
                   width: "auto",
-                  height: "auto",
+                  height: "400px",
                   border: "light",
                 }}
               >

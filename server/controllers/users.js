@@ -57,7 +57,13 @@ const getUser = (req, res, next) => {
 
 const getUsers = (req, res, next) => {
   console.log("getusers", req.body);
-  User.find(req.body)
+  User.find(req.body, null, {
+    // skip: 0, // Starting Row
+    // limit: 1, // Ending Row
+    sort: {
+      joining_date: -1, //Sort by Date Added DESC
+    },
+  })
     .then((users) => {
       res.send(users);
     })

@@ -12,6 +12,7 @@ import { Howl, Howler } from "howler";
 import notificationSound from "./assets/audio/notification.mp3";
 import { useHistory } from "react-router-dom";
 import Message from "./components/Message";
+import axios from "axios";
 
 var sound = new Howl({
   src: notificationSound,
@@ -35,15 +36,19 @@ const App = () => {
 
   useEffect(() => {
     socket.on("not-listed", (msg) => {
-      dispatch(userActions.unauthorize());
-      dispatch(
-        userActions.logout({
-          cb: () => {
-            localStorage.setItem("user", "");
-          },
-        })
-      );
-      history.replace("/login");
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/myip`).then((res) => {
+        if (res.data === msg) {
+          dispatch(userActions.unauthorize());
+          dispatch(
+            userActions.logout({
+              cb: () => {
+                localStorage.setItem("user", "");
+              },
+            })
+          );
+          history.replace("/login");
+        }
+      });
     });
 
     var user = localStorage.getItem("user");

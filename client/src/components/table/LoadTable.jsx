@@ -3,15 +3,15 @@ import EditButton from "../UI/EditButton";
 import Table from "./Table";
 import "./loadtable.css";
 import useHttp from "../../hooks/use-https";
-import Button from "../UI/Button";
 import Modal from "../modals/MyModal";
 import LoadForm from "../Form/NewLoadForm";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Button as BButton } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import Input from "../../components/UI/MyInput";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { loadsActions } from "../../store/loads";
+import GenerateInvoice from "../GenerateInvoice";
 
 const customerTableHead = [
   "#",
@@ -33,9 +33,9 @@ const LoadTable = ({ truck_number, carrier }) => {
   const [loadModal, setLoadModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const { loads: getLoads } = useSelector((state) => state.loads);
-
+  const [invoiceModal, setInvoiceModal] = useState(false);
+  // console.log(getLoads);
   const [load, setLoad] = useState("");
-
   const closeEditModel = () => {
     setEditModal(false);
   };
@@ -103,6 +103,10 @@ const LoadTable = ({ truck_number, carrier }) => {
 
   const closeLoadModal = () => {
     setLoadModal(false);
+    setInvoiceModal(false);
+  };
+  const invoiceModalHandler = () => {
+    setInvoiceModal(true);
   };
 
   const loadModalHandler = () => {
@@ -147,7 +151,8 @@ const LoadTable = ({ truck_number, carrier }) => {
           <EditButton
             type="view"
             onClick={() => {
-              console.log("view");
+              const pdfWindow = window.open();
+              pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${item.ratecons}`;
             }}
           />
         </div>
@@ -183,13 +188,20 @@ const LoadTable = ({ truck_number, carrier }) => {
             // ref={Driver1NameRef}
           />
         </Col>
-        <Col></Col>
-        <Col>
+        <Col className="text-center">
+          <BButton variant="success" size="lg" onClick={invoiceModalHandler}>
+            Generate Invoice
+          </BButton>{" "}
+        </Col>
+        <Col className="text-center">
           {" "}
-          <Button onClick={loadModalHandler} buttonText="Add Loads" />
+          <BButton size="lg" onClick={loadModalHandler}>
+            Add Loads
+          </BButton>
         </Col>
       </Row>
       <Row>
+        /
         <div className="card">
           <div className="card__body">
             {searchedCarrier.length !== 0 && !filteredCarrier && (
@@ -222,6 +234,19 @@ const LoadTable = ({ truck_number, carrier }) => {
           </div>
         </div>
       </Row>
+      <Modal
+        size="lg"
+        show={invoiceModal}
+        heading="Generate Invoice"
+        onClose={closeLoadModal}
+      >
+        <GenerateInvoice
+          truck_number={truck_number}
+          carrier={carrier}
+          loads={getLoads}
+        />
+      </Modal>
+
       <Modal
         size="lg"
         show={loadModal}

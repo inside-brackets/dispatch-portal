@@ -46,7 +46,7 @@ const MyTrucks = () => {
                 trailer_type: data[i].trucks[j].trailer_type,
                 truck_number: data[i].trucks[j].truck_number,
                 company_name: data[i].company_name,
-                // driver: data[i].trucks[j].drivers[0].name,
+                driver: data[i].trucks[j].drivers[0].name,
                 truck_status: data[i].trucks[j].t_status,
                 appointment: data[i].appointment,
               });
@@ -196,7 +196,7 @@ const MyTrucks = () => {
               <Card
                 style={{
                   width: "auto",
-                  minHeight: "450px",
+                  minHeight: "300px",
                 }}
               >
                 <Card.Body>

@@ -43,7 +43,6 @@ const NewUserForm = ({
     var sameName1 = data.find((item, index) => {
       return item.user_name.toLowerCase() === userName.toLowerCase();
     });
-    console.log(sameName1);
     setSameName(sameName1);
   };
   const handleSubmit = async (event) => {
@@ -53,7 +52,7 @@ const NewUserForm = ({
     if (form.checkValidity() === true) {
       if (defaultValue) {
         console.log(
-          "value",
+          "defaulvalue",
           salary,
           department,
           userName,
@@ -61,7 +60,6 @@ const NewUserForm = ({
           designation,
           joiningDate
         );
-        setEditModal(false);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
             id: defaultValue._id,
@@ -73,11 +71,10 @@ const NewUserForm = ({
             department,
           })
           .then((response) => {
-            console.log(response);
             setRefresh(Math.random());
+            setEditModal(false);
           });
-        console.log("edit submit");
-      } else if (!defaultValue && !sameName) {
+      } else if (!sameName) {
         console.log(
           "value",
           salary,
@@ -87,7 +84,6 @@ const NewUserForm = ({
           designation,
           joiningDate
         );
-        setShowModal(false);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
             user_name: userName,
@@ -98,14 +94,16 @@ const NewUserForm = ({
             department,
           })
           .then((response) => {
-            console.log(response);
+            console.log("response", response);
             setRefresh(Math.random());
+            setShowModal(false);
+          })
+          .catch((err) => {
+            console.log(err);
           });
       }
     }
   };
-
-  console.log("sameNAme", sameName);
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -132,7 +130,7 @@ const NewUserForm = ({
                 Please choose a username.
               </Form.Control.Feedback>
             )}
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            {/* <Form.Control.Feedback>Looks good!</Form.Control.Feedback> */}
           </InputGroup>
         </Form.Group>
 
@@ -164,7 +162,7 @@ const NewUserForm = ({
               onChange={(e) => setDepartment(e.target.value)}
               required
             >
-              <option value={null}>Select the department below</option>
+              <option value={null}>Select Department</option>
               <option value="sales">Sales</option>
               <option value="dispatch">Dispatch</option>
               <option value="accounts">Accounts</option>

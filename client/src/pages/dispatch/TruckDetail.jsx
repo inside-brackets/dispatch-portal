@@ -28,6 +28,7 @@ const transformToSelectValue = (value) => {
 const TruckDetail = ({ match }) => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const commentRef = useRef();
+  const [truckObj, setTruckObj] = useState("");
   const [validated, setValidated] = useState(false);
   const [data, setData] = useState(null);
   const [rmodal, setrModal] = useState();
@@ -70,6 +71,7 @@ const TruckDetail = ({ match }) => {
       setAgentEmail(response.data.insurance.agent_email);
       setPhoneNumber(response.data.phone_number);
       setEmail(response.data.email);
+      setOwnerName(response.data.owner_name);
       if (response.data.factoring) {
         setFactCompanyName(response.data.factoring.name);
         setFactAddress(response.data.factoring.address);
@@ -80,6 +82,7 @@ const TruckDetail = ({ match }) => {
       const truck = response.data.trucks.find((item) => {
         return item.truck_number.toString() === match.params.truck.toString();
       });
+      setTruckObj(truck);
       setTruckNumber(truck.truck_number);
       setVinNumber(truck.vin_number);
       setCarryLimit(truck.carry_limit);
@@ -716,14 +719,15 @@ const TruckDetail = ({ match }) => {
             show={rmodal}
             heading="Reject Carrier"
             onConfirm={rejectHandler}
+            onClose={() => {
+              setrModal(false);
+            }}
           >
             <form>
               <TextArea
                 name="Comment:"
                 placeholder="Comment here..."
-                // value={commentRef.current.value}
                 defaultValue={commentRef.current && commentRef.current.value}
-                // onChange={(e) => setComment(e.target.value)}
                 ref={commentRef}
               />
             </form>
@@ -732,6 +736,7 @@ const TruckDetail = ({ match }) => {
             setModal={setrModal}
             truck_number={match.params.truck}
             carrier={data}
+            truck={truckObj}
           />
           <ToastContainer />
         </div>

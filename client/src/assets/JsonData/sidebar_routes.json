@@ -48,11 +48,6 @@
       "icon": "bx bx-paper-plane"
     },
     {
-      "display_name": "Expenses",
-      "route": "/expenses",
-      "icon": "bx bx-receipt"
-    },
-    {
       "display_name": "Loads",
       "route": "/loads",
       "icon": "bx bx-package"

@@ -7,7 +7,7 @@
 .__input .input,
 textarea {
   height: 50px;
-  /* width: 300px; */
+  width: 300px;
   background-color: white;
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);

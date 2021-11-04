@@ -13,7 +13,7 @@ const carrierTableHead = [
   "#",
   "MC",
   "Carrier Name",
-  "Address",
+  // "Address",
   "Phone Number",
   "Email",
   "Sales Person",
@@ -103,8 +103,8 @@ const Carriers = () => {
       <td>{index + 1}</td>
       <td>{item.mc_number}</td>
       <td>{item.company_name}</td>
-      <td>{item.address}</td>
-      <td>{item.phone_number}</td>
+      {/* <td style={{ maxWidth: "10vh" }}>{item.address}</td> */}
+      <td style={{ width: 100 }}>{item.phone_number}</td>
       <td>{item.email}</td>
       <td>{item.salesman ? item.salesman.name : "N/A"}</td>
       <td>{item.dispatcher ? item.dispatcher.name : "N/A"}</td>
@@ -154,12 +154,9 @@ const Carriers = () => {
             onChange={searchByFilter}
             // icon="bx bx-filter-alt"
             options={[
-              { label: "Closed ", value: "closed" },
               { label: "Appointment ", value: "appointment" },
               { label: "Registered", value: "registered" },
               { label: "Deactivated ", value: "deactivated" },
-              { label: "Unassigned ", value: "unassigned" },
-              { label: "Rejected ", value: "rejected" },
               { label: "Unreached ", value: "unreached" },
             ]}
           />

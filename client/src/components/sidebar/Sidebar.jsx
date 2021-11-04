@@ -27,18 +27,26 @@ const SidebarItem = (props) => {
 
 const Sidebar = (props) => {
   const { department } = useSelector((state) => state.user.user);
+  const sidebarHeading =
+    department.toLowerCase() === "dispatch"
+      ? "SERVICES "
+      : department.toLowerCase() === "sales"
+      ? "MARKETING"
+      : department.toUpperCase();
   return (
     <div className="sidebar">
       <div className="sidebar__logo">
         <img className="logo" src={logo} alt="company logo" />
       </div>
-      <div className="sidebar__department">{`${department.toUpperCase()} PORTAL`}</div>
+      <center>
+        <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
+      </center>
       {sidebar_items[department].map((item, index) => (
         <NavLink activeClassName="active__sidebar" to={item.route} key={index}>
           <SidebarItem title={item.display_name} icon={item.icon} />
         </NavLink>
       ))}
-      <div className="copyright">@made by us</div>
+      {/* <div className="copyright">@made by us</div> */}
     </div>
   );
 };

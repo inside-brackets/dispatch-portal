@@ -136,11 +136,9 @@ const Customers = () => {
             onChange={searchByFilter}
             // icon="bx bx-filter-alt"
             options={[
-              { label: "Closed ", value: "closed" },
               { label: "Appointment ", value: "appointment" },
-              { label: "Active ", value: "active" },
+              { label: "Registered ", value: "Registered" },
               { label: "Rejected ", value: "rejected" },
-              { label: "Non-active ", value: "non-active" },
               { label: "Deactivated ", value: "deactivated" },
             ]}
           />

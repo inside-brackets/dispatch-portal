@@ -146,8 +146,9 @@ const AppointmentDetail = () => {
   } = useInput(isNotEmpty);
 
   const [selectedPayment, setSelectedPayment] = useState("");
-
   const [trucks, setTrucks] = useState([]);
+  console.log("trucks", trucks);
+
   const history = useHistory();
   const params = useParams();
   const [carrier, setCarrier] = useState({});
@@ -251,7 +252,9 @@ const AppointmentDetail = () => {
     insPhoneIsValid &&
     insCompNameIsValid &&
     insAgentEmailIsValid &&
-    insAddressIsValid
+    insAddressIsValid &&
+    trucks &&
+    trucks.length !== 0
   ) {
     formIsValid = true;
   }

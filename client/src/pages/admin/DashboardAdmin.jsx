@@ -8,8 +8,8 @@ import { useSelector } from "react-redux";
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
 
-  const [carriers, setCarriers] = useState([]);
-  const [appointment, setAppointment] = useState([]);
+  const [carriers, setCarriers] = useState(0);
+  const [appointment, setAppointment] = useState(0);
   const [active, setActive] = useState(0);
   const [pending, setPending] = useState(0);
 
@@ -59,49 +59,16 @@ const DashboardAdmin = () => {
 
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getcarriers`, {})
+      .get(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`)
       .then((res) => {
+        console.log("response.data:", res.data);
         let data = res.data;
-        setCarriers(data);
-        console.log(data);
-        setAppointment(
-          data.filter((item) => {
-            return item.c_status === "appointment";
-          })
-        );
-
-        // setActive(
-        //   data.filter((item) => {
-        //     return item.c_status === "registered";
-        //   })
-        // );
-        let pendingCount = 0;
-        let activeCount = 0;
-        data.forEach((carrier) => {
-          if (carrier.c_status === "registered") {
-            // const pendingTrucks = carrier.trucks.filter((truck) => {
-            //   return truck.t_status === "pending";
-            // });
-            const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
-              ([pending, active, fail], item) =>
-                item.t_status === "pending"
-                  ? [[...pending, item], active, fail]
-                  : item.t_status === "active"
-                  ? [pending, fail, [...active, item]]
-                  : [pending, active, [...fail, item]],
-              [[], [], []]
-            );
-            pendingCount += pendingTrucks.length;
-            activeCount += activeTrucks.length;
-          }
-        });
-        setPending(pendingCount);
-        setActive(activeCount);
-      })
-      .catch((err) => console.log(err));
+        setCarriers(data.total);
+        setAppointment(data.appointments);
+        setActive(data.activeTrucks);
+        setPending(data.pendingTrucks);
+      });
   }, []);
-
-  console.log(appointment);
 
   return (
     <div>
@@ -145,7 +112,7 @@ const DashboardAdmin = () => {
               <StatusCard
                 title=" Appointments"
                 icon="bx bx-calendar-check"
-                count={appointment.length}
+                count={appointment}
               />
             </Col>
           </Row>
@@ -161,7 +128,7 @@ const DashboardAdmin = () => {
               <StatusCard
                 title="Total Carriers"
                 icon="bx bxs-truck"
-                count={carriers.length}
+                count={carriers}
               />
             </Col>
           </Row>

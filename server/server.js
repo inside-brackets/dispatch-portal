@@ -7,9 +7,8 @@ const multer = require("multer");
 const path = require("path");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-var get_ip = require("ipware")().get_ip;
 
-const { setIp, getIpList } = require("./util/ipList");
+const { getIpList } = require("./util/ipList");
 
 const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
@@ -21,7 +20,8 @@ const httpServer = createServer(app);
 
 mongoose
   .connect(
-    "mongodb://admin:9FzZrhjv5U9cWFP@cluster0-shard-00-00.fcfh0.mongodb.net:27017,cluster0-shard-00-01.fcfh0.mongodb.net:27017,cluster0-shard-00-02.fcfh0.mongodb.net:27017/dispatch_db?ssl=true&replicaSet=atlas-hj3cly-shard-0&authSource=admin&retryWrites=true&w=majority",
+    "mongodb+srv://admin:infamd124@cluster0.tpmok.mongodb.net/falcon-portal-db?retryWrites=true&w=majority",
+    // "mongodb://admin:9FzZrhjv5U9cWFP@cluster0-shard-00-00.fcfh0.mongodb.net:27017,cluster0-shard-00-01.fcfh0.mongodb.net:27017,cluster0-shard-00-02.fcfh0.mongodb.net:27017/dispatch_db?ssl=true&replicaSet=atlas-hj3cly-shard-0&authSource=admin&retryWrites=true&w=majority",
     {
       useUnifiedTopology: true,
       useNewUrlParser: true,
@@ -91,25 +91,19 @@ app.all("*", (req, res, next) => {
   ip = ip.replace("::ffff:", "").trim();
   console.log("x-forwarded-for", ip);
   const ipList = getIpList();
-  if (req.url.includes("whitelist")) {
+  if (
+    req.originalUrl.includes("whitelist") ||
+    req.originalUrl.includes("myip")
+  ) {
     next();
   } else if (ipList.includes(ip)) {
     next();
   } else {
-    io.sockets.emit("not-listed", "logout");
+    io.sockets.emit("not-listed", ip);
     res.status(401).send({
       message: "not white listed",
     });
   }
-});
-app.post("/whitelist/:mac/:ip", (req, res) => {
-  setIp(req.params.mac, req.params.ip);
-  console.log("ip list", getIpList());
-  res.send("done");
-});
-
-app.get("/hello", (req, res) => {
-  res.send("hello");
 });
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);

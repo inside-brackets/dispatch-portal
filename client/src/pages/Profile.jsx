@@ -6,6 +6,7 @@ import { Row, Col, Button, Form, InputGroup, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Message from "../components/Message";
 import MyModal from "../components/modals/MyModal";
+import moment from "moment";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
@@ -14,7 +15,10 @@ const Profile = () => {
   const [showModal, setShowModal] = useState(false);
   const [firstName, setFirstName] = useState(user ? user.first_name : "");
   const [lastName, setLastName] = useState(user ? user.last_name : "");
-  const [dateOfBirth, setDateOfBirth] = useState(user ? user.dateOfBirth : "");
+  const [dateOfBirth, setDateOfBirth] = useState(
+    user.date_of_birth ? moment(user.date_of_birth).format("YYYY-MM-DD") : ""
+  );
+  console.log("dob", dateOfBirth, user.date_of_birth);
   const [address, setAddress] = useState(user ? user.address : "");
   const [email, setEmail] = useState(user ? user.email_address : "");
   const [phone, setPhone] = useState(user ? user.phone_number : "");

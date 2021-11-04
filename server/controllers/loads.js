@@ -59,7 +59,11 @@ const addNewLoad = async (req, res) => {
 };
 
 const getLoads = (req, res, next) => {
-  Load.find(req.body)
+  Load.find(req.body, null, {
+    sort: {
+      "drop.date": -1, //Sort by Date Added DESC
+    },
+  })
     .then((loads) => {
       res.send(loads);
     })

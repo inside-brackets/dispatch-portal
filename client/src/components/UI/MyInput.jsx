@@ -31,7 +31,6 @@ const MyInput = forwardRef((props, ref) => {
         placeholder={props.placeholder}
         onChange={props.onChange}
         ref={ref}
-        
         style={props.style}
         onBlur={props.onBlur}
       />

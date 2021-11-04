@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const carrier = require("../models/carrier");
 const Carrier = require("../models/carrier");
 
+const test = (req, res, next) => {};
+
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
   console.log(req.body);
@@ -119,10 +121,16 @@ const getCarrier = (req, res, next) => {
 };
 
 const getCarriers = (req, res, next) => {
-  console.log(req.body);
-  Carrier.find(req.body)
-    .then((carriers) => {
-      res.send(carriers);
+  console.log("get carriers", req.body);
+
+  const filter =
+    req.body && Object.keys(req.body).length !== 0
+      ? req.body
+      : { c_status: { $nin: ["unassigned", "rejected"] } };
+  Carrier.find(filter)
+    .then((result) => {
+      console.log(result.length);
+      res.send(result);
     })
     .catch((err) => {
       res.send(err);
@@ -255,6 +263,39 @@ const saleClosed = (req, res, next) => {
     });
 };
 
+const countCarriers = async (req, res, next) => {
+  const stats = {
+    appointments: 0,
+    activeTrucks: 0,
+    pendingTrucks: 0,
+    total: 0,
+  };
+  stats.total = await Carrier.countDocuments({});
+
+  stats.appointments = await Carrier.countDocuments({
+    c_status: "appointment",
+  });
+  registeredCarriers = await Carrier.find({ c_status: "registered" });
+  let pendingCount = 0;
+  let activeCount = 0;
+  registeredCarriers.forEach((carrier) => {
+    const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
+      ([pending, active, fail], item) =>
+        item.t_status === "pending"
+          ? [[...pending, item], active, fail]
+          : item.t_status === "active"
+          ? [pending, fail, [...active, item]]
+          : [pending, active, [...fail, item]],
+      [[], [], []]
+    );
+    pendingCount += pendingTrucks.length;
+    activeCount += activeTrucks.length;
+  });
+  stats.pendingTrucks = pendingCount;
+  stats.activeTrucks = activeCount;
+  res.send(stats);
+};
+
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -266,4 +307,5 @@ module.exports = {
   fetchLead,
   saleClosed,
   assignDispatcher,
+  countCarriers,
 };

@@ -80,15 +80,17 @@ const Users = () => {
   const closeEditModel = () => {
     setEditModal(false);
   };
-
   const deleteUserHandler = async (id) => {
     var result = window.confirm("Want to delete");
 
     if (result) {
-      await axios.delete(
-        `${process.env.REACT_APP_BACKEND_URL}/admin/deleteuser`,
-        { data: { id } }
-      );
+      await axios
+        .delete(`${process.env.REACT_APP_BACKEND_URL}/admin/deleteuser`, {
+          data: { id },
+        })
+        .then(() => {
+          setUsers((prev) => prev.filter((item) => item._id !== id));
+        });
     }
   };
   const editModalHnadler = (item) => {
@@ -98,7 +100,6 @@ const Users = () => {
   };
   const addUserHandler = () => {
     setShowModal(true);
-    console.log("button click");
   };
 
   const renderBody = (item, index) => (

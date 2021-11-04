@@ -295,7 +295,7 @@ const newTruckForm = forwardRef((props, ref) => {
               ? defaultValue.drivers.length === 1
                 ? "singledriver"
                 : "teamDriver"
-              : ""
+              : "singledriver"
           }
           onChange={handleDriverChange}
         >
