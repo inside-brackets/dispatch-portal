@@ -96,10 +96,11 @@ const InvoiceModal = ({
   const changeStatusHandler = async () => {
     setModalHandler(false);
     let res = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updateinvoice`,
+      `${process.env.REACT_APP_BACKEND_URL}/dispatch/clearinvoice`,
       {
         _id: invoice._id,
-        invoiceStatus: "cleared",
+        mc_number: invoice.mc_number,
+        truckNumber: invoice.truckNumber,
       }
     );
     setInvoices((prev) => {

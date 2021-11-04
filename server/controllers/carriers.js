@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const carrier = require("../models/carrier");
 const Carrier = require("../models/carrier");
 
 const test = (req, res, next) => {};
@@ -284,7 +283,7 @@ const countCarriers = async (req, res, next) => {
         item.t_status === "pending"
           ? [[...pending, item], active, fail]
           : item.t_status === "active"
-          ? [pending, fail, [...active, item]]
+          ? [pending, [...active, item], fail]
           : [pending, active, [...fail, item]],
       [[], [], []]
     );
@@ -293,6 +292,7 @@ const countCarriers = async (req, res, next) => {
   });
   stats.pendingTrucks = pendingCount;
   stats.activeTrucks = activeCount;
+  console.log(stats);
   res.send(stats);
 };
 
