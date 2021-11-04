@@ -8,7 +8,7 @@ const {
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
-const { getIpList } = require("../util/ipList");
+const { setIp, getIpList } = require("../util/ipList");
 
 route.post("/addnewtruck", carriersController.addNewTruck);
 route.post("/getcarrier", carriersController.getCarrier);
