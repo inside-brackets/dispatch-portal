@@ -147,7 +147,6 @@ const AppointmentDetail = () => {
 
   const [selectedPayment, setSelectedPayment] = useState("");
   const [trucks, setTrucks] = useState([]);
-  console.log("trucks", trucks);
 
   const history = useHistory();
   const params = useParams();
@@ -301,21 +300,13 @@ const AppointmentDetail = () => {
       },
       transformData
     );
-    // axios
-    //   .put(
-    //     `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
-    //     upObj
-    //   )
-    //   .then((result) => {
-    //     console.log(result);
-    //   });
   };
   let modalFormIsValid = false;
   if (mcIsValid && w9IsValid && insuranceIsValid) {
     modalFormIsValid = true;
   }
 
-  const closeSale = () => {
+  const closeSale = async () => {
     if (!modalFormIsValid) {
       return;
     }
@@ -326,10 +317,16 @@ const AppointmentDetail = () => {
     data.append("file", noaRef.current.files[0]);
     data.append("file", w9Ref.current.files[0]);
     data.append("id", carrier.mc_number);
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
     axios
       .post(
         `${process.env.REACT_APP_BACKEND_URL}/sales/saleclosed/${carrier.mc_number}`,
-        data
+        data,
+        config
       )
 
       .then((res) => {
@@ -339,7 +336,7 @@ const AppointmentDetail = () => {
         socket.emit("sale-closed", `New Sale By ${user_name}`);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("sales closed error", err);
       });
   };
 
