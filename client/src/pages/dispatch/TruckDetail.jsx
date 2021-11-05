@@ -584,7 +584,7 @@ const TruckDetail = ({ match }) => {
                       <Form.Label>Temperature Restrictions:</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="Tax Id"
+                        placeholder="Temperature Restrictions"
                         value={temperatureRestrictions}
                         onChange={(e) =>
                           setTemperatureRestrictions(e.target.value)
@@ -597,7 +597,7 @@ const TruckDetail = ({ match }) => {
                       <Form.Label>Trip Durration</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="Tax Id"
+                        placeholder="Trip duration"
                         value={tripDurration}
                         onChange={(e) => setTripDurration(e.target.value)}
                         // defaultValue={data.tax_id_number}
