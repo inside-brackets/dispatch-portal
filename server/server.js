@@ -20,8 +20,8 @@ const httpServer = createServer(app);
 
 mongoose
   .connect(
-    "mongodb+srv://admin:infamd124@cluster0.tpmok.mongodb.net/falcon-portal-db?retryWrites=true&w=majority",
-    // "mongodb://admin:9FzZrhjv5U9cWFP@cluster0-shard-00-00.fcfh0.mongodb.net:27017,cluster0-shard-00-01.fcfh0.mongodb.net:27017,cluster0-shard-00-02.fcfh0.mongodb.net:27017/dispatch_db?ssl=true&replicaSet=atlas-hj3cly-shard-0&authSource=admin&retryWrites=true&w=majority",
+    // "mongodb+srv://admin:infamd124@cluster0.tpmok.mongodb.net/falcon-portal-db?retryWrites=true&w=majority",
+    "mongodb://admin:9FzZrhjv5U9cWFP@cluster0-shard-00-00.fcfh0.mongodb.net:27017,cluster0-shard-00-01.fcfh0.mongodb.net:27017,cluster0-shard-00-02.fcfh0.mongodb.net:27017/dispatch_db?ssl=true&replicaSet=atlas-hj3cly-shard-0&authSource=admin&retryWrites=true&w=majority",
     {
       useUnifiedTopology: true,
       useNewUrlParser: true,

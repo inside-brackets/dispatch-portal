@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { Row } from "react-bootstrap";
 import Card from "../../components/cards/Card";
 import Input from "../../components/UI/MyInput";
 // import Badge from "../components/badge/Badge";
@@ -426,9 +427,9 @@ const AppointmentDetail = () => {
           </div>
           <div className="row">
             <div className="col-4">
+              <h4>Appointment:</h4>
               <Input
                 type="datetime-local"
-                label="Appointment:"
                 defaultValue={carrier.appointment}
                 ref={appointmentRef}
               />
@@ -455,6 +456,7 @@ const AppointmentDetail = () => {
                   ref={ownerNameRef}
                   defaultValue={carrier.owner_name}
                 />
+
                 <Input
                   type="text"
                   label="*Tax ID:"

@@ -15,11 +15,10 @@ const invoiceTableHead = [
   "MC",
   "Company Name",
   "Truck Number",
-  "Sales Person",
   "From",
   "To",
   "Gross",
-  "Dispatcher",
+  "Payable",
   "Status",
   "Action",
 ];
@@ -39,7 +38,6 @@ const Invoice = () => {
       <td>{item.mc_number ? item.mc_number : "NA"}</td>
       <td>{item.carrierCompany ? item.carrierCompany : "NA"}</td>
       <td>{item.truckNumber ? item.truckNumber : "NA"}</td>
-      <td>{item.sales.name ? item.sales.name : "NA"}</td>
 
       <td>
         {item.startingDate

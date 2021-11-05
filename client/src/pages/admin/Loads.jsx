@@ -10,6 +10,8 @@ import Loader from "react-loader-spinner";
 import axios from "axios";
 import moment from "moment";
 import EditButton from "../../components/UI/EditButton";
+import Badge from "../../components/badge/Badge";
+
 // import LoadTable from "../../components/table/LoadTable";
 
 const loadTableHead = [
@@ -23,8 +25,15 @@ const loadTableHead = [
   "Pick Up",
   "Drop",
   "Status",
+  "Action",
   "",
 ];
+const status_map = {
+  booked: "primary",
+  ongoing: "warning",
+  delivered: "success",
+  canceled: "danger",
+};
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const renderBody = (item, index) => (
@@ -48,7 +57,10 @@ const renderBody = (item, index) => (
       <br />
       {item.drop ? moment(item.drop.date).format("h:mm:ss a") : "NA"}
     </td>
-    <td>{item.l_status ? item.l_status : "NA"}</td>
+
+    <td>
+      <Badge type={status_map[item.l_status]} content={item.l_status} />
+    </td>
 
     <td>
       <div className="edit__class">

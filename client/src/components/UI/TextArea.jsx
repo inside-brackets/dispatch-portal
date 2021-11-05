@@ -13,6 +13,7 @@ const TextArea = forwardRef((props, ref) => {
         ref={ref}
         placeholder={props.placeholder}
         defaultValue={props.defaultValue}
+        readOnly={props.readOnly}
       ></textarea>
     </div>
   );

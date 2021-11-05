@@ -12,6 +12,7 @@ import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { loadsActions } from "../../store/loads";
 import GenerateInvoice from "../GenerateInvoice";
+import Badge from "../../components/badge/Badge";
 
 const customerTableHead = [
   "#",
@@ -25,6 +26,12 @@ const customerTableHead = [
   "Status",
   "",
 ];
+const status_map = {
+  booked: "primary",
+  ongoing: "warning",
+  delivered: "success",
+  canceled: "danger",
+};
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
@@ -138,7 +145,13 @@ const LoadTable = ({ truck_number, carrier }) => {
         <br />
         {item.drop ? moment(item.drop.date).format("h:mm:ss a") : "NA"}
       </td>
-      <td>{item.l_status ? item.l_status : "NA"}</td>
+      {/* <td>{item.l_status ? item.l_status : "NA"}</td> */}
+      <td>
+        <Badge
+          type={status_map[item.l_status ? item.l_status : "NA"]}
+          content={item.l_status ? item.l_status : "NA"}
+        />
+      </td>
 
       <td>
         <div className="edit__class">

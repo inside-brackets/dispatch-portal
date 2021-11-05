@@ -143,6 +143,10 @@ const carrierSchema = new mongoose.Schema(
     comment: {
       type: String,
     },
+    dispatcher_comment: {
+      type: String,
+    },
+
     appointment: {
       type: String,
     },

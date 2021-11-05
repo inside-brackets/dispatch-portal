@@ -3,6 +3,8 @@ import moment from "moment";
 import Table from "../table/Table";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import React, { useState, useRef } from "react";
+import TextArea from "../../components/UI/TextArea";
 
 const customerTableHead = [
   "#",
@@ -29,7 +31,8 @@ const InvoiceModal = ({
   setModalHandler,
   setInvoices,
 }) => {
-  // const [dispatcherFee, setDispatcherFee] = useState(0);
+  const [dispatchFee, setDispatchFee] = useState(dispatcherFee);
+  const commentRef = useRef();
 
   const { _id: currUserId, user_name: currUserName } = useSelector(
     (state) => state.user.user
@@ -61,6 +64,7 @@ const InvoiceModal = ({
     const obj = {
       carrierCompany: carrier.company_name,
       truckNumber: truck_number,
+      comment: commentRef.current.value,
       trailerType: totalLoads[0].carrier.trailer_type,
       dispatcher: {
         _id: currUserId,
@@ -101,6 +105,8 @@ const InvoiceModal = ({
         _id: invoice._id,
         mc_number: invoice.mc_number,
         truckNumber: invoice.truckNumber,
+        invoiceStatus: "cleared",
+        dispatcherFee: dispatchFee,
       }
     );
     setInvoices((prev) => {
@@ -202,6 +208,29 @@ const InvoiceModal = ({
           </Row>
         </Col>
       </Row>
+      <Row
+        style={{
+          justifyContent: "center",
+          marginTop: "40px",
+          height: "100px",
+        }}
+      >
+        {/* <Col md={1}></Col>
+        <Col md={2}>Driver Name: </Col> */}
+        <Col md={9}>
+          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <TextArea
+              style={{ width: "500px" }}
+              placeholder="Add comments here"
+              // value={comment}
+              // defaultValue={data.comment}
+              // onChange={(e) => setComment(e.target.value)}
+              ref={commentRef}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+      <br />
       <Row>
         <Col>
           <div className="card">
@@ -247,9 +276,9 @@ const InvoiceModal = ({
               <Col>
                 <Form.Control
                   type="text"
-                  placeholder="Readonly input here..."
-                  readOnly
-                  value={invoice && invoice.dispatcherFee}
+                  defaultValue={invoice && invoice.dispatcherFee}
+                  onChange={(e) => setDispatchFee(e.target.value)}
+                  value={dispatchFee}
                 />
               </Col>
             </Row>

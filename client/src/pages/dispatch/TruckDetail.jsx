@@ -28,6 +28,8 @@ const transformToSelectValue = (value) => {
 const TruckDetail = ({ match }) => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const commentRef = useRef();
+  // here
+  const dispatcherCommentRef = useRef();
   const [truckObj, setTruckObj] = useState("");
   const [validated, setValidated] = useState(false);
   const [data, setData] = useState(null);
@@ -101,6 +103,8 @@ const TruckDetail = ({ match }) => {
     if (form.checkValidity() === true) {
       const upObj = {
         comment: commentRef.current.value,
+        // here
+        dispatcher_comment: dispatcherCommentRef.current.value,
         owner_name: ownerName,
         phone_number: phoneNumber,
         email: email,
@@ -139,6 +143,8 @@ const TruckDetail = ({ match }) => {
           });
           setData(response.data);
           commentRef.current.value = response.data.comment;
+          // here
+          dispatcherCommentRef.current.value = response.data.dispatcher_comment;
 
           setCompanyName(response.data.company_name);
           setAddress(response.data.insurance.address);
@@ -176,6 +182,8 @@ const TruckDetail = ({ match }) => {
       {
         c_status: "deactivated",
         comment: commentRef.current.value,
+        // here
+        dispatcher_comment: dispatcherCommentRef.current.value,
       }
     );
     setrModal(false);
@@ -211,7 +219,7 @@ const TruckDetail = ({ match }) => {
                     <Row>
                       <Col>
                         {" "}
-                        <h3>MC</h3>{" "}
+                        <h3>MC:</h3>{" "}
                       </Col>
                       <Col md={9}>
                         <Form.Control
@@ -222,7 +230,7 @@ const TruckDetail = ({ match }) => {
                           disabled
                         />
                         <Form.Control.Feedback type="invalid">
-                          Please provide a valid zip.
+                          Please provide a valid MC.
                         </Form.Control.Feedback>
                       </Col>
                     </Row>
@@ -231,7 +239,7 @@ const TruckDetail = ({ match }) => {
                     <Row>
                       <Col>
                         {" "}
-                        <h3>Address</h3>{" "}
+                        <h3>Address:</h3>{" "}
                       </Col>
                       <Col md={9}>
                         <Form.Control
@@ -242,7 +250,7 @@ const TruckDetail = ({ match }) => {
                           disabled
                         />
                         <Form.Control.Feedback type="invalid">
-                          Please provide a valid zip.
+                          Please provide a valid entity.
                         </Form.Control.Feedback>
                       </Col>
                     </Row>
@@ -262,7 +270,7 @@ const TruckDetail = ({ match }) => {
                     <Row>
                       <Col>
                         {" "}
-                        <h3>Phone #</h3>{" "}
+                        <h3>Phone #:</h3>{" "}
                       </Col>
                       <Col md={9}>
                         <Form.Control
@@ -273,7 +281,7 @@ const TruckDetail = ({ match }) => {
                           onChange={(e) => setPhoneNumber(e.target.value)}
                         />
                         <Form.Control.Feedback type="invalid">
-                          Please provide a valid zip.
+                          Please provide a valid entity.
                         </Form.Control.Feedback>
                       </Col>
                     </Row>
@@ -282,7 +290,7 @@ const TruckDetail = ({ match }) => {
                     <Row>
                       <Col>
                         {" "}
-                        <h3>Email</h3>{" "}
+                        <h3>Email:</h3>{" "}
                       </Col>
                       <Col md={9}>
                         <Form.Control
@@ -292,42 +300,94 @@ const TruckDetail = ({ match }) => {
                           onChange={(e) => setEmail(e.target.value)}
                         />
                         <Form.Control.Feedback type="invalid">
-                          Please provide a valid zip.
+                          Please provide a valid entity.
                         </Form.Control.Feedback>
                       </Col>
                     </Row>
                   </Form.Group>
                   {/* <h4>Address: {data.address} </h4> */}
                 </Row>
+
                 <Row
                   style={{
-                    justifyContent: "center",
+                    // justifyContent: "center",
                     marginTop: "40px",
                     height: "100px",
                   }}
                 >
-                  <Col md={6}>
+                  <Col
+                    md={3}
+                    style={{
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <h4> Sales Comments:</h4>
+                  </Col>
+                  <Col
+                    md={6}
+                    style={{
+                      zIndex: 2,
+                    }}
+                  >
                     <Form.Group
                       className="mb-3"
                       controlId="exampleForm.ControlTextarea1"
                     >
                       <TextArea
                         style={{ width: "500px" }}
-                        placeholder="Comment"
+                        placeholder="Comment.."
                         // value={comment}
                         defaultValue={data.comment}
                         // onChange={(e) => setComment(e.target.value)}
                         ref={commentRef}
+                        readOnly
                       />
                     </Form.Group>
                   </Col>
                 </Row>
+                <Row
+                  style={{
+                    // justifyContent: "center",
+                    marginTop: "40px",
+                    height: "100px",
+                  }}
+                >
+                  <Col
+                    md={3}
+                    style={{
+                      justifyContent: "flex-start",
+                    }}
+                  >
+                    <h4>Dispatcher Comments:</h4>
+                  </Col>
+                  <Col
+                    md={6}
+                    style={{
+                      zIndex: 1,
+                    }}
+                  >
+                    <Form.Group
+                      className="mb-3"
+                      controlId="exampleForm.ControlTextarea1"
+                    >
+                      <TextArea
+                        style={{ width: "500px" }}
+                        placeholder="Dispatcher's Comments"
+                        // value={comment}
+                        defaultValue={data.dispatcher_comment}
+                        // onChange={(e) => setDispatcherComment(e.target.value)}
+                        ref={dispatcherCommentRef}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
                 <h2>Carrier Details :</h2>
 
                 <Row className="m-3">
                   <Row>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Owner Name</Form.Label>
+                      <Form.Label>Owner Name:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Owner Name"
@@ -335,12 +395,12 @@ const TruckDetail = ({ match }) => {
                         onChange={(e) => setOwnerName(e.target.value)}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid city.
+                        Please provide a valid entity.
                       </Form.Control.Feedback>
                     </Form.Group>
                     <Col></Col>
                     <Form.Group as={Col} md="3" controlId="validationCustom05">
-                      <Form.Label>Payment Method</Form.Label>
+                      <Form.Label>Payment Method:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Payment Method"
@@ -349,13 +409,13 @@ const TruckDetail = ({ match }) => {
                         disabled
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid zip.
+                        Please provide a valid entity.
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Row>
                   <Row className="my-3">
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Tax Id</Form.Label>
+                      <Form.Label>Tax Id:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Tax Id"
@@ -368,10 +428,10 @@ const TruckDetail = ({ match }) => {
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Row>
-                  <h2>Insurance Details</h2>
+                  <h2>Insurance Details:</h2>
                   <Row className="my-3">
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Company's Name</Form.Label>
+                      <Form.Label>Company's Name:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Company's Name"
@@ -380,11 +440,11 @@ const TruckDetail = ({ match }) => {
                         required
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid Tax Id.
+                        Please provide a valid Company's Name.
                       </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Address</Form.Label>
+                      <Form.Label>Address:</Form.Label>
                       <Form.Control
                         type="text"
                         value={address}
@@ -393,13 +453,13 @@ const TruckDetail = ({ match }) => {
                         required
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid Tax Id.
+                        Please provide a valid Address.
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Row>
                   <Row className="my-3">
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Agent's Name</Form.Label>
+                      <Form.Label>Agent's Name:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Agent's Name"
@@ -408,12 +468,12 @@ const TruckDetail = ({ match }) => {
                         required
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid Tax Id.
+                        Please provide a valid Agent's Name.
                       </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Agent's Email</Form.Label>
+                      <Form.Label>Agent's Email:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Agent's Email"
@@ -422,11 +482,11 @@ const TruckDetail = ({ match }) => {
                         required
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid Tax Id.
+                        Please provide a valid Agent's Email.
                       </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Phone Number</Form.Label>
+                      <Form.Label>Phone Number:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Phone Number"
@@ -435,21 +495,21 @@ const TruckDetail = ({ match }) => {
                         required
                       />
                       <Form.Control.Feedback type="invalid">
-                        Please provide a valid Tax Id.
+                        Please provide a valid Phone Number.
                       </Form.Control.Feedback>
                     </Form.Group>
                   </Row>
 
                   {data.payment_method === "factoring" ? (
                     <div>
-                      <h2>Factoring Details</h2>
+                      <h2>Factoring Details:</h2>
                       <Row className="my-3">
                         <Form.Group
                           as={Col}
                           md="4"
                           controlId="validationCustom03"
                         >
-                          <Form.Label>Company's Name</Form.Label>
+                          <Form.Label>Company's Name:</Form.Label>
                           <Form.Control
                             type="text"
                             placeholder="Company's Name"
@@ -458,7 +518,7 @@ const TruckDetail = ({ match }) => {
                             required
                           />
                           <Form.Control.Feedback type="invalid">
-                            Please provide a valid Tax Id.
+                            Please provide a valid Company's Name.
                           </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group
@@ -466,7 +526,7 @@ const TruckDetail = ({ match }) => {
                           md="4"
                           controlId="validationCustom03"
                         >
-                          <Form.Label>Address</Form.Label>
+                          <Form.Label>Address:</Form.Label>
                           <Form.Control
                             type="text"
                             value={factAddress}
@@ -475,7 +535,7 @@ const TruckDetail = ({ match }) => {
                             required
                           />
                           <Form.Control.Feedback type="invalid">
-                            Please provide a valid Tax Id.
+                            Please provide a valid Address.
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Row>
@@ -486,7 +546,7 @@ const TruckDetail = ({ match }) => {
                           md="4"
                           controlId="validationCustom03"
                         >
-                          <Form.Label>Agent's Name</Form.Label>
+                          <Form.Label>Agent's Name:</Form.Label>
                           <Form.Control
                             type="text"
                             placeholder="Agent's Name"
@@ -495,7 +555,7 @@ const TruckDetail = ({ match }) => {
                             required
                           />
                           <Form.Control.Feedback type="invalid">
-                            Please provide a valid Tax Id.
+                            Please provide a valid Agent's Name.
                           </Form.Control.Feedback>
                         </Form.Group>
 
@@ -504,7 +564,7 @@ const TruckDetail = ({ match }) => {
                           md="4"
                           controlId="validationCustom03"
                         >
-                          <Form.Label>Agent's Email</Form.Label>
+                          <Form.Label>Agent's Email:</Form.Label>
                           <Form.Control
                             type="text"
                             placeholder="Agent's Email"
@@ -513,7 +573,7 @@ const TruckDetail = ({ match }) => {
                             required
                           />
                           <Form.Control.Feedback type="invalid">
-                            Please provide a valid Tax Id.
+                            Please provide a valid Agent's Email.
                           </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group
@@ -521,7 +581,7 @@ const TruckDetail = ({ match }) => {
                           md="4"
                           controlId="validationCustom03"
                         >
-                          <Form.Label>Phone Number</Form.Label>
+                          <Form.Label>Phone Number:</Form.Label>
                           <Form.Control
                             type="text"
                             placeholder="Phone Number"
@@ -530,7 +590,7 @@ const TruckDetail = ({ match }) => {
                             required
                           />
                           <Form.Control.Feedback type="invalid">
-                            Please provide a valid Tax Id.
+                            Please provide a valid Phone Number.
                           </Form.Control.Feedback>
                         </Form.Group>
                       </Row>
@@ -542,7 +602,7 @@ const TruckDetail = ({ match }) => {
                 <Row className="m-3">
                   <Row>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Truck Number</Form.Label>
+                      <Form.Label>Truck Number:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Agent's Email"
@@ -556,7 +616,7 @@ const TruckDetail = ({ match }) => {
                     </Form.Group>
 
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Vin Number</Form.Label>
+                      <Form.Label>Vin Number:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Agent's Email"
@@ -571,7 +631,7 @@ const TruckDetail = ({ match }) => {
                   </Row>
                   <Row>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Carry Limit</Form.Label>
+                      <Form.Label>Carry Limit:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Agent's Email"
@@ -594,7 +654,7 @@ const TruckDetail = ({ match }) => {
                   </Row>
                   <Row>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Trip Durration</Form.Label>
+                      <Form.Label>Trip Durration:</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Trip duration"
@@ -605,7 +665,11 @@ const TruckDetail = ({ match }) => {
                     </Form.Group>
                   </Row>
                   <Row>
-                    <Col>
+                    <Col
+                      style={{
+                        marginLeft: "-30px",
+                      }}
+                    >
                       <MySelect
                         label="Region"
                         isMulti={true}
@@ -620,7 +684,11 @@ const TruckDetail = ({ match }) => {
                         ]}
                       />
                     </Col>
-                    <Col>
+                    <Col
+                      style={{
+                        marginLeft: "-300px",
+                      }}
+                    >
                       <MySelect
                         label="Trailer Type:"
                         isMulti={false}
