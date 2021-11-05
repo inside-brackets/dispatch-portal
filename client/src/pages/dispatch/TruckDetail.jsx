@@ -715,7 +715,7 @@ const TruckDetail = ({ match }) => {
                       <Button
                         onClick={() => {
                           const pdfWindow = window.open();
-                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}/${data.insurance_file}`;
+                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${data.insurance_file}`;
                         }}
                       >
                         Insurance
@@ -727,7 +727,7 @@ const TruckDetail = ({ match }) => {
                       <Button
                         onClick={() => {
                           const pdfWindow = window.open();
-                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}/${data.noa_file}`;
+                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${data.noa_file}`;
                         }}
                       >
                         NOA/Void Check
@@ -739,7 +739,7 @@ const TruckDetail = ({ match }) => {
                       <Button
                         onClick={() => {
                           const pdfWindow = window.open();
-                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}/${data.mc_file}`;
+                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${data.mc_file}`;
                         }}
                       >
                         MC Authority
@@ -751,7 +751,7 @@ const TruckDetail = ({ match }) => {
                       <Button
                         onClick={() => {
                           const pdfWindow = window.open();
-                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}/${data.w9_file}`;
+                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${data.w9_file}`;
                         }}
                       >
                         W9
