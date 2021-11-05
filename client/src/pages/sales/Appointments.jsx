@@ -35,7 +35,6 @@ const Appointments = () => {
       transformData
     );
   }, [fetchCarriers, currUserId]);
-  console.log(carriersList);
   const body = (carrier) => (
     <Row>
       <Col>

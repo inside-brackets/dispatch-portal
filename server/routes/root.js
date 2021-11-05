@@ -28,8 +28,8 @@ route.post("/createinvoice", addNewInvoice);
 route.put("/updateinvoice", updateInvoiceStatus);
 
 route.post("/updateuser", userController.updateUser);
-route.post("/uploadfile/:type", (req, res) => {
-  res.send(`/${req.files[0].path}`);
+route.post("/uploadfile/:type/:id", (req, res) => {
+  res.send(`/${req.files[0].path.replace(/\\/g, "/")}`);
   console.log(req);
 });
 route.get("/countcarriers", carriersController.countCarriers);

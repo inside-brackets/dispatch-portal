@@ -60,7 +60,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     };
     axios
       .post(
-        `${process.env.REACT_APP_BACKEND_URL}/uploadfile/ratecons`,
+        `${process.env.REACT_APP_BACKEND_URL}/uploadfile/ratecons/${loadNumber}`,
         formData,
         config
       )

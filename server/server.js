@@ -40,19 +40,15 @@ mongoose
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let path = "";
-    if (req.url.includes("uploadfile")) {
-      let arr = req.url.split("/");
-      let type = arr[arr.length - 1];
-      path = `files/${type}`;
-    } else {
-      path = `files/carrier_documents`;
-    }
+    let arr = req.url.split("/");
+    let type = arr[arr.length - 2];
+    path = `files/${type}`;
     cb(null, path);
   },
   filename: function (req, file, cb) {
     let arr = req.url.split("/");
-    let mc = arr[arr.length - 1];
-    cb(null, Date.now() + "-" + mc + "-" + file.originalname);
+    let id = arr[arr.length - 1];
+    cb(null, Date.now() + "-" + id + "-" + file.originalname);
   },
 });
 
@@ -86,25 +82,25 @@ io.on("connection", (socket) => {
 });
 
 // redirecting
-app.all("*", (req, res, next) => {
-  var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-  ip = ip.replace("::ffff:", "").trim();
-  console.log("x-forwarded-for", ip);
-  const ipList = getIpList();
-  if (
-    req.originalUrl.includes("whitelist") ||
-    req.originalUrl.includes("myip")
-  ) {
-    next();
-  } else if (ipList.includes(ip)) {
-    next();
-  } else {
-    io.sockets.emit("not-listed", ip);
-    res.status(401).send({
-      message: "not white listed",
-    });
-  }
-});
+// app.all("*", (req, res, next) => {
+//   var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+//   ip = ip.replace("::ffff:", "").trim();
+//   console.log("x-forwarded-for", ip);
+//   const ipList = getIpList();
+//   if (
+//     req.originalUrl.includes("whitelist") ||
+//     req.originalUrl.includes("myip")
+//   ) {
+//     next();
+//   } else if (ipList.includes(ip)) {
+//     next();
+//   } else {
+//     io.sockets.emit("not-listed", ip);
+//     res.status(401).send({
+//       message: "not white listed",
+//     });
+//   }
+// });
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);

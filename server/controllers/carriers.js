@@ -15,7 +15,6 @@ const updateCarrier = (req, res, next) => {
   )
     .then((carrier) => {
       res.send(carrier);
-
       console.log("done");
     })
     .catch((err) => {
@@ -237,31 +236,6 @@ const deleteTruck = (req, res, next) => {
   });
 };
 
-const saleClosed = (req, res, next) => {
-  console.log(req.files);
-  const file_names = ["mc_file", "insurance_file", "noa_file", "w9_file"];
-  var update_obj = { c_status: "registered" };
-  for (var i = 0; i < req.files.length; i++) {
-    update_obj[file_names[i]] = req.files[i].path;
-  }
-  console.log(update_obj);
-  Carrier.findOneAndUpdate(
-    { mc_number: parseInt(req.params.mc) },
-    {
-      $set: update_obj,
-    },
-    { new: true }
-  )
-    .then((carrier) => {
-      res.send(carrier);
-      console.log(carrier);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({ errMsg: "could not update" });
-    });
-};
-
 const countCarriers = async (req, res, next) => {
   const stats = {
     appointments: 0,
@@ -305,7 +279,6 @@ module.exports = {
   updateCarrier,
   updateTruckInfo,
   fetchLead,
-  saleClosed,
   assignDispatcher,
   countCarriers,
 };

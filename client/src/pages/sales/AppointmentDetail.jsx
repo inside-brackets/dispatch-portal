@@ -310,34 +310,40 @@ const AppointmentDetail = () => {
     if (!modalFormIsValid) {
       return;
     }
-
-    const data = new FormData();
-    data.append("file", mcRef.current.files[0]);
-    data.append("file", insuranceRef.current.files[0]);
-    data.append("file", noaRef.current.files[0]);
-    data.append("file", w9Ref.current.files[0]);
-    data.append("id", carrier.mc_number);
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    const files = {
+      mc_file: new FormData(),
+      insurance_file: new FormData(),
+      noa_file: noaRef.current.files[0] ? new FormData() : "",
+      w9_file: new FormData(),
     };
-    axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/sales/saleclosed/${carrier.mc_number}`,
-        data,
-        config
-      )
+    files.mc_file.append("file", mcRef.current.files[0]);
+    files.insurance_file.append("file", insuranceRef.current.files[0]);
 
-      .then((res) => {
-        console.log(res.statusText);
-        setShowCloseModal(false);
-        history.push("/appointments");
-        socket.emit("sale-closed", `New Sale By ${user_name}`);
-      })
-      .catch((err) => {
-        console.log("sales closed error", err);
-      });
+    if (noaRef.current.files[0]) {
+      files.noa_file.append("file", noaRef.current.files[0]);
+    }
+    files.w9_file.append("file", w9Ref.current.files[0]);
+
+    for (const property in files) {
+      if (files[property]) {
+        let res = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/uploadfile/carrier_documents/${carrier.mc_number}`,
+          files[property]
+        );
+        files[property] = res.data;
+      }
+    }
+    const response = await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+      {
+        c_status: "registered",
+        ...files,
+      }
+    );
+    console.log(response);
+    setShowCloseModal(false);
+    history.push("/appointments");
+    socket.emit("sale-closed", `New Sale By ${user_name}`);
   };
 
   if (isLoading && !httpError) {
