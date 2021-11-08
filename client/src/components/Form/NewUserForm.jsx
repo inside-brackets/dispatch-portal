@@ -29,18 +29,9 @@ const NewUserForm = ({
     defaultValue ? defaultValue.joining_date : null
   );
   const [sameName, setSameName] = useState(null);
-  // if(defaultValue){
-  //   setUserName(defaultValue.user_name)
-  //   setPassword(defaultValue.password)
-  //   setDepartment(defaultValue.department)
-  //   setDesignation(defaultValue.designation)
-  //   setSalary(defaultValue.salary)
-  //   setJoiningDate(defaultValue.joining_date)
-
-  // }
 
   const onChangeHandler = (e) => {
-    var sameName1 = data.find((item, index) => {
+    var sameName1 = data.find((item) => {
       return item.user_name.toLowerCase() === userName.toLowerCase();
     });
     setSameName(sameName1);
@@ -107,34 +98,34 @@ const NewUserForm = ({
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <Row className="m-3">
-        <Form.Group as={Col} md="6">
-          <Form.Label>Username</Form.Label>
-          <InputGroup hasValidation>
-            <Form.Control
-              type="text"
-              placeholder="Username"
-              aria-describedby="inputGroupPrepend"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              onBlur={() => onChangeHandler()}
-              required
-            />
-            {sameName && (
-              <Form.Control.Feedback type="invalid">
-                user Name should be unique
-              </Form.Control.Feedback>
-            )}
-            {!userName && (
-              <Form.Control.Feedback type="invalid">
-                Please choose a username.
-              </Form.Control.Feedback>
-            )}
-            {/* <Form.Control.Feedback>Looks good!</Form.Control.Feedback> */}
-          </InputGroup>
-        </Form.Group>
+      {!defaultValue && (
+        <Row className="m-3">
+          <Form.Group as={Col} md="6">
+            <Form.Label>Username</Form.Label>
+            <InputGroup hasValidation>
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                aria-describedby="inputGroupPrepend"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                onBlur={() => onChangeHandler()}
+                required
+              />
+              {sameName && (
+                <Form.Control.Feedback type="invalid">
+                  user Name should be unique
+                </Form.Control.Feedback>
+              )}
+              {!userName && (
+                <Form.Control.Feedback type="invalid">
+                  Please choose a username.
+                </Form.Control.Feedback>
+              )}
+              {/* <Form.Control.Feedback>Looks good!</Form.Control.Feedback> */}
+            </InputGroup>
+          </Form.Group>
 
-        {!defaultValue && (
           <Form.Group as={Col} md="6">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -148,11 +139,11 @@ const NewUserForm = ({
               Please provide a valid password.
             </Form.Control.Feedback>
           </Form.Group>
-        )}
-      </Row>
+        </Row>
+      )}
       <Row className="mb-3 justify-content-center">
         <Row className="m-3">
-          <hr />
+          {!defaultValue && <hr />}
           <h1>Company Info</h1>
           <Form.Group as={Col} md="6">
             <Form.Label>Department</Form.Label>
