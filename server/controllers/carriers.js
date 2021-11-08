@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Carrier = require("../models/carrier");
+const hcarrier = require("../models/hcarrier");
+const Hcarrier = require("../models/hcarrier");
 
 const test = (req, res, next) => {};
 
@@ -16,6 +18,12 @@ const updateCarrier = (req, res, next) => {
     .then((carrier) => {
       res.send(carrier);
       console.log("done");
+      if (req.body.c_status) {
+        Hcarrier.save({
+          mc_number: parseInt(req.params.mcNumber),
+          change: req.body.c_status,
+        });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -66,6 +74,11 @@ const assignDispatcher = (req, res, next) => {
     .then((result) => {
       console.log(result);
       res.send(result);
+      Hcarrier.save({
+        mc_number: req.params.mc,
+        truck_number: req.params.truckNumber,
+        change: "dispatcher assigned",
+      });
     })
     .catch((err) => {
       res.status(404).send(result);
