@@ -17,7 +17,6 @@ const carrierTableHead = [
   "Phone Number",
   "Email",
   "Sales Person",
-  "Dispatcher",
   "Status",
 ];
 
@@ -104,10 +103,9 @@ const Carriers = () => {
       <td>{item.mc_number}</td>
       <td>{item.company_name}</td>
       {/* <td style={{ maxWidth: "10vh" }}>{item.address}</td> */}
-      <td style={{ width: 100 }}>{item.phone_number}</td>
+      <td style={{ width: "200px" }}>{item.phone_number}</td>
       <td>{item.email}</td>
       <td>{item.salesman ? item.salesman.name : "N/A"}</td>
-      <td>{item.dispatcher ? item.dispatcher.name : "N/A"}</td>
       <td>
         {<Badge type={status_map[item.c_status]} content={item.c_status} />}
       </td>
