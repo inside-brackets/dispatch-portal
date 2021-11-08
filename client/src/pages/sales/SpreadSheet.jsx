@@ -137,7 +137,7 @@ const Customers = () => {
             // icon="bx bx-filter-alt"
             options={[
               { label: "Appointment ", value: "appointment" },
-              { label: "Registered ", value: "Registered" },
+              { label: "Registered ", value: "registered" },
               { label: "Rejected ", value: "rejected" },
               { label: "Deactivated ", value: "deactivated" },
             ]}

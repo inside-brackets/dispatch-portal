@@ -618,8 +618,8 @@ const TruckDetail = ({ match }) => {
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Vin Number:</Form.Label>
                       <Form.Control
-                        type="text"
-                        placeholder="Agent's Email"
+                        type="number"
+                        placeholder="Truck's Vin number"
                         value={vinNumber}
                         onChange={(e) => setVinNumber(e.target.value)}
                         required
@@ -633,8 +633,8 @@ const TruckDetail = ({ match }) => {
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Carry Limit:</Form.Label>
                       <Form.Control
-                        type="text"
-                        placeholder="Agent's Email"
+                        type="number"
+                        placeholder="carry limit"
                         value={carryLimit}
                         onChange={(e) => setCarryLimit(e.target.value)}
                       />
@@ -643,7 +643,7 @@ const TruckDetail = ({ match }) => {
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Temperature Restrictions:</Form.Label>
                       <Form.Control
-                        type="text"
+                        type="number"
                         placeholder="Temperature Restrictions"
                         value={temperatureRestrictions}
                         onChange={(e) =>
@@ -656,7 +656,7 @@ const TruckDetail = ({ match }) => {
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Trip Durration:</Form.Label>
                       <Form.Control
-                        type="text"
+                        type="number"
                         placeholder="Trip duration"
                         value={tripDurration}
                         onChange={(e) => setTripDurration(e.target.value)}

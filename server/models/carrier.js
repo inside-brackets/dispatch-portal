@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const mongooseHistory = require("mongoose-history");
 
 const carrierSchema = new mongoose.Schema(
   {
@@ -160,6 +159,4 @@ const carrierSchema = new mongoose.Schema(
     timeStamps: true,
   }
 );
-var options = { customCollectionName: "carrier_hst" };
-carrierSchema.plugin(mongooseHistory, options);
 module.exports = mongoose.model("Carrier", carrierSchema);
