@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Row } from "react-bootstrap";
 import Card from "../../components/cards/Card";
 import Input from "../../components/UI/MyInput";
-// import Badge from "../components/badge/Badge";
 import TruckTable from "../../components/table/TruckTable";
 import Button from "../../components/UI/Button";
 import Modal from "../../components/modals/MyModal";
