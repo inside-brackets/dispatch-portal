@@ -32,7 +32,9 @@ const InvoiceModal = ({
   setInvoices,
   closeModal,
 }) => {
-  const [dispatchFee, setDispatchFee] = useState(dispatcherFee);
+  const [dispatchFee, setDispatchFee] = useState(
+    invoice ? invoice.dispatcherFee : null
+  );
   const commentRef = useRef();
 
   const { _id: currUserId, user_name: currUserName } = useSelector(
@@ -102,18 +104,20 @@ const InvoiceModal = ({
   };
 
   const changeStatusHandler = async () => {
-    setModalHandler(false);
+    console.log("fee", dispatchFee);
     let res = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updateinvoice`,
+      `${process.env.REACT_APP_BACKEND_URL}/admin/clearinvoice`,
       {
         _id: invoice._id,
-        invoiceStatus: "cleared",
         dispatcherFee: dispatchFee,
+        mc_number: invoice.mc_number,
+        truck_number: invoice.truckNumber,
       }
     );
     setInvoices((prev) => {
       return prev.map((item) => (item._id === res.data._id ? res.data : item));
     });
+    setModalHandler(false);
   };
   const cancelledStatusHandler = async () => {
     setModalHandler(false);

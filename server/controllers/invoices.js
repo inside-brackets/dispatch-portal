@@ -46,13 +46,18 @@ const updateInvoiceStatus = async (req, res) => {
 const clearInvoice = async (req, res) => {
   console.log("updateInvoiceStatus");
   let mc_number = req.body.mc_number;
-  let truckNumber = req.body.truckNumber;
+  let truckNumber = req.body.truck_number;
   let previousInvoices = await Invoice.find({
     mc_number: mc_number,
     truckNumber: truckNumber,
     invoiceStatus: "cleared",
   });
-
+  console.log(
+    "previousInvoices.length",
+    previousInvoices,
+    mc_number,
+    truckNumber
+  );
   if (previousInvoices.length === 0) {
     // active carrier
     Carrier.updateOne(
@@ -83,6 +88,7 @@ const clearInvoice = async (req, res) => {
       {
         $set: {
           invoiceStatus: "cleared",
+          dispatcherFee: req.body.dispatcherFee,
         },
       },
       { new: true }
