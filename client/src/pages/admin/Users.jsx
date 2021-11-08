@@ -106,11 +106,11 @@ const Users = () => {
     <tr key={index}>
       <td>{index + 1}</td>
       <td>{item.user_name}</td>
-      <td>{item.phone_number}</td>
-      <td>{item.email_address}</td>
+      <td>{item.phone_number ? item.phone_number : "N/A"}</td>
+      <td>{item.email_address ? item.email_address : "N/A"}</td>
       <td>{item.designation}</td>
       <td>{item.department}</td>
-      <td>{moment(item.joining_date).formate("YYYY-MM-DD")}</td>
+      <td>{moment(item.joining_date).format("YYYY-MM-DD")}</td>
       <td>{item.salary}</td>
       <td>
         <div className="edit__class">
