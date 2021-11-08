@@ -257,6 +257,7 @@ const LoadTable = ({ truck_number, carrier }) => {
           truck_number={truck_number}
           carrier={carrier}
           loads={getLoads}
+          closeModal={() => setInvoiceModal(false)}
         />
       </Modal>
 

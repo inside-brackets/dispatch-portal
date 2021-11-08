@@ -30,6 +30,7 @@ const InvoiceModal = ({
   invoice,
   setModalHandler,
   setInvoices,
+  closeModal,
 }) => {
   const [dispatchFee, setDispatchFee] = useState(dispatcherFee);
   const commentRef = useRef();
@@ -93,18 +94,19 @@ const InvoiceModal = ({
 
     await axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/createinvoice`, obj)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        closeModal();
+      })
       .catch((err) => console.log(err));
   };
 
   const changeStatusHandler = async () => {
     setModalHandler(false);
     let res = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/dispatch/clearinvoice`,
+      `${process.env.REACT_APP_BACKEND_URL}/updateinvoice`,
       {
         _id: invoice._id,
-        mc_number: invoice.mc_number,
-        truckNumber: invoice.truckNumber,
         invoiceStatus: "cleared",
         dispatcherFee: dispatchFee,
       }
@@ -223,9 +225,10 @@ const InvoiceModal = ({
               style={{ width: "500px" }}
               placeholder="Add comments here"
               // value={comment}
-              // defaultValue={data.comment}
+              defaultValue={invoice ? invoice.comment : ""}
               // onChange={(e) => setComment(e.target.value)}
               ref={commentRef}
+              readOnly
             />
           </Form.Group>
         </Col>
