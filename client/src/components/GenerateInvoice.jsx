@@ -21,15 +21,12 @@ const GenerateInvoice = ({
   const { dispatcher_fee } = carrier;
   console.log(carrier);
   const search = () => {
-    console.log({
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    });
-
+    const to = new Date(endDate);
+    to.setDate(to.getDate() + 1);
     const filteredLoad = loads.filter((item) => {
       return (
         new Date(item.pick_up.date) >= new Date(startDate) &&
-        new Date(item.pick_up.date) <= new Date(endDate).addDays(1)
+        new Date(item.pick_up.date) <= to
       );
     });
 
@@ -48,16 +45,12 @@ const GenerateInvoice = ({
       }, 0);
     setGrossTotal(totalGross);
     if (dispatcher_fee <= 50) {
-      console.log("49", dispatcher_fee);
       setDispatcherFee((totalGross / 100) * dispatcher_fee);
     } else if (dispatcher_fee > 50 && dispatcher_fee <= 100) {
-      console.log("50-100", dispatcher_fee);
       setDispatcherFee(dispatcher_fee * parseInt(load.length));
     } else if (dispatcher_fee > 100) {
-      console.log("100+", dispatcher_fee);
       setDispatcherFee(dispatcher_fee);
     }
-    console.log(totalLoadedMiles, totalGross);
   };
   // console.log("Generatew Inovice", loads);
   const handleSelection = (ranges) => {
