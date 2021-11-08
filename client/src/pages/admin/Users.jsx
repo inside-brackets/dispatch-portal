@@ -7,7 +7,7 @@ import MyModal from "../../components/modals/MyModal";
 import NewUserForm from "../../components/Form/NewUserForm";
 import MySelect from "../../components/UI/MySelect";
 import Input from "../../components/UI/MyInput";
-
+import moment from "moment";
 const Users = () => {
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);
@@ -110,7 +110,7 @@ const Users = () => {
       <td>{item.email_address}</td>
       <td>{item.designation}</td>
       <td>{item.department}</td>
-      <td>{item.joining_date}</td>
+      <td>{moment(item.joining_date).formate("YYYY-MM-DD")}</td>
       <td>{item.salary}</td>
       <td>
         <div className="edit__class">
