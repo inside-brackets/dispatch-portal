@@ -29,7 +29,7 @@ const GenerateInvoice = ({
     const filteredLoad = loads.filter((item) => {
       return (
         new Date(item.pick_up.date) >= new Date(startDate) &&
-        new Date(item.pick_up.date) <= new Date(endDate)
+        new Date(item.pick_up.date) <= new Date(endDate).addDays(1)
       );
     });
 
