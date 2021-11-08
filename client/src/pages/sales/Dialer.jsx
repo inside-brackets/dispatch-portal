@@ -1,4 +1,3 @@
-// import { Button } from "@material-ui/core";
 import React, { useState, useEffect, useRef } from "react";
 import DialerCard from "../../components/cards/Card";
 import Modal from "../../components/modals/MyModal";
@@ -6,11 +5,8 @@ import Input from "../../components/UI/MyInput";
 import Loader from "react-loader-spinner";
 import useHttp from "../../hooks/use-https";
 import { useSelector } from "react-redux";
-
+import moment from "moment";
 import TextArea from "../../components/UI/TextArea";
-// import Table from "../components/table/Table";
-// import axios from "axios";
-// import Badge from "../components/badge/Badge";
 
 const Dialer = () => {
   const { user } = useSelector((state) => state.user);
@@ -156,6 +152,7 @@ const Dialer = () => {
             <Input
               type="datetime-local"
               label="Call back time:"
+              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm:ss")}
               ref={appointmentRef}
             />
             <TextArea

@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const Carrier = require("../models/carrier");
-const hcarrier = require("../models/hcarrier");
 const Hcarrier = require("../models/hcarrier");
-
-const test = (req, res, next) => {};
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
@@ -19,7 +16,7 @@ const updateCarrier = (req, res, next) => {
       res.send(carrier);
       console.log("done");
       if (req.body.c_status) {
-        Hcarrier.save({
+        Hcarrier.create({
           mc_number: parseInt(req.params.mcNumber),
           change: req.body.c_status,
         });
@@ -74,7 +71,7 @@ const assignDispatcher = (req, res, next) => {
     .then((result) => {
       console.log(result);
       res.send(result);
-      Hcarrier.save({
+      Hcarrier.create({
         mc_number: req.params.mc,
         truck_number: req.params.truckNumber,
         change: "dispatcher assigned",
