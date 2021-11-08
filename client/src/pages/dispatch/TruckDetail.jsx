@@ -336,9 +336,7 @@ const TruckDetail = ({ match }) => {
                       <TextArea
                         style={{ width: "500px" }}
                         placeholder="Comment.."
-                        // value={comment}
                         defaultValue={data.comment}
-                        // onChange={(e) => setComment(e.target.value)}
                         ref={commentRef}
                         readOnly
                       />
