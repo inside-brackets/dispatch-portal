@@ -159,4 +159,5 @@ const carrierSchema = new mongoose.Schema(
     timeStamps: true,
   }
 );
+
 module.exports = mongoose.model("Carrier", carrierSchema);
