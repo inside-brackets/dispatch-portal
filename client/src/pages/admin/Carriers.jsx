@@ -105,7 +105,8 @@ const Carriers = () => {
       {/* <td style={{ maxWidth: "10vh" }}>{item.address}</td> */}
       <td style={{ width: "200px" }}>{item.phone_number}</td>
       <td>{item.email}</td>
-      <td>{item.salesman ? item.salesman.name : "N/A"}</td>
+      <td>{item.salesman ? item.salesman.user_name : "N/A"}</td>
+     
       <td>
         {<Badge type={status_map[item.c_status]} content={item.c_status} />}
       </td>

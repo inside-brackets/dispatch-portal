@@ -95,10 +95,7 @@ const fetchLead = (req, res, next) => {
           { c_status: "unassigned" },
           {
             $set: {
-              salesman: {
-                _id: req.body._id,
-                name: req.body.name,
-              },
+              salesman: req.body._id,
               c_status: "unreached",
             },
           },
@@ -130,13 +127,15 @@ const getCarrier = (req, res, next) => {
 
 const getCarriers = (req, res, next) => {
   console.log("get carriers", req.body);
-
+  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } }
   const filter =
     req.body && Object.keys(req.body).length !== 0
       ? req.body
-      : { c_status: { $nin: ["unassigned", "rejected"] } };
-  Carrier.find(filter)
+      : defaultFilter;
+  
+  Carrier.find(filter).populate('salesman',{user_name:1})
     .then((result) => {
+      console.log(result);
       console.log(result.length);
       res.send(result);
     })

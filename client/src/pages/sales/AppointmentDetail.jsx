@@ -210,7 +210,7 @@ const AppointmentDetail = () => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          "salesman._id": currUserId,
+          "salesman": currUserId,
           mc_number: params.mc,
         },
       },

@@ -28,7 +28,7 @@ const Appointments = () => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          "salesman._id": currUserId,
+          "salesman": currUserId,
           c_status: "appointment",
         },
       },
