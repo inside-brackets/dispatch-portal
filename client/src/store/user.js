@@ -4,6 +4,7 @@ const initialState = {
   isAuthenticated: false,
   user: null,
   isAuthorized: true,
+  company:null,
 };
 
 const userSlice = createSlice({
@@ -14,6 +15,7 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload;
       state.isAuthorized = true;
+      state.company = { label: "Falcon", value: "falcon "}
     },
     logout(state, action) {
       state = initialState;
@@ -22,6 +24,9 @@ const userSlice = createSlice({
     unauthorize(state) {
       state.isAuthorized = false;
     },
+    changeCompany(state,action){
+      state.company = action.payload
+    }
   },
 });
 export const userActions = userSlice.actions;

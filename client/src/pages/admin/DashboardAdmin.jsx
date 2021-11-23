@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import Chart from "react-apexcharts";
 import StatusCard from "../../components/status-card/StatusCard";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import MySelect from "../../components/UI/MySelect";
+import { userActions } from "../../store/user";
 
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
@@ -13,6 +15,9 @@ const DashboardAdmin = () => {
   const [active, setActive] = useState(0);
   const [pending, setPending] = useState(0);
 
+  const {company:selectedCompany} = useSelector((state)=>state.user)
+  const dispatch = useDispatch();
+  
   const chartOptions = {
     series: [
       {
@@ -72,6 +77,25 @@ const DashboardAdmin = () => {
 
   return (
     <div>
+    <Row>
+      <MySelect
+        isMulti={false}
+        value={selectedCompany}
+        onChange={(option)=>{
+          dispatch(userActions.changeCompany(option))
+        }}
+        options={[
+          {
+            label: "Falcon", 
+            value: "falcon",
+        },
+       {
+            label: "MCQueen", 
+            value: "mcqueen",
+        }
+         ] }
+      />
+    </Row>
       <Row>
         <Col>
           <Card>
