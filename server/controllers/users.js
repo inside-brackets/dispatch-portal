@@ -15,6 +15,7 @@ const addNewUser = async (req, res) => {
     designation,
     date_of_birth,
     department,
+    company,
   } = req.body;
 
   let createUser = await User.create({
@@ -30,6 +31,7 @@ const addNewUser = async (req, res) => {
     address,
     designation,
     department,
+    company,
   });
   res.status(201);
   res.json({
