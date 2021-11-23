@@ -86,9 +86,10 @@ const assignDispatcher = (req, res, next) => {
 const fetchLead = (req, res, next) => {
   console.log("fetchLead", req.body);
   Carrier.findOne({
-    "salesman._id": mongoose.Types.ObjectId(req.body._id),
+    "salesman": mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
   })
+  .populate('salesman',{user_name:1})
     .then((result) => {
       if (result === null) {
         Carrier.findOneAndUpdate(
@@ -116,7 +117,7 @@ const fetchLead = (req, res, next) => {
 
 const getCarrier = (req, res, next) => {
   console.log("get carrier", req.body);
-  Carrier.findOne(req.body)
+  Carrier.findOne(req.body).populate('salesman',{user_name:1})
     .then((carriers) => {
       res.send(carriers);
     })
@@ -135,7 +136,6 @@ const getCarriers = (req, res, next) => {
   
   Carrier.find(filter).populate('salesman',{user_name:1})
     .then((result) => {
-      console.log(result);
       console.log(result.length);
       res.send(result);
     })
