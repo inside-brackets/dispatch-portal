@@ -56,6 +56,11 @@ const userSchema = new mongoose.Schema(
         read: Boolean,
       },
     ],
+    company: {
+      type: String,
+      enum: ["felcon", "mcqueen"],
+      required:true,
+    },
   },
   {
     timestamps: true,
