@@ -8,6 +8,8 @@ import Input from "../../components/UI/MyInput";
 import { Col, Row } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
+import { useSelector } from 'react-redux';
+
 
 const carrierTableHead = [
   "#",
@@ -34,6 +36,8 @@ const Carriers = () => {
   const searchRef = useRef();
   const [carriers, setCarriers] = useState([]);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
+
+  const { company:selectedCompany } = useSelector((state)=> state.user);
 
   // search
   const [searchedCarrier, setSearchedCarrier] = useState(null);
@@ -91,11 +95,13 @@ const Carriers = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
 
-        body: {},
+        body: {
+          company:selectedCompany.value
+        },
       },
       transformData
     );
-  }, [fetchCarriers]);
+  }, [fetchCarriers,selectedCompany]);
 
   const renderBody = (item, index) => (
     <tr key={index}>

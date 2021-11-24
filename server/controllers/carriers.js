@@ -129,13 +129,22 @@ const getCarrier = (req, res, next) => {
 const getCarriers = (req, res, next) => {
   console.log("get carriers", req.body);
   const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } }
-  const filter =
+  var filter = defaultFilter;
+  if(!req.body.company){
+    filter =
     req.body && Object.keys(req.body).length !== 0
-      ? req.body
+      ? { ...req.body, ...defaultFilter }
       : defaultFilter;
+  }
   
-  Carrier.find(filter).populate('salesman',{user_name:1})
+  
+  Carrier.find(filter).populate('salesman',{user_name:1,company:1})
     .then((result) => {
+      if(req.body.company){
+        const filteredResult = result.filter(carry => carry.salesman.company == req.body.company);
+        console.log(filteredResult.length);
+        return res.send(filteredResult);
+      }
       console.log(result.length);
       res.send(result);
     })
