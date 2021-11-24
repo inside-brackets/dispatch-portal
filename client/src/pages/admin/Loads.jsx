@@ -12,6 +12,8 @@ import moment from "moment";
 import EditButton from "../../components/UI/EditButton";
 import Badge from "../../components/badge/Badge";
 
+import { useSelector } from "react-redux";
+
 // import LoadTable from "../../components/table/LoadTable";
 
 const loadTableHead = [
@@ -43,7 +45,7 @@ const renderBody = (item, index) => (
     <td>{item.weight ? item.weight : "NA"}</td>
     <td>{item.miles ? item.miles : "NA"}</td>
     <td>{item.pay ? item.pay : "NA"}</td>
-    <td>{item.dispatcher.name ? item.dispatcher.name : "NA"}</td>
+    <td>{item.dispatcher.user_name ? item.dispatcher.user_name : "NA"}</td>
     <td>{item.broker ? item.broker : "NA"}</td>
     <td>
       {item.pick_up ? item.pick_up.address : "NA"} <br />{" "}
@@ -79,15 +81,19 @@ const renderBody = (item, index) => (
 
 const Loads = () => {
   const [loads, setLoads] = useState("");
+  const { company:selectedCompany } = useSelector((state)=> state.user);
+
   useEffect(() => {
     const fetchLoads = async () => {
       axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {})
+        .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
+            company:selectedCompany.value
+        })
         .then((res) => setLoads(res.data))
         .catch((err) => console.log(err));
     };
     fetchLoads();
-  }, []);
+  }, [selectedCompany]);
   //search
   const searchRef = useRef();
 
