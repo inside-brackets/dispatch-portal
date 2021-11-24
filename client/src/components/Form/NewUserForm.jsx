@@ -2,6 +2,9 @@ import axios from "axios";
 import { useState } from "react";
 import { Form, Col, Row, Button, InputGroup } from "react-bootstrap";
 
+import { useSelector } from 'react-redux';
+
+
 const NewUserForm = ({
   data,
   defaultValue,
@@ -29,6 +32,9 @@ const NewUserForm = ({
     defaultValue ? defaultValue.joining_date : null
   );
   const [sameName, setSameName] = useState(null);
+
+  const {company:selectedCompany} = useSelector((state)=>state.user)
+
 
   const onChangeHandler = (e) => {
     var sameName1 = data.find((item) => {
@@ -83,11 +89,13 @@ const NewUserForm = ({
             salary,
             designation,
             department,
+            company: selectedCompany.value,
           })
           .then((response) => {
             console.log("response", response);
             setRefresh(Math.random());
             setShowModal(false);
+            console.log(selectedCompany)
           })
           .catch((err) => {
             console.log(err);

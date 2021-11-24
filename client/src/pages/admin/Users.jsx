@@ -8,6 +8,7 @@ import NewUserForm from "../../components/Form/NewUserForm";
 import MySelect from "../../components/UI/MySelect";
 import Input from "../../components/UI/MyInput";
 import moment from "moment";
+
 const Users = () => {
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);
@@ -16,6 +17,7 @@ const Users = () => {
   const [editModal, setEditModal] = useState(false);
   const searchRef = useRef();
   const [searchedCarrier, setSearchedCarrier] = useState([]);
+  
   const search = (e) => {
     console.log("ref", searchRef);
     if (e.key === "Enter") {
