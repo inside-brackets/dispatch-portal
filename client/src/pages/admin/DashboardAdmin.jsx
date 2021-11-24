@@ -86,12 +86,12 @@ const DashboardAdmin = () => {
         }}
         options={[
           {
-            label: "Falcon", 
-            value: "falcon",
+            label: "Elite", 
+            value: "elite",
         },
        {
-            label: "MCQueen", 
-            value: "mcqueen",
+            label: "Alpha", 
+            value: "alpha",
         }
          ] }
       />

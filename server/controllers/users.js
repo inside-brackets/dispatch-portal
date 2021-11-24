@@ -67,6 +67,7 @@ const getUsers = (req, res, next) => {
     },
   })
     .then((users) => {
+      console.log(users);
       res.send(users);
     })
     .catch((err) => {
