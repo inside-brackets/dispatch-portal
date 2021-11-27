@@ -60,7 +60,11 @@ const Topnav = () => {
       <SearchBar className="topnav__search" placeholder="Search here..." />
       <div className="topnav__right">
         <div class="bd-brand-item">
-          <span class="h3">{company.value === "elite" ? "Elite Dispatch Service" : "Alpha Dispatch Solution"}</span>
+          <span class="h3">{
+            user.department === "admin" ? 
+            company.label 
+            : user.company === "elite" ? "Elite Dispatch Service" : "Alpha Dispatch Solution"
+        }</span>
         </div> 
         <div className="topnav__right-item">
           

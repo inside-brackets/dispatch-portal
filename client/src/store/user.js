@@ -15,7 +15,7 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload;
       state.isAuthorized = true;
-      state.company = { label: "Elite", value: "elite"}
+      state.company = { label: "Elite Dispatch Service", value: "elite"}
     },
     logout(state, action) {
       state = initialState;

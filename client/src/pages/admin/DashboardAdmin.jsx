@@ -30,7 +30,6 @@ const DashboardAdmin = () => {
     }else{
       color = "theme-color-red";
     }
-    localStorage.setItem("colorMode", color);
     dispatch(themeActions.setColor(color));
   }
 
@@ -94,6 +93,7 @@ const DashboardAdmin = () => {
         setPending(data.pendingTrucks);
       });
 
+ 
   }, [selectedCompany]);
 
   return (
