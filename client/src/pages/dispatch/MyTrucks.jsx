@@ -196,7 +196,7 @@ const MyTrucks = () => {
               <Card
                 style={{
                   width: "auto",
-                  minHeight: "300px",
+                  minHeight: "450px",
                 }}
               >
                 <Card.Body>
@@ -204,7 +204,12 @@ const MyTrucks = () => {
 
                   <hr />
                   <Card.Text className="">{body(item)}</Card.Text>
-                  <Card.Footer>
+                  <Card.Footer
+                    style={{
+                      width: "auto",
+                      minHeight: "100px",
+                    }}
+                  >
                     {item.out_of ? (
                       <div>
                         {`Next load : ${moment(new Date(item.next)).format(
