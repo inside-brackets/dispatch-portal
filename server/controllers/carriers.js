@@ -136,6 +136,9 @@ const getCarriers = (req, res, next) => {
       ? { ...req.body, ...defaultFilter }
       : defaultFilter;
   }
+  if(req.body.salesman && req.body.c_status){
+    filter = req.body;
+  }
   
   
   Carrier.find(filter).populate('salesman',{user_name:1,company:1})
