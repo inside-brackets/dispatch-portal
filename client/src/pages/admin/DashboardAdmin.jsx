@@ -7,6 +7,7 @@ import { useSelector,useDispatch } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 
+
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
 
@@ -16,6 +17,7 @@ const DashboardAdmin = () => {
   const [pending, setPending] = useState(0);
 
   const {company:selectedCompany} = useSelector((state)=>state.user)
+
   const dispatch = useDispatch();
   
   const chartOptions = {
@@ -64,7 +66,10 @@ const DashboardAdmin = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`,
+      {
+        company:selectedCompany.value,
+      })
       .then((res) => {
         console.log("response.data:", res.data);
         let data = res.data;
@@ -73,7 +78,7 @@ const DashboardAdmin = () => {
         setActive(data.activeTrucks);
         setPending(data.pendingTrucks);
       });
-  }, []);
+  }, [selectedCompany]);
 
   return (
     <div>

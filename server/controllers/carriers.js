@@ -268,29 +268,37 @@ const countCarriers = async (req, res, next) => {
     pendingTrucks: 0,
     total: 0,
   };
-  stats.total = await Carrier.countDocuments({});
+  var filteredCarrier = [];
+  await Carrier.find({c_status: { $nin: "unassigned" }})
+  .populate('salesman',{company:1})
+  .then(
+    async (carrier) => {
+      filteredCarrier = carrier.filter(carry => carry.salesman.company == req.body.company);
+      stats.total = await Carrier.countDocuments({});
+      const appointmentCarrier = filteredCarrier.filter(carry => carry.c_status == "appointment");
+      stats.appointments = appointmentCarrier.length;
 
-  stats.appointments = await Carrier.countDocuments({
-    c_status: "appointment",
-  });
-  registeredCarriers = await Carrier.find({ c_status: "registered" });
-  let pendingCount = 0;
-  let activeCount = 0;
-  registeredCarriers.forEach((carrier) => {
-    const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
-      ([pending, active, fail], item) =>
-        item.t_status === "pending"
-          ? [[...pending, item], active, fail]
-          : item.t_status === "active"
-          ? [pending, [...active, item], fail]
-          : [pending, active, [...fail, item]],
-      [[], [], []]
-    );
-    pendingCount += pendingTrucks.length;
-    activeCount += activeTrucks.length;
-  });
-  stats.pendingTrucks = pendingCount;
-  stats.activeTrucks = activeCount;
+      const registeredCarrier = filteredCarrier.filter(carry => carry.c_status == "registered");
+      let pendingCount = 0;
+      let activeCount = 0;
+      registeredCarrier.forEach((carrier) => {
+        const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
+          ([pending, active, fail], item) =>
+            item.t_status === "pending"
+              ? [[...pending, item], active, fail]
+              : item.t_status === "active"
+              ? [pending, [...active, item], fail]
+              : [pending, active, [...fail, item]],
+          [[], [], []]
+        );
+        pendingCount += pendingTrucks.length;
+        activeCount += activeTrucks.length;
+      });
+      
+      stats.pendingTrucks = pendingCount;
+      stats.activeTrucks = activeCount;
+    }
+  );
   console.log(stats);
   res.send(stats);
 };
