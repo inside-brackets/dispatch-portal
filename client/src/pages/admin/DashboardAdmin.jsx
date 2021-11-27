@@ -19,7 +19,7 @@ const DashboardAdmin = () => {
 
   const {company:selectedCompany} = useSelector((state)=>state.user)
 
-  const [currColor, setcurrColor] = useState("blue");
+  
 
   const dispatch = useDispatch();
   
@@ -30,7 +30,6 @@ const DashboardAdmin = () => {
     }else{
       color = "theme-color-red";
     }
-    setcurrColor(color);
     localStorage.setItem("colorMode", color);
     dispatch(themeActions.setColor(color));
   }
@@ -95,9 +94,6 @@ const DashboardAdmin = () => {
         setPending(data.pendingTrucks);
       });
 
-      const colorClass = localStorage.getItem("colorMode")
-
-      if (colorClass !== undefined) setcurrColor("theme-color-blue");
   }, [selectedCompany]);
 
   return (
@@ -112,11 +108,11 @@ const DashboardAdmin = () => {
         }}
         options={[
           {
-            label: "Elite", 
+            label: "Elite Dispatch Service", 
             value: "elite",
         },
        {
-            label: "Alpha", 
+            label: "Alpha Dispatch Solution", 
             value: "alpha",
         }
          ] }
