@@ -9,6 +9,7 @@ import axios from "axios";
 import MyModal from "../../components/modals/MyModal";
 import InvoiceModal from "../../components/modals/InvoiceModal";
 import Badge from "../../components/badge/Badge";
+import { useSelector } from 'react-redux';
 
 const invoiceTableHead = [
   "#",
@@ -31,6 +32,9 @@ const status_map = {
 
 const Invoice = () => {
   const renderHead = (item, index) => <th key={index}>{item}</th>;
+
+  const { company:selectedCompany } = useSelector((state)=> state.user);
+
 
   const renderBody = (item, index) => (
     <tr key={index}>
@@ -89,12 +93,14 @@ const Invoice = () => {
   useEffect(() => {
     const fetchLoads = async () => {
       axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/getinvoices`, {})
+        .post(`${process.env.REACT_APP_BACKEND_URL}/getinvoices`, {
+          company:selectedCompany.value,
+        })
         .then((res) => setInvoices(res.data))
         .catch((err) => console.log(err));
     };
     fetchLoads();
-  }, []);
+  }, [selectedCompany]);
   //Search
   const searchRef = useRef();
   const [searchedCarrier, setSearchedCarrier] = useState([]);
