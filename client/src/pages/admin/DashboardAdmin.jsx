@@ -132,7 +132,7 @@ const DashboardAdmin = () => {
           <Row>
             <Col>
               <StatusCard
-                title="Total Active"
+                title="Active Trucks"
                 icon="bx bx-line-chart"
                 count={active}
               />
@@ -148,7 +148,7 @@ const DashboardAdmin = () => {
           <Row>
             <Col>
               <StatusCard
-                title="Pendings"
+                title="Pendings Trucks"
                 icon="bx bx-time-five"
                 count={pending}
               />

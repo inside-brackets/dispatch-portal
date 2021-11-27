@@ -66,7 +66,6 @@ const renderBody = (item, index) => (
 
     <td>
       <div className="edit__class">
-        <EditButton type="edit" />
         <EditButton
           type="view"
           onClick={() => {
