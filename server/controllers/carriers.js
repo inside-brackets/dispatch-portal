@@ -139,6 +139,10 @@ const getCarriers = (req, res, next) => {
   if(req.body.salesman && req.body.c_status){
     filter = req.body;
   }
+  if(req.body.c_status === "registered"){
+    const { company, ...newFilter } = req.body;
+    filter = newFilter;
+  }
   
   
   Carrier.find(filter).populate('salesman',{user_name:1,company:1})

@@ -33,6 +33,8 @@ const AssignSales = () => {
   // const dispatchRef = useRef();
   const [selectedDispatcher, setSelectedDispatcher] = useState([]);
 
+  const { company:selectedCompany } = useSelector((state)=> state.user);
+
   const onAssign = async (mc, truckNumber) => {
     console.log(selectedDispatcher);
     if (selectedDispatcher.length === 0) return;
@@ -85,11 +87,12 @@ const AssignSales = () => {
 
         body: {
           department: "dispatch",
+          company: selectedCompany.value,
         },
       },
       transformDispatch
     );
-  }, [fetchDispatchers, fetchCarriers, dispatch]);
+  }, [fetchDispatchers, fetchCarriers, dispatch,selectedCompany]);
 
   const renderBody = (item, index) => (
     <tr key={index}>
