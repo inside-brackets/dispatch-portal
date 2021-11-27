@@ -6,6 +6,7 @@ import StatusCard from "../../components/status-card/StatusCard";
 import { useSelector,useDispatch } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
+import { themeActions } from "../../store/theme";
 
 
 const DashboardAdmin = () => {
@@ -18,8 +19,23 @@ const DashboardAdmin = () => {
 
   const {company:selectedCompany} = useSelector((state)=>state.user)
 
+  const [currColor, setcurrColor] = useState("blue");
+
   const dispatch = useDispatch();
   
+  const setColor = (option) => {
+    var color = "theme-color-blue"
+    if(option.value === "elite"){
+      color = "theme-color-blue";
+    }else{
+      color = "theme-color-red";
+    }
+    setcurrColor(color);
+    localStorage.setItem("colorMode", color);
+    dispatch(themeActions.setColor(color));
+  }
+
+
   const chartOptions = {
     series: [
       {
@@ -78,6 +94,10 @@ const DashboardAdmin = () => {
         setActive(data.activeTrucks);
         setPending(data.pendingTrucks);
       });
+
+      const colorClass = localStorage.getItem("colorMode")
+
+      if (colorClass !== undefined) setcurrColor("theme-color-blue");
   }, [selectedCompany]);
 
   return (
@@ -87,7 +107,8 @@ const DashboardAdmin = () => {
         isMulti={false}
         value={selectedCompany}
         onChange={(option)=>{
-          dispatch(userActions.changeCompany(option))
+          dispatch(userActions.changeCompany(option));
+          setColor(option);
         }}
         options={[
           {
