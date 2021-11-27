@@ -45,7 +45,7 @@ const TruckTable = (props) => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          "salesman._id": currUserId,
+          "salesman": currUserId,
           mc_number: mc,
         },
       },
