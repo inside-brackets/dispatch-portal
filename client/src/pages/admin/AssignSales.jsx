@@ -72,6 +72,7 @@ const AssignSales = () => {
         body: {
           c_status: "registered",
           "trucks.t_status": "new",
+          company:selectedCompany.value,
         },
       },
       transformData
