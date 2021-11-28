@@ -51,7 +51,7 @@ const Carriers = () => {
           searchValue = searchValue.toLowerCase();
           if (
             carrier.salesman &&
-            carrier.salesman.name.toLowerCase() === searchValue
+            carrier.salesman.user_name.toLowerCase() === searchValue
           ) {
             return true;
           } else if (carrier.dispatcher) {
