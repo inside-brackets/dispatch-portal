@@ -8,8 +8,7 @@ import Input from "../../components/UI/MyInput";
 import { Col, Row } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 const carrierTableHead = [
   "#",
@@ -37,32 +36,63 @@ const Carriers = () => {
   const [carriers, setCarriers] = useState([]);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
 
-  const { company:selectedCompany } = useSelector((state)=> state.user);
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
   // search
   const [searchedCarrier, setSearchedCarrier] = useState(null);
   const search = (e) => {
     if (e.key === "Enter") {
       var searchValue = searchRef.current.value.trim();
-      const searched = carriers.find((carrier) => {
+      // const searched = carriers.find((carrier) => {
+      //   if (!isNaN(searchValue)) {
+      //     return carrier.mc_number === parseInt(searchRef.current.value.trim());
+      //   } else {
+      //     searchValue = searchValue.toLowerCase();
+      //     if (
+      //       carrier.salesman &&
+      //       carrier.salesman.user_name.toLowerCase() === searchValue
+      //     ) {
+      //       return true;
+      //     } else if (carrier.dispatcher) {
+      //       return carrier.dispatcher.name.toLowerCase() === searchValue;
+      //     }
+      //     return false;
+      //   }
+      // });
+
+      // var searched = [];
+      // if (!isNaN(searchValue)) {
+      //   searched = carriers.filter((carry) => carry.mc_number === searchValue);
+      // } else {
+      //   searched = carriers.filter(
+      //     (carry) => carry.salesman.user_name === searchValue
+      //   );
+      //   if (!searched.length) {
+      //     searched = carriers.filter(
+      //       (carry) => carry.dispatcher.name === searchValue
+      //     );
+      //   }
+      // }
+
+      const searched = carriers.filter((carrier) => {
         if (!isNaN(searchValue)) {
           return carrier.mc_number === parseInt(searchRef.current.value.trim());
         } else {
           searchValue = searchValue.toLowerCase();
-          if (
-            carrier.salesman &&
-            carrier.salesman.user_name.toLowerCase() === searchValue
-          ) {
-            return true;
-          } else if (carrier.dispatcher) {
-            return carrier.dispatcher.name.toLowerCase() === searchValue;
+          if (carrier.salesman) {
+            return carrier.salesman.user_name.toLowerCase() === searchValue;
+          } else if (carrier.trucks.length) {
+            return carrier.trucks.filter(
+              (truck) => truck.dispatcher.name.toLowerCase() === searchValue
+            );
           }
           return false;
         }
       });
 
-      if (searched) {
+      if (searched.length) {
         setSearchedCarrier(searched);
+        console.log(searched);
       } else {
         setSearchedCarrier(null);
       }
@@ -96,12 +126,12 @@ const Carriers = () => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          company:selectedCompany.value
+          company: selectedCompany.value,
         },
       },
       transformData
     );
-  }, [fetchCarriers,selectedCompany]);
+  }, [fetchCarriers, selectedCompany]);
 
   const renderBody = (item, index) => (
     <tr key={index}>
@@ -112,7 +142,7 @@ const Carriers = () => {
       <td style={{ width: "200px" }}>{item.phone_number}</td>
       <td>{item.email}</td>
       <td>{item.salesman ? item.salesman.user_name : "N/A"}</td>
-     
+
       <td>
         {<Badge type={status_map[item.c_status]} content={item.c_status} />}
       </td>
