@@ -11,7 +11,7 @@ import { userActions } from "../../store/user";
 // import notifications from "../../assets/JsonData/notification.json";
 
 const Topnav = () => {
-  const { user,company } = useSelector((state) => state.user);
+  const { user, company } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const logout = () => {
     dispatch(
@@ -60,14 +60,15 @@ const Topnav = () => {
       <SearchBar className="topnav__search" placeholder="Search here..." />
       <div className="topnav__right">
         <div class="bd-brand-item">
-          <span class="h3">{
-            user.department === "admin" ? 
-            company.label 
-            : user.company === "elite" ? "Elite Dispatch Service" : "Alpha Dispatch Solution"
-        }</span>
-        </div> 
+          <span class="h3">
+            {user.department === "admin"
+              ? company.label
+              : user.company === "elite"
+              ? "Elite Dispatch Service"
+              : "Alpha Dispatch Solution"}
+          </span>
+        </div>{" "}
         <div className="topnav__right-item">
-          
           {/* dropdown here */}
           <Dropdown
             customToggle={() => renderUserToggle(curr_user)}
@@ -85,7 +86,6 @@ const Topnav = () => {
             renderFooter={() => <Link to="/">View All</Link>}
           />
         </div> */}
-        
         <div className="topnav__right-item">
           <ThemeMenu />
         </div>
