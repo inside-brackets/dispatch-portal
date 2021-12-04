@@ -61,13 +61,9 @@ const Topnav = () => {
       <div className="topnav__right">
         <div class="bd-brand-item">
           <span class="h3">
-            {user.department === "admin"
-              ? company.label
-              : user.company === "elite"
-              ? "Elite Dispatch Service"
-              : "Alpha Dispatch Solution"}
+            {user.department === "admin" ? company.label : ""}
           </span>
-        </div>{" "}
+        </div>
         <div className="topnav__right-item">
           {/* dropdown here */}
           <Dropdown

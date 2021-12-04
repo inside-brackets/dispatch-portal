@@ -92,7 +92,6 @@ const Carriers = () => {
 
       if (searched.length) {
         setSearchedCarrier(searched);
-        console.log(searched);
       } else {
         setSearchedCarrier(null);
       }
@@ -206,10 +205,10 @@ const Carriers = () => {
             <div className="card__body">
               {searchedCarrier && !filteredCarrier && (
                 <Table
-                  key={searchedCarrier.mc_number}
+                  key={Math.random()}
                   headData={carrierTableHead}
                   renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={[searchedCarrier]}
+                  bodyData={searchedCarrier}
                   renderBody={(item, index) => renderBody(item, index)}
                 />
               )}
@@ -228,6 +227,15 @@ const Carriers = () => {
                   headData={carrierTableHead}
                   renderHead={(item, index) => renderHead(item, index)}
                   bodyData={carriers}
+                  renderBody={(item, index) => renderBody(item, index)}
+                />
+              )}
+              {searchedCarrier && filteredCarrier && (
+                <Table
+                  key={Math.random()}
+                  headData={carrierTableHead}
+                  renderHead={(item, index) => renderHead(item, index)}
+                  bodyData={[]}
                   renderBody={(item, index) => renderBody(item, index)}
                 />
               )}
