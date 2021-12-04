@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -37,9 +37,20 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
 
   const dispatch = useDispatch();
 
-  const [lstatus, setLstatus] = useState(
-    defaultValue ? defaultValue.l_status : ""
-  );
+  const [lstatus, setLstatus] = useState();
+  useEffect(()=>{
+    if(defaultValue.l_status === "booked"){
+      setLstatus({ label: "Booked ", value: "booked" })
+    }else if(defaultValue.l_status === "ongoing"){
+      setLstatus({ label: "Ongoing ", value: "ongoing" })
+    }else if(defaultValue.l_status === "delivered"){
+      setLstatus({ label: "Delivered ", value: "delivered" })
+    }else if(defaultValue.l_status === "canceled"){
+      setLstatus({ label:"Canceled", value: "canceled" })
+    }
+  },[defaultValue.l_status])
+  
+
   const { _id: currUserId, user_name: currUserName } = useSelector(
     (state) => state.user.user
   );
@@ -325,6 +336,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
           </Form.Group>
         </Row>
         {defaultValue && (
+          
           <MySelect
             label="Status:"
             isMulti={false}
