@@ -39,16 +39,19 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
 
   const [lstatus, setLstatus] = useState();
   useEffect(()=>{
-    if(defaultValue.l_status === "booked"){
-      setLstatus({ label: "Booked ", value: "booked" })
-    }else if(defaultValue.l_status === "ongoing"){
-      setLstatus({ label: "Ongoing ", value: "ongoing" })
-    }else if(defaultValue.l_status === "delivered"){
-      setLstatus({ label: "Delivered ", value: "delivered" })
-    }else if(defaultValue.l_status === "canceled"){
-      setLstatus({ label:"Canceled", value: "canceled" })
+    if(defaultValue){
+      if(defaultValue.l_status === "booked"){
+        setLstatus({ label: "Booked ", value: "booked" })
+      }else if(defaultValue.l_status === "ongoing"){
+        setLstatus({ label: "Ongoing ", value: "ongoing" })
+      }else if(defaultValue.l_status === "delivered"){
+        setLstatus({ label: "Delivered ", value: "delivered" })
+      }else if(defaultValue.l_status === "canceled"){
+        setLstatus({ label:"Canceled", value: "canceled" })
+      }
     }
-  },[defaultValue.l_status])
+    
+  },[defaultValue])
   
 
   const { _id: currUserId, user_name: currUserName } = useSelector(
