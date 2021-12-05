@@ -26,7 +26,6 @@ const AssignSales = () => {
   // const [carriers, setCarriers] = useState([]);
   const { carriers } = useSelector((state) => state.sales);
   const dispatch = useDispatch();
-  console.log("carriers", carriers);
   const [dispatchers, setDispatchers] = useState([]);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   const { sendRequest: fetchDispatchers } = useHttp();
