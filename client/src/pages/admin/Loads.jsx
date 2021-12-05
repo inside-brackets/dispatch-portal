@@ -80,13 +80,13 @@ const renderBody = (item, index) => (
 
 const Loads = () => {
   const [loads, setLoads] = useState("");
-  const { company:selectedCompany } = useSelector((state)=> state.user);
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchLoads = async () => {
       axios
         .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
-            company:selectedCompany.value
+          company: selectedCompany.value,
         })
         .then((res) => setLoads(res.data))
         .catch((err) => console.log(err));
@@ -107,6 +107,7 @@ const Loads = () => {
           searchValue = searchValue.toLowerCase();
           if (load.broker.toLowerCase().includes(searchValue.toLowerCase())) {
             return true;
+            // return load.broker === searchRef.current.value.trim();
           }
           return false;
         }

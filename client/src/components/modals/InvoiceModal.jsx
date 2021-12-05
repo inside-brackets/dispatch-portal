@@ -232,6 +232,7 @@ const InvoiceModal = ({
               defaultValue={invoice ? invoice.comment : ""}
               // onChange={(e) => setComment(e.target.value)}
               ref={commentRef}
+              readOnly
             />
           </Form.Group>
         </Col>

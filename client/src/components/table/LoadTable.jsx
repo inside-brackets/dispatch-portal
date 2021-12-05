@@ -194,7 +194,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         <Col>
           <Input
             type="text"
-            placeholder="Load Number / Broker"
+            placeholder="Load Number / Br"
             icon="bx bx-search"
             ref={searchRef}
             onKeyDown={search}
