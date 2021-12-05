@@ -29,6 +29,7 @@ const Profile = () => {
 
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
+
     if (!oldPassword && !newPassword && !confirmPassword) {
       setError("Please fill all fields");
     } else if (oldPassword !== user.password) {
