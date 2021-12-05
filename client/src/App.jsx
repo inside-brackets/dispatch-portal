@@ -5,6 +5,7 @@ import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "./store/user";
+import { themeActions } from "./store/theme";
 import { socket } from "./index";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -51,13 +52,19 @@ const App = () => {
       });
     });
 
+
+    
+
     var user = localStorage.getItem("user");
     if (user) {
+     
       user = JSON.parse(user);
       socket.on("backend-notify", (msg) => {
         if (user.department === "admin") {
           notify(msg);
           sound.play();
+          // fetch selectedCompany and set colors
+          
         }
       });
       socket.on("sale-closed", (msg) => {
@@ -66,7 +73,25 @@ const App = () => {
           sound.play();
         }
       });
-      dispatch(userActions.login(user));
+      if(user.department === "admin"){
+        var selectedCompany = localStorage.getItem("selectedCompany");
+        if(selectedCompany){
+          dispatch(userActions.login({user,company:JSON.parse(selectedCompany)}));
+          var color = JSON.parse(selectedCompany).value === "elite" ?  "theme-color-blue" : "theme-color-red"
+          dispatch(themeActions.setColor(color));
+        }else{
+          dispatch(userActions.login({user,company:{
+            label: "Elite Dispatch Service", 
+            value: "elite",
+          }}));
+        }
+      }else{
+        dispatch(userActions.login({user,company:{
+          label: "Elite Dispatch Service", 
+          value: "elite",
+        }}));
+      }
+      
     }
   }, [dispatch, history]);
   return (

@@ -23,15 +23,7 @@ const DashboardAdmin = () => {
 
   const dispatch = useDispatch();
   
-  const setColor = (option) => {
-    var color = "theme-color-blue"
-    if(option.value === "elite"){
-      color = "theme-color-blue";
-    }else{
-      color = "theme-color-red";
-    }
-    dispatch(themeActions.setColor(color));
-  }
+    
 
 
   const chartOptions = {
@@ -79,6 +71,7 @@ const DashboardAdmin = () => {
   };
 
   useEffect(() => {
+    console.log("selected company", selectedCompany)
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`,
       {
@@ -104,7 +97,9 @@ const DashboardAdmin = () => {
         value={selectedCompany}
         onChange={(option)=>{
           dispatch(userActions.changeCompany(option));
-          setColor(option);
+          var color = option.value === "elite" ? "theme-color-blue" :"theme-color-red"
+          dispatch(themeActions.setColor(color));
+          localStorage.setItem("selectedCompany",JSON.stringify(option));
         }}
         options={[
           {
