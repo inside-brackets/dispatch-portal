@@ -33,7 +33,7 @@ const AssignSales = () => {
   // const dispatchRef = useRef();
   const [selectedDispatcher, setSelectedDispatcher] = useState([]);
 
-  const { company:selectedCompany } = useSelector((state)=> state.user);
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
   const onAssign = async (mc, truckNumber) => {
     console.log(selectedDispatcher);
@@ -72,7 +72,7 @@ const AssignSales = () => {
         body: {
           c_status: "registered",
           "trucks.t_status": "new",
-          company:selectedCompany.value,
+          company: selectedCompany.value,
         },
       },
       transformData
@@ -93,7 +93,7 @@ const AssignSales = () => {
       },
       transformDispatch
     );
-  }, [fetchDispatchers, fetchCarriers, dispatch,selectedCompany]);
+  }, [fetchDispatchers, fetchCarriers, dispatch, selectedCompany]);
 
   const renderBody = (item, index) => (
     <tr key={index}>
@@ -103,6 +103,7 @@ const AssignSales = () => {
       <td>{item.truck_number}</td>
       <td>{item.trailer_type}</td>
       <td>{item.salesman ? item.salesman : "N/A"}</td>
+      {/* <td>{item.salesman}</td> */}
       <td>
         <Button
           buttonText="Assign"
