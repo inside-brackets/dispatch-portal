@@ -52,7 +52,7 @@ const carrierSchema = new mongoose.Schema(
     },
     salesman: {
       type: mongoose.Types.ObjectId,
-      ref: "User" 
+      ref: "User",
     },
     factoring: {
       name: String,
