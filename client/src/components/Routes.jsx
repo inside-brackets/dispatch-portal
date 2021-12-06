@@ -32,6 +32,9 @@ const Routes = () => {
   const [refresh, setRefresh] = useState(true);
   const dispatch = useDispatch();
   const { sendRequest: fetchCarriers } = useHttp();
+
+  const { company:selectedCompany } = useSelector((state)=>state.user);
+
   socket.on("sale-closed", (msg) => {
     if (department === "admin") {
       setRefresh((prev) => !prev);
@@ -53,12 +56,13 @@ const Routes = () => {
           body: {
             c_status: "registered",
             "trucks.t_status": "new",
+            company:selectedCompany.value,
           },
         },
         transformData
       );
     }
-  }, [dispatch, department, fetchCarriers, refresh]);
+  }, [dispatch, department, fetchCarriers, refresh, selectedCompany ]);
   return department === "sales" ? (
     <Switch>
       <Route path="/" exact>

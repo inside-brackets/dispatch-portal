@@ -51,8 +51,8 @@ const carrierSchema = new mongoose.Schema(
       type: Date,
     },
     salesman: {
-      _id: { type: mongoose.Types.ObjectId, ref: "User" },
-      name: String,
+      type: mongoose.Types.ObjectId,
+      ref: "User" 
     },
     factoring: {
       name: String,

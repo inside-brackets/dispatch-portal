@@ -13,12 +13,23 @@ const addNewInvoice = async (req, res) => {
 };
 
 const getInvoices = (req, res, next) => {
-  Invoice.find(req.body, null, {
+  var filter = req.body;
+  if(req.body.company){
+    const { company, ...newFilter } = req.body;
+    filter = newFilter;
+  }
+
+  Invoice.find(filter, null, {
     sort: {
       createdAt: -1, //Sort by Date Added DESC
     },
-  })
+  }).populate('dispatcher._id',{company:1})
     .then((invoices) => {
+      if(req.body.company){
+        console.log("if company:",invoices);
+        const filteredInvoices = invoices.filter(invoice=> invoice.dispatcher._id.company == req.body.company);
+        return res.send(filteredInvoices);
+      }
       res.send(invoices);
     })
     .catch((err) => {

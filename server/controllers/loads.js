@@ -59,12 +59,21 @@ const addNewLoad = async (req, res) => {
 };
 
 const getLoads = (req, res, next) => {
-  Load.find(req.body, null, {
+  var filter = req.body;
+  if(req.body.company){
+    filter = {}
+  }
+
+  Load.find(filter, null, {
     sort: {
       "drop.date": -1, //Sort by Date Added DESC
     },
-  })
+  }).populate('dispatcher',{user_name:1,company:1})
     .then((loads) => {
+      if(req.body.company){
+        const filteredLoads = loads.filter(load=> load.dispatcher.company == req.body.company);
+        return res.send(filteredLoads);
+      }
       res.send(loads);
     })
     .catch((err) => {

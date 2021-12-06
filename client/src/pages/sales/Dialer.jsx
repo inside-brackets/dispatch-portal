@@ -90,7 +90,6 @@ const Dialer = () => {
         headers: { "Content-Type": "application/json" },
         body: {
           _id: user._id,
-          name: user.user_name,
         },
       },
       transformData

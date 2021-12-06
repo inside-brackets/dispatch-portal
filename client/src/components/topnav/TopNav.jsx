@@ -11,7 +11,7 @@ import { userActions } from "../../store/user";
 // import notifications from "../../assets/JsonData/notification.json";
 
 const Topnav = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user, company } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const logout = () => {
     dispatch(
@@ -59,6 +59,11 @@ const Topnav = () => {
     <div className="topnav">
       <SearchBar className="topnav__search" placeholder="Search here..." />
       <div className="topnav__right">
+        <div class="bd-brand-item">
+          <span class="h3">
+            {user.department === "admin" ? company.label : ""}
+          </span>
+        </div>
         <div className="topnav__right-item">
           {/* dropdown here */}
           <Dropdown
@@ -68,6 +73,7 @@ const Topnav = () => {
           />
         </div>
         {/* <div className="topnav__right-item">
+           
           <Dropdown
             icon="bx bx-bell"
             badge="12"

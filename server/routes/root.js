@@ -32,7 +32,7 @@ route.post("/uploadfile/:type/:id", (req, res) => {
   res.send(`/${req.files[0].path.replace(/\\/g, "/")}`);
   console.log(req);
 });
-route.get("/countcarriers", carriersController.countCarriers);
+route.post("/countcarriers", carriersController.countCarriers);
 route.post("/whitelist/:mac/:ip", (req, res) => {
   setIp(req.params.mac, req.params.ip);
   console.log("ip list", getIpList());

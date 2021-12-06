@@ -26,12 +26,13 @@ const AssignSales = () => {
   // const [carriers, setCarriers] = useState([]);
   const { carriers } = useSelector((state) => state.sales);
   const dispatch = useDispatch();
-  console.log("carriers", carriers);
   const [dispatchers, setDispatchers] = useState([]);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   const { sendRequest: fetchDispatchers } = useHttp();
   // const dispatchRef = useRef();
   const [selectedDispatcher, setSelectedDispatcher] = useState([]);
+
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
   const onAssign = async (mc, truckNumber) => {
     console.log(selectedDispatcher);
@@ -70,6 +71,7 @@ const AssignSales = () => {
         body: {
           c_status: "registered",
           "trucks.t_status": "new",
+          company: selectedCompany.value,
         },
       },
       transformData
@@ -85,11 +87,12 @@ const AssignSales = () => {
 
         body: {
           department: "dispatch",
+          company: selectedCompany.value,
         },
       },
       transformDispatch
     );
-  }, [fetchDispatchers, fetchCarriers, dispatch]);
+  }, [fetchDispatchers, fetchCarriers, dispatch, selectedCompany]);
 
   const renderBody = (item, index) => (
     <tr key={index}>
@@ -99,6 +102,7 @@ const AssignSales = () => {
       <td>{item.truck_number}</td>
       <td>{item.trailer_type}</td>
       <td>{item.salesman ? item.salesman : "N/A"}</td>
+      {/* <td>{item.salesman}</td> */}
       <td>
         <Button
           buttonText="Assign"

@@ -17,9 +17,9 @@ const loadSchema = new mongoose.Schema(
     ratecons: {
       type: String,
     },
-    dispatcher: {
-      _id: { type: mongoose.Types.ObjectId, ref: "User" },
-      name: String,
+    dispatcher: { 
+      type: mongoose.Types.ObjectId,
+      ref: "User" 
     },
     broker: String, // broker name
     pick_up: { address: String, date: Date },

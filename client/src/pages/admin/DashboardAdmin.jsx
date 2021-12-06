@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import Chart from "react-apexcharts";
 import StatusCard from "../../components/status-card/StatusCard";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import MySelect from "../../components/UI/MySelect";
+import { userActions } from "../../store/user";
+import { themeActions } from "../../store/theme";
+
 
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
@@ -12,6 +16,15 @@ const DashboardAdmin = () => {
   const [appointment, setAppointment] = useState(0);
   const [active, setActive] = useState(0);
   const [pending, setPending] = useState(0);
+
+  const {company:selectedCompany} = useSelector((state)=>state.user)
+
+  
+
+  const dispatch = useDispatch();
+  
+    
+
 
   const chartOptions = {
     series: [
@@ -58,8 +71,12 @@ const DashboardAdmin = () => {
   };
 
   useEffect(() => {
+    console.log("selected company", selectedCompany)
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`)
+      .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`,
+      {
+        company:selectedCompany.value,
+      })
       .then((res) => {
         console.log("response.data:", res.data);
         let data = res.data;
@@ -68,10 +85,34 @@ const DashboardAdmin = () => {
         setActive(data.activeTrucks);
         setPending(data.pendingTrucks);
       });
-  }, []);
+
+ 
+  }, [selectedCompany]);
 
   return (
     <div>
+    <Row>
+      <MySelect
+        isMulti={false}
+        value={selectedCompany}
+        onChange={(option)=>{
+          dispatch(userActions.changeCompany(option));
+          var color = option.value === "elite" ? "theme-color-blue" :"theme-color-red"
+          dispatch(themeActions.setColor(color));
+          localStorage.setItem("selectedCompany",JSON.stringify(option));
+        }}
+        options={[
+          {
+            label: "Elite Dispatch Service", 
+            value: "elite",
+        },
+       {
+            label: "Alpha Dispatch Solution", 
+            value: "alpha",
+        }
+         ] }
+      />
+    </Row>
       <Row>
         <Col>
           <Card>
@@ -103,7 +144,7 @@ const DashboardAdmin = () => {
           <Row>
             <Col>
               <StatusCard
-                title="Total Active"
+                title="Active Trucks"
                 icon="bx bx-line-chart"
                 count={active}
               />
@@ -119,7 +160,7 @@ const DashboardAdmin = () => {
           <Row>
             <Col>
               <StatusCard
-                title="Pendings"
+                title="Pendings Trucks"
                 icon="bx bx-time-five"
                 count={pending}
               />

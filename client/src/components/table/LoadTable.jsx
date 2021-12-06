@@ -49,7 +49,7 @@ const LoadTable = ({ truck_number, carrier }) => {
 
   //Search
   const searchRef = useRef();
-  const [searchedCarrier, setSearchedCarrier] = useState([]);
+  const [searchedCarrier, setSearchedCarrier] = useState(null);
   const search = (e) => {
     if (e.key === "Enter") {
       var searchValue = searchRef.current.value.trim();
@@ -67,7 +67,7 @@ const LoadTable = ({ truck_number, carrier }) => {
       if (searched.length !== 0) {
         setSearchedCarrier(searched);
       } else {
-        setSearchedCarrier([]);
+        setSearchedCarrier(null);
       }
     }
   };
@@ -194,7 +194,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         <Col>
           <Input
             type="text"
-            placeholder="Load Number / Broker"
+            placeholder="Load Number / Br"
             icon="bx bx-search"
             ref={searchRef}
             onKeyDown={search}
@@ -217,7 +217,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         /
         <div className="card">
           <div className="card__body">
-            {searchedCarrier.length !== 0 && !filteredCarrier && (
+            {searchedCarrier && !filteredCarrier && (
               <Table
                 key={Math.random()}
                 headData={customerTableHead}
@@ -226,7 +226,7 @@ const LoadTable = ({ truck_number, carrier }) => {
                 renderBody={(item, index) => renderBody(item, index)}
               />
             )}
-            {searchedCarrier.length === 0 && filteredCarrier && (
+            {!searchedCarrier && filteredCarrier && (
               <Table
                 key={filteredCarrier.length}
                 headData={customerTableHead}
@@ -235,12 +235,21 @@ const LoadTable = ({ truck_number, carrier }) => {
                 renderBody={(item, index) => renderBody(item, index)}
               />
             )}
-            {searchedCarrier.length === 0 && !filteredCarrier && (
+            {!searchedCarrier && !filteredCarrier && (
               <Table
                 key={Math.random()}
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 bodyData={getLoads}
+                renderBody={(item, index) => renderBody(item, index)}
+              />
+            )}
+            {searchedCarrier && filteredCarrier && (
+              <Table
+                key={Math.random()}
+                headData={customerTableHead}
+                renderHead={(item, index) => renderHead(item, index)}
+                bodyData={[]}
                 renderBody={(item, index) => renderBody(item, index)}
               />
             )}

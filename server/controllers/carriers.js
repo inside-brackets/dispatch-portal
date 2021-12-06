@@ -86,19 +86,17 @@ const assignDispatcher = (req, res, next) => {
 const fetchLead = (req, res, next) => {
   console.log("fetchLead", req.body);
   Carrier.findOne({
-    "salesman._id": mongoose.Types.ObjectId(req.body._id),
+    "salesman": mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
   })
+  .populate('salesman',{user_name:1})
     .then((result) => {
       if (result === null) {
         Carrier.findOneAndUpdate(
           { c_status: "unassigned" },
           {
             $set: {
-              salesman: {
-                _id: req.body._id,
-                name: req.body.name,
-              },
+              salesman: req.body._id,
               c_status: "unreached",
             },
           },
@@ -119,7 +117,7 @@ const fetchLead = (req, res, next) => {
 
 const getCarrier = (req, res, next) => {
   console.log("get carrier", req.body);
-  Carrier.findOne(req.body)
+  Carrier.findOne(req.body).populate('salesman',{user_name:1})
     .then((carriers) => {
       res.send(carriers);
     })
@@ -130,13 +128,31 @@ const getCarrier = (req, res, next) => {
 
 const getCarriers = (req, res, next) => {
   console.log("get carriers", req.body);
-
-  const filter =
+  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } }
+  var filter = defaultFilter;
+  if(!req.body.company){
+    filter =
     req.body && Object.keys(req.body).length !== 0
-      ? req.body
-      : { c_status: { $nin: ["unassigned", "rejected"] } };
+      ? { ...req.body, ...defaultFilter }
+      : defaultFilter;
+  }
+  if(req.body.salesman && req.body.c_status){
+    filter = req.body;
+  }
+  if(req.body.c_status === "registered"){
+    const { company, ...newFilter } = req.body;
+    filter = newFilter;
+  }
+  
+  
   Carrier.find(filter)
+  .populate('salesman',{user_name:1,company:1})
     .then((result) => {
+      if(req.body.company){
+        const filteredResult = result.filter(carry => carry.salesman.company == req.body.company);
+        console.log(filteredResult.length);
+        return res.send(filteredResult);
+      }
       console.log(result.length);
       res.send(result);
     })
@@ -253,29 +269,37 @@ const countCarriers = async (req, res, next) => {
     pendingTrucks: 0,
     total: 0,
   };
-  stats.total = await Carrier.countDocuments({});
+  var filteredCarrier = [];
+  await Carrier.find({c_status: { $nin: "unassigned" }})
+  .populate('salesman',{company:1})
+  .then(
+    async (carrier) => {
+      filteredCarrier = carrier.filter(carry => carry.salesman.company == req.body.company);
+      stats.total = await Carrier.countDocuments({});
+      const appointmentCarrier = filteredCarrier.filter(carry => carry.c_status == "appointment");
+      stats.appointments = appointmentCarrier.length;
 
-  stats.appointments = await Carrier.countDocuments({
-    c_status: "appointment",
-  });
-  registeredCarriers = await Carrier.find({ c_status: "registered" });
-  let pendingCount = 0;
-  let activeCount = 0;
-  registeredCarriers.forEach((carrier) => {
-    const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
-      ([pending, active, fail], item) =>
-        item.t_status === "pending"
-          ? [[...pending, item], active, fail]
-          : item.t_status === "active"
-          ? [pending, [...active, item], fail]
-          : [pending, active, [...fail, item]],
-      [[], [], []]
-    );
-    pendingCount += pendingTrucks.length;
-    activeCount += activeTrucks.length;
-  });
-  stats.pendingTrucks = pendingCount;
-  stats.activeTrucks = activeCount;
+      const registeredCarrier = filteredCarrier.filter(carry => carry.c_status == "registered");
+      let pendingCount = 0;
+      let activeCount = 0;
+      registeredCarrier.forEach((carrier) => {
+        const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
+          ([pending, active, fail], item) =>
+            item.t_status === "pending"
+              ? [[...pending, item], active, fail]
+              : item.t_status === "active"
+              ? [pending, [...active, item], fail]
+              : [pending, active, [...fail, item]],
+          [[], [], []]
+        );
+        pendingCount += pendingTrucks.length;
+        activeCount += activeTrucks.length;
+      });
+      
+      stats.pendingTrucks = pendingCount;
+      stats.activeTrucks = activeCount;
+    }
+  );
   console.log(stats);
   res.send(stats);
 };
