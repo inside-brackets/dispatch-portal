@@ -6,16 +6,16 @@ const initialState = {
   isAuthorized: true,
   company:null,
 };
-
+ 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     login(state, action) {
       state.isAuthenticated = true;
-      state.user = action.payload;
+      state.user = action.payload.user;
       state.isAuthorized = true;
-      state.company = { label: "Elite Dispatch Service", value: "elite"}
+      state.company = action.payload.company
     },
     logout(state, action) {
       state = initialState;

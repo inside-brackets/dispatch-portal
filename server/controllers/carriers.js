@@ -145,7 +145,8 @@ const getCarriers = (req, res, next) => {
   }
   
   
-  Carrier.find(filter).populate('salesman',{user_name:1,company:1})
+  Carrier.find(filter)
+  .populate('salesman',{user_name:1,company:1})
     .then((result) => {
       if(req.body.company){
         const filteredResult = result.filter(carry => carry.salesman.company == req.body.company);

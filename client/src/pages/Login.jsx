@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/user";
+import { themeActions } from "../store/theme";
 import Input from "../components/UI/MyInput";
 import Button from "../components/UI/Button";
 import { Col, Row, Form, Image } from "react-bootstrap";
@@ -38,7 +39,29 @@ const Login = () => {
       .then(({ data }) => {
         console.log("test", data);
         if (data) {
-          dispatch(userActions.login(data));
+
+          if(data.company === "admin"){
+            var selectedCompany = localStorage.getItem("selectedCompany")
+            if(selectedCompany){
+              dispatch(userActions.login({data,company:JSON.parse(selectedCompany)}));
+              var color = JSON.parse(selectedCompany).value === "elite" ?  "theme-color-blue" : "theme-color-red"
+              dispatch(themeActions.setColor(color));
+            }else{
+              dispatch(userActions.login({data,company:{
+                label: "Elite Dispatch Service", 
+                value: "elite",
+              }}));
+              dispatch(themeActions.setColor("theme-color-blue"));
+            }
+            
+          }else{
+            dispatch(userActions.login({data,company:{
+              label: "Elite Dispatch Service", 
+              value: "elite",
+            }}));
+          }
+          
+
           localStorage.setItem("user", JSON.stringify(data));
           setLoginError(false);
           history.replace(from);

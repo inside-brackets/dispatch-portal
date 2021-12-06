@@ -15,11 +15,11 @@ const Layout = () => {
   useEffect(() => {
     const themeClass = localStorage.getItem("themeMode", "theme-mode-light");
 
-    const colorClass = localStorage.getItem("colorMode", "theme-mode-light");
+    // const colorClass = localStorage.getItem("colorMode", "theme-mode-light");
 
     dispatch(themeActions.setMode(themeClass));
 
-    dispatch(themeActions.setColor(colorClass));
+    // dispatch(themeActions.setColor(colorClass));
   }, [dispatch]);
 
   return (
