@@ -9,6 +9,7 @@ import { Col, Row, Form, Image } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
 import axios from "axios";
+import bcrypt from 'bcryptjs'
 
 const Login = () => {
   let history = useHistory();
@@ -24,8 +25,20 @@ const Login = () => {
   if (user) {
     history.replace(from);
   }
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
+    const pass = await axios({
+      url: `${process.env.REACT_APP_BACKEND_URL}/login`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: {
+        username: usernameRef.current.value,
+      },
+    })
+    const allowLogin = await bcrypt.compare(passwordRef.current.value,pass.data.password)
+    
+    if(allowLogin){
 
     axios({
       url: `${process.env.REACT_APP_BACKEND_URL}/getuser`,
@@ -33,7 +46,6 @@ const Login = () => {
       headers: { "Content-Type": "application/json" },
       data: {
         user_name: usernameRef.current.value,
-        password: passwordRef.current.value,
       },
     })
       .then(({ data }) => {
@@ -43,11 +55,11 @@ const Login = () => {
           if(data.company === "admin"){
             var selectedCompany = localStorage.getItem("selectedCompany")
             if(selectedCompany){
-              dispatch(userActions.login({data,company:JSON.parse(selectedCompany)}));
+              dispatch(userActions.login({user:data,company:JSON.parse(selectedCompany)}));
               var color = JSON.parse(selectedCompany).value === "elite" ?  "theme-color-blue" : "theme-color-red"
               dispatch(themeActions.setColor(color));
             }else{
-              dispatch(userActions.login({data,company:{
+              dispatch(userActions.login({user:data,company:{
                 label: "Elite Dispatch Service", 
                 value: "elite",
               }}));
@@ -55,7 +67,7 @@ const Login = () => {
             }
             
           }else{
-            dispatch(userActions.login({data,company:{
+            dispatch(userActions.login({user:data,company:{
               label: "Elite Dispatch Service", 
               value: "elite",
             }}));
@@ -72,6 +84,8 @@ const Login = () => {
       .catch((err) => {
         throw err;
       });
+
+    }
   };
   return (
     <Row className="vh-100 vw-100" style={{ backgroundColor: "#ebf2fa" }}>

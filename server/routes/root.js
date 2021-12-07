@@ -1,3 +1,4 @@
+const User = require("../models/user")
 const express = require("express");
 const route = express.Router();
 const carriersController = require("../controllers/carriers");
@@ -46,4 +47,17 @@ route.get("/myip", (req, res) => {
 route.get("/hello", (req, res) => {
   res.send("hello");
 });
+
+route.post("/login",(req,res)=>{
+  try{
+    User.findOne({user_name:req.body.username}).select("password")
+    .then((data)=>{
+      res.status(200).send(data)
+    })
+  }catch(err){
+    res.status(500).send({msg:err.message})
+  }
+})
+
+
 module.exports = route;
