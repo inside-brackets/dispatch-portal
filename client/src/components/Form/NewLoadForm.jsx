@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -17,6 +17,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const [miles, setMiles] = useState(defaultValue ? defaultValue.miles : "");
   const [pay, setPay] = useState(defaultValue ? defaultValue.pay : "");
   const [broker, setBroker] = useState(defaultValue ? defaultValue.broker : "");
+  const [loadNumberIsValid, setLoadNumberIsValid] = useState(null);
   const [pickupAddress, setPickupAddress] = useState(
     defaultValue ? defaultValue.pick_up.address : ""
   );
@@ -38,21 +39,33 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const dispatch = useDispatch();
 
   const [lstatus, setLstatus] = useState();
-  useEffect(()=>{
-    if(defaultValue){
-      if(defaultValue.l_status === "booked"){
-        setLstatus({ label: "Booked ", value: "booked" })
-      }else if(defaultValue.l_status === "ongoing"){
-        setLstatus({ label: "Ongoing ", value: "ongoing" })
-      }else if(defaultValue.l_status === "delivered"){
-        setLstatus({ label: "Delivered ", value: "delivered" })
-      }else if(defaultValue.l_status === "canceled"){
-        setLstatus({ label:"Canceled", value: "canceled" })
+  useEffect(() => {
+    if (defaultValue) {
+      if (defaultValue.l_status === "booked") {
+        setLstatus({ label: "Booked ", value: "booked" });
+      } else if (defaultValue.l_status === "ongoing") {
+        setLstatus({ label: "Ongoing ", value: "ongoing" });
+      } else if (defaultValue.l_status === "delivered") {
+        setLstatus({ label: "Delivered ", value: "delivered" });
+      } else if (defaultValue.l_status === "canceled") {
+        setLstatus({ label: "Canceled", value: "canceled" });
       }
     }
-    
-  },[defaultValue])
-  
+
+    const indentifier = setTimeout(async () => {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/getload`,
+        { load_number: loadNumber }
+      );
+      console.log("checking loadNumber");
+      console.log(response.data);
+      console.log(loadNumber);
+      setLoadNumberIsValid(response.data.length === 0);
+    }, 500);
+    return () => {
+      clearTimeout(indentifier);
+    };
+  }, [defaultValue, loadNumber]);
 
   const { _id: currUserId, user_name: currUserName } = useSelector(
     (state) => state.user.user
@@ -89,7 +102,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
-    if (form.checkValidity() === true) {
+    if (form.checkValidity() === true && loadNumberIsValid) {
       const loadObject = {
         load_number: loadNumber,
         l_status: "booked",
@@ -97,7 +110,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         miles: miles,
         pay: pay,
         ratecons: image,
-        dispatcher: currUserId ,
+        dispatcher: currUserId,
         broker: broker,
         pick_up: {
           address: pickupAddress,
@@ -190,7 +203,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     <div>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row>
-          <Form.Group as={Col} md="6" controlId="validationCustom03">
+          {/* <Form.Group as={Col} md="6" controlId="validationCustom03">
             <Form.Label>Load Number:</Form.Label>
             <Form.Control
               type="number"
@@ -202,6 +215,31 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             <Form.Control.Feedback type="invalid">
               Please provide a valid Load Number.
             </Form.Control.Feedback>
+          </Form.Group> */}
+          <Form.Group as={Col} md="6" controlId="validationCustom03">
+            <Form.Label>Load Number</Form.Label>
+            <Form.Control
+              className={`${
+                loadNumber && !loadNumberIsValid ? "loadNumber is-invalid" : ""
+              } no__feedback shadow-none`}
+              value={loadNumber}
+              onChange={(e) => {
+                setLoadNumber(e.target.value);
+              }}
+              type="text"
+              placeholder="Enter load Number"
+            />
+            {loadNumberIsValid && loadNumber && (
+              <Form.Text style={{ color: "green" }}>
+                load Number is available!
+              </Form.Text>
+            )}
+            {loadNumberIsValid === false && loadNumber && (
+              <Form.Text style={{ color: "red" }}>
+                Whoops! Load Number already exists or you are editing an
+                existing load.
+              </Form.Text>
+            )}
           </Form.Group>
           <Form.Group as={Col} md="6" controlId="validationCustom03">
             <Form.Label>Load Weight:</Form.Label>
@@ -339,7 +377,6 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
           </Form.Group>
         </Row>
         {defaultValue && (
-          
           <MySelect
             label="Status:"
             isMulti={false}

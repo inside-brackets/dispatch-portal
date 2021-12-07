@@ -11,6 +11,8 @@ import "./newTruckForm.css";
 import useHttp from "../../hooks/use-https";
 import { useParams } from "react-router-dom";
 import useInput from "../../hooks/use-input";
+import { Row, Col, Form } from "react-bootstrap";
+import axios from "axios";
 
 const transformArrayToObjectArray = (array) => {
   return array.map((item) => ({
@@ -24,6 +26,7 @@ const isNotEmpty = (value) => value.trim() !== "";
 const newTruckForm = forwardRef((props, ref) => {
   const params = useParams();
   const formRef = useRef();
+  // hello
   const {
     value: truckNumber,
     isValid: truckNumberIsValid,
@@ -31,7 +34,7 @@ const newTruckForm = forwardRef((props, ref) => {
     valueChangeHandler: truckNumberChangeHandler,
     inputBlurHandler: truckNumberBlurHandler,
   } = useInput(isNotEmpty);
-
+  // hello
   const {
     value: vinNumber,
     isValid: vinNumberIsValid,
@@ -79,17 +82,26 @@ const newTruckForm = forwardRef((props, ref) => {
   const [selectedTravel, setSelectedTravel] = useState([]);
   const [selectedTrailer, setSelectedTrailer] = useState([]);
   const [selectedOffDays, setSelectedOffDays] = useState([]);
+  // const [userName, setUserName] = useState(null);
+  const [truckNumberIsAvailable, setTruckNumberIsAvailable] = useState(null);
+
   const { sendRequest: postTruck } = useHttp();
+
   const { defaultValue, closeModal, setRefresh } = props;
+  // const [truckNumber, setTruckNumber] = useState(
+  //   defaultValue ? defaultValue.truck_number : ""
+  // );
   useEffect(() => {
     if (defaultValue) {
       setSelectedOffDays(transformArrayToObjectArray(defaultValue.off_days));
       setSelectedTrailer(
         transformArrayToObjectArray([defaultValue.trailer_type])[0]
       );
+      // hello
       truckNumberChangeHandler({
         target: { value: `${defaultValue.truck_number}` },
       });
+      // hello
       vinNumberChangeHandler({
         target: { value: `${defaultValue.vin_number}` },
       });
@@ -101,12 +113,29 @@ const newTruckForm = forwardRef((props, ref) => {
       });
       setSelectedTravel(transformArrayToObjectArray(defaultValue.region));
     }
+
+    const indentifier = setTimeout(async () => {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
+        { "trucks.truck_number": truckNumber }
+      );
+      console.log("checking truck Number");
+      console.log(response.data);
+      console.log("truckNumber", truckNumber);
+      setTruckNumberIsAvailable(response.data.length === 0);
+    }, 500);
+    return () => {
+      clearTimeout(indentifier);
+    };
   }, [
     defaultValue,
+    // hello
     truckNumberChangeHandler,
+    // hello
     vinNumberChangeHandler,
     Driver1NameChangeHandler,
     Driver1PhoneChangeHandler,
+    truckNumber,
   ]);
   const handleDriverChange = (event) => {
     setDriverType(event.target.value);
@@ -114,10 +143,13 @@ const newTruckForm = forwardRef((props, ref) => {
   // submit
   let formIsValid = false;
   if (
+    // hello
     truckNumberIsValid &&
+    // hello
     vinNumberIsValid &&
     oPhoneIsValid &&
-    Driver1NameIsValid
+    Driver1NameIsValid &&
+    truckNumberIsAvailable
   ) {
     formIsValid = true;
   }
@@ -197,6 +229,20 @@ const newTruckForm = forwardRef((props, ref) => {
         <p className="error-text">Truck number is required.</p>
       )}
 
+      {
+        // <Form.Group as={Col} md="6">
+        //   <Form.Label>Truck Number</Form.Label>
+        //   <Form.Control
+        //     value={truckNumber}
+        //     // defaultValue={truckNumber}
+        //     onChange={(e) => {
+        //       setTruckNumber(e.target.value);
+        //     }}
+        //     type="text"
+        //     placeholder="Enter Truck Number"
+        //   />
+        // </Form.Group>
+      }
       <Input
         type="text"
         label="*Vin Number:"
@@ -231,7 +277,6 @@ const newTruckForm = forwardRef((props, ref) => {
         ref={tripDurrationRef}
         defaultValue={defaultValue ? defaultValue.trip_durration : ""}
       />
-
       <MySelect
         isMulti={true}
         value={selectedTravel}
@@ -282,7 +327,6 @@ const newTruckForm = forwardRef((props, ref) => {
           ]}
         />
       </div>
-
       <FormControl component="fieldset">
         <FormLabel style={{ color: "var(--text-color)" }} component="legend">
           *Driver set:
@@ -311,7 +355,6 @@ const newTruckForm = forwardRef((props, ref) => {
           />
         </RadioGroup>
       </FormControl>
-
       <Input
         type="text"
         label="Driver 1:"
@@ -338,11 +381,9 @@ const newTruckForm = forwardRef((props, ref) => {
         onBlur={Driver1PhoneBlurHandler}
         defaultValue={defaultValue ? defaultValue.drivers[0].phone_number : ""}
       />
-
       {Driver1PhoneHasError && (
         <p className="error-text">Drviver Phone Number is required.</p>
       )}
-
       {driverType === "teamDriver" && (
         <div>
           {" "}
@@ -377,7 +418,6 @@ const newTruckForm = forwardRef((props, ref) => {
           )}
         </div>
       )}
-
       <div
         style={{
           width: "100%",

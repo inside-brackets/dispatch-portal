@@ -1,9 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Col, Row, Button, InputGroup } from "react-bootstrap";
 
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 const NewUserForm = ({
   data,
@@ -13,6 +12,7 @@ const NewUserForm = ({
   setRefresh,
 }) => {
   const [validated, setValidated] = useState(false);
+  const [usernameIsValid, setUsernameIsValid] = useState(null);
   const [userName, setUserName] = useState(
     defaultValue ? defaultValue.user_name : null
   );
@@ -33,20 +33,35 @@ const NewUserForm = ({
   );
   const [sameName, setSameName] = useState(null);
 
-  const {company:selectedCompany} = useSelector((state)=>state.user)
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
+  useEffect(() => {
+    const indentifier = setTimeout(async () => {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/getuser`,
+        { user_name: userName.toLowerCase() }
+      );
+      console.log("checking username");
+      console.log(response.data);
+      console.log(userName);
+      setUsernameIsValid(response.data.length === 0);
+    }, 500);
+    return () => {
+      clearTimeout(indentifier);
+    };
+  }, [userName]);
 
-  const onChangeHandler = (e) => {
-    var sameName1 = data.find((item) => {
-      return item.user_name.toLowerCase() === userName.toLowerCase();
-    });
-    setSameName(sameName1);
-  };
+  // const onChangeHandler = (e) => {
+  //   var sameName1 = data.find((item) => {
+  //     return item.user_name.toLowerCase() === userName.toLowerCase();
+  //   });
+  //   setSameName(sameName1);
+  // };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
-    if (form.checkValidity() === true) {
+    if (form.checkValidity() === true && usernameIsValid) {
       if (defaultValue) {
         console.log(
           "defaulvalue",
@@ -95,7 +110,7 @@ const NewUserForm = ({
             console.log("response", response);
             setRefresh(Math.random());
             setShowModal(false);
-            console.log(selectedCompany)
+            console.log(selectedCompany);
           })
           .catch((err) => {
             console.log(err);
@@ -108,7 +123,7 @@ const NewUserForm = ({
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       {!defaultValue && (
         <Row className="m-3">
-          <Form.Group as={Col} md="6">
+          {/* <Form.Group as={Col} md="6">
             <Form.Label>Username</Form.Label>
             <InputGroup hasValidation>
               <Form.Control
@@ -130,8 +145,32 @@ const NewUserForm = ({
                   Please choose a username.
                 </Form.Control.Feedback>
               )}
-              {/* <Form.Control.Feedback>Looks good!</Form.Control.Feedback> */}
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </InputGroup>
+          </Form.Group> */}
+          <Form.Group as={Col} md="6">
+            <Form.Label>User Name</Form.Label>
+            <Form.Control
+              className={`${
+                userName && !usernameIsValid ? "invalid is-invalid" : ""
+              } no__feedback shadow-none`}
+              value={userName}
+              onChange={(e) => {
+                setUserName(e.target.value);
+              }}
+              type="text"
+              placeholder="Enter username"
+            />
+            {usernameIsValid && userName && (
+              <Form.Text style={{ color: "green" }}>
+                Username is available!
+              </Form.Text>
+            )}
+            {usernameIsValid === false && userName && (
+              <Form.Text style={{ color: "red" }}>
+                Whoops! username already exists.
+              </Form.Text>
+            )}
           </Form.Group>
 
           <Form.Group as={Col} md="6">
@@ -164,8 +203,8 @@ const NewUserForm = ({
               <option value={null}>Select Department</option>
               <option value="sales">Sales</option>
               <option value="dispatch">Dispatch</option>
-              <option value="accounts">Accounts</option>
-              <option value="HR">HR</option>
+              {/* <option value="accounts">Accounts</option> */}
+              {/* <option value="HR">HR</option> */}
               <option value="admin">Admin</option>
             </Form.Control>
 
