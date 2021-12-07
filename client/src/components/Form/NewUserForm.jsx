@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Form, Col, Row, Button, InputGroup } from "react-bootstrap";
+import { Form, Col, Row, Button } from "react-bootstrap";
 
 import { useSelector } from "react-redux";
 
@@ -61,7 +61,7 @@ const NewUserForm = ({
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
-    if (form.checkValidity() === true && usernameIsValid) {
+    if (form.checkValidity() === true) {
       if (defaultValue) {
         console.log(
           "defaulvalue",
@@ -86,15 +86,17 @@ const NewUserForm = ({
             setRefresh(Math.random());
             setEditModal(false);
           });
-      } else if (!sameName) {
+      } else if (usernameIsValid) {
         console.log(
           "value",
+          defaultValue,
           salary,
           department,
           userName,
           password,
           designation,
-          joiningDate
+          joiningDate,
+          sameName
         );
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {

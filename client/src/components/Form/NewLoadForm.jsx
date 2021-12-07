@@ -236,8 +236,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             )}
             {loadNumberIsValid === false && loadNumber && (
               <Form.Text style={{ color: "red" }}>
-                Whoops! Load Number already exists or you are editing an
-                existing load.
+                Load Number already exists or you are editing an existing load.
               </Form.Text>
             )}
           </Form.Group>

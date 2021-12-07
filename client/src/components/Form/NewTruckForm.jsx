@@ -11,7 +11,6 @@ import "./newTruckForm.css";
 import useHttp from "../../hooks/use-https";
 import { useParams } from "react-router-dom";
 import useInput from "../../hooks/use-input";
-import { Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 
 const transformArrayToObjectArray = (array) => {
