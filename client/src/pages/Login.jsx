@@ -102,6 +102,8 @@ const Login = () => {
         throw err;
       });
 
+    }else{
+      setLoginError(true);
     }
   };
   return (
