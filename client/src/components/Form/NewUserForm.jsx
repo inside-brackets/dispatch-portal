@@ -1,11 +1,10 @@
 import axios from "axios";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Form, Col, Row, Button, InputGroup } from "react-bootstrap";
 import bcrypt from 'bcryptjs'
 import { useSelector } from 'react-redux';
 
-import { useSelector } from "react-redux";
 
 const NewUserForm = ({
   data,

@@ -88,6 +88,7 @@ const Login = () => {
                 },
               })
             );
+            dispatch(themeActions.setColor("theme-color-blue"));
           }
 
           localStorage.setItem("user", JSON.stringify(data));
