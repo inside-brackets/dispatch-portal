@@ -1,6 +1,9 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { Form, Col, Row, Button } from "react-bootstrap";
+
+import { useState } from "react";
+import { Form, Col, Row, Button, InputGroup } from "react-bootstrap";
+import bcrypt from 'bcryptjs'
+import { useSelector } from 'react-redux';
 
 import { useSelector } from "react-redux";
 
@@ -61,6 +64,7 @@ const NewUserForm = ({
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
+    const hash = await bcrypt.hash(password,8)
     if (form.checkValidity() === true) {
       if (defaultValue) {
         console.log(
@@ -72,6 +76,7 @@ const NewUserForm = ({
           designation,
           joiningDate
         );
+        
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
             id: defaultValue._id,
@@ -101,7 +106,7 @@ const NewUserForm = ({
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
             user_name: userName,
-            password,
+            password:hash,
             joining_date: joiningDate,
             salary,
             designation,
