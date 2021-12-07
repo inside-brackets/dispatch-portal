@@ -9,7 +9,7 @@ import { Col, Row, Form, Image } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
 import axios from "axios";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
 
 const Login = () => {
   let history = useHistory();
@@ -35,74 +35,78 @@ const Login = () => {
       data: {
         username: usernameRef.current.value,
       },
-    })
-    const allowLogin = await bcrypt.compare(passwordRef.current.value,pass.data.password)
-    
-    if(allowLogin){
+    });
+    if (pass.data.password) {
+      const allowLogin = await bcrypt.compare(
+        passwordRef.current.value,
+        pass.data.password
+      );
 
-    axios({
-      url: `${process.env.REACT_APP_BACKEND_URL}/getuser`,
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      data: {
-        user_name: usernameRef.current.value,
-      },
-    })
-      .then(({ data }) => {
-        console.log("test", data);
-        if (data) {
+      if (allowLogin) {
+        axios({
+          url: `${process.env.REACT_APP_BACKEND_URL}/getuser`,
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          data: {
+            user_name: usernameRef.current.value,
+          },
+        })
+          .then(({ data }) => {
+            console.log("test", data);
+            if (data) {
+              if (data.company === "admin") {
+                var selectedCompany = localStorage.getItem("selectedCompany");
+                if (selectedCompany) {
+                  dispatch(
+                    userActions.login({
+                      user: data,
+                      company: JSON.parse(selectedCompany),
+                    })
+                  );
+                  var color =
+                    JSON.parse(selectedCompany).value === "elite"
+                      ? "theme-color-blue"
+                      : "theme-color-red";
+                  dispatch(themeActions.setColor(color));
+                } else {
+                  dispatch(
+                    userActions.login({
+                      user: data,
+                      company: {
+                        label: "Elite Dispatch Service",
+                        value: "elite",
+                      },
+                    })
+                  );
+                  dispatch(themeActions.setColor("theme-color-blue"));
+                }
+              } else {
+                dispatch(
+                  userActions.login({
+                    user: data,
+                    company: {
+                      label: "Elite Dispatch Service",
+                      value: "elite",
+                    },
+                  })
+                );
+                dispatch(themeActions.setColor("theme-color-blue"));
+              }
 
-          if (data.company === "admin") {
-            var selectedCompany = localStorage.getItem("selectedCompany");
-            if (selectedCompany) {
-              dispatch(
-                userActions.login({
-                  user: data,
-                  company: JSON.parse(selectedCompany),
-                })
-              );
-              var color =
-                JSON.parse(selectedCompany).value === "elite"
-                  ? "theme-color-blue"
-                  : "theme-color-red";
-              dispatch(themeActions.setColor(color));
+              localStorage.setItem("user", JSON.stringify(data));
+              setLoginError(false);
+              history.replace(from);
             } else {
-              dispatch(
-                userActions.login({
-                  user: data,
-                  company: {
-                    label: "Elite Dispatch Service",
-                    value: "elite",
-                  },
-                })
-              );
-              dispatch(themeActions.setColor("theme-color-blue"));
+              setLoginError(true);
             }
-          } else {
-            dispatch(
-              userActions.login({
-                user: data,
-                company: {
-                  label: "Elite Dispatch Service",
-                  value: "elite",
-                },
-              })
-            );
-            dispatch(themeActions.setColor("theme-color-blue"));
-          }
-
-          localStorage.setItem("user", JSON.stringify(data));
-          setLoginError(false);
-          history.replace(from);
-        } else {
-          setLoginError(true);
-        }
-      })
-      .catch((err) => {
-        throw err;
-      });
-
-    }else{
+          })
+          .catch((err) => {
+            throw err;
+          });
+      } else {
+        setLoginError(true);
+      }
+    } else {
       setLoginError(true);
     }
   };

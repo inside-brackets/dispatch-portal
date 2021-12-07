@@ -86,10 +86,10 @@ const assignDispatcher = (req, res, next) => {
 const fetchLead = (req, res, next) => {
   console.log("fetchLead", req.body);
   Carrier.findOne({
-    "salesman": mongoose.Types.ObjectId(req.body._id),
+    salesman: mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
   })
-  .populate('salesman',{user_name:1})
+    .populate("salesman", { user_name: 1 })
     .then((result) => {
       if (result === null) {
         Carrier.findOneAndUpdate(
@@ -117,7 +117,8 @@ const fetchLead = (req, res, next) => {
 
 const getCarrier = (req, res, next) => {
   console.log("get carrier", req.body);
-  Carrier.findOne(req.body).populate('salesman',{user_name:1})
+  Carrier.findOne(req.body)
+    .populate("salesman", { user_name: 1 })
     .then((carriers) => {
       res.send(carriers);
     })
@@ -128,28 +129,29 @@ const getCarrier = (req, res, next) => {
 
 const getCarriers = (req, res, next) => {
   console.log("get carriers", req.body);
-  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } }
+  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } };
   var filter = defaultFilter;
-  if(!req.body.company){
+  if (!req.body.company) {
     filter =
-    req.body && Object.keys(req.body).length !== 0
-      ? { ...req.body, ...defaultFilter }
-      : defaultFilter;
+      req.body && Object.keys(req.body).length !== 0
+        ? { ...req.body, ...defaultFilter }
+        : defaultFilter;
   }
-  if(req.body.salesman && req.body.c_status){
+  if (req.body.salesman && req.body.c_status) {
     filter = req.body;
   }
-  if(req.body.c_status === "registered"){
+  if (req.body.c_status === "registered") {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
-  
-  
+
   Carrier.find(filter)
-  .populate('salesman',{user_name:1,company:1})
+    .populate("salesman", { user_name: 1, company: 1 })
     .then((result) => {
-      if(req.body.company){
-        const filteredResult = result.filter(carry => carry.salesman.company == req.body.company);
+      if (req.body.company) {
+        const filteredResult = result.filter(
+          (carry) => carry.salesman.company == req.body.company
+        );
         console.log(filteredResult.length);
         return res.send(filteredResult);
       }
@@ -196,7 +198,7 @@ const addNewCarrier = (req, res, next) => {
   const carrier = new Carrier({
     mc_number: 123,
     company_name: "ML TRUCKING INC",
-    usdot_number: 2952582,
+    usdot_number: "2952582",
     c_satus: "unreached",
     dispatcher_fee: 250,
     phone_number: "(952) 300-7811",
@@ -270,16 +272,21 @@ const countCarriers = async (req, res, next) => {
     total: 0,
   };
   var filteredCarrier = [];
-  await Carrier.find({c_status: { $nin: "unassigned" }})
-  .populate('salesman',{company:1})
-  .then(
-    async (carrier) => {
-      filteredCarrier = carrier.filter(carry => carry.salesman.company == req.body.company);
+  await Carrier.find({ c_status: { $nin: "unassigned" } })
+    .populate("salesman", { company: 1 })
+    .then(async (carrier) => {
+      filteredCarrier = carrier.filter(
+        (carry) => carry.salesman.company == req.body.company
+      );
       stats.total = await Carrier.countDocuments({});
-      const appointmentCarrier = filteredCarrier.filter(carry => carry.c_status == "appointment");
+      const appointmentCarrier = filteredCarrier.filter(
+        (carry) => carry.c_status == "appointment"
+      );
       stats.appointments = appointmentCarrier.length;
 
-      const registeredCarrier = filteredCarrier.filter(carry => carry.c_status == "registered");
+      const registeredCarrier = filteredCarrier.filter(
+        (carry) => carry.c_status == "registered"
+      );
       let pendingCount = 0;
       let activeCount = 0;
       registeredCarrier.forEach((carrier) => {
@@ -295,11 +302,10 @@ const countCarriers = async (req, res, next) => {
         pendingCount += pendingTrucks.length;
         activeCount += activeTrucks.length;
       });
-      
+
       stats.pendingTrucks = pendingCount;
       stats.activeTrucks = activeCount;
-    }
-  );
+    });
   console.log(stats);
   res.send(stats);
 };

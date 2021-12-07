@@ -58,8 +58,8 @@ const userSchema = new mongoose.Schema(
     ],
     company: {
       type: String,
-      enum: ["elite", "alpha"],
-      required:true,
+      enum: ["elite", "alpha", "falcon"],
+      required: true,
     },
   },
   {

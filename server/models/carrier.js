@@ -17,7 +17,7 @@ const carrierSchema = new mongoose.Schema(
       trim: true,
     },
     usdot_number: {
-      type: Number,
+      type: String,
       require: true,
       unique: true,
     },

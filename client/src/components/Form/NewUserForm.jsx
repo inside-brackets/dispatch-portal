@@ -107,7 +107,7 @@ const NewUserForm = ({
             salary,
             designation,
             department,
-            company: selectedCompany.value,
+            company: department === "admin" ? "falcon" : selectedCompany.value,
           })
           .then((response) => {
             console.log("response", response);
