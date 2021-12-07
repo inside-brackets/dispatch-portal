@@ -52,27 +52,43 @@ const Login = () => {
         console.log("test", data);
         if (data) {
 
-          if(data.company === "admin"){
-            var selectedCompany = localStorage.getItem("selectedCompany")
-            if(selectedCompany){
-              dispatch(userActions.login({user:data,company:JSON.parse(selectedCompany)}));
-              var color = JSON.parse(selectedCompany).value === "elite" ?  "theme-color-blue" : "theme-color-red"
+          if (data.company === "admin") {
+            var selectedCompany = localStorage.getItem("selectedCompany");
+            if (selectedCompany) {
+              dispatch(
+                userActions.login({
+                  user: data,
+                  company: JSON.parse(selectedCompany),
+                })
+              );
+              var color =
+                JSON.parse(selectedCompany).value === "elite"
+                  ? "theme-color-blue"
+                  : "theme-color-red";
               dispatch(themeActions.setColor(color));
-            }else{
-              dispatch(userActions.login({user:data,company:{
-                label: "Elite Dispatch Service", 
-                value: "elite",
-              }}));
+            } else {
+              dispatch(
+                userActions.login({
+                  user: data,
+                  company: {
+                    label: "Elite Dispatch Service",
+                    value: "elite",
+                  },
+                })
+              );
               dispatch(themeActions.setColor("theme-color-blue"));
             }
-            
-          }else{
-            dispatch(userActions.login({user:data,company:{
-              label: "Elite Dispatch Service", 
-              value: "elite",
-            }}));
+          } else {
+            dispatch(
+              userActions.login({
+                user: data,
+                company: {
+                  label: "Elite Dispatch Service",
+                  value: "elite",
+                },
+              })
+            );
           }
-          
 
           localStorage.setItem("user", JSON.stringify(data));
           setLoginError(false);

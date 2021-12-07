@@ -8,8 +8,7 @@ import NewUserForm from "../../components/Form/NewUserForm";
 import MySelect from "../../components/UI/MySelect";
 import Input from "../../components/UI/MyInput";
 import moment from "moment";
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 const Users = () => {
   const [users, setUsers] = useState("");
@@ -19,8 +18,8 @@ const Users = () => {
   const [editModal, setEditModal] = useState(false);
   const searchRef = useRef();
   const [searchedCarrier, setSearchedCarrier] = useState([]);
-  
-  const { company:selectedCompany } = useSelector((state)=> state.user);
+
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
   const search = (e) => {
     console.log("ref", searchRef);
@@ -61,13 +60,13 @@ const Users = () => {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/getusers`,
         {
-            company:selectedCompany.value,
+          company: selectedCompany.value,
         }
       );
       setUsers(data);
     };
     fetchUsers();
-  }, [refresh,selectedCompany]);
+  }, [refresh, selectedCompany]);
 
   const customerTableHead = [
     "#",
