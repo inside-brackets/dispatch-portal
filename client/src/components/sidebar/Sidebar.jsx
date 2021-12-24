@@ -33,6 +33,7 @@ const Sidebar = (props) => {
       : department.toLowerCase() === "sales"
       ? "MARKETING"
       : department.toUpperCase();
+
   return (
     <div className="sidebar">
       <div className="sidebar__logo">
