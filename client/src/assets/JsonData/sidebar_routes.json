@@ -38,6 +38,11 @@
       "icon": "bx bxs-truck"
     },
     {
+      "display_name": "Add Carrier",
+      "route": "/addcarrier",
+      "icon": "bx bx-plus-circle"
+    },
+    {
       "display_name": "Users",
       "route": "/users",
       "icon": "bx bx-user"

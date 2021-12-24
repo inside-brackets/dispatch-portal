@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Carrier = require("../models/carrier");
 const Hcarrier = require("../models/hcarrier");
+var moment = require("moment-timezone");
+const { callAbleStates } = require("../util/convertTZ");
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
@@ -83,17 +85,23 @@ const assignDispatcher = (req, res, next) => {
     });
 };
 //assigns carriers to salesmen and changes c_status to unreached
+
 const fetchLead = (req, res, next) => {
   console.log("fetchLead", req.body);
+  const pst = moment().tz("US/Pacific");
   Carrier.findOne({
     salesman: mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
+    address: { $regex: callAbleStates(pst), $options: "i" },
   })
     .populate("salesman", { user_name: 1 })
     .then((result) => {
       if (result === null) {
         Carrier.findOneAndUpdate(
-          { c_status: "unassigned" },
+          {
+            c_status: "unassigned",
+            address: { $regex: callAbleStates(pst), $options: "i" },
+          },
           {
             $set: {
               salesman: req.body._id,
@@ -310,6 +318,18 @@ const countCarriers = async (req, res, next) => {
   res.send(stats);
 };
 
+const test = async (req, res) => {
+  try {
+    const pst = moment().tz("US/Pacific");
+    const result = await Carrier.find({
+      address: { $regex: callAbleStates(pst), $options: "i" },
+    });
+    res.status(200).send({ result: result.length });
+  } catch (e) {
+    res.status(500).send({ msg: e.message });
+  }
+};
+
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -321,4 +341,5 @@ module.exports = {
   fetchLead,
   assignDispatcher,
   countCarriers,
+  test,
 };

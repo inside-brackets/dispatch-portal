@@ -1,3 +1,7 @@
-let str = ["192.168.88.20"];
-
-console.log(str.includes("192.168.88.20"));
+const moment = require("moment");
+const id = "ID";
+const reg = ",s*";
+const str = "h, ID";
+var regexp = new RegExp(reg, "i");
+console.log(str.match(regexp));
+console.log("regular expression: ", regexp);
