@@ -27,6 +27,7 @@ const carrierSchema = new mongoose.Schema(
       enum: [
         "unassigned",
         "unreached",
+        "didnotpick",
         "appointment",
         "rejected",
         "registered",

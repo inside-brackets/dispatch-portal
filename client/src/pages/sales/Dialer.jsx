@@ -20,6 +20,7 @@ const Dialer = () => {
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
 
   const { sendRequest: postCarriers } = useHttp();
+  const { sendRequest: postdidnotPickCarriers } = useHttp();
 
   const { sendRequest: postrejectCarriers } = useHttp();
 
@@ -43,7 +44,17 @@ const Dialer = () => {
       transformData
     );
   };
-
+  const didnotPickHandler = () => {
+    postdidnotPickCarriers({
+      url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: {
+        c_status: "didnotpick",
+      },
+    });
+    setrefresh(!refresh);
+  };
   const buttonClickHandler = () => {
     setModal(true);
   };
@@ -126,7 +137,12 @@ const Dialer = () => {
               color: "red",
               onClick: buttonrClickHandler,
             },
-            { buttonText: "Appointment", onClick: buttonClickHandler },
+            { buttonText: "Didn't Pick", onClick: didnotPickHandler },
+            {
+              buttonText: "Appointment",
+              onClick: buttonClickHandler,
+              color: "green",
+            },
           ]}
         >
           <h5>Mc:</h5> <h6>{carrier.mc_number}</h6>
