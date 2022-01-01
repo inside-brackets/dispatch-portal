@@ -1,0 +1,6 @@
+{
+  "new": "primary",
+  "pending": "yellow",
+  "active": "success",
+  "inactive": "danger"
+}

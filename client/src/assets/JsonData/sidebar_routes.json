@@ -38,9 +38,9 @@
       "icon": "bx bxs-truck"
     },
     {
-      "display_name": "Add Carrier",
-      "route": "/addcarrier",
-      "icon": "bx bx-plus-circle"
+      "display_name": "Search Carrier",
+      "route": "/searchcarrier",
+      "icon": "bx bx-search-alt"
     },
     {
       "display_name": "Users",

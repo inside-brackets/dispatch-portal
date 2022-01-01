@@ -1,0 +1,5 @@
+{
+  "pending": "warning",
+  "cleared": "success",
+  "cancelled": "danger"
+}

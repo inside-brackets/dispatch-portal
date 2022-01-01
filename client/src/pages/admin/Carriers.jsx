@@ -9,6 +9,7 @@ import { Col, Row } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
+import status_map from "../../assets/JsonData/status_map.json";
 
 const carrierTableHead = [
   "#",
@@ -20,14 +21,6 @@ const carrierTableHead = [
   "Sales Person",
   "Status",
 ];
-
-const status_map = {
-  unreached: "unreached",
-  appointment: "appointment",
-  rejected: "danger",
-  registered: "success",
-  deactivated: "warning",
-};
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
@@ -43,36 +36,6 @@ const Carriers = () => {
   const search = (e) => {
     if (e.key === "Enter") {
       var searchValue = searchRef.current.value.trim();
-      // const searched = carriers.find((carrier) => {
-      //   if (!isNaN(searchValue)) {
-      //     return carrier.mc_number === parseInt(searchRef.current.value.trim());
-      //   } else {
-      //     searchValue = searchValue.toLowerCase();
-      //     if (
-      //       carrier.salesman &&
-      //       carrier.salesman.user_name.toLowerCase() === searchValue
-      //     ) {
-      //       return true;
-      //     } else if (carrier.dispatcher) {
-      //       return carrier.dispatcher.name.toLowerCase() === searchValue;
-      //     }
-      //     return false;
-      //   }
-      // });
-
-      // var searched = [];
-      // if (!isNaN(searchValue)) {
-      //   searched = carriers.filter((carry) => carry.mc_number === searchValue);
-      // } else {
-      //   searched = carriers.filter(
-      //     (carry) => carry.salesman.user_name === searchValue
-      //   );
-      //   if (!searched.length) {
-      //     searched = carriers.filter(
-      //       (carry) => carry.dispatcher.name === searchValue
-      //     );
-      //   }
-      // }
 
       const searched = carriers.filter((carrier) => {
         if (!isNaN(searchValue)) {

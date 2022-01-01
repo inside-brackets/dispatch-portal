@@ -67,3 +67,8 @@
   margin-bottom: 10px;
   font-size: 1.5rem;
 }
+
+.sidebar-items {
+  max-height: 62vh;
+  overflow-y: scroll;
+}

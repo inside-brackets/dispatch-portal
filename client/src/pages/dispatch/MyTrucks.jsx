@@ -1,28 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
-import { Row, Col, Card } from "react-bootstrap";
-import Badge from "../../components/badge/Badge";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import moment from "moment";
-
-const status_map = {
-  pending: "appointment",
-  rejected: "danger",
-  new: "primary",
-  active: "success",
-  "non-active": "warning",
-  deactivated: "black",
-};
-
-const loadStatusMap = {
-  empty: "warning",
-  booked: "appointment",
-  ongoing: "primary",
-  canceled: "danger",
-  delivered: "success",
-};
+import TruckCard from "../../components/cards/TruckCard";
 
 const MyTrucks = () => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
@@ -101,73 +82,6 @@ const MyTrucks = () => {
       });
   }, [currUserId]);
 
-  const body = (carrier) => (
-    <Row>
-      <Col>
-        <h5>MC: </h5>
-      </Col>
-      <Col>
-        <h6> {carrier.mc_number}</h6>
-      </Col>
-      <br />
-
-      <Row>
-        <Col>
-          <h5>Truck #:</h5>
-        </Col>
-        <Col>
-          <h6>{carrier.truck_number}</h6>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <h5>Trailer Type</h5>
-        </Col>
-        <Col>
-          <h6>{carrier.trailer_type}</h6>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <h5>Driver:</h5>
-        </Col>
-        <Col>
-          <h6>{carrier.driver}</h6>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <h5>Truck Status:</h5>
-        </Col>
-        <Col>
-          <h6>
-            <Badge
-              type={status_map[carrier.truck_status]}
-              content={carrier.truck_status}
-            />
-          </h6>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <h5>Load Status:</h5>
-        </Col>
-        <Col>
-          <h6>
-            <Badge
-              type={
-                loadStatusMap[
-                  carrier.load_status ? carrier.load_status : "empty"
-                ]
-              }
-              content={carrier.load_status ? carrier.load_status : "empty"}
-            />
-          </h6>
-        </Col>
-      </Row>
-    </Row>
-  );
-
   if (isLoading && !httpError) {
     return (
       <div className="spreadsheet__loader">
@@ -192,43 +106,7 @@ const MyTrucks = () => {
       {carriersList.map((item, index) => (
         <div className="col-4" key={index}>
           <Link to={`/trucks/${item.mc_number}/${item.truck_number}`}>
-            {
-              <Card
-                style={{
-                  width: "auto",
-                  minHeight: "450px",
-                }}
-              >
-                <Card.Body>
-                  <Card.Title>{item.company_name}</Card.Title>
-
-                  <hr />
-                  <Card.Text className="">{body(item)}</Card.Text>
-                  <Card.Footer
-                    style={{
-                      width: "auto",
-                      minHeight: "100px",
-                    }}
-                  >
-                    {item.out_of ? (
-                      <div>
-                        {`Next load : ${moment(new Date(item.next)).format(
-                          "MMM Do YYYY"
-                        )}`}
-                        <br />
-                        {`Time: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 ${moment(
-                          new Date(item.next)
-                        ).format("h:mm:ss a")}`}
-                        <br />
-                        {`Out of:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  ${item.out_of}`}
-                      </div>
-                    ) : (
-                      <h3 className="text-center new-carrier">New Carrier!</h3>
-                    )}
-                  </Card.Footer>
-                </Card.Body>
-              </Card>
-            }
+            {<TruckCard item={item} />}
           </Link>
         </div>
       ))}

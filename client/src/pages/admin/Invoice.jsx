@@ -9,7 +9,8 @@ import axios from "axios";
 import MyModal from "../../components/modals/MyModal";
 import InvoiceModal from "../../components/modals/InvoiceModal";
 import Badge from "../../components/badge/Badge";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
+import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 
 const invoiceTableHead = [
   "#",
@@ -24,17 +25,10 @@ const invoiceTableHead = [
   "Action",
 ];
 
-const status_map = {
-  pending: "warning",
-  cleared: "success",
-  cancelled: "danger",
-};
-
 const Invoice = () => {
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-  const { company:selectedCompany } = useSelector((state)=> state.user);
-
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
   const renderBody = (item, index) => (
     <tr key={index}>
@@ -65,14 +59,13 @@ const Invoice = () => {
       <td>
         {item.invoiceStatus ? (
           <Badge
-            type={status_map[item.invoiceStatus]}
+            type={invoice_status_map[item.invoiceStatus]}
             content={item.invoiceStatus}
           />
         ) : (
           "NA"
         )}
       </td>
-      {/* {<Badge type={status_map[item.c_status]} content={item.c_status} />} */}
       <td>
         <div className="edit__class">
           <EditButton type="view" onClick={() => viewInvoiceModal(item)} />
@@ -94,7 +87,7 @@ const Invoice = () => {
     const fetchLoads = async () => {
       axios
         .post(`${process.env.REACT_APP_BACKEND_URL}/getinvoices`, {
-          company:selectedCompany.value,
+          company: selectedCompany.value,
         })
         .then((res) => setInvoices(res.data))
         .catch((err) => console.log(err));

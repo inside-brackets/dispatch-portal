@@ -42,11 +42,18 @@ const Sidebar = (props) => {
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>
-      {sidebar_items[department].map((item, index) => (
-        <NavLink activeClassName="active__sidebar" to={item.route} key={index}>
-          <SidebarItem title={item.display_name} icon={item.icon} />
-        </NavLink>
-      ))}
+      <div className="sidebar-items">
+        {sidebar_items[department].map((item, index) => (
+          <NavLink
+            activeClassName="active__sidebar"
+            to={item.route}
+            key={index}
+          >
+            <SidebarItem title={item.display_name} icon={item.icon} />
+          </NavLink>
+        ))}
+      </div>
+
       {/* <div className="copyright">@made by us</div> */}
     </div>
   );

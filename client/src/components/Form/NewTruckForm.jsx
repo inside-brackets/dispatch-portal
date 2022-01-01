@@ -86,7 +86,7 @@ const newTruckForm = forwardRef((props, ref) => {
 
   const { sendRequest: postTruck } = useHttp();
 
-  const { defaultValue, closeModal, setRefresh } = props;
+  const { defaultValue, closeModal, setTrucks } = props;
   // const [truckNumber, setTruckNumber] = useState(
   //   defaultValue ? defaultValue.truck_number : ""
   // );
@@ -156,9 +156,10 @@ const newTruckForm = forwardRef((props, ref) => {
     if (!formIsValid) {
       return;
     }
+    const newTruck = saveTruck();
     const transformData = (data) => {
       console.log("fetch", data);
-      setRefresh((prev) => prev + 1);
+      setTrucks(data.trucks);
       closeModal();
     };
     postTruck(
@@ -166,7 +167,7 @@ const newTruckForm = forwardRef((props, ref) => {
         url: `${process.env.REACT_APP_BACKEND_URL}/addnewtruck/${params.mc}`,
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: saveTruck(),
+        body: newTruck,
       },
       transformData
     );

@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import Input from "../../components/UI/MyInput";
 import { Col, Row } from "react-bootstrap";
+import status_map from "../../assets/JsonData/status_map.json";
 
 const customerTableHead = [
   "#",
@@ -18,14 +19,6 @@ const customerTableHead = [
   "Email",
   "Status",
 ];
-
-const status_map = {
-  unreached: "unreached",
-  appointment: "appointment",
-  rejected: "danger",
-  registered: "success",
-  deactivated: "black",
-};
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
@@ -91,7 +84,7 @@ const Customers = () => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          "salesman": currUserId,
+          salesman: currUserId,
         },
       },
       transformData

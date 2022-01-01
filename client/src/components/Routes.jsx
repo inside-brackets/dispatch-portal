@@ -2,18 +2,22 @@ import React, { useEffect, useState } from "react";
 
 import { Route, Switch, Redirect } from "react-router-dom";
 
-import Dashboard from "../pages/sales/Dashboard";
+import Invoice from "../pages/admin/Invoice";
+import AddCarrier from "../pages/admin/AddCarrier";
+import CarrierView from "../pages/admin/CarrierView";
 import DashboardAdmin from "../pages/admin/DashboardAdmin";
 import AssignSales from "../pages/admin/AssignSales";
 import Carriers from "../pages/admin/Carriers";
-import AddCarrier from "../pages/admin/AddCarrier";
+import SearchCarrier from "../pages/admin/SearchCarrier";
+
+import Dashboard from "../pages/sales/Dashboard";
 import SpreadSheet from "../pages/sales/SpreadSheet";
 import Appointments from "../pages/sales/Appointments";
 import AppointmentDetail from "../pages/sales/AppointmentDetail";
-import TruckDetail from "../pages/dispatch/TruckDetail";
-import Invoice from "../pages/admin/Invoice";
 import Dialer from "../pages/sales/Dialer";
 import Profile from "../pages/Profile";
+
+import TruckDetail from "../pages/dispatch/TruckDetail";
 import MyTrucks from "../pages/dispatch/MyTrucks";
 
 import { useSelector } from "react-redux";
@@ -81,7 +85,9 @@ const Routes = () => {
       </Route>
       <Route path="/dashboard" exact component={DashboardAdmin} />
       <Route path="/carriers" exact component={Carriers} />
-      <Route path="/addcarrier" exact component={AddCarrier} />
+      <Route path="/searchcarrier" exact component={SearchCarrier} />
+      <Route path="/addcarrier/:mc" component={AddCarrier} />
+      <Route path="/carrierview/:mc" component={CarrierView} />
       <Route path="/assignsales" exact component={AssignSales} />
       <Route path="/profile" component={Profile} />
       <Route path="/loads" component={Loads} />

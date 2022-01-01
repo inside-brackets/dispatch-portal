@@ -13,8 +13,7 @@ import EditButton from "../../components/UI/EditButton";
 import Badge from "../../components/badge/Badge";
 
 import { useSelector } from "react-redux";
-
-// import LoadTable from "../../components/table/LoadTable";
+import status_map from "../../assets/JsonData/status_map.json";
 
 const loadTableHead = [
   "#",
@@ -30,12 +29,7 @@ const loadTableHead = [
   "Action",
   "",
 ];
-const status_map = {
-  booked: "primary",
-  ongoing: "warning",
-  delivered: "success",
-  canceled: "danger",
-};
+
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const renderBody = (item, index) => (

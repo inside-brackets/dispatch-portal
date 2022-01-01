@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loadsActions } from "../../store/loads";
 import GenerateInvoice from "../GenerateInvoice";
 import Badge from "../../components/badge/Badge";
+import status_map from "../../assets/JsonData/status_map.json";
 
 const customerTableHead = [
   "#",
@@ -26,12 +27,6 @@ const customerTableHead = [
   "Status",
   "",
 ];
-const status_map = {
-  booked: "primary",
-  ongoing: "warning",
-  delivered: "success",
-  canceled: "danger",
-};
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 

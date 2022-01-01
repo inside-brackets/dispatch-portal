@@ -1,62 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import EditButton from "../UI/EditButton";
 import Table from "./Table";
 import TruckForm from "../Form/NewTruckForm";
 import Button from "../UI/Button";
 import Modal from "../modals/MyModal";
 import "./trucktable.css";
-import { useSelector } from "react-redux";
 import useHttp from "../../hooks/use-https";
+
+import truck_status_map from "../../assets/JsonData/truck_status_map.json";
+import Badge from "../../components/badge/Badge";
 
 const customerTableHead = [
   "#",
   "Truck Number",
   "Vin Number",
   "Trailer Type",
-  "Carry Limit(lbs)",
-  "Temp Restrictions",
-  "Off Days",
-  "Travel Region",
-  "Trip Duration",
-  "Drivers",
-  "",
+  "Truck Staus",
+  "Actions",
 ];
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
-  const { _id: currUserId } = useSelector((state) => state.user.user);
-
   const [truckModal, setTruckModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [truck, setTruck] = useState(null);
-  const [refresh, setRefresh] = useState(0);
-  const { sendRequest: fetchTrucks } = useHttp();
   const { sendRequest: deleteTruck } = useHttp();
   const { setTrucks, mc } = props;
-  useEffect(() => {
-    const transformData = (data) => {
-      setTrucks(data.trucks);
-    };
-    fetchTrucks(
-      {
-        url: `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-
-        body: {
-          salesman: currUserId,
-          mc_number: mc,
-        },
-      },
-      transformData
-    );
-  }, [fetchTrucks, mc, setTrucks, currUserId, refresh]);
   const truckModalHnadler = () => {
     setTruckModal(true);
   };
   const closeTruckModal = () => {
-    console.log("close");
     setTruckModal(false);
   };
 
@@ -64,15 +38,15 @@ const TruckTable = (props) => {
     setEditModal(true);
   };
   const closeEditModal = () => {
-    console.log("close Edit Modal");
-    setTruck();
+    setTruck(null);
     setEditModal(false);
   };
 
   const deleteTruckHandler = (truck_number) => {
     const transformData = (data) => {
-      setTrucks(data.trucks);
-      setRefresh((prev) => prev + 1);
+      setTrucks((prev) =>
+        prev.filter((item) => item.truck_number !== truck_number)
+      );
     };
     deleteTruck(
       {
@@ -81,32 +55,19 @@ const TruckTable = (props) => {
       transformData
     );
   };
-
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
       <td>{item.truck_number ? item.truck_number : "NA"}</td>
       <td>{item.vin_number ? item.vin_number : "NA"}</td>
       <td>{item.trailer_type ? item.trailer_type : "NA"}</td>
-      <td>{item.carry_limit ? `<${item.carry_limit}K` : "NA"}</td>
       <td>
-        {item.temperature_restriction
-          ? `> ${item.temperature_restriction} F`
-          : "NA"}
-      </td>
-      <td>
-        {item.off_days.length !== 0
-          ? item.off_days.map((item) => `${item}, `)
-          : "NA"}
-      </td>
-      <td>
-        {item.region.length !== 0
-          ? item.region.map((item) => `${item}, `)
-          : "NA"}
-      </td>
-      <td>{item.trip_durration ? `${item.trip_durration} Days` : "NA"}</td>
-      <td>
-        {item.drivers ? item.drivers.map((item) => `${item.name}, `) : "NA"}
+        <h6>
+          <Badge
+            type={truck_status_map[item.t_status]}
+            content={item.t_status}
+          />
+        </h6>
       </td>
       <td>
         <div className="edit__class">
@@ -114,7 +75,6 @@ const TruckTable = (props) => {
             type="edit"
             onClick={() => {
               setTruck(item);
-
               editModalHnadler();
             }}
           />
@@ -163,17 +123,12 @@ const TruckTable = (props) => {
         heading="Add New Truck"
         onClose={closeTruckModal}
       >
-        <TruckForm
-          setRefresh={setRefresh}
-          refresh={refresh}
-          closeModal={closeTruckModal}
-        />
+        <TruckForm setTrucks={setTrucks} closeModal={closeTruckModal} />
       </Modal>
 
       <Modal show={editModal} heading="Edit Truck" onClose={closeEditModal}>
         <TruckForm
-          setRefresh={setRefresh}
-          refresh={refresh}
+          setTrucks={setTrucks}
           closeModal={closeEditModal}
           defaultValue={truck}
         />
