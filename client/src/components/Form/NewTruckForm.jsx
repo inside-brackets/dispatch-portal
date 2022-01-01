@@ -1,6 +1,5 @@
-import React, { forwardRef, useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Input from "../UI/MyInput";
-import Button from "../UI/Button";
 import MySelect from "../UI/MySelect";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -12,6 +11,10 @@ import useHttp from "../../hooks/use-https";
 import { useParams } from "react-router-dom";
 import useInput from "../../hooks/use-input";
 import axios from "axios";
+import { Button, Row, Col } from "react-bootstrap";
+
+import Select from "react-select";
+import { useSelector } from "react-redux";
 
 const transformArrayToObjectArray = (array) => {
   return array.map((item) => ({
@@ -22,10 +25,28 @@ const transformArrayToObjectArray = (array) => {
 
 const isNotEmpty = (value) => value.trim() !== "";
 
-const newTruckForm = forwardRef((props, ref) => {
+const NewTruckForm = (props) => {
+  const [selectedDispatcher, setSelectedDispatcher] = useState(null);
+  const [dispatchers, setDispatchers] = useState([]);
+  const { company } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+
+        {
+          department: "dispatch",
+          company: company.value,
+        }
+      )
+      .then(({ data }) => setDispatchers(data));
+  }, [company]);
+
   const params = useParams();
   const formRef = useRef();
-  // hello
+
+  const [t_status, setT_status] = useState(false);
   const {
     value: truckNumber,
     isValid: truckNumberIsValid,
@@ -33,7 +54,6 @@ const newTruckForm = forwardRef((props, ref) => {
     valueChangeHandler: truckNumberChangeHandler,
     inputBlurHandler: truckNumberBlurHandler,
   } = useInput(isNotEmpty);
-  // hello
   const {
     value: vinNumber,
     isValid: vinNumberIsValid,
@@ -81,17 +101,19 @@ const newTruckForm = forwardRef((props, ref) => {
   const [selectedTravel, setSelectedTravel] = useState([]);
   const [selectedTrailer, setSelectedTrailer] = useState([]);
   const [selectedOffDays, setSelectedOffDays] = useState([]);
-  // const [userName, setUserName] = useState(null);
   const [truckNumberIsAvailable, setTruckNumberIsAvailable] = useState(null);
-
   const { sendRequest: postTruck } = useHttp();
 
   const { defaultValue, closeModal, setTrucks } = props;
-  // const [truckNumber, setTruckNumber] = useState(
-  //   defaultValue ? defaultValue.truck_number : ""
-  // );
   useEffect(() => {
     if (defaultValue) {
+      setT_status(defaultValue.t_status);
+      if (defaultValue.t_status !== "new") {
+        setSelectedDispatcher({
+          label: defaultValue.dispatcher.user_name,
+          value: defaultValue.dispatcher._id,
+        });
+      }
       setSelectedOffDays(transformArrayToObjectArray(defaultValue.off_days));
       setSelectedTrailer(
         transformArrayToObjectArray([defaultValue.trailer_type])[0]
@@ -112,43 +134,44 @@ const newTruckForm = forwardRef((props, ref) => {
       });
       setSelectedTravel(transformArrayToObjectArray(defaultValue.region));
     }
-
-    const indentifier = setTimeout(async () => {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-        { "trucks.truck_number": truckNumber }
-      );
-      console.log("checking truck Number");
-      console.log(response.data);
-      console.log("truckNumber", truckNumber);
-      setTruckNumberIsAvailable(response.data.length === 0);
-    }, 500);
-    return () => {
-      clearTimeout(indentifier);
-    };
   }, [
     defaultValue,
-    // hello
     truckNumberChangeHandler,
-    // hello
     vinNumberChangeHandler,
     Driver1NameChangeHandler,
     Driver1PhoneChangeHandler,
-    truckNumber,
   ]);
+
+  useEffect(() => {
+    setTruckNumberIsAvailable(true);
+
+    const indentifier = setTimeout(async () => {
+      if (truckNumber) {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
+          { mc_number: params.mc, "trucks.truck_number": truckNumber }
+        );
+        console.log("checking truck Number");
+        console.log(response.data);
+        console.log("truckNumber", truckNumber);
+        setTruckNumberIsAvailable(response.data.length === 0);
+      }
+    }, 250);
+    return () => {
+      clearTimeout(indentifier);
+    };
+  }, [truckNumber, params.mc]);
+
   const handleDriverChange = (event) => {
     setDriverType(event.target.value);
   };
-  // submit
   let formIsValid = false;
   if (
-    // hello
     truckNumberIsValid &&
-    // hello
     vinNumberIsValid &&
     oPhoneIsValid &&
     Driver1NameIsValid &&
-    truckNumberIsAvailable
+    (truckNumberIsAvailable || defaultValue)
   ) {
     formIsValid = true;
   }
@@ -213,8 +236,51 @@ const newTruckForm = forwardRef((props, ref) => {
     };
     return saveObj;
   };
+
+  const reassign = async () => {
+    console.log("reassign", selectedDispatcher.value);
+    axios
+      .put(
+        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${truckNumber}`,
+        { "trucks.$.dispatcher": selectedDispatcher.value }
+      )
+      .then((result) => {
+        console.log(result);
+      });
+  };
+
   return (
     <form ref={formRef}>
+      {props.admin && defaultValue && t_status !== "new" && (
+        <>
+          <h4>Assigned Dispatcher</h4>
+          <Row>
+            <Col>
+              <Select
+                options={dispatchers.map((item) => ({
+                  label: item.user_name,
+                  value: item._id,
+                }))}
+                value={selectedDispatcher}
+                onChange={setSelectedDispatcher}
+                isSearchable={true}
+              />
+            </Col>
+            <Col>
+              <Button
+                variant="warning"
+                onClick={reassign}
+                disabled={
+                  defaultValue.dispatcher?._id === selectedDispatcher?.value
+                }
+              >
+                Change Dispatcher
+              </Button>
+            </Col>
+          </Row>
+          <br />
+        </>
+      )}
       <Input
         type="number"
         label="*Truck Number:"
@@ -228,21 +294,9 @@ const newTruckForm = forwardRef((props, ref) => {
       {truckNumberHasError && (
         <p className="error-text">Truck number is required.</p>
       )}
-
-      {
-        // <Form.Group as={Col} md="6">
-        //   <Form.Label>Truck Number</Form.Label>
-        //   <Form.Control
-        //     value={truckNumber}
-        //     // defaultValue={truckNumber}
-        //     onChange={(e) => {
-        //       setTruckNumber(e.target.value);
-        //     }}
-        //     type="text"
-        //     placeholder="Enter Truck Number"
-        //   />
-        // </Form.Group>
-      }
+      {truckNumberIsAvailable === false && !defaultValue && (
+        <p className="error-text">Truck exists.</p>
+      )}
       <Input
         type="text"
         label="*Vin Number:"
@@ -418,6 +472,7 @@ const newTruckForm = forwardRef((props, ref) => {
           )}
         </div>
       )}
+
       <div
         style={{
           width: "100%",
@@ -425,16 +480,12 @@ const newTruckForm = forwardRef((props, ref) => {
           justifyContent: "flex-end",
         }}
       >
-        <Button
-          buttonText="Submit"
-          color="inherit"
-          onClick={onSubmit}
-          className="button__class"
-          disabled={!formIsValid}
-        />
+        <Button variant="primary" onClick={onSubmit} disabled={!formIsValid}>
+          Submit
+        </Button>
       </div>
     </form>
   );
-});
+};
 
-export default newTruckForm;
+export default NewTruckForm;

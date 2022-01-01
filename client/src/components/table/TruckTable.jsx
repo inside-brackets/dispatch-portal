@@ -9,6 +9,7 @@ import useHttp from "../../hooks/use-https";
 
 import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import Badge from "../../components/badge/Badge";
+import { useSelector } from "react-redux";
 
 const customerTableHead = [
   "#",
@@ -22,6 +23,8 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
+  const { user } = useSelector((state) => state.user);
+
   const [truckModal, setTruckModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [truck, setTruck] = useState(null);
@@ -123,11 +126,16 @@ const TruckTable = (props) => {
         heading="Add New Truck"
         onClose={closeTruckModal}
       >
-        <TruckForm setTrucks={setTrucks} closeModal={closeTruckModal} />
+        <TruckForm
+          admin={user.department === "admin"}
+          setTrucks={setTrucks}
+          closeModal={closeTruckModal}
+        />
       </Modal>
 
       <Modal show={editModal} heading="Edit Truck" onClose={closeEditModal}>
         <TruckForm
+          admin={user.department === "admin"}
           setTrucks={setTrucks}
           closeModal={closeEditModal}
           defaultValue={truck}

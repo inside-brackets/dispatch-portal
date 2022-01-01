@@ -13,6 +13,7 @@ import Loader from "react-loader-spinner";
 import Badge from "../../components/badge/Badge";
 import { useHistory } from "react-router-dom";
 import status_map from "../../assets/JsonData/status_map.json";
+import { useSelector } from "react-redux";
 
 const CardRow = ({ field, value, badge }) => {
   return (
@@ -40,6 +41,8 @@ const SearchCarrier = () => {
   const [error, setError] = useState(false);
   const [searchedMc, setSearchedMc] = useState("");
   const [carrier, setCarrier] = useState("");
+
+  const { company: selectedCompany } = useSelector((state) => state.user);
 
   const history = useHistory();
 
@@ -118,20 +121,29 @@ const SearchCarrier = () => {
                 <Card.Title>{carrier.company_name}</Card.Title>
                 <hr />
                 <CardRow field="Status" value={carrier.c_status} badge={true} />
+                {carrier.salesman ? (
+                  <CardRow field="With" value={carrier.salesman.company} />
+                ) : (
+                  <CardRow field="With" value="N/A" />
+                )}
               </Card.Body>
-
-              <Button
-                onClick={() =>
-                  clickHandler(
-                    carrier.c_status === "unassigned"
-                      ? "addcarrier"
-                      : "carrierview"
-                  )
-                }
-                variant="primary"
-              >
-                {carrier.c_status === "unassigned" ? "Assign" : "View"}
-              </Button>
+              {carrier.c_status === "unassigned" ? (
+                <Button
+                  onClick={() => clickHandler("addcarrier")}
+                  variant="primary"
+                >
+                  Assign
+                </Button>
+              ) : (
+                selectedCompany.value === carrier.salesman.company && (
+                  <Button
+                    onClick={() => clickHandler("carrierview")}
+                    variant="primary"
+                  >
+                    View
+                  </Button>
+                )
+              )}
             </Card>
           </center>
         ) : (

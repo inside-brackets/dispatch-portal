@@ -34,6 +34,11 @@ route.post("/uploadfile/:type/:id", (req, res) => {
   console.log(req);
 });
 route.post("/countcarriers", carriersController.countCarriers);
+route.put(
+  "/updatetruck/:mcNumber/:trucknumber",
+  carriersController.updateTruck
+);
+
 route.post("/whitelist/:mac/:ip", (req, res) => {
   setIp(req.params.mac, req.params.ip);
   console.log("ip list", getIpList());
@@ -56,7 +61,5 @@ route.post("/login", (req, res) => {
     res.status(500).send({ msg: err.message });
   }
 });
-
-route.get("/test", carriersController.test);
 
 module.exports = route;

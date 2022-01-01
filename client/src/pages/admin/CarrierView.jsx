@@ -30,6 +30,7 @@ const AppointmentDetail = () => {
         console.log(data);
         if (data) {
           setCarrier(data);
+          setTrucks(data.trucks);
           setSelectedPayment({
             label: data.payment_method,
             value: data.payment_method,

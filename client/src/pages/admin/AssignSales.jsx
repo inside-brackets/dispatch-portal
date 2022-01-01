@@ -29,7 +29,6 @@ const AssignSales = () => {
   const [dispatchers, setDispatchers] = useState([]);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   const { sendRequest: fetchDispatchers } = useHttp();
-  // const dispatchRef = useRef();
   const [selectedDispatcher, setSelectedDispatcher] = useState([]);
 
   const { company: selectedCompany } = useSelector((state) => state.user);
@@ -41,17 +40,15 @@ const AssignSales = () => {
     const assignedDispatcher = dispatchers.find((item) => {
       return item.user_name === selectedDispatcher.value;
     });
-    const response = await axios({
+    await axios({
       url: `${process.env.REACT_APP_BACKEND_URL}/admin/assigndispatcher/${mc}/${truckNumber}`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
 
       data: {
-        _id: assignedDispatcher._id,
-        name: assignedDispatcher.user_name,
+        id: assignedDispatcher._id,
       },
     });
-    console.log(response);
     const newCarriers = carriers.filter((item) => {
       return !(item.truck_number === truckNumber && item.mc_number === mc);
     });

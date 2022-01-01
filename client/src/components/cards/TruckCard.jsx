@@ -80,7 +80,7 @@ const TruckCard = ({ item }) => {
     <Card
       style={{
         width: "auto",
-        height: "400px",
+        height: "410px",
       }}
     >
       <Card.Body>
