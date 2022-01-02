@@ -768,14 +768,15 @@ const TruckDetail = ({ match }) => {
                     </Button>
                   </Col>
                   <Col md={6}>
-                    <Button
+                    {/* <Button
                       style={{ float: "right" }}
                       size="lg"
                       variant="danger"
                       onClick={openModal}
+
                     >
                       Deactivate Carrier
-                    </Button>
+                    </Button> */}
                   </Col>
                 </Row>
               </Card.Body>
