@@ -166,7 +166,7 @@ const TruckDetail = ({ match }) => {
 
       await axios
         .put(
-          `${process.env.REACT_APP_BACKEND_URL}/dispatch/updatetruck/${data.mc_number}/${match.params.truck}`,
+          `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${data.mc_number}/${match.params.truck}`,
           truckObj
         )
         .then((res) => console.log(res))
