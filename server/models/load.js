@@ -17,13 +17,17 @@ const loadSchema = new mongoose.Schema(
     ratecons: {
       type: String,
     },
-    dispatcher: { 
+    dispatcher: {
       type: mongoose.Types.ObjectId,
-      ref: "User" 
+      ref: "User",
     },
     broker: String, // broker name
     pick_up: { address: String, date: Date },
     drop: { address: String, date: Date },
+    invoice: {
+      type: mongoose.Types.ObjectId,
+      ref: "Invoice",
+    },
     carrier: {
       mc_number: {
         type: Number,
