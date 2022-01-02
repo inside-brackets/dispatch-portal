@@ -118,11 +118,9 @@ const NewTruckForm = (props) => {
       setSelectedTrailer(
         transformArrayToObjectArray([defaultValue.trailer_type])[0]
       );
-      // hello
       truckNumberChangeHandler({
         target: { value: `${defaultValue.truck_number}` },
       });
-      // hello
       vinNumberChangeHandler({
         target: { value: `${defaultValue.vin_number}` },
       });
@@ -283,6 +281,7 @@ const NewTruckForm = (props) => {
       )}
       <Input
         type="number"
+        name="truck_number"
         label="*Truck Number:"
         placeholder="Enter 3 digit code.."
         className={truckNumberHasError ? "invalid" : ""}

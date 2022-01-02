@@ -14,7 +14,7 @@ const addNewInvoice = async (req, res) => {
 
 const getInvoices = (req, res, next) => {
   var filter = req.body;
-  if(req.body.company){
+  if (req.body.company) {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
@@ -23,11 +23,14 @@ const getInvoices = (req, res, next) => {
     sort: {
       createdAt: -1, //Sort by Date Added DESC
     },
-  }).populate('dispatcher._id',{company:1})
+  })
+    .populate("dispatcher", { company: 1 })
     .then((invoices) => {
-      if(req.body.company){
-        console.log("if company:",invoices);
-        const filteredInvoices = invoices.filter(invoice=> invoice.dispatcher._id.company == req.body.company);
+      if (req.body.company) {
+        console.log("if company:", invoices);
+        const filteredInvoices = invoices.filter(
+          (invoice) => invoice.dispatcher.company == req.body.company
+        );
         return res.send(filteredInvoices);
       }
       res.send(invoices);
