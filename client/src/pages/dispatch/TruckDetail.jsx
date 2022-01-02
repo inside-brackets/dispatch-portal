@@ -174,9 +174,9 @@ const TruckDetail = ({ match }) => {
     }
   };
 
-  const openModal = () => {
-    setrModal(true);
-  };
+  // const openModal = () => {
+  //   setrModal(true);
+  // };
   const rejectHandler = async () => {
     await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${data.mc_number}`,
