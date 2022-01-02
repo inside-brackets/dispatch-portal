@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EditButton from "../UI/EditButton";
 import Table from "./Table";
 import TruckForm from "../Form/NewTruckForm";
-import Button from "../UI/Button";
 import Modal from "../modals/MyModal";
 import "./trucktable.css";
 import useHttp from "../../hooks/use-https";
@@ -10,6 +9,10 @@ import useHttp from "../../hooks/use-https";
 import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
+
+import { Button, Row, Col } from "react-bootstrap";
+import Select from "react-select";
+import axios from "axios";
 
 const customerTableHead = [
   "#",
@@ -23,13 +26,21 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
+  // reassign states
+  const [selectedDispatcher, setSelectedDispatcher] = useState(null);
+  const [dispatchers, setDispatchers] = useState([]);
+  const { company } = useSelector((state) => state.user);
+  //
   const { user } = useSelector((state) => state.user);
-
   const [truckModal, setTruckModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [truck, setTruck] = useState(null);
   const { sendRequest: deleteTruck } = useHttp();
+
   const { setTrucks, mc } = props;
+
+  const [showReassingModal, setShowReassingModal] = useState(false);
+
   const truckModalHnadler = () => {
     setTruckModal(true);
   };
@@ -74,23 +85,68 @@ const TruckTable = (props) => {
       </td>
       <td>
         <div className="edit__class">
-          <EditButton
-            type="edit"
-            onClick={() => {
-              setTruck(item);
-              editModalHnadler();
-            }}
-          />
-          <EditButton
-            type="delete"
-            onClick={() => {
-              deleteTruckHandler(item.truck_number);
-            }}
-          />
+          {item.t_status === "new" ? (
+            <>
+              <EditButton
+                type="edit"
+                onClick={() => {
+                  setTruck(item);
+                  editModalHnadler();
+                }}
+              />
+              <EditButton
+                type="delete"
+                onClick={() => {
+                  deleteTruckHandler(item.truck_number);
+                }}
+              />
+            </>
+          ) : (
+            user.department === "admin" && (
+              <EditButton
+                type="edit"
+                onClick={() => {
+                  setSelectedDispatcher({
+                    label: item.dispatcher.user_name,
+                    value: item.dispatcher._id,
+                  });
+                  setTruck(item);
+                  setShowReassingModal(true);
+                }}
+              />
+            )
+          )}
         </div>
       </td>
     </tr>
   );
+
+  // reassign
+  useEffect(() => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+
+        {
+          department: "dispatch",
+          company: company.value,
+        }
+      )
+      .then(({ data }) => setDispatchers(data));
+  }, [company]);
+  const reassign = async () => {
+    axios
+      .put(
+        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${mc}/${truck.truck_number}`,
+        { "trucks.$.dispatcher": selectedDispatcher.value }
+      )
+      .then((result) => {
+        console.log("reassing", result.data.trucks);
+        setTrucks(result.data.trucks);
+        setShowReassingModal(false);
+      });
+  };
+  // reassign end
 
   return (
     <div style={{ left: "10%", position: "relative" }}>
@@ -115,7 +171,7 @@ const TruckTable = (props) => {
                 justifyContent: "flex-end",
               }}
             >
-              <Button onClick={truckModalHnadler} buttonText="Add Truck" />
+              <Button onClick={truckModalHnadler}>Add Truck</Button>
             </div>
           </div>
         </div>
@@ -140,6 +196,38 @@ const TruckTable = (props) => {
           closeModal={closeEditModal}
           defaultValue={truck}
         />
+      </Modal>
+      <Modal
+        show={showReassingModal}
+        heading="Assigned Dispatcher"
+        onClose={() => {
+          setShowReassingModal(false);
+        }}
+      >
+        {truck && (
+          <Row>
+            <Col>
+              <Select
+                options={dispatchers.map((item) => ({
+                  label: item.user_name,
+                  value: item._id,
+                }))}
+                value={selectedDispatcher}
+                onChange={setSelectedDispatcher}
+                isSearchable={true}
+              />
+            </Col>
+            <Col>
+              <Button
+                variant="warning"
+                onClick={reassign}
+                disabled={truck.dispatcher?._id === selectedDispatcher?.value}
+              >
+                Change Dispatcher
+              </Button>
+            </Col>
+          </Row>
+        )}
       </Modal>
     </div>
   );

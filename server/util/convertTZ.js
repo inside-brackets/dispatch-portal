@@ -49,8 +49,8 @@ const usStates = {
 const callAbleStates = (pst) => {
   let availableStates = [];
   pst = parseInt(moment(pst).format("H"));
-  const cst = pst + 2;
   const mst = pst + 1;
+  const cst = pst + 2;
   const nineAm = 9;
   if (pst >= nineAm) {
     availableStates = [

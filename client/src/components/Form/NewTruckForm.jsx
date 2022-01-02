@@ -10,11 +10,8 @@ import "./newTruckForm.css";
 import useHttp from "../../hooks/use-https";
 import { useParams } from "react-router-dom";
 import useInput from "../../hooks/use-input";
+import { Button } from "react-bootstrap";
 import axios from "axios";
-import { Button, Row, Col } from "react-bootstrap";
-
-import Select from "react-select";
-import { useSelector } from "react-redux";
 
 const transformArrayToObjectArray = (array) => {
   return array.map((item) => ({
@@ -26,23 +23,6 @@ const transformArrayToObjectArray = (array) => {
 const isNotEmpty = (value) => value.trim() !== "";
 
 const NewTruckForm = (props) => {
-  const [selectedDispatcher, setSelectedDispatcher] = useState(null);
-  const [dispatchers, setDispatchers] = useState([]);
-  const { company } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-
-        {
-          department: "dispatch",
-          company: company.value,
-        }
-      )
-      .then(({ data }) => setDispatchers(data));
-  }, [company]);
-
   const params = useParams();
   const formRef = useRef();
 
@@ -108,12 +88,6 @@ const NewTruckForm = (props) => {
   useEffect(() => {
     if (defaultValue) {
       setT_status(defaultValue.t_status);
-      if (defaultValue.t_status !== "new") {
-        setSelectedDispatcher({
-          label: defaultValue.dispatcher.user_name,
-          value: defaultValue.dispatcher._id,
-        });
-      }
       setSelectedOffDays(transformArrayToObjectArray(defaultValue.off_days));
       setSelectedTrailer(
         transformArrayToObjectArray([defaultValue.trailer_type])[0]
@@ -221,7 +195,7 @@ const NewTruckForm = (props) => {
 
     const saveObj = {
       truck_number: parseInt(truckNumber),
-      vin_number: parseInt(vinNumber),
+      vin_number: vinNumber,
       trailer_type: selectedTrailer.value,
       carry_limit: parseInt(carryLimitRef.current.value),
       drivers: drivers,
@@ -235,50 +209,8 @@ const NewTruckForm = (props) => {
     return saveObj;
   };
 
-  const reassign = async () => {
-    console.log("reassign", selectedDispatcher.value);
-    axios
-      .put(
-        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${truckNumber}`,
-        { "trucks.$.dispatcher": selectedDispatcher.value }
-      )
-      .then((result) => {
-        console.log(result);
-      });
-  };
-
   return (
     <form ref={formRef}>
-      {props.admin && defaultValue && t_status !== "new" && (
-        <>
-          <h4>Assigned Dispatcher</h4>
-          <Row>
-            <Col>
-              <Select
-                options={dispatchers.map((item) => ({
-                  label: item.user_name,
-                  value: item._id,
-                }))}
-                value={selectedDispatcher}
-                onChange={setSelectedDispatcher}
-                isSearchable={true}
-              />
-            </Col>
-            <Col>
-              <Button
-                variant="warning"
-                onClick={reassign}
-                disabled={
-                  defaultValue.dispatcher?._id === selectedDispatcher?.value
-                }
-              >
-                Change Dispatcher
-              </Button>
-            </Col>
-          </Row>
-          <br />
-        </>
-      )}
       <Input
         type="number"
         name="truck_number"
