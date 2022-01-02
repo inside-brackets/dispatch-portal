@@ -49,7 +49,7 @@ const updateInvoiceStatus = async (req, res) => {
         $set: req.body,
       },
       { new: true }
-    );
+    ).populate("dispatcher");
     res.status(200);
     res.send(updatedLoad);
     console.log("done");
@@ -106,7 +106,7 @@ const clearInvoice = async (req, res) => {
         },
       },
       { new: true }
-    );
+    ).populate("dispatcher");
     res.status(200);
     res.send(updatedLoad);
     console.log("done");
