@@ -24,7 +24,7 @@ const getInvoices = (req, res, next) => {
       createdAt: -1, //Sort by Date Added DESC
     },
   })
-    .populate("dispatcher", { company: 1 })
+    .populate("dispatcher")
     .then((invoices) => {
       if (req.body.company) {
         console.log("if company:", invoices);

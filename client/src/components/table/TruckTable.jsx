@@ -104,7 +104,7 @@ const TruckTable = (props) => {
           ) : (
             user.department === "admin" && (
               <EditButton
-                type="edit"
+                type="view"
                 onClick={() => {
                   setSelectedDispatcher({
                     label: item.dispatcher.user_name,

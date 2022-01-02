@@ -26,7 +26,6 @@ const NewTruckForm = (props) => {
   const params = useParams();
   const formRef = useRef();
 
-  const [t_status, setT_status] = useState(false);
   const {
     value: truckNumber,
     isValid: truckNumberIsValid,
@@ -87,7 +86,6 @@ const NewTruckForm = (props) => {
   const { defaultValue, closeModal, setTrucks } = props;
   useEffect(() => {
     if (defaultValue) {
-      setT_status(defaultValue.t_status);
       setSelectedOffDays(transformArrayToObjectArray(defaultValue.off_days));
       setSelectedTrailer(
         transformArrayToObjectArray([defaultValue.trailer_type])[0]
