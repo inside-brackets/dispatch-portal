@@ -24,7 +24,7 @@ const getInvoices = (req, res, next) => {
       createdAt: -1, //Sort by Date Added DESC
     },
   })
-    .populate("dispatcher")
+    .populate("dispatcher loads")
     .then((invoices) => {
       if (req.body.company) {
         console.log("if company:", invoices);
@@ -106,7 +106,7 @@ const clearInvoice = async (req, res) => {
         },
       },
       { new: true }
-    ).populate("dispatcher");
+    ).populate("dispatcher loads");
     res.status(200);
     res.send(updatedLoad);
     console.log("done");

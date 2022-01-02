@@ -29,10 +29,12 @@ const invoiceSchema = new mongoose.Schema(
       require: true,
     },
 
-    loads: {
-      type: Array,
-      reuire: true,
-    },
+    loads: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Load",
+      },
+    ],
     dispatcherFee: {
       type: Number,
       require: true,

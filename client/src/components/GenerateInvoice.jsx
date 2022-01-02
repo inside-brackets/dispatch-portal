@@ -19,7 +19,7 @@ const GenerateInvoice = ({
   const [grossTotal, setGrossTotal] = useState(0);
   const [loadedMilesTotal, setLoadedMilesTotal] = useState(0);
   const { dispatcher_fee } = carrier;
-  console.log(carrier);
+
   const search = () => {
     const to = new Date(endDate);
     to.setDate(to.getDate() + 1);
