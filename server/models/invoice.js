@@ -13,12 +13,12 @@ const invoiceSchema = new mongoose.Schema(
     trailerType: { type: String, require: true },
 
     dispatcher: {
-      _id: { type: mongoose.Types.ObjectId, ref: "User" },
-      name: String,
+      type: mongoose.Types.ObjectId,
+      ref: "User",
     },
     sales: {
-      _id: { type: mongoose.Types.ObjectId, ref: "User" },
-      name: String,
+      type: mongoose.Types.ObjectId,
+      ref: "User",
     },
     startingDate: {
       type: Date,

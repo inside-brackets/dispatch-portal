@@ -69,14 +69,8 @@ const InvoiceModal = ({
       truckNumber: truck_number,
       comment: commentRef.current.value,
       trailerType: totalLoads[0].carrier.trailer_type,
-      dispatcher: {
-        _id: currUserId,
-        name: currUserName,
-      },
-      sales: {
-        _id: carrier.salesman._id,
-        name: carrier.salesman.name,
-      },
+      dispatcher: currUserId,
+      sales: carrier.salesman._id,
       startingDate: startDate,
       endingDate: endDate,
       loads: load,

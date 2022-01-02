@@ -89,7 +89,7 @@ const Invoice = () => {
         .post(`${process.env.REACT_APP_BACKEND_URL}/getinvoices`, {
           company: selectedCompany.value,
         })
-        .then((res) => setInvoices(res.data))
+        .then((res) => setInvoices(res.data), console.log("invoices", invoices))
         .catch((err) => console.log(err));
     };
     fetchLoads();

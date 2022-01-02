@@ -13,7 +13,7 @@ import EditButton from "../../components/UI/EditButton";
 import Badge from "../../components/badge/Badge";
 
 import { useSelector } from "react-redux";
-import status_map from "../../assets/JsonData/status_map.json";
+import status_map from "../../assets/JsonData/load_status_map.json";
 
 const loadTableHead = [
   "#",
