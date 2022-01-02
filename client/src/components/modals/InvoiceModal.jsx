@@ -73,7 +73,7 @@ const InvoiceModal = ({
       sales: carrier.salesman._id,
       startingDate: startDate,
       endingDate: endDate,
-      loads: load,
+      loads: load.map((item) => item._id),
       dispatcherFee: dispatcherFee,
       totalLoadedMiles: totalLoadedMiles,
       totalGross: totalGross,
