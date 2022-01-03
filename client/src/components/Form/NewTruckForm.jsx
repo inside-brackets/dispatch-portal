@@ -1,6 +1,5 @@
-import React, { forwardRef, useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Input from "../UI/MyInput";
-import Button from "../UI/Button";
 import MySelect from "../UI/MySelect";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -11,6 +10,7 @@ import "./newTruckForm.css";
 import useHttp from "../../hooks/use-https";
 import { useParams } from "react-router-dom";
 import useInput from "../../hooks/use-input";
+import { Button } from "react-bootstrap";
 import axios from "axios";
 
 const transformArrayToObjectArray = (array) => {
@@ -22,10 +22,10 @@ const transformArrayToObjectArray = (array) => {
 
 const isNotEmpty = (value) => value.trim() !== "";
 
-const newTruckForm = forwardRef((props, ref) => {
+const NewTruckForm = (props) => {
   const params = useParams();
   const formRef = useRef();
-  // hello
+
   const {
     value: truckNumber,
     isValid: truckNumberIsValid,
@@ -33,7 +33,6 @@ const newTruckForm = forwardRef((props, ref) => {
     valueChangeHandler: truckNumberChangeHandler,
     inputBlurHandler: truckNumberBlurHandler,
   } = useInput(isNotEmpty);
-  // hello
   const {
     value: vinNumber,
     isValid: vinNumberIsValid,
@@ -81,26 +80,19 @@ const newTruckForm = forwardRef((props, ref) => {
   const [selectedTravel, setSelectedTravel] = useState([]);
   const [selectedTrailer, setSelectedTrailer] = useState([]);
   const [selectedOffDays, setSelectedOffDays] = useState([]);
-  // const [userName, setUserName] = useState(null);
   const [truckNumberIsAvailable, setTruckNumberIsAvailable] = useState(null);
-
   const { sendRequest: postTruck } = useHttp();
 
   const { defaultValue, closeModal, setTrucks } = props;
-  // const [truckNumber, setTruckNumber] = useState(
-  //   defaultValue ? defaultValue.truck_number : ""
-  // );
   useEffect(() => {
     if (defaultValue) {
       setSelectedOffDays(transformArrayToObjectArray(defaultValue.off_days));
       setSelectedTrailer(
         transformArrayToObjectArray([defaultValue.trailer_type])[0]
       );
-      // hello
       truckNumberChangeHandler({
         target: { value: `${defaultValue.truck_number}` },
       });
-      // hello
       vinNumberChangeHandler({
         target: { value: `${defaultValue.vin_number}` },
       });
@@ -112,43 +104,44 @@ const newTruckForm = forwardRef((props, ref) => {
       });
       setSelectedTravel(transformArrayToObjectArray(defaultValue.region));
     }
-
-    const indentifier = setTimeout(async () => {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-        { "trucks.truck_number": truckNumber }
-      );
-      console.log("checking truck Number");
-      console.log(response.data);
-      console.log("truckNumber", truckNumber);
-      setTruckNumberIsAvailable(response.data.length === 0);
-    }, 500);
-    return () => {
-      clearTimeout(indentifier);
-    };
   }, [
     defaultValue,
-    // hello
     truckNumberChangeHandler,
-    // hello
     vinNumberChangeHandler,
     Driver1NameChangeHandler,
     Driver1PhoneChangeHandler,
-    truckNumber,
   ]);
+
+  useEffect(() => {
+    setTruckNumberIsAvailable(true);
+
+    const indentifier = setTimeout(async () => {
+      if (truckNumber) {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
+          { mc_number: params.mc, "trucks.truck_number": truckNumber }
+        );
+        console.log("checking truck Number");
+        console.log(response.data);
+        console.log("truckNumber", truckNumber);
+        setTruckNumberIsAvailable(response.data.length === 0);
+      }
+    }, 250);
+    return () => {
+      clearTimeout(indentifier);
+    };
+  }, [truckNumber, params.mc]);
+
   const handleDriverChange = (event) => {
     setDriverType(event.target.value);
   };
-  // submit
   let formIsValid = false;
   if (
-    // hello
     truckNumberIsValid &&
-    // hello
     vinNumberIsValid &&
     oPhoneIsValid &&
     Driver1NameIsValid &&
-    truckNumberIsAvailable
+    (truckNumberIsAvailable || defaultValue)
   ) {
     formIsValid = true;
   }
@@ -200,7 +193,7 @@ const newTruckForm = forwardRef((props, ref) => {
 
     const saveObj = {
       truck_number: parseInt(truckNumber),
-      vin_number: parseInt(vinNumber),
+      vin_number: vinNumber,
       trailer_type: selectedTrailer.value,
       carry_limit: parseInt(carryLimitRef.current.value),
       drivers: drivers,
@@ -213,10 +206,12 @@ const newTruckForm = forwardRef((props, ref) => {
     };
     return saveObj;
   };
+
   return (
     <form ref={formRef}>
       <Input
         type="number"
+        name="truck_number"
         label="*Truck Number:"
         placeholder="Enter 3 digit code.."
         className={truckNumberHasError ? "invalid" : ""}
@@ -228,21 +223,9 @@ const newTruckForm = forwardRef((props, ref) => {
       {truckNumberHasError && (
         <p className="error-text">Truck number is required.</p>
       )}
-
-      {
-        // <Form.Group as={Col} md="6">
-        //   <Form.Label>Truck Number</Form.Label>
-        //   <Form.Control
-        //     value={truckNumber}
-        //     // defaultValue={truckNumber}
-        //     onChange={(e) => {
-        //       setTruckNumber(e.target.value);
-        //     }}
-        //     type="text"
-        //     placeholder="Enter Truck Number"
-        //   />
-        // </Form.Group>
-      }
+      {truckNumberIsAvailable === false && !defaultValue && (
+        <p className="error-text">Truck exists.</p>
+      )}
       <Input
         type="text"
         label="*Vin Number:"
@@ -418,6 +401,7 @@ const newTruckForm = forwardRef((props, ref) => {
           )}
         </div>
       )}
+
       <div
         style={{
           width: "100%",
@@ -425,16 +409,12 @@ const newTruckForm = forwardRef((props, ref) => {
           justifyContent: "flex-end",
         }}
       >
-        <Button
-          buttonText="Submit"
-          color="inherit"
-          onClick={onSubmit}
-          className="button__class"
-          disabled={!formIsValid}
-        />
+        <Button variant="primary" onClick={onSubmit} disabled={!formIsValid}>
+          Submit
+        </Button>
       </div>
     </form>
   );
-});
+};
 
-export default newTruckForm;
+export default NewTruckForm;

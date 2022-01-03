@@ -86,12 +86,9 @@ const carrierSchema = new mongoose.Schema(
           require: true,
           unique: true,
         },
-        dispatcher: {
-          _id: { type: mongoose.Types.ObjectId, ref: "User" },
-          name: String,
-        },
+        dispatcher: { type: mongoose.Types.ObjectId, ref: "User" },
         vin_number: {
-          type: Number,
+          type: String,
           require: true,
         },
 

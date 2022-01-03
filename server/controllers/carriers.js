@@ -28,33 +28,24 @@ const updateCarrier = (req, res, next) => {
       console.log(err);
     });
 };
-const updateTruckInfo = (req, res, next) => {
-  console.log(req.body);
-  Carrier.updateOne(
-    {
-      mc_number: parseInt(req.params.mcNumber),
-      "trucks.truck_number": parseInt(req.params.trucknumber),
-    },
-    {
-      $set: {
-        "trucks.$.trailer_type": req.body.trailer_type,
-        "trucks.$.carry_limit": req.body.carry_limit,
-        "trucks.$.trip_durration": req.body.trip_durration,
-        "trucks.$.temperature_restriction": req.body.temperature_restriction,
-        "trucks.$.truck_number": req.body.truck_number,
-        "trucks.$.vin_number": req.body.vin_number,
-        "trucks.$.region": req.body.region,
+const updateTruck = async (req, res) => {
+  try {
+    console.log(req.body);
+    const result = await Carrier.findOneAndUpdate(
+      {
+        mc_number: parseInt(req.params.mcNumber),
+        "trucks.truck_number": parseInt(req.params.trucknumber),
       },
-    }
-  )
-    .then((carrier) => {
-      res.send(carrier);
-
-      console.log("done");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      {
+        $set: req.body,
+      },
+      { new: true }
+    ).populate("trucks.dispatcher", { user_name: 1, company: 1 });
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err.message);
+  }
 };
 
 // assigns (closed)carrier to dispatcher and changes the c_status to active
@@ -65,7 +56,7 @@ const assignDispatcher = (req, res, next) => {
     { mc_number: req.params.mc, "trucks.truck_number": req.params.truckNumber },
     {
       $set: {
-        "trucks.$.dispatcher": req.body,
+        "trucks.$.dispatcher": req.body.id,
         "trucks.$.t_status": "pending",
       },
     }
@@ -126,12 +117,12 @@ const fetchLead = (req, res, next) => {
 const getCarrier = (req, res, next) => {
   console.log("get carrier", req.body);
   Carrier.findOne(req.body)
-    .populate("salesman", { user_name: 1 })
+    .populate("salesman trucks.dispatcher", { user_name: 1, company: 1 })
     .then((carriers) => {
-      res.send(carriers);
+      res.status(200).send(carriers);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 };
 
@@ -154,7 +145,7 @@ const getCarriers = (req, res, next) => {
   }
 
   Carrier.find(filter)
-    .populate("salesman", { user_name: 1, company: 1 })
+    .populate("salesman trucks.dispatcher", { user_name: 1, company: 1 })
     .then((result) => {
       if (req.body.company) {
         const filteredResult = result.filter(
@@ -222,37 +213,41 @@ const addNewCarrier = (req, res, next) => {
 };
 
 //adds new truck to existing carriers
-const addNewTruck = (req, res, next) => {
-  console.log(req.body);
-  Carrier.updateOne(
-    {
-      mc_number: parseInt(req.params.mcNumber),
-      "trucks.truck_number": parseInt(req.body.truck_number),
-    },
-    { $set: { "trucks.$": req.body } },
-    {
-      new: true,
-    }
-  )
-    .then((result) => {
-      if (result.nModified === 0) {
-        Carrier.findOneAndUpdate(
-          { mc_number: parseInt(req.params.mcNumber) },
-          { $push: { trucks: req.body } },
-          {
-            new: true,
-          }
-        ).then((carrier) => {
-          res.send(carrier);
-        });
-      } else {
-        res.send(result);
+const addNewTruck = async (req, res, next) => {
+  try {
+    console.log("add new truck", req.body);
+    const result = await Carrier.updateOne(
+      {
+        mc_number: parseInt(req.params.mcNumber),
+        "trucks.truck_number": parseInt(req.body.truck_number),
+      },
+      { $set: { "trucks.$": req.body } },
+      {
+        new: true,
       }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ status: 500, msg: "Error" });
-    });
+    );
+    if (result.nModified === 0) {
+      Carrier.findOneAndUpdate(
+        { mc_number: parseInt(req.params.mcNumber) },
+        { $push: { trucks: req.body } },
+        {
+          new: true,
+        }
+      ).then((carrier) => {
+        res.send(carrier);
+      });
+    } else {
+      const newCarrier = await Carrier.findOne({
+        mc_number: parseInt(req.params.mcNumber),
+        "trucks.truck_number": parseInt(req.body.truck_number),
+      });
+      console.log(newCarrier);
+      res.send(newCarrier);
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.satus(500).send(err.message);
+  }
 };
 
 const deleteTruck = (req, res, next) => {
@@ -318,18 +313,6 @@ const countCarriers = async (req, res, next) => {
   res.send(stats);
 };
 
-const test = async (req, res) => {
-  try {
-    const pst = moment().tz("US/Pacific");
-    const result = await Carrier.find({
-      address: { $regex: callAbleStates(pst), $options: "i" },
-    });
-    res.status(200).send({ result: result.length });
-  } catch (e) {
-    res.status(500).send({ msg: e.message });
-  }
-};
-
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -337,9 +320,8 @@ module.exports = {
   getCarrier,
   getCarriers,
   updateCarrier,
-  updateTruckInfo,
+  updateTruck,
   fetchLead,
   assignDispatcher,
   countCarriers,
-  test,
 };

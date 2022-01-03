@@ -17,6 +17,7 @@ const MyTrucks = () => {
       if (data === null) {
         return;
       }
+
       const myTrucks = [];
       for (var i = 0; i < data.length; i++) {
         for (var j = 0; j < data[i].trucks.length; j++) {
@@ -72,7 +73,7 @@ const MyTrucks = () => {
     };
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/getcarriers`, {
-        "trucks.dispatcher._id": currUserId,
+        "trucks.dispatcher": currUserId,
         c_status: "registered",
       })
       .then(transformData)

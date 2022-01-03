@@ -27,9 +27,10 @@ const AppointmentDetail = () => {
         mc_number: params.mc,
       })
       .then(({ data }) => {
-        console.log(data);
+        console.log("carrier", data);
         if (data) {
           setCarrier(data);
+          setTrucks(data.trucks);
           setSelectedPayment({
             label: data.payment_method,
             value: data.payment_method,
@@ -55,7 +56,6 @@ const AppointmentDetail = () => {
     );
   }
 
-  console.log("trucks", trucks);
   return (
     <div className="row">
       <div className="col-10">

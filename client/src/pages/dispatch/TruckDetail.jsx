@@ -61,19 +61,21 @@ const TruckDetail = ({ match }) => {
       let response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
         {
-          "trucks.dispatcher._id": currUserId,
+          "trucks.dispatcher": currUserId,
           mc_number: match.params.mc,
         }
       );
       setData(response.data);
       setCompanyName(response.data.company_name);
-      setAddress(response.data.insurance.address);
-      setPhone(response.data.insurance.phone_no);
-      setAgentName(response.data.insurance.agent_name);
-      setAgentEmail(response.data.insurance.agent_email);
       setPhoneNumber(response.data.phone_number);
       setEmail(response.data.email);
       setOwnerName(response.data.owner_name);
+      if (response.data.insurance) {
+        setAddress(response.data.insurance.address);
+        setPhone(response.data.insurance.phone_no);
+        setAgentName(response.data.insurance.agent_name);
+        setAgentEmail(response.data.insurance.agent_email);
+      }
       if (response.data.factoring) {
         setFactCompanyName(response.data.factoring.name);
         setFactAddress(response.data.factoring.address);
@@ -154,18 +156,17 @@ const TruckDetail = ({ match }) => {
         })
         .catch((err) => console.log(err));
       const truckObj = {
-        trailer_type: trailerType.value,
-        carry_limit: carryLimit,
-        trip_durration: tripDurration,
-        temperature_restriction: temperatureRestrictions,
-        truck_number: truckNumber,
-        vin_number: vinNumber,
-        region: region.map((item) => item.value),
+        "trucks.$.trailer_type": trailerType.value,
+        "trucks.$.carry_limit": carryLimit,
+        "trucks.$.trip_durration": tripDurration,
+        "trucks.$.temperature_restriction": temperatureRestrictions,
+        "trucks.$.vin_number": vinNumber,
+        "trucks.$.region": region.map((item) => item.value),
       };
 
       await axios
         .put(
-          `${process.env.REACT_APP_BACKEND_URL}/dispatch/updatetruck/${data.mc_number}/${match.params.truck}`,
+          `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${data.mc_number}/${match.params.truck}`,
           truckObj
         )
         .then((res) => console.log(res))
@@ -173,16 +174,15 @@ const TruckDetail = ({ match }) => {
     }
   };
 
-  const openModal = () => {
-    setrModal(true);
-  };
+  // const openModal = () => {
+  //   setrModal(true);
+  // };
   const rejectHandler = async () => {
     await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${data.mc_number}`,
       {
         c_status: "deactivated",
         comment: commentRef.current.value,
-        // here
         dispatcher_comment: dispatcherCommentRef.current.value,
       }
     );
@@ -606,7 +606,7 @@ const TruckDetail = ({ match }) => {
                         placeholder="Agent's Email"
                         value={truckNumber}
                         onChange={(e) => setTruckNumber(e.target.value)}
-                        required
+                        readOnly
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid Truck Number.
@@ -768,14 +768,15 @@ const TruckDetail = ({ match }) => {
                     </Button>
                   </Col>
                   <Col md={6}>
-                    <Button
+                    {/* <Button
                       style={{ float: "right" }}
                       size="lg"
                       variant="danger"
                       onClick={openModal}
+
                     >
                       Deactivate Carrier
-                    </Button>
+                    </Button> */}
                   </Col>
                 </Row>
               </Card.Body>

@@ -47,15 +47,6 @@ const userSchema = new mongoose.Schema(
       enum: ["sales", "dispatch", "HR", "admin", "accounts", "undefined"],
       default: "undefined",
     },
-    assigned_trucks: [
-      { carrierId: mongoose.Types.ObjectId, truckId: mongoose.Types.ObjectId },
-    ],
-    notifications: [
-      {
-        msg: String,
-        read: Boolean,
-      },
-    ],
     company: {
       type: String,
       enum: ["elite", "alpha", "falcon"],
