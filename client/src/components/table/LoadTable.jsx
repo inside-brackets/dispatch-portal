@@ -209,7 +209,6 @@ const LoadTable = ({ truck_number, carrier }) => {
         </Col>
       </Row>
       <Row>
-        /
         <div className="card">
           <div className="card__body">
             {searchedCarrier && !filteredCarrier && (
