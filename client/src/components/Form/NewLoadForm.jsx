@@ -122,7 +122,17 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
           date: dropDate,
         },
 
-        carrier: carrier._id,
+        carrier: {
+          mc_number: carrier.mc_number,
+          _id: carrier._id,
+          truck_number: truck.truck_number,
+          trailer_type: truck.trailer_type,
+          driver: {
+            name: truck.drivers[0].name,
+            email_address: truck.drivers[0].email_address,
+            phone_number: truck.drivers[0].phone_number,
+          },
+        },
       };
       setEditModal(false);
       await axios
@@ -161,7 +171,6 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
           address: dropAddress,
           date: dropDate,
         },
-
         carrier: {
           mc_number: carrier.mc_number,
           _id: carrier._id,
