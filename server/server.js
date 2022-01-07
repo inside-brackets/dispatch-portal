@@ -8,10 +8,7 @@ const path = require("path");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
-const { getIpList } = require("./util/ipList");
-
 const salesRoutes = require("./routes/sales");
-const generateUploadURL = require("./s3");
 const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
@@ -20,16 +17,12 @@ const app = express();
 const httpServer = createServer(app);
 
 mongoose
-  .connect(
-    // "mongodb+srv://admin:infamd124@cluster0.tpmok.mongodb.net/falcon-portal-db?retryWrites=true&w=majority",
-    "mongodb://admin:9FzZrhjv5U9cWFP@cluster0-shard-00-00.fcfh0.mongodb.net:27017,cluster0-shard-00-01.fcfh0.mongodb.net:27017,cluster0-shard-00-02.fcfh0.mongodb.net:27017/dispatch_db?ssl=true&replicaSet=atlas-hj3cly-shard-0&authSource=admin&retryWrites=true&w=majority",
-    {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    }
-  )
+  .connect(process.env.FALCON_DB_TEST, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
   .then((result) => {
     console.log("databse is connected");
   })
@@ -55,11 +48,6 @@ var storage = multer.diskStorage({
 
 app.use(multer({ storage: storage }).array("file"));
 
-//s3-bucket
-app.get("s3url", async (req, res) => {
-  const url = s3.generateUploadURL();
-  res.send({ url });
-});
 // middlewares
 app.use(express.json());
 app.use(helmet());

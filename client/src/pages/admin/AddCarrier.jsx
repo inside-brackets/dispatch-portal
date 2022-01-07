@@ -294,21 +294,21 @@ const AppointmentDetail = () => {
       noa_file: noaRef.current.files[0] ? new FormData() : "",
       w9_file: new FormData(),
     };
-    files.mc_file.append("file", mcRef.current.files[0]);
-    files.insurance_file.append("file", insuranceRef.current.files[0]);
+    files.mc_file = mcRef.current.files[0];
+    files.insurance_file = insuranceRef.current.files[0];
 
     if (noaRef.current.files[0]) {
-      files.noa_file.append("file", noaRef.current.files[0]);
+      files.noa_file = noaRef.current.files[0];
     }
-    files.w9_file.append("file", w9Ref.current.files[0]);
+    files.w9_file = w9Ref.current.files[0];
 
     for (const property in files) {
       if (files[property]) {
-        let res = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/uploadfile/carrier_documents/${carrier.mc_number}`,
-          files[property]
+        const { data: url } = await axios(
+          `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${files[property].name}`
         );
-        files[property] = res.data;
+        axios.put(url, files[property]);
+        files[property] = url.split("?")[0];
       }
     }
     await axios.put(

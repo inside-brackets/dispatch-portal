@@ -2,9 +2,6 @@ const dotenv = require("dotenv");
 const aws = require("aws-sdk");
 const crypto = require("crypto");
 const { promisify } = require("util");
-// import aws from "aws-sdk";
-// import crypto from "crypto";
-// import { promisify } from "util";
 const randomBytes = promisify(crypto.randomBytes);
 
 dotenv.config();
@@ -21,22 +18,19 @@ const s3 = new aws.S3({
   signatureVersion: "v4",
 });
 
-const generateUploadURL = async (event) => {
+const generateUploadURL = async (folder, fileName) => {
   // export async function generateUploadURL() {
   const rawBytes = await randomBytes(16);
-  const imageName = rawBytes.toString("hex");
+  const name = `${rawBytes.toString("hex")}-${fileName}`;
 
   const params = {
-    Bucket: bucketName,
-    Key: imageName,
+    Bucket: `${bucketName}/${folder}`,
+    Key: name,
     Expires: 60,
   };
-
   const uploadURL = await s3.getSignedUrlPromise("putObject", params);
   return uploadURL;
 };
-
-// export default generateUploadURL;
 
 module.exports = {
   generateUploadURL,
