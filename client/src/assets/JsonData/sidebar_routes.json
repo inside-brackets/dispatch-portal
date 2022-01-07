@@ -28,6 +28,11 @@
       "icon": "bx bx-category-alt"
     },
     {
+      "display_name": "Salaries",
+      "route": "/salaries",
+      "icon": "bx bx-wallet"
+    },
+    {
       "display_name": "Assign Sales",
       "route": "/assignsales",
       "icon": "bx bx-log-in-circle"

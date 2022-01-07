@@ -10,6 +10,7 @@ import AssignSales from "../pages/admin/AssignSales";
 import Carriers from "../pages/admin/Carriers";
 import SearchCarrier from "../pages/admin/SearchCarrier";
 
+import Salaries from "../pages/admin/Salaries";
 import Dashboard from "../pages/sales/Dashboard";
 import SpreadSheet from "../pages/sales/SpreadSheet";
 import Appointments from "../pages/sales/Appointments";
@@ -91,6 +92,7 @@ const Routes = () => {
       <Route path="/assignsales" exact component={AssignSales} />
       <Route path="/profile" component={Profile} />
       <Route path="/loads" component={Loads} />
+      <Route path="/salaries" exact component={Salaries} />
       <Route path="/invoices" component={Invoice} />
       <Route path="/users" exact component={Users} />
       <Route path="*">
