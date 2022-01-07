@@ -10,7 +10,6 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 
 const salesRoutes = require("./routes/sales");
-const generateUploadURL = require("./s3");
 const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
@@ -62,11 +61,6 @@ var storage = multer.diskStorage({
 
 app.use(multer({ storage: storage }).array("file"));
 
-//s3-bucket
-app.get("s3url", async (req, res) => {
-  const url = s3.generateUploadURL();
-  res.send({ url });
-});
 // middlewares
 app.use(express.json({ limit: "5mb", extended: true }));
 app.use(helmet());

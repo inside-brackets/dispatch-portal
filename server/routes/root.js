@@ -10,6 +10,7 @@ const {
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
 const { setIp, getIpList } = require("../util/ipList");
+const { generateUploadURL } = require("../util/s3");
 
 const upload = require("../middlewares/upload");
 
@@ -68,6 +69,12 @@ route.post("/login", (req, res) => {
   } catch (err) {
     res.status(500).send({ msg: err.message });
   }
+});
+
+//s3-bucket
+route.get("/s3url/:folder/:fileName", async (req, res) => {
+  const url = await generateUploadURL(req.params.folder, req.params.fileName);
+  res.send(url);
 });
 
 module.exports = route;
