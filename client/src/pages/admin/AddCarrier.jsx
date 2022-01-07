@@ -289,18 +289,11 @@ const AppointmentDetail = () => {
       return;
     }
     const files = {
-      mc_file: new FormData(),
-      insurance_file: new FormData(),
-      noa_file: noaRef.current.files[0] ? new FormData() : "",
-      w9_file: new FormData(),
+      mc_file: mcRef.current.files[0],
+      insurance_file: insuranceRef.current.files[0],
+      noa_file: noaRef.current.files[0] ? noaRef.current.files[0] : "",
+      w9_file: w9Ref.current.files[0],
     };
-    files.mc_file = mcRef.current.files[0];
-    files.insurance_file = insuranceRef.current.files[0];
-
-    if (noaRef.current.files[0]) {
-      files.noa_file = noaRef.current.files[0];
-    }
-    files.w9_file = w9Ref.current.files[0];
 
     for (const property in files) {
       if (files[property]) {

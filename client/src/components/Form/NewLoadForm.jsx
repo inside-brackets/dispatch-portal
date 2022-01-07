@@ -77,25 +77,12 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const uploadFileHandler = async (e) => {
     console.log("hello world");
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
 
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-    axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/uploadfile/ratecons/${loadNumber}`,
-        formData,
-        config
-      )
-      .then((res) => {
-        console.log("image url", res.data);
-        setImage(res.data);
-      })
-      .catch((error) => console.log(error));
+    const { data: url } = await axios(
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/ratecons/${loadNumber}`
+    );
+    axios.put(url, file);
+    setImage(url.split("?")[0]);
   };
 
   const handleSubmit = async (event) => {
