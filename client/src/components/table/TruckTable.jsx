@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { Button, Row, Col } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const customerTableHead = [
   "#",
@@ -26,6 +27,8 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
+  const history = useHistory();
+
   // reassign states
   const [selectedDispatcher, setSelectedDispatcher] = useState(null);
   const [dispatchers, setDispatchers] = useState([]);
@@ -85,6 +88,19 @@ const TruckTable = (props) => {
       </td>
       <td>
         <div className="edit__class">
+          <EditButton
+            type="edit"
+            onClick={() => {
+              setTruck(item);
+              editModalHnadler();
+            }}
+          />
+          <EditButton
+            type="delete"
+            onClick={() => {
+              deleteTruckHandler(item.truck_number);
+            }}
+          />
           {item.t_status === "new" ? (
             <>
               <EditButton
@@ -112,6 +128,13 @@ const TruckTable = (props) => {
                   });
                   setTruck(item);
                   setShowReassingModal(true);
+                  // setSelectedDispatcher({
+                  //   label: item.dispatcher.user_name,
+                  //   value: item.dispatcher._id,
+                  // });
+                  // setTruck(item);
+                  // setShowReassingModal(true);
+                  history.push(`/carrierview/${mc}/${item.truck_number}`);
                 }}
               />
             )
@@ -149,7 +172,9 @@ const TruckTable = (props) => {
   // reassign end
 
   return (
-    <div style={{ left: "10%", position: "relative" }}>
+    <div
+    //  style={{ left: "10%", position: "relative" }}
+    >
       <h2> Trucks: </h2>
       <div className="row">
         <div className="col-12">
