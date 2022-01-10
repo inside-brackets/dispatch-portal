@@ -21,6 +21,7 @@ const isNotEmpty = (value) => value.trim() !== "";
 const AppointmentDetail = () => {
   const [selectedSalesman, setSelectedSalesman] = useState("");
   const [users, setUsers] = useState([]);
+  const [buttonLoader, setButtonLoader] = useState(false);
   const { company } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -288,6 +289,7 @@ const AppointmentDetail = () => {
     if (!modalFormIsValid) {
       return;
     }
+    setButtonLoader(true);
     const files = {
       mc_file: new FormData(),
       insurance_file: new FormData(),
@@ -319,6 +321,7 @@ const AppointmentDetail = () => {
         ...files,
       }
     );
+
     setShowCloseModal(false);
     history.push("/searchcarrier");
   };
@@ -701,7 +704,7 @@ const AppointmentDetail = () => {
             color="inherit"
             onClick={closeSale}
             className="button__class"
-            disabled={!modalFormIsValid}
+            disabled={!modalFormIsValid && buttonLoader}
           />
         </div>
       </Modal>

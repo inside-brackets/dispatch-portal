@@ -19,7 +19,7 @@ const AppointmentDetail = () => {
   const { _id: currUserId, user_name } = useSelector(
     (state) => state.user.user
   );
-
+  const [buttonLoader, setButtonLoader] = useState(false);
   const appointmentRef = useRef();
 
   const isNotEmpty = (value) => value.trim() !== "";
@@ -210,7 +210,7 @@ const AppointmentDetail = () => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          "salesman": currUserId,
+          salesman: currUserId,
           mc_number: params.mc,
         },
       },
@@ -309,6 +309,7 @@ const AppointmentDetail = () => {
     if (!modalFormIsValid) {
       return;
     }
+    setButtonLoader(true);
     const files = {
       mc_file: new FormData(),
       insurance_file: new FormData(),
@@ -702,7 +703,7 @@ const AppointmentDetail = () => {
                 color="inherit"
                 onClick={closeSale}
                 className="button__class"
-                disabled={!modalFormIsValid}
+                disabled={!modalFormIsValid && buttonLoader}
               />
             </div>
           </Modal>

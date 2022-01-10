@@ -14,6 +14,7 @@ const NewUserForm = ({
 }) => {
   const [validated, setValidated] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(null);
+  const [buttonLoader, setButtonLoader] = useState(false);
   const [userName, setUserName] = useState(
     defaultValue ? defaultValue.user_name : null
   );
@@ -73,7 +74,7 @@ const NewUserForm = ({
           designation,
           joiningDate
         );
-
+        setButtonLoader(true);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
             id: defaultValue._id,
@@ -99,6 +100,7 @@ const NewUserForm = ({
           designation,
           joiningDate
         );
+        setButtonLoader(true);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
             user_name: userName,
@@ -261,9 +263,13 @@ const NewUserForm = ({
         </Row>
       </Row>
       {defaultValue ? (
-        <Button type="submit">Edit form</Button>
+        <Button disabled={buttonLoader} type="submit">
+          Edit form
+        </Button>
       ) : (
-        <Button type="submit">Submit form</Button>
+        <Button disabled={buttonLoader} type="submit">
+          Submit form
+        </Button>
       )}
     </Form>
   );
