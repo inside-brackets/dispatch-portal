@@ -80,7 +80,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     const file = e.target.files[0];
 
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/ratecons/${loadNumber}`
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/ratecons/${loadNumber}-${file.name}`
     );
     axios.put(url, file);
     setImage(url.split("?")[0]);
