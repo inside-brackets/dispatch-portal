@@ -18,6 +18,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const [pay, setPay] = useState(defaultValue ? defaultValue.pay : "");
   const [broker, setBroker] = useState(defaultValue ? defaultValue.broker : "");
   const [loadNumberIsValid, setLoadNumberIsValid] = useState(null);
+  const [buttonLoader, setButtonLoader] = useState(false);
   const [pickupAddress, setPickupAddress] = useState(
     defaultValue ? defaultValue.pick_up.address : ""
   );
@@ -103,6 +104,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     const form = event.currentTarget;
     setValidated(true);
     if (form.checkValidity() === true && loadNumberIsValid) {
+      setButtonLoader(true);
       const loadObject = {
         load_number: loadNumber,
         l_status: "booked",
@@ -142,6 +144,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         )
         .then((res) => {
           dispatch(loadsActions.append(res.data));
+          setButtonLoader(false);
         })
         .catch((err) => console.log(err));
     }
@@ -152,6 +155,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     const form = event.currentTarget;
     setValidated(true);
     if (form.checkValidity() === true) {
+      setButtonLoader(true);
       console.log(truck.drivers);
       const loadEditObject = {
         id: defaultValue._id,
@@ -193,6 +197,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         )
         .then((res) => {
           dispatch(loadsActions.replace(res.data));
+          setButtonLoader(false);
         })
         .catch((err) => console.log(err));
     }
@@ -394,11 +399,17 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
           >
             {!defaultValue ? (
-              <Button type="submit" onSubmit={handleSubmit}>
+              <Button
+                disabled={buttonLoader}
+                type="submit"
+                onSubmit={handleSubmit}
+              >
                 Add Load
               </Button>
             ) : (
-              <Button onClick={handleEditSubmit}>Edit Load</Button>
+              <Button disabled={buttonLoader} onClick={handleEditSubmit}>
+                Edit Load
+              </Button>
             )}
           </Col>
         </Row>

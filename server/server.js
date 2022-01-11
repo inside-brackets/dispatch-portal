@@ -7,8 +7,7 @@ const multer = require("multer");
 const path = require("path");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-
-const { getIpList } = require("./util/ipList");
+const dotenv = require("dotenv");
 
 const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
@@ -18,10 +17,13 @@ const dispatchRoutes = require("./routes/dispatch");
 const app = express();
 const httpServer = createServer(app);
 
+dotenv.config();
+
 mongoose
   .connect(
-    // "mongodb+srv://admin:infamd124@cluster0.tpmok.mongodb.net/falcon-portal-db?retryWrites=true&w=majority",
-    "mongodb://admin:9FzZrhjv5U9cWFP@cluster0-shard-00-00.fcfh0.mongodb.net:27017,cluster0-shard-00-01.fcfh0.mongodb.net:27017,cluster0-shard-00-02.fcfh0.mongodb.net:27017/dispatch_db?ssl=true&replicaSet=atlas-hj3cly-shard-0&authSource=admin&retryWrites=true&w=majority",
+    process.env.PROD === "true"
+      ? process.env.FALCON_DB
+      : process.env.FALCON_DB_TEST,
     {
       useUnifiedTopology: true,
       useNewUrlParser: true,
@@ -30,7 +32,11 @@ mongoose
     }
   )
   .then((result) => {
-    console.log("databse is connected");
+    console.log(
+      process.env.PROD === "true"
+        ? "Real database connected"
+        : "Test database connected"
+    );
   })
   .catch((err) => {
     throw err;
@@ -82,25 +88,29 @@ io.on("connection", (socket) => {
 });
 
 // redirecting;
-// app.all("*", (req, res, next) => {
-//   var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-//   ip = ip.replace("::ffff:", "").trim();
-//   console.log("x-forwarded-for", ip);
-//   const ipList = getIpList();
-//   if (
-//     req.originalUrl.includes("whitelist") ||
-//     req.originalUrl.includes("myip")
-//   ) {
-//     next();
-//   } else if (ipList.includes(ip)) {
-//     next();
-//   } else {
-//     io.sockets.emit("not-listed", ip);
-//     res.status(401).send({
-//       message: "not white listed",
-//     });
-//   }
-// });
+app.all("*", (req, res, next) => {
+  if (process.env.PROD === "true") {
+    var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    ip = ip.replace("::ffff:", "").trim();
+    console.log("x-forwarded-for", ip);
+    const ipList = getIpList();
+    if (
+      req.originalUrl.includes("whitelist") ||
+      req.originalUrl.includes("myip")
+    ) {
+      next();
+    } else if (ipList.includes(ip)) {
+      next();
+    } else {
+      io.sockets.emit("not-listed", ip);
+      res.status(401).send({
+        message: "not white listed",
+      });
+    }
+  } else {
+    next();
+  }
+});
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
