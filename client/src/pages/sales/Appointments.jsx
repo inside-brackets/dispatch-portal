@@ -10,7 +10,7 @@ const Appointments = () => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   const [carriersList, setCarriersList] = useState([]);
-  
+
   useEffect(() => {
     const transformData = (data) => {
       if (data === null) {
@@ -28,7 +28,7 @@ const Appointments = () => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          "salesman": currUserId,
+          salesman: currUserId,
           c_status: "appointment",
         },
       },
@@ -127,7 +127,7 @@ const Appointments = () => {
                 className="my-card"
                 style={{
                   width: "auto",
-                  height: "400px",
+                  height: "auto",
                   border: "light",
                 }}
               >

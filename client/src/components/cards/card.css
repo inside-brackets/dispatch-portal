@@ -36,7 +36,7 @@
 .appointment__detail {
   width: 100%;
   margin: 0 10% 10% 10%;
-  height: 200vh;
+  height: 250vh !important;
 }
 
 .appointment__detail .dialer__body {

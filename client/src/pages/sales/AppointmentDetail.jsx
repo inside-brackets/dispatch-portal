@@ -3,7 +3,6 @@ import { useParams, useHistory } from "react-router-dom";
 import Card from "../../components/cards/Card";
 import Input from "../../components/UI/MyInput";
 import TruckTable from "../../components/table/TruckTable";
-import Button from "../../components/UI/Button";
 import Modal from "../../components/modals/MyModal";
 import TextArea from "../../components/UI/TextArea";
 import useHttp from "../../hooks/use-https";
@@ -15,11 +14,13 @@ import axios from "axios";
 import useInput from "../../hooks/use-input";
 import { socket } from "../..";
 
+import { Button } from "react-bootstrap";
+
 const AppointmentDetail = () => {
   const { _id: currUserId, user_name } = useSelector(
     (state) => state.user.user
   );
-
+  const [buttonLoader, setButtonLoader] = useState(false);
   const appointmentRef = useRef();
 
   const isNotEmpty = (value) => value.trim() !== "";
@@ -210,7 +211,7 @@ const AppointmentDetail = () => {
         headers: { "Content-Type": "application/json" },
 
         body: {
-          "salesman": currUserId,
+          salesman: currUserId,
           mc_number: params.mc,
         },
       },
@@ -309,6 +310,7 @@ const AppointmentDetail = () => {
     if (!modalFormIsValid) {
       return;
     }
+    setButtonLoader(true);
     const files = {
       mc_file: new FormData(),
       insurance_file: new FormData(),
@@ -698,12 +700,11 @@ const AppointmentDetail = () => {
               }}
             >
               <Button
-                buttonText="Submit"
-                color="inherit"
                 onClick={closeSale}
-                className="button__class"
-                disabled={!modalFormIsValid}
-              />
+                disabled={!modalFormIsValid || buttonLoader}
+              >
+                Submit
+              </Button>
             </div>
           </Modal>
         </Card>

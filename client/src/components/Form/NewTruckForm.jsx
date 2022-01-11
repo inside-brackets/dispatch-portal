@@ -80,6 +80,7 @@ const NewTruckForm = (props) => {
   const [selectedTravel, setSelectedTravel] = useState([]);
   const [selectedTrailer, setSelectedTrailer] = useState([]);
   const [selectedOffDays, setSelectedOffDays] = useState([]);
+  const [buttonLoader, setButtonLoader] = useState(false);
   const [truckNumberIsAvailable, setTruckNumberIsAvailable] = useState(null);
   const { sendRequest: postTruck } = useHttp();
 
@@ -149,6 +150,7 @@ const NewTruckForm = (props) => {
     if (!formIsValid) {
       return;
     }
+    setButtonLoader(true);
     const newTruck = saveTruck();
     const transformData = (data) => {
       console.log("fetch", data);
@@ -409,7 +411,11 @@ const NewTruckForm = (props) => {
           justifyContent: "flex-end",
         }}
       >
-        <Button variant="primary" onClick={onSubmit} disabled={!formIsValid}>
+        <Button
+          variant="primary"
+          onClick={onSubmit}
+          disabled={!formIsValid || buttonLoader}
+        >
           Submit
         </Button>
       </div>

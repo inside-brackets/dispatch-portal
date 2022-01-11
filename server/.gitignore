@@ -1,1 +1,4 @@
 /node_modules
+
+/files/carrier_documents/*
+/files/ratecons/*
