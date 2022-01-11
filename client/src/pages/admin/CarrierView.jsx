@@ -7,6 +7,7 @@ import BackButton from "../../components/UI/BackButton";
 import Modal from "../../components/modals/MyModal";
 import axios from "axios";
 import { Form, Card, Row, Col, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const AppointmentDetail = () => {
   // const [selectedPayment, setSelectedPayment] = useState("");
@@ -18,6 +19,8 @@ const AppointmentDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [rmodal, setrModal] = useState();
   const [error, setError] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [loaderButton, setloaderButton] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,22 +39,81 @@ const AppointmentDetail = () => {
           //   value: data.payment_method,
           // });
           setTrucks(data.trucks);
-          // setSelectedPayment({
-          //   label: data.payment_method,
-          //   value: data.payment_method,
-          // });
         } else {
           setError(true);
         }
         setIsLoading(false);
       });
   }, [params.mc]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setValidated(true);
+    if (form.checkValidity() === true) {
+      setloaderButton(true);
+      const upObj = {
+        owner_name: event.target.owner_name.value,
+        phone_number: event.target.phone_number.value,
+        email: event.target.email.value,
+        tax_id: event.target.tax_id.value,
+        insurance: {
+          name: event.target.i_company_name.value,
+          address: event.target.i_address.value,
+          phone_no: event.target.i_phone_number.value,
+          agent_name: event.target.i_agent_name.value,
+          agent_email: event.target.i_agent_email.value,
+        },
+      };
+      if (carrier.payment_method === "factoring") {
+        upObj["factoring"] = {};
+        upObj["factoring"]["name"] = event.target.f_name.value;
+        upObj["factoring"]["address"] = event.target.f_address.value;
+        upObj["factoring"]["agent_name"] = event.target.f_agent_name.value;
+        upObj["factoring"]["agent_email"] = event.target.f_agent_email.value;
+        upObj["factoring"]["phone_no"] = event.target.f_phone.value;
+      }
+      await axios
+        .put(
+          `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
+          upObj
+        )
+        .then((response) => {
+          console.log(response.data);
+          toast.success("Carrier Saved", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setCarrier(response.data);
+          setloaderButton(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setloaderButton(false);
+        });
+    }
+  };
+
   const openModal = () => {
     setrModal(true);
   };
 
   const rejectHandler = async () => {
+    setloaderButton(true);
+    await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
+      {
+        c_status: "deactivated",
+      }
+    );
+    setloaderButton(false);
     setrModal(false);
+    // history.push("/mytrucks");
   };
 
   if (isLoading && !error) {
@@ -72,10 +134,7 @@ const AppointmentDetail = () => {
     <div className="row">
       <div className="col">
         <BackButton onClick={() => history.push("/searchcarrier")} />
-        <Form
-          noValidate
-          // validated={validated} onSubmit={handleSubmit}
-        >
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Card
             className="truck-detail-card"
             style={{
@@ -142,6 +201,7 @@ const AppointmentDetail = () => {
                       <Form.Control
                         type="text"
                         placeholder="Payment Method"
+                        name="phone_number"
                         required
                         // value={phoneNumber}
                         // onChange={(e) => setPhoneNumber(e.target.value)}
@@ -163,6 +223,7 @@ const AppointmentDetail = () => {
                       <Form.Control
                         type="text"
                         required
+                        name="email"
                         // value={email}
                         // onChange={(e) => setEmail(e.target.value)}
                         defaultValue={carrier ? carrier.email : false}
@@ -258,6 +319,7 @@ const AppointmentDetail = () => {
                     <Form.Control
                       type="text"
                       placeholder="Owner Name"
+                      name="owner_name"
                       // value={ownerName}
                       // onChange={(e) => setOwnerName(e.target.value)}
                       defaultValue={carrier ? carrier.owner_name : false}
@@ -287,8 +349,8 @@ const AppointmentDetail = () => {
                     <Form.Control
                       type="text"
                       placeholder="Tax Id"
-                      disabled
                       defaultValue={carrier ? carrier.tax_id_number : false}
+                      name="tax_id"
                       required
                     />
                     <Form.Control.Feedback type="invalid">
@@ -305,6 +367,7 @@ const AppointmentDetail = () => {
                       placeholder="Company's Name"
                       // value={companyName}
                       // onChange={(e) => setCompanyName(e.target.value)}
+                      name="i_company_name"
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.name
@@ -322,6 +385,7 @@ const AppointmentDetail = () => {
                       type="text"
                       // value={address}
                       // onChange={(e) => setAddress(e.target.value)}
+                      name="i_address"
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.address
@@ -341,6 +405,7 @@ const AppointmentDetail = () => {
                     <Form.Control
                       type="text"
                       placeholder="Agent's Name"
+                      name="i_agent_name"
                       // value={agentName}
                       // onChange={(e) => setAgentName(e.target.value)}
                       defaultValue={
@@ -360,6 +425,7 @@ const AppointmentDetail = () => {
                     <Form.Control
                       type="text"
                       placeholder="Agent's Email"
+                      name="i_agent_email"
                       // value={agentEmail}
                       // onChange={(e) => setAgentEmail(e.target.value)}
                       defaultValue={
@@ -378,6 +444,7 @@ const AppointmentDetail = () => {
                     <Form.Control
                       type="text"
                       placeholder="Phone Number"
+                      name="i_phone_number"
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.phone_no
@@ -406,6 +473,7 @@ const AppointmentDetail = () => {
                         <Form.Control
                           type="text"
                           placeholder="Company's Name"
+                          name="f_name"
                           // value={factCompanyName}
                           // onChange={(e) => setFactCompanyName(e.target.value)}
                           defaultValue={
@@ -427,6 +495,7 @@ const AppointmentDetail = () => {
                         <Form.Label>Address:</Form.Label>
                         <Form.Control
                           type="text"
+                          name="f_address"
                           // value={factAddress}
                           // onChange={(e) => setFactAddress(e.target.value)}
                           defaultValue={
@@ -453,6 +522,7 @@ const AppointmentDetail = () => {
                         <Form.Control
                           type="text"
                           placeholder="Agent's Name"
+                          name="f_agent_name"
                           // value={factAgentName}
                           // onChange={(e) => setFactAgentName(e.target.value)}
                           defaultValue={
@@ -476,6 +546,7 @@ const AppointmentDetail = () => {
                         <Form.Control
                           type="text"
                           placeholder="Agent's Email"
+                          name="f_agent_email"
                           // value={factAgentEmail}
                           // onChange={(e) => setfactAgentEmail(e.target.value)}
                           defaultValue={
@@ -500,6 +571,7 @@ const AppointmentDetail = () => {
                           placeholder="Phone Number"
                           // value={factPhone}
                           // onChange={(e) => setFactPhone(e.target.value)}
+                          name="f_phone"
                           defaultValue={
                             carrier && carrier.factoring
                               ? carrier.factoring.phone_no
@@ -575,7 +647,12 @@ const AppointmentDetail = () => {
               >
                 <hr />
                 <Col md={6}>
-                  <Button variant="success" size="lg" type="submit">
+                  <Button
+                    disabled={loaderButton}
+                    variant="success"
+                    size="lg"
+                    type="submit"
+                  >
                     Update Carrier
                   </Button>
                 </Col>
@@ -596,19 +673,12 @@ const AppointmentDetail = () => {
         <Modal
           show={rmodal}
           heading="Reject Carrier"
-          onConfirm={rejectHandler}
+          onConfirm={!loaderButton && rejectHandler}
           onClose={() => {
             setrModal(false);
           }}
         >
-          <form>
-            <TextArea
-              name="Comment:"
-              placeholder="Comment here..."
-              // defaultValue={commentRef.current && commentRef.current.value}
-              // ref={commentRef}
-            />
-          </form>
+          <p>Are You Sure you want to deavtivate?</p>
         </Modal>
 
         <TruckTable
