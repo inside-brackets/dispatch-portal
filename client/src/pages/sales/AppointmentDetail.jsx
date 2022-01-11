@@ -3,7 +3,6 @@ import { useParams, useHistory } from "react-router-dom";
 import Card from "../../components/cards/Card";
 import Input from "../../components/UI/MyInput";
 import TruckTable from "../../components/table/TruckTable";
-import Button from "../../components/UI/Button";
 import Modal from "../../components/modals/MyModal";
 import TextArea from "../../components/UI/TextArea";
 import useHttp from "../../hooks/use-https";
@@ -14,6 +13,8 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import useInput from "../../hooks/use-input";
 import { socket } from "../..";
+
+import { Button } from "react-bootstrap";
 
 const AppointmentDetail = () => {
   const { _id: currUserId, user_name } = useSelector(
@@ -699,12 +700,11 @@ const AppointmentDetail = () => {
               }}
             >
               <Button
-                buttonText="Submit"
-                color="inherit"
                 onClick={closeSale}
-                className="button__class"
-                disabled={!modalFormIsValid && buttonLoader}
-              />
+                disabled={!modalFormIsValid || buttonLoader}
+              >
+                Submit
+              </Button>
             </div>
           </Modal>
         </Card>

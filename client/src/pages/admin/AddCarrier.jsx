@@ -704,7 +704,7 @@ const AppointmentDetail = () => {
             color="inherit"
             onClick={closeSale}
             className="button__class"
-            disabled={!modalFormIsValid && buttonLoader}
+            disabled={!modalFormIsValid || buttonLoader}
           />
         </div>
       </Modal>

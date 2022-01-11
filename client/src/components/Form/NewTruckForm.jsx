@@ -414,7 +414,7 @@ const NewTruckForm = (props) => {
         <Button
           variant="primary"
           onClick={onSubmit}
-          disabled={!formIsValid && buttonLoader}
+          disabled={!formIsValid || buttonLoader}
         >
           Submit
         </Button>
