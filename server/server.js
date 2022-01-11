@@ -3,11 +3,11 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const mongoose = require("mongoose");
-const multer = require("multer");
 const path = require("path");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
 
 const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
@@ -42,28 +42,11 @@ mongoose
     throw err;
   });
 
-// multer
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    let path = "";
-    let arr = req.url.split("/");
-    let type = arr[arr.length - 2];
-    path = `files/${type}`;
-    cb(null, path);
-  },
-  filename: function (req, file, cb) {
-    let arr = req.url.split("/");
-    let id = arr[arr.length - 1];
-    cb(null, Date.now() + "-" + id + "-" + file.originalname);
-  },
-});
-
-app.use(multer({ storage: storage }).array("file"));
-
 // middlewares
-app.use(express.json());
+app.use(express.json({ limit: "5mb", extended: true }));
 app.use(helmet());
 app.use(compression());
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(
   cors({
     origin: "*",

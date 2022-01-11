@@ -11,6 +11,8 @@ const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
 const { setIp, getIpList } = require("../util/ipList");
 
+const upload = require("../middlewares/upload");
+
 route.post("/addnewtruck", carriersController.addNewTruck);
 route.post("/getcarrier", carriersController.getCarrier);
 route.post("/getcarriers", carriersController.getCarriers);
@@ -39,7 +41,7 @@ route.put("/updateinvoice", updateInvoiceStatus);
 route.post("/getloads", loadsController.getLoads);
 route.post("/getload", loadsController.getLoad);
 
-route.post("/uploadfile/:type/:id", (req, res) => {
+route.post("/uploadfile/:type/:id", upload.any(), (req, res) => {
   console.log(`uploading ${req.params.id}-${req.params.type}`);
   res.send(`/${req.files[0].path.replace(/\\/g, "/")}`);
 });
