@@ -7,7 +7,6 @@ import BackButton from "../../components/UI/BackButton";
 import axios from "axios";
 import { Form, Card, Row, Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
 
 const TruckDetails = () => {
   const transformToSelectValue = (value) => {
@@ -40,16 +39,14 @@ const TruckDetails = () => {
   const [dispatchers, setDispatchers] = useState([]);
   const { company } = useSelector((state) => state.user);
   const reassign = async () => {
-    // axios
-    //   .put(
-    //     `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${mc}/${truck.truck_number}`,
-    //     { "trucks.$.dispatcher": selectedDispatcher.value }
-    //   )
-    //   .then((result) => {
-    //     console.log("reassing", result.data.trucks);
-    //     setTrucks(result.data.trucks);
-    //     setShowReassingModal(false);
-    //   });
+    axios
+      .put(
+        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
+        { "trucks.$.dispatcher": selectedDispatcher.value }
+      )
+      .then((result) => {
+        console.log("reassing", result.data.trucks);
+      });
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -65,7 +62,7 @@ const TruckDetails = () => {
           event.target.temperature_restriction.value,
         "trucks.$.vin_number": event.target.vin_number.value,
         "trucks.$.region": region.map((item) => item.value),
-        "trucks.$.dispatcher": selectedDispatcher.value,
+        "trucks.$.off_days": offDays.map((item) => item.value),
       };
       await axios
         .put(
@@ -111,7 +108,6 @@ const TruckDetails = () => {
             label: truck.dispatcher.user_name,
           });
           console.log(truck);
-          console.log(selectedDispatcher);
         } else {
           setError(true);
         }
@@ -273,18 +269,6 @@ const TruckDetails = () => {
                 </Form.Group>
               </Row>
               <Form.Group as={Col} md="4" controlId="validationCustom03">
-                <Form.Label>Dispatcher:</Form.Label>
-                <Select
-                  options={dispatchers.map((item) => ({
-                    label: item.user_name,
-                    value: item._id,
-                  }))}
-                  value={selectedDispatcher && selectedDispatcher}
-                  onChange={setSelectedDispatcher}
-                  isSearchable={true}
-                />
-              </Form.Group>
-              <Form.Group as={Col} md="4" controlId="validationCustom03">
                 <Form.Label>Off Days:</Form.Label>
                 <Select
                   isMulti={true}
@@ -301,24 +285,38 @@ const TruckDetails = () => {
                   ]}
                 />
               </Form.Group>
+              <Row className="justify-content-center align-items-center">
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <Form.Label>Dispatcher:</Form.Label>
+                  <Select
+                    options={dispatchers.map((item) => ({
+                      label: item.user_name,
+                      value: item._id,
+                    }))}
+                    value={selectedDispatcher && selectedDispatcher}
+                    onChange={setSelectedDispatcher}
+                    isSearchable={true}
+                  />
+                </Form.Group>
+                <Col>
+                  <Button
+                    style={{ marginTop: "25px" }}
+                    variant="warning"
+                    onClick={reassign}
+                    disabled={
+                      truck?.dispatcher?._id === selectedDispatcher?.value
+                    }
+                  >
+                    Change Dispatcher
+                  </Button>
+                </Col>
+              </Row>
             </Row>
-            <Row>
-              <Col>
-                {/* <Button
-                  variant="warning"
-                  onClick={reassign}
-                  disabled={
-                    truck?.dispatcher?._id === selectedDispatcher?.value
-                  }
-                >
-                  Change Dispatcher
-                </Button> */}
-                <Button disabled={loadButton} type="submit">
-                  {" "}
-                  Submit
-                </Button>
-              </Col>
-            </Row>
+
+            <Button disabled={loadButton} type="submit">
+              {" "}
+              Submit
+            </Button>
           </Card.Body>
         </Card>
       </Form>

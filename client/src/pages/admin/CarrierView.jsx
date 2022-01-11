@@ -31,10 +31,10 @@ const AppointmentDetail = () => {
         if (data) {
           setCarrier(data);
           setTrucks(data.trucks);
-          setSelectedPayment({
-            label: data.payment_method,
-            value: data.payment_method,
-          });
+          // setSelectedPayment({
+          //   label: data.payment_method,
+          //   value: data.payment_method,
+          // });
           setTrucks(data.trucks);
           // setSelectedPayment({
           //   label: data.payment_method,

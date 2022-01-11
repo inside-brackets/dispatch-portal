@@ -10,7 +10,7 @@ import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 
-import { Button, Row, Col } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
