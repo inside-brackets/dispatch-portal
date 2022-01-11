@@ -40,8 +40,8 @@ route.post("/getloads", loadsController.getLoads);
 route.post("/getload", loadsController.getLoad);
 
 route.post("/uploadfile/:type/:id", (req, res) => {
+  console.log(`uploading ${req.params.id}-${req.params.type}`);
   res.send(`/${req.files[0].path.replace(/\\/g, "/")}`);
-  console.log(req);
 });
 
 // security
