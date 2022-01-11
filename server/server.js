@@ -98,6 +98,9 @@ app.all("*", (req, res, next) => {
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
+app.get("/hello", (req, res) => {
+  res.status(200).send({ msg: "hello" });
+});
 app.use("/", rootRoutes);
 
 // staticly serving folders
