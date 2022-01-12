@@ -103,20 +103,6 @@ app.get("/hello", (req, res) => {
 });
 app.use("/", rootRoutes);
 
-// staticly serving folders
-app.use(
-  "/files/carrier_documents",
-  express.static(path.join(__dirname, "/files/carrier_documents"))
-);
-app.use(
-  "/files/invoices",
-  express.static(path.join(__dirname, "/files/invoices"))
-);
-app.use(
-  "/files/ratecons",
-  express.static(path.join(__dirname, "/files/ratecons"))
-);
-
 httpServer.listen(process.env.PORT || 8800, () =>
   console.log("Api is running")
 );
