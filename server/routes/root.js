@@ -11,6 +11,7 @@ const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
 const { setIp, getIpList } = require("../util/ipList");
 const { generateUploadURL } = require("../util/s3");
+const auth = require("../middlewares/auth");
 
 // const upload = require("../middlewares/upload");
 

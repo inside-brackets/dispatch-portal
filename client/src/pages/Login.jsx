@@ -10,6 +10,7 @@ import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
 import axios from "axios";
 import bcrypt from "bcryptjs";
+import jwtDecode from "jwt-decode";
 
 const Login = () => {
   let history = useHistory();
@@ -53,13 +54,18 @@ const Login = () => {
         })
           .then(({ data }) => {
             console.log("test", data);
-            if (data) {
-              if (data.company === "admin") {
+            localStorage.setItem("user", JSON.stringify(data));
+            const jwt = localStorage.getItem("user");
+
+            const user = jwtDecode(jwt);
+
+            if (user) {
+              if (user.company === "admin") {
                 var selectedCompany = localStorage.getItem("selectedCompany");
                 if (selectedCompany) {
                   dispatch(
                     userActions.login({
-                      user: data,
+                      user: user,
                       company: JSON.parse(selectedCompany),
                     })
                   );
@@ -71,7 +77,7 @@ const Login = () => {
                 } else {
                   dispatch(
                     userActions.login({
-                      user: data,
+                      user: user,
                       company: {
                         label: "Elite Dispatch Service",
                         value: "elite",
@@ -83,7 +89,7 @@ const Login = () => {
               } else {
                 dispatch(
                   userActions.login({
-                    user: data,
+                    user: user,
                     company: {
                       label: "Elite Dispatch Service",
                       value: "elite",
@@ -93,7 +99,6 @@ const Login = () => {
                 dispatch(themeActions.setColor("theme-color-blue"));
               }
 
-              localStorage.setItem("user", JSON.stringify(data));
               setLoginError(false);
               history.replace(from);
             } else {

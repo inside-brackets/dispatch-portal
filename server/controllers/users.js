@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 const addNewUser = async (req, res) => {
   console.log(req.body.joining_date);
@@ -48,7 +49,21 @@ const getUser = (req, res, next) => {
 
   User.findOne(req.body)
     .then((user) => {
-      res.send(user);
+      let token = jwt.sign(
+        {
+          _id: user._id,
+          user_name: user.user_name,
+          department: user.department,
+          salary: user.salary,
+          joining_date: user.joining_date,
+          designation: user.designation,
+          assigned_trucks: user.assigned_trucks,
+          notifications: user.notifications,
+          company: user.company,
+        },
+        process.env.JWT
+      );
+      res.send(token);
       console.log("respo", user);
     })
     .catch((err) => {
