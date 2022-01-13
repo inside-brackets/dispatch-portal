@@ -88,21 +88,14 @@ const TruckTable = (props) => {
       </td>
       <td>
         <div className="edit__class">
-          <EditButton
-            type="edit"
-            onClick={() => {
-              setTruck(item);
-              editModalHnadler();
-            }}
-          />
-          <EditButton
-            type="delete"
-            onClick={() => {
-              deleteTruckHandler(item.truck_number);
-            }}
-          />
-          {item.t_status === "new" ? (
+          {user.department === "sales" ? (
             <>
+              <EditButton
+                type="delete"
+                onClick={() => {
+                  deleteTruckHandler(item.truck_number);
+                }}
+              />
               <EditButton
                 type="edit"
                 onClick={() => {
@@ -110,33 +103,43 @@ const TruckTable = (props) => {
                   editModalHnadler();
                 }}
               />
-              <EditButton
-                type="delete"
-                onClick={() => {
-                  deleteTruckHandler(item.truck_number);
-                }}
-              />
             </>
+          ) : user.department === "admin" && item.t_status !== "new" ? (
+            <EditButton
+              type="view"
+              onClick={() => {
+                setSelectedDispatcher({
+                  label: item.dispatcher.user_name,
+                  value: item.dispatcher._id,
+                });
+                setTruck(item);
+                setShowReassingModal(true);
+                history.push(`/carrierview/${mc}/${item.truck_number}`);
+              }}
+            />
           ) : (
-            user.department === "admin" && (
-              <EditButton
-                type="view"
-                onClick={() => {
-                  setSelectedDispatcher({
-                    label: item.dispatcher.user_name,
-                    value: item.dispatcher._id,
-                  });
-                  setTruck(item);
-                  setShowReassingModal(true);
-                  // setSelectedDispatcher({
-                  //   label: item.dispatcher.user_name,
-                  //   value: item.dispatcher._id,
-                  // });
-                  // setTruck(item);
-                  // setShowReassingModal(true);
-                  history.push(`/carrierview/${mc}/${item.truck_number}`);
-                }}
-              />
+            user.department === "admin" &&
+            item.t_status === "new" && (
+              <>
+                <EditButton
+                  type="view"
+                  onClick={() => {
+                    setSelectedDispatcher({
+                      label: item.dispatcher.user_name,
+                      value: item.dispatcher._id,
+                    });
+                    setTruck(item);
+                    setShowReassingModal(true);
+                    history.push(`/carrierview/${mc}/${item.truck_number}`);
+                  }}
+                />
+                <EditButton
+                  type="delete"
+                  onClick={() => {
+                    deleteTruckHandler(item.truck_number);
+                  }}
+                />
+              </>
             )
           )}
         </div>
