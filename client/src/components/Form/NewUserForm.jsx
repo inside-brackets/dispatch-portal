@@ -37,19 +37,21 @@ const NewUserForm = ({
   const { company: selectedCompany } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const indentifier = setTimeout(async () => {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getuser`,
-        { user_name: userName.toLowerCase() }
-      );
-      console.log("checking username");
-      console.log(response.data);
-      console.log(userName);
-      setUsernameIsValid(response.data.length === 0);
-    }, 500);
-    return () => {
-      clearTimeout(indentifier);
-    };
+    if (userName) {
+      const indentifier = setTimeout(async () => {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/getuser`,
+          { user_name: userName.toLowerCase() }
+        );
+        console.log("checking username");
+        console.log(response.data);
+        console.log(userName);
+        setUsernameIsValid(response.data.length === 0);
+      }, 500);
+      return () => {
+        clearTimeout(indentifier);
+      };
+    }
   }, [userName]);
 
   // const onChangeHandler = (e) => {
