@@ -91,16 +91,16 @@ const TruckTable = (props) => {
           {user.department === "sales" ? (
             <>
               <EditButton
-                type="delete"
-                onClick={() => {
-                  deleteTruckHandler(item.truck_number);
-                }}
-              />
-              <EditButton
                 type="edit"
                 onClick={() => {
                   setTruck(item);
                   editModalHnadler();
+                }}
+              />
+              <EditButton
+                type="delete"
+                onClick={() => {
+                  deleteTruckHandler(item.truck_number);
                 }}
               />
             </>
@@ -175,9 +175,7 @@ const TruckTable = (props) => {
   // reassign end
 
   return (
-    <div
-    //  style={{ left: "10%", position: "relative" }}
-    >
+    <div className="truck-detail">
       <h2> Trucks: </h2>
       <div className="row">
         <div className="col-12">
