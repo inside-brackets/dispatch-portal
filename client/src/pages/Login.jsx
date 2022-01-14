@@ -54,9 +54,8 @@ const Login = () => {
         })
           .then(({ data }) => {
             console.log("test", data);
-            localStorage.setItem("user", JSON.stringify(data));
+            localStorage.setItem("user", data);
             const jwt = localStorage.getItem("user");
-
             const user = jwtDecode(jwt);
 
             if (user) {
