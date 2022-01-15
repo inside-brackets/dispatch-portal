@@ -56,7 +56,13 @@ const App = () => {
     const jwt = localStorage.getItem("user");
 
     if (jwt) {
-      const user = jwtDecode(jwt);
+      try {
+        var user = jwtDecode(jwt);
+      } catch (error) {
+        localStorage.removeItem("user");
+        user = "";
+      }
+
       // user = JSON.parse(user);
       socket.on("backend-notify", (msg) => {
         if (user.department === "admin") {
