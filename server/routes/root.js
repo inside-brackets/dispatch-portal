@@ -11,8 +11,7 @@ const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
 const { setIp, getIpList } = require("../util/ipList");
 const { generateUploadURL } = require("../util/s3");
-
-// const upload = require("../middlewares/upload");
+const { edit } = require("../controllers/db");
 
 route.post("/addnewtruck", carriersController.addNewTruck);
 route.post("/getcarrier", carriersController.getCarrier);
@@ -41,11 +40,6 @@ route.put("/updateinvoice", updateInvoiceStatus);
 // loads
 route.post("/getloads", loadsController.getLoads);
 route.post("/getload", loadsController.getLoad);
-
-// route.post("/uploadfile/:type/:id", upload.any(), (req, res) => {
-//   console.log(`uploading ${req.params.id}-${req.params.type}`);
-//   res.send(`/${req.files[0].path.replace(/\\/g, "/")}`);
-// });
 
 // security
 route.post("/whitelist/:mac/:ip", (req, res) => {
@@ -76,5 +70,8 @@ route.get("/s3url/:folder/:fileName", async (req, res) => {
   const url = await generateUploadURL(req.params.folder, req.params.fileName);
   res.send(url);
 });
+
+// edit database
+route.post("/editdatabase", edit);
 
 module.exports = route;
