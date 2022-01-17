@@ -355,384 +355,390 @@ const AppointmentDetail = () => {
   }
 
   return (
-    <div className="row">
-      <div className="col-10">
-        <BackButton onClick={() => history.push("/appointments")} />
-        <Card
-          title={carrier.company_name}
-          className="appointment__detail"
-          buttons={[
-            { buttonText: "Save", onClick: saveCarrier },
-            { buttonText: "Reject", color: "red", onClick: onConfirm },
-            {
-              buttonText: "Close Sale",
-              color: "green",
-              onClick: showCloseModalHandler,
-              disabled: !formIsValid,
-            },
-          ]}
-        >
-          <div
-            className="row"
-            style={{
-              position: "relative",
-              width: "100%",
-            }}
+    <>
+      <BackButton onClick={() => history.push("/appointments")} />
+      <div className="row justify-content-center align-items-center">
+        <div className="col-10">
+          <Card
+            title={carrier.company_name}
+            className="appointment__detail"
+            buttons={[
+              { buttonText: "Save", onClick: saveCarrier },
+              { buttonText: "Reject", color: "red", onClick: onConfirm },
+              {
+                buttonText: "Close Sale",
+                color: "green",
+                onClick: showCloseModalHandler,
+                disabled: !formIsValid,
+              },
+            ]}
           >
-            <div className="col-1">
-              <h4>MC:</h4>
-            </div>
-            <div className="col-5">
-              <h4>{carrier.mc_number}</h4>
-            </div>
-            <div className="col-2">
-              <h4>Phone no:</h4>
-            </div>
-            <div className="col-4">
-              <h5>{carrier.phone_number}</h5>
-            </div>
-          </div>
-          <div
-            className="row"
-            style={{
-              position: "relative",
-              width: "100%",
-            }}
-          >
-            <div className="col-1">
-              <h4>Email:</h4>
-            </div>
-            <div className="col-5">
-              <Input
-                style={{ marginTop: "-10px" }}
-                type="text"
-                ref={carrierEmailRef}
-                defaultValue={carrier.email}
-              />
-            </div>
-            <div className="col-2">
-              <h4>Address:</h4>
-            </div>
-
-            <div className="col-4">
-              <h5>{carrier.address}</h5>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-4">
-              <h4>Appointment:</h4>
-              <Input
-                type="datetime-local"
-                defaultValue={carrier.appointment}
-                ref={appointmentRef}
-              />
-            </div>
-            <div className="col-8">
-              <TextArea
-                style={{ width: "500px" }}
-                placeholder="comment"
-                ref={commentRef}
-                defaultValue={carrier.comment}
-              />
-            </div>
-          </div>
-          {/* Carrier Details */}
-          <div className="row">
-            <div className="col-6">
-              <h2>Carrier Details:</h2>
-
-              <form action="">
-                <Input
-                  type="text"
-                  label="Owner's Name:"
-                  placeholder="Enter Name"
-                  ref={ownerNameRef}
-                  defaultValue={carrier.owner_name}
-                />
-
-                <Input
-                  type="text"
-                  label="*Tax ID:"
-                  placeholder="Enter 16 Digit code"
-                  className={taxIdHasError ? "invalid" : ""}
-                  value={taxId}
-                  onChange={taxIdChangeHandler}
-                  onBlur={taxIdBlurHandler}
-                  defaultValue={carrier.tax_id_number}
-                />
-              </form>
-            </div>
             <div
-              className="col-6"
+              className="row"
               style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                marginTop: "50px",
+                position: "relative",
+                width: "100%",
               }}
             >
-              <MySelect
-                isMulti={false}
-                value={selectedPayment}
-                onChange={setSelectedPayment}
-                label="Payment Method:"
-                options={[
-                  { label: "Factoring ", value: "factoring" },
-                  { label: "Quickpay ", value: "quickpay" },
-                  { label: "Standardpay ", value: "standardpay" },
-                ]}
-              />
-              <Input
-                type="number"
-                label="*Dispatch Fee:"
-                placeholder="Enter Fee"
-                className={feeHasError ? "invalid" : ""}
-                value={fee}
-                onChange={feeChangeHandler}
-                onBlur={feeBlurHandler}
-                defaultValue={
-                  carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
-                }
-              />
+              <div className="col-1">
+                <h4>MC:</h4>
+              </div>
+              <div className="col-5">
+                <h4>{carrier.mc_number}</h4>
+              </div>
+              <div className="col-2">
+                <h4>Phone no:</h4>
+              </div>
+              <div className="col-4">
+                <h5>{carrier.phone_number}</h5>
+              </div>
             </div>
-          </div>
+            <div
+              className="row"
+              style={{
+                position: "relative",
+                width: "100%",
+              }}
+            >
+              <div className="col-1">
+                <h4>Email:</h4>
+              </div>
+              <div className="col-5">
+                <Input
+                  style={{ marginTop: "-10px" }}
+                  type="text"
+                  ref={carrierEmailRef}
+                  defaultValue={carrier.email}
+                />
+              </div>
+              <div className="col-2">
+                <h4>Address:</h4>
+              </div>
 
-          <div className="row">
-            <div className="col-6">
-              <h2>*Insurance Details:</h2>
-              <form action="">
-                <Input
-                  type="text"
-                  label="Company's Name:"
-                  placeholder="Enter name"
-                  className={insCompNameHasError ? "invalid" : ""}
-                  value={insCompName}
-                  onChange={insCompNameChangeHandler}
-                  onBlur={insCompNameBlurHandler}
-                  defaultValue={carrier.insurance && carrier.insurance.name}
-                />
-                <Input
-                  type="text"
-                  label="Address:"
-                  placeholder="Enter Address"
-                  className={insAddressHasError ? "invalid" : ""}
-                  value={insAddress}
-                  onChange={insAddressChangeHandler}
-                  onBlur={insAddressBlurHandler}
-                  defaultValue={carrier.insurance && carrier.insurance.address}
-                />
-                <Input
-                  type="text"
-                  label="Phone Number:"
-                  placeholder="(000) 000-0000"
-                  className={insPhoneHasError ? "invalid" : ""}
-                  value={insPhone}
-                  onChange={insPhoneChangeHandler}
-                  onBlur={insPhoneBlurHandler}
-                  defaultValue={carrier.insurance && carrier.insurance.phone_no}
-                />
-                <Input
-                  type="text"
-                  label="Agent's Name:"
-                  placeholder="Enter Agent's Name"
-                  className={insAgentNameHasError ? "invalid" : ""}
-                  value={insAgentName}
-                  onChange={insAgentNameChangeHandler}
-                  onBlur={insAgentNameBlurHandler}
-                  defaultValue={
-                    carrier.insurance && carrier.insurance.agent_name
-                  }
-                />
-                <Input
-                  type="email"
-                  label="Agents's Email:"
-                  placeholder="Enter email"
-                  className={insAgentEmailHasError ? "invalid" : ""}
-                  value={insAgentEmail}
-                  onChange={insAgentEmailChangeHandler}
-                  onBlur={insAgentEmailBlurHandler}
-                  defaultValue={
-                    carrier.insurance && carrier.insurance.agent_email
-                  }
-                />
-              </form>
+              <div className="col-4">
+                <h5>{carrier.address}</h5>
+              </div>
             </div>
-            {selectedPayment.value === "factoring" && (
+            <div className="row">
+              <div className="col-4">
+                <h4>Appointment:</h4>
+                <Input
+                  type="datetime-local"
+                  defaultValue={carrier.appointment}
+                  ref={appointmentRef}
+                />
+              </div>
+              <div className="col-8">
+                <TextArea
+                  style={{ width: "500px" }}
+                  placeholder="comment"
+                  ref={commentRef}
+                  defaultValue={carrier.comment}
+                />
+              </div>
+            </div>
+            {/* Carrier Details */}
+            <div className="row">
               <div className="col-6">
-                <h2>Factoring Details:</h2>
+                <h2>Carrier Details:</h2>
+
+                <form action="">
+                  <Input
+                    type="text"
+                    label="Owner's Name:"
+                    placeholder="Enter Name"
+                    ref={ownerNameRef}
+                    defaultValue={carrier.owner_name}
+                  />
+
+                  <Input
+                    type="text"
+                    label="*Tax ID:"
+                    placeholder="Enter 16 Digit code"
+                    className={taxIdHasError ? "invalid" : ""}
+                    value={taxId}
+                    onChange={taxIdChangeHandler}
+                    onBlur={taxIdBlurHandler}
+                    defaultValue={carrier.tax_id_number}
+                  />
+                </form>
+              </div>
+              <div
+                className="col-6"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  marginTop: "50px",
+                }}
+              >
+                <MySelect
+                  isMulti={false}
+                  value={selectedPayment}
+                  onChange={setSelectedPayment}
+                  label="Payment Method:"
+                  options={[
+                    { label: "Factoring ", value: "factoring" },
+                    { label: "Quickpay ", value: "quickpay" },
+                    { label: "Standardpay ", value: "standardpay" },
+                  ]}
+                />
+                <Input
+                  type="number"
+                  label="*Dispatch Fee:"
+                  placeholder="Enter Fee"
+                  className={feeHasError ? "invalid" : ""}
+                  value={fee}
+                  onChange={feeChangeHandler}
+                  onBlur={feeBlurHandler}
+                  defaultValue={
+                    carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-6">
+                <h2>*Insurance Details:</h2>
                 <form action="">
                   <Input
                     type="text"
                     label="Company's Name:"
                     placeholder="Enter name"
-                    ref={factCompNameRef}
-                    defaultValue={carrier.factoring && carrier.factoring.name}
+                    className={insCompNameHasError ? "invalid" : ""}
+                    value={insCompName}
+                    onChange={insCompNameChangeHandler}
+                    onBlur={insCompNameBlurHandler}
+                    defaultValue={carrier.insurance && carrier.insurance.name}
                   />
                   <Input
                     type="text"
                     label="Address:"
                     placeholder="Enter Address"
-                    ref={factAddressRef}
+                    className={insAddressHasError ? "invalid" : ""}
+                    value={insAddress}
+                    onChange={insAddressChangeHandler}
+                    onBlur={insAddressBlurHandler}
                     defaultValue={
-                      carrier.factoring && carrier.factoring.address
+                      carrier.insurance && carrier.insurance.address
                     }
                   />
                   <Input
                     type="text"
                     label="Phone Number:"
                     placeholder="(000) 000-0000"
-                    ref={factPhoneRef}
+                    className={insPhoneHasError ? "invalid" : ""}
+                    value={insPhone}
+                    onChange={insPhoneChangeHandler}
+                    onBlur={insPhoneBlurHandler}
                     defaultValue={
-                      carrier.factoring && carrier.factoring.phone_no
+                      carrier.insurance && carrier.insurance.phone_no
                     }
                   />
-
                   <Input
                     type="text"
                     label="Agent's Name:"
                     placeholder="Enter Agent's Name"
-                    ref={factAgentNameRef}
+                    className={insAgentNameHasError ? "invalid" : ""}
+                    value={insAgentName}
+                    onChange={insAgentNameChangeHandler}
+                    onBlur={insAgentNameBlurHandler}
                     defaultValue={
-                      carrier.factoring && carrier.factoring.agent_name
+                      carrier.insurance && carrier.insurance.agent_name
                     }
                   />
                   <Input
-                    type="text"
+                    type="email"
                     label="Agents's Email:"
                     placeholder="Enter email"
-                    ref={factAgentEmailRef}
+                    className={insAgentEmailHasError ? "invalid" : ""}
+                    value={insAgentEmail}
+                    onChange={insAgentEmailChangeHandler}
+                    onBlur={insAgentEmailBlurHandler}
                     defaultValue={
-                      carrier.factoring && carrier.factoring.agent_email
+                      carrier.insurance && carrier.insurance.agent_email
                     }
                   />
                 </form>
               </div>
-            )}
-          </div>
+              {selectedPayment.value === "factoring" && (
+                <div className="col-6">
+                  <h2>Factoring Details:</h2>
+                  <form action="">
+                    <Input
+                      type="text"
+                      label="Company's Name:"
+                      placeholder="Enter name"
+                      ref={factCompNameRef}
+                      defaultValue={carrier.factoring && carrier.factoring.name}
+                    />
+                    <Input
+                      type="text"
+                      label="Address:"
+                      placeholder="Enter Address"
+                      ref={factAddressRef}
+                      defaultValue={
+                        carrier.factoring && carrier.factoring.address
+                      }
+                    />
+                    <Input
+                      type="text"
+                      label="Phone Number:"
+                      placeholder="(000) 000-0000"
+                      ref={factPhoneRef}
+                      defaultValue={
+                        carrier.factoring && carrier.factoring.phone_no
+                      }
+                    />
 
-          <Modal
-            size="lg"
-            show={showCloseModal}
-            heading="Upload Files*"
-            onClose={closeCloseModel}
-            style={{ width: "auto" }}
-          >
-            <div
-              className="row"
-              style={{
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <div className="col-1">
-                <h5>MC:</h5>
-              </div>
-              <div className="col-5">
-                <Input
-                  type="file"
-                  name="file"
-                  className={mcHasError ? "invalid" : ""}
-                  onChange={mcChangeHandler}
-                  onBlur={mcBlurHandler}
-                  value={mc}
-                  ref={mcRef}
-                />
-              </div>
-              <div className="col-2">
-                <h5>Insurance Certificate:</h5>
-              </div>
-              <div className="col-4">
-                <Input
-                  type="file"
-                  name="file"
-                  className={insuranceHasError ? "invalid" : ""}
-                  value={insurance}
-                  onChange={insuranceChangeHandler}
-                  onBlur={insuranceBlurHandler}
-                  ref={insuranceRef}
-                />
-              </div>
+                    <Input
+                      type="text"
+                      label="Agent's Name:"
+                      placeholder="Enter Agent's Name"
+                      ref={factAgentNameRef}
+                      defaultValue={
+                        carrier.factoring && carrier.factoring.agent_name
+                      }
+                    />
+                    <Input
+                      type="text"
+                      label="Agents's Email:"
+                      placeholder="Enter email"
+                      ref={factAgentEmailRef}
+                      defaultValue={
+                        carrier.factoring && carrier.factoring.agent_email
+                      }
+                    />
+                  </form>
+                </div>
+              )}
             </div>
-            <div
-              className="row"
-              style={{
-                position: "relative",
-                width: "100%",
-              }}
+
+            <Modal
+              size="lg"
+              show={showCloseModal}
+              heading="Upload Files*"
+              onClose={closeCloseModel}
+              style={{ width: "auto" }}
             >
-              <div className="col-1">
-                {selectedPayment.value === "factoring" ? (
-                  <h5>NOA:</h5>
-                ) : (
-                  <h5>Void Check</h5>
-                )}
-              </div>
-              <div className="col-5">
-                <Input type="file" name="file" ref={noaRef} />
-              </div>
-              <div className="col-2">
-                <h5>W-9 Form:</h5>
-              </div>
-              <div className="col-4">
-                <Input
-                  type="file"
-                  name="file"
-                  className={w9HasError ? "invalid" : ""}
-                  onChange={w9ChangeHandler}
-                  onBlur={w9BlurHandler}
-                  value={w9}
-                  ref={w9Ref}
-                />
-              </div>
-            </div>
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Button
-                onClick={closeSale}
-                disabled={!modalFormIsValid || buttonLoader}
+              <div
+                className="row"
+                style={{
+                  position: "relative",
+                  width: "100%",
+                }}
               >
-                Submit
-              </Button>
-            </div>
-          </Modal>
-        </Card>
-        <Modal
-          show={rmodal}
-          heading="Reject Carrier"
-          onConfirm={rejectHandler}
-          onClose={onrClose}
-        >
-          <form>
-            <TextArea
-              name="Comment:"
-              placeholder="Comment here..."
-              // value={commentRef.current.value}
-              defaultValue={commentRef.current && commentRef.current.value}
-              // onChange={(e) => setComment(e.target.value)}
-              ref={commentRef}
-            />
+                <div className="col-1">
+                  <h5>MC:</h5>
+                </div>
+                <div className="col-5">
+                  <Input
+                    type="file"
+                    name="file"
+                    className={mcHasError ? "invalid" : ""}
+                    onChange={mcChangeHandler}
+                    onBlur={mcBlurHandler}
+                    value={mc}
+                    ref={mcRef}
+                  />
+                </div>
+                <div className="col-2">
+                  <h5>Insurance Certificate:</h5>
+                </div>
+                <div className="col-4">
+                  <Input
+                    type="file"
+                    name="file"
+                    className={insuranceHasError ? "invalid" : ""}
+                    value={insurance}
+                    onChange={insuranceChangeHandler}
+                    onBlur={insuranceBlurHandler}
+                    ref={insuranceRef}
+                  />
+                </div>
+              </div>
+              <div
+                className="row"
+                style={{
+                  position: "relative",
+                  width: "100%",
+                }}
+              >
+                <div className="col-1">
+                  {selectedPayment.value === "factoring" ? (
+                    <h5>NOA:</h5>
+                  ) : (
+                    <h5>Void Check</h5>
+                  )}
+                </div>
+                <div className="col-5">
+                  <Input type="file" name="file" ref={noaRef} />
+                </div>
+                <div className="col-2">
+                  <h5>W-9 Form:</h5>
+                </div>
+                <div className="col-4">
+                  <Input
+                    type="file"
+                    name="file"
+                    className={w9HasError ? "invalid" : ""}
+                    onChange={w9ChangeHandler}
+                    onBlur={w9BlurHandler}
+                    value={w9}
+                    ref={w9Ref}
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Button
+                  onClick={closeSale}
+                  disabled={!modalFormIsValid || buttonLoader}
+                >
+                  Submit
+                </Button>
+              </div>
+            </Modal>
+          </Card>
+          <Modal
+            show={rmodal}
+            heading="Reject Carrier"
+            onConfirm={rejectHandler}
+            onClose={onrClose}
+          >
+            <form>
+              <TextArea
+                name="Comment:"
+                placeholder="Comment here..."
+                // value={commentRef.current.value}
+                defaultValue={commentRef.current && commentRef.current.value}
+                // onChange={(e) => setComment(e.target.value)}
+                ref={commentRef}
+              />
 
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            ></div>
-          </form>
-        </Modal>
-        <TruckTable
-          mc={carrier.mc_number}
-          trucks={trucks}
-          setTrucks={setTrucks}
-        />
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              ></div>
+            </form>
+          </Modal>
+          <TruckTable
+            mc={carrier.mc_number}
+            trucks={trucks}
+            setTrucks={setTrucks}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

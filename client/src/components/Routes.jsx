@@ -27,6 +27,7 @@ import { salesActions } from "../store/sales";
 import useHttp from "../hooks/use-https";
 import { socket } from "..";
 import Loads from "../pages/admin/Loads";
+import TruckDetails from "../pages/admin/TruckDetails";
 const Routes = () => {
   const { department } = useSelector((state) => state.user.user);
   const [refresh, setRefresh] = useState(true);
@@ -87,7 +88,8 @@ const Routes = () => {
       <Route path="/carriers" exact component={Carriers} />
       <Route path="/searchcarrier" exact component={SearchCarrier} />
       <Route path="/addcarrier/:mc" component={AddCarrier} />
-      <Route path="/carrierview/:mc" component={CarrierView} />
+      <Route path="/carrierview/:mc" exact component={CarrierView} />
+      <Route path="/carrierview/:mc/:truck" exact component={TruckDetails} />
       <Route path="/assignsales" exact component={AssignSales} />
       <Route path="/profile" component={Profile} />
       <Route path="/loads" component={Loads} />

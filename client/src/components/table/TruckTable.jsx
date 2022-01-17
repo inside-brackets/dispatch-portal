@@ -10,9 +10,10 @@ import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 
-import { Button, Row, Col } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const customerTableHead = [
   "#",
@@ -26,6 +27,8 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
+  const history = useHistory();
+
   // reassign states
   const [selectedDispatcher, setSelectedDispatcher] = useState(null);
   const [dispatchers, setDispatchers] = useState([]);
@@ -85,7 +88,7 @@ const TruckTable = (props) => {
       </td>
       <td>
         <div className="edit__class">
-          {item.t_status === "new" ? (
+          {user.department === "sales" ? (
             <>
               <EditButton
                 type="edit"
@@ -101,19 +104,42 @@ const TruckTable = (props) => {
                 }}
               />
             </>
+          ) : user.department === "admin" && item.t_status !== "new" ? (
+            <EditButton
+              type="view"
+              onClick={() => {
+                setSelectedDispatcher({
+                  label: item.dispatcher.user_name,
+                  value: item.dispatcher._id,
+                });
+                setTruck(item);
+                setShowReassingModal(true);
+                history.push(`/carrierview/${mc}/${item.truck_number}`);
+              }}
+            />
           ) : (
-            user.department === "admin" && (
-              <EditButton
-                type="view"
-                onClick={() => {
-                  setSelectedDispatcher({
-                    label: item.dispatcher.user_name,
-                    value: item.dispatcher._id,
-                  });
-                  setTruck(item);
-                  setShowReassingModal(true);
-                }}
-              />
+            user.department === "admin" &&
+            item.t_status === "new" && (
+              <>
+                <EditButton
+                  type="view"
+                  onClick={() => {
+                    setSelectedDispatcher({
+                      label: item.dispatcher.user_name,
+                      value: item.dispatcher._id,
+                    });
+                    setTruck(item);
+                    setShowReassingModal(true);
+                    history.push(`/carrierview/${mc}/${item.truck_number}`);
+                  }}
+                />
+                <EditButton
+                  type="delete"
+                  onClick={() => {
+                    deleteTruckHandler(item.truck_number);
+                  }}
+                />
+              </>
             )
           )}
         </div>
@@ -149,7 +175,7 @@ const TruckTable = (props) => {
   // reassign end
 
   return (
-    <div style={{ left: "10%", position: "relative" }}>
+    <div className="truck-detail">
       <h2> Trucks: </h2>
       <div className="row">
         <div className="col-12">
