@@ -108,10 +108,6 @@ const TruckTable = (props) => {
             <EditButton
               type="view"
               onClick={() => {
-                setSelectedDispatcher({
-                  label: item.dispatcher.user_name,
-                  value: item.dispatcher._id,
-                });
                 setTruck(item);
                 setShowReassingModal(true);
                 history.push(`/carrierview/${mc}/${item.truck_number}`);
@@ -124,10 +120,6 @@ const TruckTable = (props) => {
                 <EditButton
                   type="view"
                   onClick={() => {
-                    setSelectedDispatcher({
-                      label: item.dispatcher.user_name,
-                      value: item.dispatcher._id,
-                    });
                     setTruck(item);
                     setShowReassingModal(true);
                     history.push(`/carrierview/${mc}/${item.truck_number}`);

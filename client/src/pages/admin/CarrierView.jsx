@@ -56,7 +56,7 @@ const AppointmentDetail = () => {
         owner_name: event.target.owner_name.value,
         phone_number: event.target.phone_number.value,
         email: event.target.email.value,
-        tax_id: event.target.tax_id.value,
+        tax_id_number: event.target.tax_id.value,
         insurance: {
           name: event.target.i_company_name.value,
           address: event.target.i_address.value,
@@ -159,7 +159,7 @@ const AppointmentDetail = () => {
                         type="text"
                         placeholder="Payment Method"
                         required
-                        defaultValue={carrier ? carrier.mc_number : false}
+                        defaultValue={carrier ? carrier.mc_number : ""}
                         disabled
                       />
                       <Form.Control.Feedback type="invalid">
@@ -179,7 +179,7 @@ const AppointmentDetail = () => {
                         type="text"
                         placeholder="Payment Method"
                         required
-                        defaultValue={carrier ? carrier.address : false}
+                        defaultValue={carrier ? carrier.address : ""}
                         disabled
                       />
                       <Form.Control.Feedback type="invalid">
@@ -188,7 +188,6 @@ const AppointmentDetail = () => {
                     </Col>
                   </Row>
                 </Form.Group>
-                {/* <h4>Address: {data.address} </h4> */}
               </Row>
               <Row style={{ marginTop: "40px" }}>
                 <Form.Group as={Col} md="6" controlId="validationCustom03">
@@ -203,9 +202,7 @@ const AppointmentDetail = () => {
                         placeholder="Payment Method"
                         name="phone_number"
                         required
-                        // value={phoneNumber}
-                        // onChange={(e) => setPhoneNumber(e.target.value)}
-                        defaultValue={carrier ? carrier.phone_number : false}
+                        defaultValue={carrier ? carrier.phone_number : ""}
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid entity.
@@ -226,7 +223,7 @@ const AppointmentDetail = () => {
                         name="email"
                         // value={email}
                         // onChange={(e) => setEmail(e.target.value)}
-                        defaultValue={carrier ? carrier.email : false}
+                        defaultValue={carrier ? carrier.email : ""}
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid entity.
@@ -234,11 +231,9 @@ const AppointmentDetail = () => {
                     </Col>
                   </Row>
                 </Form.Group>
-                {/* <h4>Address: {data.address} </h4> */}
               </Row>
               <Row
                 style={{
-                  // justifyContent: "center",
                   marginTop: "40px",
                   height: "100px",
                 }}
@@ -264,8 +259,7 @@ const AppointmentDetail = () => {
                     <TextArea
                       style={{ width: "500px" }}
                       placeholder="Comment.."
-                      defaultValue={carrier ? carrier.comment : false}
-                      // ref={commentRef}
+                      defaultValue={carrier ? carrier.comment : ""}
                       readOnly
                     />
                   </Form.Group>
@@ -273,7 +267,6 @@ const AppointmentDetail = () => {
               </Row>
               <Row
                 style={{
-                  // justifyContent: "center",
                   marginTop: "40px",
                   height: "100px",
                 }}
@@ -299,12 +292,7 @@ const AppointmentDetail = () => {
                     <TextArea
                       style={{ width: "500px" }}
                       placeholder="Dispatcher's Comments"
-                      // value={comment}
-                      defaultValue={
-                        carrier ? carrier.dispatcher_comment : false
-                      }
-                      // onChange={(e) => setDispatcherComment(e.target.value)}
-                      // ref={dispatcherCommentRef}
+                      defaultValue={carrier ? carrier.dispatcher_comment : ""}
                     />
                   </Form.Group>
                 </Col>
@@ -322,7 +310,7 @@ const AppointmentDetail = () => {
                       name="owner_name"
                       // value={ownerName}
                       // onChange={(e) => setOwnerName(e.target.value)}
-                      defaultValue={carrier ? carrier.owner_name : false}
+                      defaultValue={carrier ? carrier.owner_name : ""}
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid entity.
@@ -335,7 +323,7 @@ const AppointmentDetail = () => {
                       type="text"
                       placeholder="Payment Method"
                       required
-                      defaultValue={carrier ? carrier.payment_method : false}
+                      defaultValue={carrier ? carrier.payment_method : ""}
                       disabled
                     />
                     <Form.Control.Feedback type="invalid">
@@ -349,9 +337,8 @@ const AppointmentDetail = () => {
                     <Form.Control
                       type="text"
                       placeholder="Tax Id"
-                      defaultValue={carrier ? carrier.tax_id_number : false}
+                      defaultValue={carrier ? carrier.tax_id_number : ""}
                       name="tax_id"
-                      required
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid Tax Id.
@@ -371,7 +358,7 @@ const AppointmentDetail = () => {
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.name
-                          : false
+                          : ""
                       }
                       required
                     />
@@ -389,7 +376,7 @@ const AppointmentDetail = () => {
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.address
-                          : false
+                          : ""
                       }
                       placeholder="Address"
                       required
@@ -411,7 +398,7 @@ const AppointmentDetail = () => {
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.agent_name
-                          : false
+                          : ""
                       }
                       required
                     />
@@ -431,7 +418,7 @@ const AppointmentDetail = () => {
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.agent_email
-                          : false
+                          : ""
                       }
                       required
                     />
@@ -448,7 +435,7 @@ const AppointmentDetail = () => {
                       defaultValue={
                         carrier && carrier.insurance
                           ? carrier.insurance.phone_no
-                          : false
+                          : ""
                       }
                       // value={phone}
                       // onChange={(e) => setPhone(e.target.value)}
@@ -479,7 +466,7 @@ const AppointmentDetail = () => {
                           defaultValue={
                             carrier && carrier.factoring
                               ? carrier.factoring.name
-                              : false
+                              : ""
                           }
                           required
                         />
@@ -501,7 +488,7 @@ const AppointmentDetail = () => {
                           defaultValue={
                             carrier && carrier.factoring
                               ? carrier.factoring.address
-                              : false
+                              : ""
                           }
                           placeholder="Address"
                           required
@@ -528,7 +515,7 @@ const AppointmentDetail = () => {
                           defaultValue={
                             carrier && carrier.factoring
                               ? carrier.factoring.agent_name
-                              : false
+                              : ""
                           }
                           required
                         />
@@ -552,7 +539,7 @@ const AppointmentDetail = () => {
                           defaultValue={
                             carrier && carrier.factoring
                               ? carrier.factoring.agent_email
-                              : false
+                              : ""
                           }
                           required
                         />
@@ -575,7 +562,7 @@ const AppointmentDetail = () => {
                           defaultValue={
                             carrier && carrier.factoring
                               ? carrier.factoring.phone_no
-                              : false
+                              : ""
                           }
                           required
                         />

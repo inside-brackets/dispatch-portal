@@ -92,10 +92,6 @@ const TruckDetails = () => {
         console.log("carrier", data);
         if (data) {
           setCarrier(data);
-          //   setSelectedPayment({
-          //     label: data.payment_method,
-          //     value: data.payment_method,
-          //   });
           const truck = data.trucks.find((item) => {
             return item.truck_number.toString() === params.truck.toString();
           });
@@ -103,10 +99,12 @@ const TruckDetails = () => {
           setRegion(transformToSelectValue(truck.region));
           setoffDays(transformToSelectValue(truck.off_days));
           setTrailerType(transformToSelectValue(truck.trailer_type));
-          setSelectedDispatcher({
-            value: truck.dispatcher._id,
-            label: truck.dispatcher.user_name,
-          });
+          if (truck.t_status !== "new") {
+            setSelectedDispatcher({
+              value: truck.dispatcher._id,
+              label: truck.dispatcher.user_name,
+            });
+          }
           console.log(truck);
         } else {
           setError(true);
@@ -168,8 +166,6 @@ const TruckDetails = () => {
                   <Form.Control
                     type="text"
                     placeholder="Agent's Email"
-                    // value={truckNumber}
-                    // onChange={(e) => setTruckNumber(e.target.value)}
                     defaultValue={truck ? truck.truck_number : false}
                     readOnly
                   />
@@ -184,8 +180,6 @@ const TruckDetails = () => {
                     type="number"
                     placeholder="Truck's Vin number"
                     name="vin_number"
-                    // value={vinNumber}
-                    // onChange={(e) => setVinNumber(e.target.value)}
                     defaultValue={truck ? truck.vin_number : false}
                     required
                   />
@@ -202,8 +196,6 @@ const TruckDetails = () => {
                     name="carry_limit"
                     placeholder="carry limit"
                     defaultValue={truck ? truck.carry_limit : false}
-                    // value={carryLimit}
-                    // onChange={(e) => setCarryLimit(e.target.value)}
                   />
                 </Form.Group>
 
@@ -213,8 +205,6 @@ const TruckDetails = () => {
                     type="number"
                     placeholder="Temperature Restrictions"
                     name="temperature_restriction"
-                    // value={temperatureRestrictions}
-                    // onChange={(e) => setTemperatureRestrictions(e.target.value)}
                     defaultValue={truck ? truck.temperature_restriction : false}
                   />
                 </Form.Group>
@@ -226,8 +216,6 @@ const TruckDetails = () => {
                     type="number"
                     placeholder="Trip duration"
                     name="trip_durration"
-                    // value={tripDurration}
-                    // onChange={(e) => setTripDurration(e.target.value)}
                     defaultValue={truck ? truck.trip_durration : false}
                   />
                 </Form.Group>
@@ -285,32 +273,34 @@ const TruckDetails = () => {
                   ]}
                 />
               </Form.Group>
-              <Row className="justify-content-center align-items-center">
-                <Form.Group as={Col} md="4" controlId="validationCustom03">
-                  <Form.Label>Dispatcher:</Form.Label>
-                  <Select
-                    options={dispatchers.map((item) => ({
-                      label: item.user_name,
-                      value: item._id,
-                    }))}
-                    value={selectedDispatcher && selectedDispatcher}
-                    onChange={setSelectedDispatcher}
-                    isSearchable={true}
-                  />
-                </Form.Group>
-                <Col>
-                  <Button
-                    style={{ marginTop: "25px" }}
-                    variant="warning"
-                    onClick={reassign}
-                    disabled={
-                      truck?.dispatcher?._id === selectedDispatcher?.value
-                    }
-                  >
-                    Change Dispatcher
-                  </Button>
-                </Col>
-              </Row>
+              {truck?.t_status !== "new" && (
+                <Row className="justify-content-center align-items-center">
+                  <Form.Group as={Col} md="4" controlId="validationCustom03">
+                    <Form.Label>Dispatcher:</Form.Label>
+                    <Select
+                      options={dispatchers.map((item) => ({
+                        label: item.user_name,
+                        value: item._id,
+                      }))}
+                      value={selectedDispatcher && selectedDispatcher}
+                      onChange={setSelectedDispatcher}
+                      isSearchable={true}
+                    />
+                  </Form.Group>
+                  <Col>
+                    <Button
+                      style={{ marginTop: "25px" }}
+                      variant="warning"
+                      onClick={reassign}
+                      disabled={
+                        truck?.dispatcher?._id === selectedDispatcher?.value
+                      }
+                    >
+                      Change Dispatcher
+                    </Button>
+                  </Col>
+                </Row>
+              )}
             </Row>
 
             <Button disabled={loadButton} type="submit">
