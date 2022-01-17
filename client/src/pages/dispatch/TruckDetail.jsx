@@ -419,7 +419,6 @@ const TruckDetail = ({ match }) => {
                         placeholder="Tax Id"
                         disabled
                         defaultValue={data.tax_id_number}
-                        required
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid Tax Id.
