@@ -139,7 +139,9 @@ const Login = () => {
                     />
                   </Form.Group>
                   {loginError && (
-                    <p className="error-text">Email or password is wrong.</p>
+                    <p className="error-text">
+                      Email or password is incorrect.
+                    </p>
                   )}
                 </div>
 
