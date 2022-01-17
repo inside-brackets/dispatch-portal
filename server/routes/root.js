@@ -12,6 +12,9 @@ const userController = require("../controllers/users");
 const { setIp, getIpList } = require("../util/ipList");
 const { generateUploadURL } = require("../util/s3");
 const { edit } = require("../controllers/db");
+const auth = require("../middlewares/auth");
+
+// const upload = require("../middlewares/upload");
 
 route.post("/addnewtruck", carriersController.addNewTruck);
 route.post("/getcarrier", carriersController.getCarrier);

@@ -14,6 +14,7 @@ import notificationSound from "./assets/audio/notification.mp3";
 import { useHistory } from "react-router-dom";
 import Message from "./components/Message";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 var sound = new Howl({
   src: notificationSound,
@@ -52,19 +53,22 @@ const App = () => {
       });
     });
 
+    const jwt = localStorage.getItem("user");
 
-    
+    if (jwt) {
+      try {
+        var user = jwtDecode(jwt);
+      } catch (error) {
+        localStorage.removeItem("user");
+        user = "";
+      }
 
-    var user = localStorage.getItem("user");
-    if (user) {
-     
-      user = JSON.parse(user);
+      // user = JSON.parse(user);
       socket.on("backend-notify", (msg) => {
         if (user.department === "admin") {
           notify(msg);
           sound.play();
           // fetch selectedCompany and set colors
-          
         }
       });
       socket.on("sale-closed", (msg) => {
@@ -73,25 +77,41 @@ const App = () => {
           sound.play();
         }
       });
-      if(user.department === "admin"){
+      if (user.department === "admin") {
         var selectedCompany = localStorage.getItem("selectedCompany");
-        if(selectedCompany){
-          dispatch(userActions.login({user,company:JSON.parse(selectedCompany)}));
-          var color = JSON.parse(selectedCompany).value === "elite" ?  "theme-color-blue" : "theme-color-red"
+        if (selectedCompany) {
+          dispatch(
+            userActions.login({ user, company: JSON.parse(selectedCompany) })
+          );
+          var color =
+            JSON.parse(selectedCompany).value === "elite"
+              ? "theme-color-blue"
+              : "theme-color-red";
           dispatch(themeActions.setColor(color));
-        }else{
-          dispatch(userActions.login({user,company:{
-            label: "Elite Dispatch Service", 
-            value: "elite",
-          }}));
+        } else {
+          dispatch(
+            userActions.login({
+              user,
+              company: {
+                label: "Elite Dispatch Service",
+                value: "elite",
+              },
+            })
+          );
         }
-      }else{
-        dispatch(userActions.login({user,company:{
-          label: "Elite Dispatch Service", 
-          value: "elite",
-        }}));
+      } else {
+        dispatch(
+          userActions.login({
+            user,
+            company: {
+              label: "Elite Dispatch Service",
+              value: "elite",
+            },
+          })
+        );
       }
-      
+    } else {
+      localStorage.removeItem("user");
     }
   }, [dispatch, history]);
   return (
