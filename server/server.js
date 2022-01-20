@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
 
 // redirecting;
 app.all("*", (req, res, next) => {
-  if (process.env.PROD === "true") {
+  if (process.env.SECURITY === "on") {
     var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     ip = ip.replace("::ffff:", "").trim();
     console.log("x-forwarded-for", ip);
