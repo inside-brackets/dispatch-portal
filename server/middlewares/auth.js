@@ -1,17 +1,22 @@
-var jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const { getIpList } = require("../util/ipList");
 
-async function auth(req, res, next) {
-  let token = req.header("x-auth-token");
-  if (!token) return res.status(400).send("Token Not Provided");
-  try {
-    let user = jwt.verify(token, process.env.JWT);
-    let a = user;
-    req.user = await User.findById(user._id);
-  } catch (error) {
-    return res.status(401).send("Token Invalid");
+// check ip before request
+const auth = async (req, res, next) => {
+  if (process.env.SECURITY === "on") {
+    var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    ip = ip.replace("::ffff:", "").trim();
+    console.log("x-forwarded-for", ip);
+    const ipList = getIpList();
+    if (ipList.includes(ip)) {
+      next();
+    } else {
+      res.status(401).send({
+        message: "not white listed",
+      });
+    }
+  } else {
+    next();
   }
-  next();
-}
+};
 
 module.exports = auth;

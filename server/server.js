@@ -13,7 +13,6 @@ const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
-const { getIpList } = require("./util/ipList");
 
 const app = express();
 const httpServer = createServer(app);
@@ -71,30 +70,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// redirecting;
-app.all("*", (req, res, next) => {
-  if (process.env.SECURITY === "on") {
-    var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-    ip = ip.replace("::ffff:", "").trim();
-    console.log("x-forwarded-for", ip);
-    const ipList = getIpList();
-    if (
-      req.originalUrl.includes("whitelist") ||
-      req.originalUrl.includes("myip")
-    ) {
-      next();
-    } else if (ipList.includes(ip)) {
-      next();
-    } else {
-      io.sockets.emit("not-listed", ip);
-      res.status(401).send({
-        message: "not white listed",
-      });
-    }
-  } else {
-    next();
-  }
-});
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);

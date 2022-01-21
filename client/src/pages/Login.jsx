@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/user";
-import { themeActions } from "../store/theme";
 import Input from "../components/UI/MyInput";
 import Button from "../components/UI/Button";
 import { Col, Row, Form, Image } from "react-bootstrap";
@@ -12,157 +11,140 @@ import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwtDecode from "jwt-decode";
 
+import Message from "../components/Message";
+
 const Login = () => {
   let history = useHistory();
   let location = useLocation();
-
   const dispatch = useDispatch();
   const usernameRef = useRef();
   const passwordRef = useRef();
-  const [loginError, setLoginError] = useState(false);
+  const [loginError, setLoginError] = useState({ status: false, msg: "" });
+  const [unAuthorized, setUnAuthorized] = useState(false);
+
   let { from } = location.state || { from: { pathname: "/" } };
 
-  var user = localStorage.getItem("user");
-  if (user) {
+  var loggedInUser = localStorage.getItem("user");
+  if (loggedInUser) {
     history.replace(from);
   }
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoginError({ status: false, msg: "" });
+    setUnAuthorized(false);
 
-    const pass = await axios({
-      url: `${process.env.REACT_APP_BACKEND_URL}/login`,
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      data: {
-        username: usernameRef.current.value,
-      },
-    });
-    if (pass.data.password) {
-      const allowLogin = await bcrypt.compare(
-        passwordRef.current.value,
-        pass.data.password
-      );
+    try {
+      const loginResponse = await axios({
+        url: `${process.env.REACT_APP_BACKEND_URL}/login`,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        data: {
+          username: usernameRef.current.value,
+        },
+      });
+      if (loginResponse.data.password) {
+        const allowLogin = await bcrypt.compare(
+          passwordRef.current.value,
+          loginResponse.data.password
+        );
 
-      if (allowLogin) {
-        axios({
-          url: `${process.env.REACT_APP_BACKEND_URL}/getuser`,
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          data: {
-            user_name: usernameRef.current.value,
-          },
-        })
-          .then(({ data }) => {
-            console.log("test", data);
-            localStorage.setItem("user", data);
-            const jwt = localStorage.getItem("user");
-            const user = jwtDecode(jwt);
+        if (allowLogin) {
+          const data = loginResponse.data.userToken;
+          localStorage.setItem("user", data);
+          const jwt = localStorage.getItem("user");
+          const user = jwtDecode(jwt);
 
-            if (user) {
-              if (user.company === "admin") {
-                var selectedCompany = localStorage.getItem("selectedCompany");
-                if (selectedCompany) {
-                  dispatch(
-                    userActions.login({
-                      user: user,
-                      company: JSON.parse(selectedCompany),
-                    })
-                  );
-                  var color =
-                    JSON.parse(selectedCompany).value === "elite"
-                      ? "theme-color-blue"
-                      : "theme-color-red";
-                  dispatch(themeActions.setColor(color));
-                } else {
-                  dispatch(
-                    userActions.login({
-                      user: user,
-                      company: {
+          if (user) {
+            console.log("login");
+            dispatch(
+              userActions.login({
+                user: user,
+                company:
+                  user.company === "alpha"
+                    ? {
+                        label: "Alpha Dispatch Service",
+                        value: "alpha",
+                      }
+                    : {
                         label: "Elite Dispatch Service",
                         value: "elite",
                       },
-                    })
-                  );
-                  dispatch(themeActions.setColor("theme-color-blue"));
-                }
-              } else {
-                dispatch(
-                  userActions.login({
-                    user: user,
-                    company: {
-                      label: "Elite Dispatch Service",
-                      value: "elite",
-                    },
-                  })
-                );
-                dispatch(themeActions.setColor("theme-color-blue"));
-              }
+              })
+            );
 
-              setLoginError(false);
-              history.replace(from);
-            } else {
-              setLoginError(true);
-            }
-          })
-          .catch((err) => {
-            throw err;
-          });
+            setLoginError(false);
+            history.replace(from);
+          } else {
+            setLoginError({ status: true, msg: "No Such user in local" });
+          }
+        } else {
+          // passwrong
+          setLoginError({ status: true, msg: "Incorrect Password" });
+        }
       } else {
-        setLoginError(true);
+        setLoginError({ status: true, msg: "Incorrect Username" });
       }
-    } else {
-      setLoginError(true);
+    } catch (err) {
+      dispatch(userActions.unauthorize());
+      setUnAuthorized(true);
     }
   };
   return (
-    <Row className="vh-100 vw-100" style={{ backgroundColor: "#ebf2fa" }}>
-      <Col md={6}>
-        <FormContainer size="4" title="Login">
-          <Row>
-            <Col>
-              <Form>
-                <div className="d-flex  flex-column align-items-center">
-                  <Form.Group className="justify-content-center">
-                    <Input
-                      type="text"
-                      label="Username:"
-                      ref={usernameRef}
-                      placeholder="Enter username..."
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Input
-                      type="password"
-                      label="Password:"
-                      ref={passwordRef}
-                      placeholder="Enter password..."
-                    />
-                  </Form.Group>
-                  {loginError && (
-                    <p className="error-text">
-                      Your Email or Password is incorrect.
-                    </p>
-                  )}
-                </div>
+    <>
+      <Row className="vh-100 vw-100" style={{ backgroundColor: "#ebf2fa" }}>
+        <Col md={6}>
+          <FormContainer size="4" title="Login">
+            <Row>
+              <Col>
+                <Form>
+                  <div className="d-flex  flex-column align-items-center">
+                    <Form.Group className="justify-content-center">
+                      <Input
+                        type="text"
+                        label="Username:"
+                        ref={usernameRef}
+                        placeholder="Enter username..."
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Input
+                        type="password"
+                        label="Password:"
+                        ref={passwordRef}
+                        placeholder="Enter password..."
+                      />
+                    </Form.Group>
+                    {loginError.status && (
+                      <p className="error-text">{loginError.msg}</p>
+                    )}
+                  </div>
 
-                <Button
-                  onClick={handleLogin}
-                  className="float-right"
-                  buttonText="Login"
-                ></Button>
-              </Form>
-            </Col>
-          </Row>
-        </FormContainer>
-      </Col>
-      <Col md={6}>
-        <Image
-          className="justify-content-start align-items-center vh-100 vw-100"
-          src={logo}
-          fluid
-        />
-      </Col>
-    </Row>
+                  <Button
+                    onClick={handleLogin}
+                    className="float-right"
+                    buttonText="Login"
+                  ></Button>
+                </Form>
+              </Col>
+            </Row>
+          </FormContainer>
+        </Col>
+        <Col md={6}>
+          <Image
+            className="justify-content-start align-items-center vh-100 vw-100"
+            src={logo}
+            fluid
+          />
+        </Col>
+      </Row>
+      {unAuthorized && (
+        <div style={{ position: "absolute", top: "0px", width: "100%" }}>
+          <Message>
+            <center>Your computer is not authorized</center>
+          </Message>
+        </div>
+      )}
+    </>
   );
 };
 

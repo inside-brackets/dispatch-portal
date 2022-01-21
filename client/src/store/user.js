@@ -18,7 +18,7 @@ const userSlice = createSlice({
       state.company = action.payload.company
     },
     logout(state, action) {
-      state = initialState;
+      state =  initialState;
       action.payload.cb();
     },
     unauthorize(state) {

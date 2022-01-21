@@ -3,7 +3,7 @@ import Layout from "./components/layout/Layout";
 import Login from "./pages/Login";
 import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userActions } from "./store/user";
 import { themeActions } from "./store/theme";
 import { socket } from "./index";
@@ -12,8 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { Howl, Howler } from "howler";
 import notificationSound from "./assets/audio/notification.mp3";
 import { useHistory } from "react-router-dom";
-import Message from "./components/Message";
-import axios from "axios";
 import jwtDecode from "jwt-decode";
 
 var sound = new Howl({
@@ -23,7 +21,6 @@ var sound = new Howl({
 const App = () => {
   Howler.volume(1.0);
   let history = useHistory();
-  const { isAuthorized } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const notify = (msg) =>
     toast.info(msg, {
@@ -37,22 +34,6 @@ const App = () => {
     });
 
   useEffect(() => {
-    socket.on("not-listed", (msg) => {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/myip`).then((res) => {
-        if (res.data === msg) {
-          dispatch(userActions.unauthorize());
-          dispatch(
-            userActions.logout({
-              cb: () => {
-                localStorage.setItem("user", "");
-              },
-            })
-          );
-          history.replace("/login");
-        }
-      });
-    });
-
     const jwt = localStorage.getItem("user");
 
     if (jwt) {
@@ -80,6 +61,8 @@ const App = () => {
       if (user.department === "admin") {
         var selectedCompany = localStorage.getItem("selectedCompany");
         if (selectedCompany) {
+          console.log("login admin with local");
+
           dispatch(
             userActions.login({ user, company: JSON.parse(selectedCompany) })
           );
@@ -89,6 +72,7 @@ const App = () => {
               : "theme-color-red";
           dispatch(themeActions.setColor(color));
         } else {
+          console.log("login admin no local");
           dispatch(
             userActions.login({
               user,
@@ -98,15 +82,23 @@ const App = () => {
               },
             })
           );
+          dispatch(themeActions.setColor("theme-color-blue"));
         }
       } else {
+        console.log("login user");
         dispatch(
           userActions.login({
             user,
-            company: {
-              label: "Elite Dispatch Service",
-              value: "elite",
-            },
+            company:
+              user.company === "alpha"
+                ? {
+                    label: "Alpha Dispatch Service",
+                    value: "alpha",
+                  }
+                : {
+                    label: "Elite Dispatch Service",
+                    value: "elite",
+                  },
           })
         );
       }
@@ -133,13 +125,6 @@ const App = () => {
           />
         </PrivateRoute>
       </Switch>
-      {!isAuthorized && (
-        <div style={{ position: "absolute", top: "0px", width: "100%" }}>
-          <Message>
-            <center>Your computer is not authorized</center>
-          </Message>
-        </div>
-      )}
     </>
   );
 };

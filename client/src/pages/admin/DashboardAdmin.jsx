@@ -71,14 +71,13 @@ const DashboardAdmin = () => {
   };
 
   useEffect(() => {
-    console.log("selected company", selectedCompany)
+    console.log("counting carriers")
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`,
       {
         company:selectedCompany.value,
       })
       .then((res) => {
-        console.log("response.data:", res.data);
         let data = res.data;
         setCarriers(data.total);
         setAppointment(data.appointments);

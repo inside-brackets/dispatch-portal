@@ -17,7 +17,6 @@ const Topnav = () => {
     dispatch(
       userActions.logout({
         cb: () => {
-          // localStorage.setItem("user", "");
           localStorage.removeItem("user");
           localStorage.removeItem("selectedCompany")
         },

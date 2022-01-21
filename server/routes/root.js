@@ -56,17 +56,7 @@ route.get("/myip", (req, res) => {
   res.send(ip);
 });
 
-route.post("/login", (req, res) => {
-  try {
-    User.findOne({ user_name: req.body.username })
-      .select("password")
-      .then((data) => {
-        res.status(200).send(data);
-      });
-  } catch (err) {
-    res.status(500).send({ msg: err.message });
-  }
-});
+route.post("/login", auth, userController.login);
 
 //s3-bucket
 route.get("/s3url/:folder/:fileName", async (req, res) => {

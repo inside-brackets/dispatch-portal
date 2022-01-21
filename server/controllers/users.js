@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const { response } = require("express");
 
 const addNewUser = async (req, res) => {
   console.log(req.body.joining_date);
@@ -44,39 +45,20 @@ const addNewUser = async (req, res) => {
 };
 
 const getUser = (req, res, next) => {
-  console.log("login");
-  console.log(req.body);
-
+  console.log("get user",req.body);
   User.findOne(req.body)
     .then((user) => {
-      let token = jwt.sign(
-        {
-          _id: user._id,
-          user_name: user.user_name,
-          department: user.department,
-          salary: user.salary,
-          joining_date: user.joining_date,
-          designation: user.designation,
-          assigned_trucks: user.assigned_trucks,
-          notifications: user.notifications,
-          company: user.company,
-        },
-        process.env.JWT
-      );
-      res.send(token);
+      res.send(user);
       console.log("respo", user);
     })
     .catch((err) => {
-      console.log(err);
-      res.send(null);
+      res.status(500).send(err);
     });
 };
 
 const getUsers = (req, res, next) => {
   console.log("getusers", req.body);
   User.find(req.body, null, {
-    // skip: 0, // Starting Row
-    // limit: 1, // Ending Row
     sort: {
       joining_date: -1, //Sort by Date Added DESC
     },
@@ -119,10 +101,41 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const login = (req,res)=>{
+  try {
+    console.log("login", req.body)
+    User.findOne({ user_name: req.body.username })
+      .then((user) => {
+        if(user){
+          let userToken = jwt.sign(
+            {
+              _id: user._id,
+              user_name: user.user_name,
+              department: user.department,
+              salary: user.salary,
+              joining_date: user.joining_date,
+              designation: user.designation,
+              notifications: user.notifications,
+              company: user.company,
+            },
+            process.env.JWT
+          );
+          res.status(200).send({userToken,password:user.password});
+        }else{
+          res.status(200).send(null)
+        }
+        
+      });
+  } catch (err) {
+    res.status(500).send({ msg: err.message });
+  }
+}
+
 module.exports = {
   addNewUser,
   getUser,
   getUsers,
   updateUser,
   deleteUser,
+  login
 };
