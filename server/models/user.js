@@ -11,7 +11,11 @@ const userSchema = new mongoose.Schema(
     last_name: {
       type: String,
     },
-
+    u_status: {
+      type: String,
+      enum: ["active", "fired", "inactive"],
+      default: "active",
+    },
     password: String,
     date_of_birth: {
       type: Date,

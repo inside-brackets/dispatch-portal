@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const express = require("express");
+
 const route = express.Router();
 const carriersController = require("../controllers/carriers");
 const {
@@ -9,9 +10,10 @@ const {
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
+const { edit, test } = require("../controllers/db");
+
 const { setIp, getIpList } = require("../util/ipList");
 const { generateUploadURL } = require("../util/s3");
-const { edit } = require("../controllers/db");
 const auth = require("../middlewares/auth");
 
 // const upload = require("../middlewares/upload");
@@ -66,5 +68,6 @@ route.get("/s3url/:folder/:fileName", async (req, res) => {
 
 // edit database
 route.post("/editdatabase", edit);
+route.post("/test", test);
 
 module.exports = route;

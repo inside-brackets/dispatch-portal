@@ -122,13 +122,13 @@ const Users = () => {
       <td>
         <div className="edit__class">
           <EditButton type="edit" onClick={() => editModalHnadler(item)} />
-
+          {/* 
           <EditButton
             type="delete"
             onClick={() => {
               deleteUserHandler(item._id);
             }}
-          />
+          /> */}
         </div>
       </td>
     </tr>

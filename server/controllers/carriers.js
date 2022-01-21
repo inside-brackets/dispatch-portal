@@ -128,7 +128,9 @@ const getCarrier = (req, res, next) => {
 
 const getCarriers = (req, res, next) => {
   console.log("get carriers", req.body);
-  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } };
+  const defaultFilter = {
+    c_status: { $nin: ["unassigned", "rejected", "didnotpick"] },
+  };
   var filter = defaultFilter;
   if (!req.body.company) {
     filter =
@@ -158,7 +160,7 @@ const getCarriers = (req, res, next) => {
       res.send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send({ msg: "error in getCarriers carrier.find" });
     });
 };
 
