@@ -354,6 +354,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
               required
               value={image}
               onChange={(e) => setImage(e.target.value)}
+              readOnly
             ></Form.Control>
             <Form.Control.Feedback type="invalid">
               Please provide a File.

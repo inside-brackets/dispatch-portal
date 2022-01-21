@@ -77,7 +77,7 @@ const Users = () => {
     "Department",
     "Joining Date",
     "Basic Salary",
-    // "Edit/Del",
+    "",
   ];
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
