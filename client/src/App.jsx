@@ -13,12 +13,14 @@ import { Howl, Howler } from "howler";
 import notificationSound from "./assets/audio/notification.mp3";
 import { useHistory } from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import httpIntercept from "./interceptor/interceptor";
 
 var sound = new Howl({
   src: notificationSound,
 });
 
 const App = () => {
+  httpIntercept();
   Howler.volume(1.0);
   let history = useHistory();
   const dispatch = useDispatch();
@@ -58,7 +60,7 @@ const App = () => {
           sound.play();
         }
       });
-      socket.on("logout", () => {
+      socket.on("logout", (msg) => {
         dispatch(
           userActions.logout({
             cb: () => {

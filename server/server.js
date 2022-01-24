@@ -8,6 +8,8 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+const User = require("./models/user");
+const jwt = require("jsonwebtoken");
 
 const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
@@ -42,29 +44,17 @@ mongoose
     throw err;
   });
 
-// check
-app.use((req, res, next) => {
-  if (req.path === "/login") {
-    next();
-  } else {
-    // get user from headers
-    // find user in database
-    // if user exists next()
-    // else emit 'logout'
-    next();
-  }
-});
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // middlewares
 app.use(express.json({ limit: "5mb", extended: true }));
 app.use(helmet());
 app.use(compression());
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
-app.use(
-  cors({
-    origin: "*",
-  })
-);
 
 // sockets
 const io = new Server(httpServer, {
@@ -83,6 +73,25 @@ io.on("connection", (socket) => {
   });
 });
 
+// check
+app.use(async (req, res, next) => {
+  if (req.path === "/login") {
+    next();
+  } else {
+    let token = req.header("x-auth-token");
+    if (!token) return res.status(400).send("Token Not Provided");
+    try {
+      let user = jwt.verify(token, process.env.JWT);
+      let userObj = await User.findById(user._id);
+      if (!userObj) {
+        io.sockets.emit("logout", { message: "Abcd" });
+      }
+    } catch (error) {
+      return res.status(401).send("Token Invalid");
+    }
+    next();
+  }
+});
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
