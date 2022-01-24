@@ -44,7 +44,6 @@ mongoose
 
 // check
 app.use((req, res, next) => {
-  console.log(req.path);
   if (req.path === "/login") {
     next();
   } else {
@@ -52,6 +51,7 @@ app.use((req, res, next) => {
     // find user in database
     // if user exists next()
     // else emit 'logout'
+    next();
   }
 });
 
