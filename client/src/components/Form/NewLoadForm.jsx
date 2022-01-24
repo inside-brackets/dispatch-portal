@@ -98,7 +98,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         weight: weight,
         miles: miles,
         pay: pay,
-        ratecons: image,
+        ratecon: image,
         dispatcher: currUserId,
         broker: broker,
         pick_up: {

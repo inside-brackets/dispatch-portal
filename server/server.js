@@ -42,6 +42,19 @@ mongoose
     throw err;
   });
 
+// check
+app.use((req, res, next) => {
+  console.log(req.path);
+  if (req.path === "/login") {
+    next();
+  } else {
+    // get user from headers
+    // find user in database
+    // if user exists next()
+    // else emit 'logout'
+  }
+});
+
 // middlewares
 app.use(express.json({ limit: "5mb", extended: true }));
 app.use(helmet());

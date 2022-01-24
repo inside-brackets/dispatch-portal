@@ -584,7 +584,7 @@ const AppointmentDetail = () => {
                       <Button
                         onClick={() => {
                           const pdfWindow = window.open();
-                          pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${carrier.insurance_file}`;
+                          pdfWindow.location.href = `${carrier.insurance_file}`;
                         }}
                       >
                         Insurance
@@ -596,7 +596,7 @@ const AppointmentDetail = () => {
                     <Button
                       onClick={() => {
                         const pdfWindow = window.open();
-                        pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${carrier.noa_file}`;
+                        pdfWindow.location.href = `${carrier.noa_file}`;
                       }}
                     >
                       NOA/Void Check
@@ -608,7 +608,7 @@ const AppointmentDetail = () => {
                     <Button
                       onClick={() => {
                         const pdfWindow = window.open();
-                        pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${carrier.mc_file}`;
+                        pdfWindow.location.href = `${carrier.mc_file}`;
                       }}
                     >
                       MC Authority
@@ -620,7 +620,7 @@ const AppointmentDetail = () => {
                     <Button
                       onClick={() => {
                         const pdfWindow = window.open();
-                        pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${carrier.w9_file}`;
+                        pdfWindow.location.href = `${carrier.w9_file}`;
                       }}
                     >
                       W9

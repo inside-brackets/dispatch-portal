@@ -58,6 +58,18 @@ const App = () => {
           sound.play();
         }
       });
+      socket.on("logout", () => {
+        dispatch(
+          userActions.logout({
+            cb: () => {
+              localStorage.removeItem("user");
+              localStorage.removeItem("selectedCompany");
+              // redirect
+              history.replace("/login");
+            },
+          })
+        );
+      });
       if (user.department === "admin") {
         var selectedCompany = localStorage.getItem("selectedCompany");
         if (selectedCompany) {

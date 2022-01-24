@@ -3,6 +3,7 @@ const { getIpList } = require("../util/ipList");
 // check ip before request
 const auth = async (req, res, next) => {
   if (process.env.SECURITY === "on") {
+    console.log("hello");
     var ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     ip = ip.replace("::ffff:", "").trim();
     console.log("x-forwarded-for", ip);
