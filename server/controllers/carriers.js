@@ -281,7 +281,7 @@ const countCarriers = async (req, res, next) => {
     .populate("salesman", { company: 1 })
     .then(async (carrier) => {
       filteredCarrier = carrier.filter(
-        (carry) => carry.salesman.company == req.body.company
+        (carry) => carry.salesman?.company == req.body.company
       );
       stats.total = await Carrier.countDocuments({});
       const appointmentCarrier = filteredCarrier.filter(

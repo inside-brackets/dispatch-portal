@@ -13,7 +13,9 @@ const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
-const { isUser } = require("./middlewares/isUser");
+
+const User = require("./models/user");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const httpServer = createServer(app);
@@ -72,7 +74,27 @@ io.on("connection", (socket) => {
   });
 });
 
-// app.use(isUser);
+// check every request for user token and validate token from database
+app.use(async (req, res, next) => {
+  if (req.path === "/login") {
+    next();
+  } else {
+    let token = req.header("x-auth-token");
+    if (!token) return res.status(400).send("Token Not Provided");
+    try {
+      let user = jwt.verify(token, process.env.JWT);
+      let userObj = await User.findById(user._id);
+      if (!userObj) {
+        console.log("checking", user);
+        io.sockets.emit("logout", { userId: user._id });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(401).send("Token Invalid");
+    }
+    next();
+  }
+});
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);

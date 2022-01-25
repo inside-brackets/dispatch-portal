@@ -67,7 +67,6 @@ const App = () => {
               cb: () => {
                 localStorage.removeItem("user");
                 localStorage.removeItem("selectedCompany");
-                // redirect
                 history.replace("/login");
               },
             })
