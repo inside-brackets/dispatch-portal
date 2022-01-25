@@ -14,12 +14,9 @@ const rename = async (req, res) => {
 
 const test = async (req, res) => {
   try {
-    const users = await User.updateMany(
-      {},
-      { $set: { u_status: "active" } },
-      { new: true }
-    );
-    res.status(200).send(users);
+    const carriers = await Carrier.find().populate("salesman");
+    carriers.filter((item) => item.salesman === null);
+    res.status(200).send(carriers);
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
