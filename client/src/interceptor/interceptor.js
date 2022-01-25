@@ -5,7 +5,6 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 const httpIntercept = (props) => {
   axios.interceptors.request.use(
     (request) => {
-      console.log(request);
       // Edit request config
       return request;
     },
@@ -17,7 +16,6 @@ const httpIntercept = (props) => {
 
   axios.interceptors.response.use(
     (response) => {
-      console.log(response);
       // Edit response config
       return response;
     },

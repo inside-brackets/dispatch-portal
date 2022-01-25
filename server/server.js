@@ -8,13 +8,12 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const User = require("./models/user");
-const jwt = require("jsonwebtoken");
 
 const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
+const { isUser } = require("./middlewares/isUser");
 
 const app = express();
 const httpServer = createServer(app);
@@ -73,32 +72,15 @@ io.on("connection", (socket) => {
   });
 });
 
-// check
-app.use(async (req, res, next) => {
-  if (req.path === "/login") {
-    next();
-  } else {
-    let token = req.header("x-auth-token");
-    if (!token) return res.status(400).send("Token Not Provided");
-    try {
-      let user = jwt.verify(token, process.env.JWT);
-      let userObj = await User.findById(user._id);
-      if (!userObj) {
-        io.sockets.emit("logout", { message: "Abcd" });
-      }
-    } catch (error) {
-      return res.status(401).send("Token Invalid");
-    }
-    next();
-  }
-});
+// app.use(isUser);
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
+app.use("/", rootRoutes);
+
 app.get("/hello", (req, res) => {
   res.status(200).send({ msg: "hello" });
 });
-app.use("/", rootRoutes);
 
 httpServer.listen(process.env.PORT || 8800, () =>
   console.log("Api is running")

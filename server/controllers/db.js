@@ -3,10 +3,10 @@ const Load = require("../models/load");
 const Carrier = require("../models/carrier");
 const User = require("../models/user");
 
-const edit = async (req, res) => {
-  const result = await Carrier.updateMany(
+const rename = async (req, res) => {
+  const result = await Load.updateMany(
     {},
-    { $rename: { physical_address: "address" } },
+    { $rename: { ratecons: "ratecon" } },
     { multi: true }
   );
   res.status(200).send(result);
@@ -27,6 +27,6 @@ const test = async (req, res) => {
 };
 
 module.exports = {
-  edit,
+  rename,
   test,
 };

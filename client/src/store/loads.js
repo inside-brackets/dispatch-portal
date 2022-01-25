@@ -12,7 +12,7 @@ const loadsSlice = createSlice({
       state.loads = action.payload;
     },
     append(state, action) {
-      state.loads.push(action.payload);
+      state.loads.unshift(action.payload);
     },
     replace(state, action) {
       // var newLoads = [];

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import axios from "axios";
 
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -7,28 +8,18 @@ const useHttp = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(requestConfig.url, {
+      const response = await axios(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
         headers: requestConfig.headers ? requestConfig.headers : {},
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
       });
-      if (!response.ok) {
-        throw new Error("Request failed!");
-      }
-      var data = null;
 
-      try {
-        data = await response.json();
-      } catch (err) {
-        console.log(err);
-      } finally {
-        applyData(data);
-      }
+      applyData(response.data);
+      setIsLoading(false);
     } catch (err) {
       setError(err.message || "Something went wrong!");
       console.log(err);
     }
-    setIsLoading(false);
   }, []);
 
   return {

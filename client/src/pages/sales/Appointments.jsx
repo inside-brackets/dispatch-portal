@@ -74,7 +74,7 @@ const Appointments = () => {
             }}
           >
             <h6 className="text-muted">
-              {carrier.comment.length >= 62
+              {carrier.comment?.length >= 62
                 ? `${carrier.comment
                     .substring(0, Math.min(carrier.comment.length, 62))
                     .trim()}...`

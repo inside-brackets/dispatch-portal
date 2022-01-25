@@ -61,16 +61,18 @@ const App = () => {
         }
       });
       socket.on("logout", (msg) => {
-        dispatch(
-          userActions.logout({
-            cb: () => {
-              localStorage.removeItem("user");
-              localStorage.removeItem("selectedCompany");
-              // redirect
-              history.replace("/login");
-            },
-          })
-        );
+        if (msg.userId === user._id) {
+          dispatch(
+            userActions.logout({
+              cb: () => {
+                localStorage.removeItem("user");
+                localStorage.removeItem("selectedCompany");
+                // redirect
+                history.replace("/login");
+              },
+            })
+          );
+        }
       });
       if (user.department === "admin") {
         var selectedCompany = localStorage.getItem("selectedCompany");
