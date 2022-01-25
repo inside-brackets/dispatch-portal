@@ -25,8 +25,6 @@ const Appointments = () => {
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-
         body: {
           salesman: currUserId,
           c_status: "appointment",
