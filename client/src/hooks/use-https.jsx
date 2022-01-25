@@ -10,7 +10,7 @@ const useHttp = () => {
     try {
       const response = await axios(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
-        data: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
+        data: requestConfig.body ? requestConfig.body : null,
       });
 
       applyData(response.data);

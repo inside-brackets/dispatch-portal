@@ -108,19 +108,6 @@ const Appointments = () => {
         <div className="col-4" key={index}>
           <Link to={`/appointments/${item.mc_number}`}>
             {
-              /* <SimpleCard
-              id={item._id}
-              textCentre={true}
-              className={"appointment"}
-              Header={item.company_name}
-              Body={body(item)}
-              Footer={
-                <h5>{`Time: ${new Date(
-                  item.appointment
-                ).toLocaleString()}`}</h5>
-              }
-            /> */
-
               <Card
                 className="my-card"
                 style={{
