@@ -1,11 +1,11 @@
 import axios from "axios";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
-axios.defaults.headers.common["x-auth-token"] = localStorage.getItem("user");
-axios.defaults.headers.post["Content-Type"] = "application/json";
 const httpIntercept = (props) => {
   axios.interceptors.request.use(
     (request) => {
-      // Edit request config
+      request.headers.common["x-auth-token"] = cookies.get("user");
       return request;
     },
     (error) => {
