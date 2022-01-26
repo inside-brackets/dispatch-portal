@@ -128,33 +128,32 @@ const NewUserForm = ({
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      {!defaultValue && (
-        <Row className="m-3">
-          <Form.Group as={Col} md="6">
-            <Form.Label>User Name</Form.Label>
-            <Form.Control
-              className={`${
-                userName && !usernameIsValid ? "invalid is-invalid" : ""
-              } no__feedback shadow-none`}
-              value={userName}
-              onChange={(e) => {
-                setUserName(e.target.value);
-              }}
-              type="text"
-              placeholder="Enter username"
-            />
-            {usernameIsValid && userName && (
-              <Form.Text style={{ color: "green" }}>
-                Username is available!
-              </Form.Text>
-            )}
-            {usernameIsValid === false && userName && (
-              <Form.Text style={{ color: "red" }}>
-                Whoops! username already exists.
-              </Form.Text>
-            )}
-          </Form.Group>
-
+      <Row className="m-3">
+        <Form.Group as={Col} md="6">
+          <Form.Label>User Name</Form.Label>
+          <Form.Control
+            className={`${
+              userName && !usernameIsValid ? "invalid is-invalid" : ""
+            } no__feedback shadow-none`}
+            value={userName}
+            onChange={(e) => {
+              setUserName(e.target.value);
+            }}
+            type="text"
+            placeholder="Enter username"
+          />
+          {usernameIsValid && userName && (
+            <Form.Text style={{ color: "green" }}>
+              Username is available!
+            </Form.Text>
+          )}
+          {usernameIsValid === false && userName && (
+            <Form.Text style={{ color: "red" }}>
+              Whoops! username already exists.
+            </Form.Text>
+          )}
+        </Form.Group>
+        {!defaultValue && (
           <Form.Group as={Col} md="6">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -168,8 +167,8 @@ const NewUserForm = ({
               Please provide a valid password.
             </Form.Control.Feedback>
           </Form.Group>
-        </Row>
-      )}
+        )}
+      </Row>
       <Row className="mb-3 justify-content-center">
         <Row className="m-3">
           {!defaultValue && <hr />}
