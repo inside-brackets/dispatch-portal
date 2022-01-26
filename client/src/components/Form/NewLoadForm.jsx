@@ -54,24 +54,22 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     }
 
     const indentifier = setTimeout(async () => {
-      const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getload`,
-        { load_number: loadNumber }
-      );
-      console.log("checking loadNumber");
-      console.log(response.data);
-      console.log(loadNumber);
-      setLoadNumberIsValid(response.data.length === 0);
-    }, 500);
+      if (loadNumber.toString() !== defaultValue?.load_number.toString()) {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/getload`,
+          { load_number: loadNumber }
+        );
+        setLoadNumberIsValid(response.data.length === 0);
+      } else {
+        setLoadNumberIsValid(true);
+      }
+    }, 250);
     return () => {
       clearTimeout(indentifier);
     };
   }, [defaultValue, loadNumber]);
 
-  const { _id: currUserId, user_name: currUserName } = useSelector(
-    (state) => state.user.user
-  );
-  console.log("currUserName", currUserName);
+  const { _id: currUserId } = useSelector((state) => state.user.user);
   const truck = carrier.trucks.find((item) => {
     return item.truck_number.toString() === truck_number.toString();
   });
@@ -98,7 +96,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         weight: weight,
         miles: miles,
         pay: pay,
-        ratecons: image,
+        ratecon: image,
         dispatcher: currUserId,
         broker: broker,
         pick_up: {
@@ -141,9 +139,8 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
-    if (form.checkValidity() === true) {
+    if (form.checkValidity() === true && loadNumberIsValid) {
       setButtonLoader(true);
-      console.log(truck.drivers);
       const loadEditObject = {
         id: defaultValue._id,
         load_number: loadNumber,
@@ -194,19 +191,6 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     <div>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row>
-          {/* <Form.Group as={Col} md="6" controlId="validationCustom03">
-            <Form.Label>Load Number:</Form.Label>
-            <Form.Control
-              type="number"
-              placeholder="Enter here"
-              value={loadNumber}
-              onChange={(e) => setLoadNumber(e.target.value)}
-              required
-            />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid Load Number.
-            </Form.Control.Feedback>
-          </Form.Group> */}
           <Form.Group as={Col} md="6" controlId="validationCustom03">
             <Form.Label>Load Number</Form.Label>
             <Form.Control
@@ -227,7 +211,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             )}
             {loadNumberIsValid === false && loadNumber && (
               <Form.Text style={{ color: "red" }}>
-                Load Number already exists or you are editing an existing load.
+                Load Number already exists.
               </Form.Text>
             )}
           </Form.Group>

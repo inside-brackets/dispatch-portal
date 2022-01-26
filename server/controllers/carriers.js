@@ -6,7 +6,7 @@ const { callAbleStates } = require("../util/convertTZ");
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
-  console.log(req.body);
+  console.log("update carrier", req.body);
   Carrier.findOneAndUpdate(
     { mc_number: parseInt(req.params.mcNumber) },
     {
@@ -15,7 +15,7 @@ const updateCarrier = (req, res, next) => {
     { new: true }
   )
     .then((carrier) => {
-      res.send(carrier);
+      res.status(200).send(carrier);
       console.log("done");
       if (req.body.c_status) {
         Hcarrier.create({
@@ -26,6 +26,7 @@ const updateCarrier = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
+      res.status(500).send({ orginalError: err, customMsg: "" });
     });
 };
 const updateTruck = async (req, res) => {
@@ -100,12 +101,12 @@ const fetchLead = (req, res, next) => {
             },
           },
           { new: true }
-        ).then((unreached) => {
-          console.log("unreached", unreached);
-          res.send(unreached);
+        ).then((newLead) => {
+          console.log("new load");
+          res.send(newLead);
         });
       } else {
-        console.log("result", result);
+        console.log("old lead");
         res.send(result);
       }
     })
@@ -151,7 +152,7 @@ const getCarriers = (req, res, next) => {
     .then((result) => {
       if (req.body.company) {
         const filteredResult = result.filter(
-          (carry) => carry.salesman.company == req.body.company
+          (carry) => carry.salesman?.company == req.body.company
         );
         console.log(filteredResult.length);
         return res.send(filteredResult);
@@ -281,7 +282,7 @@ const countCarriers = async (req, res, next) => {
     .populate("salesman", { company: 1 })
     .then(async (carrier) => {
       filteredCarrier = carrier.filter(
-        (carry) => carry.salesman.company == req.body.company
+        (carry) => carry.salesman?.company == req.body.company
       );
       stats.total = await Carrier.countDocuments({});
       const appointmentCarrier = filteredCarrier.filter(

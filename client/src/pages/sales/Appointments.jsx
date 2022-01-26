@@ -25,8 +25,6 @@ const Appointments = () => {
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-
         body: {
           salesman: currUserId,
           c_status: "appointment",
@@ -74,7 +72,7 @@ const Appointments = () => {
             }}
           >
             <h6 className="text-muted">
-              {carrier.comment.length >= 62
+              {carrier.comment?.length >= 62
                 ? `${carrier.comment
                     .substring(0, Math.min(carrier.comment.length, 62))
                     .trim()}...`
@@ -110,19 +108,6 @@ const Appointments = () => {
         <div className="col-4" key={index}>
           <Link to={`/appointments/${item.mc_number}`}>
             {
-              /* <SimpleCard
-              id={item._id}
-              textCentre={true}
-              className={"appointment"}
-              Header={item.company_name}
-              Body={body(item)}
-              Footer={
-                <h5>{`Time: ${new Date(
-                  item.appointment
-                ).toLocaleString()}`}</h5>
-              }
-            /> */
-
               <Card
                 className="my-card"
                 style={{

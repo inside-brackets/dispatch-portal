@@ -67,8 +67,6 @@ const AppointmentDetail = () => {
     );
     setrModal(false);
     history.push("/appointments");
-
-    console.log(commentRef.current.value);
   };
   const onrClose = () => {
     setrModal(false);

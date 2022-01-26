@@ -13,6 +13,9 @@ import jwtDecode from "jwt-decode";
 
 import Message from "../components/Message";
 
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
+
 const Login = () => {
   let history = useHistory();
   let location = useLocation();
@@ -20,7 +23,7 @@ const Login = () => {
   const usernameRef = useRef();
   const passwordRef = useRef();
   const [loginError, setLoginError] = useState({ status: false, msg: "" });
-  const [unAuthorized, setUnAuthorized] = useState(false);
+  const [unAuthorized, setUnAuthorized] = useState({ status: false, msg: "" });
 
   let { from } = location.state || { from: { pathname: "/" } };
 
@@ -31,7 +34,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError({ status: false, msg: "" });
-    setUnAuthorized(false);
+    setUnAuthorized({ status: false, msg: "" });
 
     try {
       const loginResponse = await axios({
@@ -49,10 +52,11 @@ const Login = () => {
         );
 
         if (allowLogin) {
-          const data = loginResponse.data.userToken;
-          localStorage.setItem("user", data);
-          const jwt = localStorage.getItem("user");
-          const user = jwtDecode(jwt);
+          const userToken = loginResponse.data.userToken;
+          localStorage.setItem("user", userToken);
+          const user = jwtDecode(userToken);
+
+          cookies.set("user", userToken, { path: "/" });
 
           if (user) {
             console.log("login");
@@ -82,11 +86,20 @@ const Login = () => {
           setLoginError({ status: true, msg: "Incorrect Password" });
         }
       } else {
-        setLoginError({ status: true, msg: "Incorrect Username" });
+        setLoginError({ status: true, msg: "User does not exists" });
       }
     } catch (err) {
-      dispatch(userActions.unauthorize());
-      setUnAuthorized(true);
+      if (err.response.status === 501) {
+        setUnAuthorized({
+          status: true,
+          msg: "Your computer is not authorized",
+        });
+      } else {
+        setUnAuthorized({
+          status: true,
+          msg: "Something wrong with the server",
+        });
+      }
     }
   };
   return (
@@ -137,10 +150,10 @@ const Login = () => {
           />
         </Col>
       </Row>
-      {unAuthorized && (
+      {unAuthorized.status && (
         <div style={{ position: "absolute", top: "0px", width: "100%" }}>
           <Message>
-            <center>Your computer is not authorized</center>
+            <center>{unAuthorized.msg}</center>
           </Message>
         </div>
       )}

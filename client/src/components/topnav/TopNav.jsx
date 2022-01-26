@@ -8,7 +8,8 @@ import user_menu from "../../assets/JsonData/user_menus.json";
 import SearchBar from "../UI/SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../store/user";
-// import notifications from "../../assets/JsonData/notification.json";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const Topnav = () => {
   const { user, company } = useSelector((state) => state.user);
@@ -18,7 +19,8 @@ const Topnav = () => {
       userActions.logout({
         cb: () => {
           localStorage.removeItem("user");
-          localStorage.removeItem("selectedCompany")
+          localStorage.removeItem("selectedCompany");
+          cookies.remove("user");
         },
       })
     );

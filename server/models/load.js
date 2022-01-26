@@ -14,7 +14,7 @@ const loadSchema = new mongoose.Schema(
     weight: { type: Number },
     miles: { type: Number },
     pay: { type: Number },
-    ratecons: {
+    ratecon: {
       type: String,
     },
     dispatcher: {

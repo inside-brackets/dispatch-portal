@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import Layout from "./components/layout/Layout";
 import Login from "./pages/Login";
 import { Route, Switch } from "react-router-dom";
@@ -13,12 +14,14 @@ import { Howl, Howler } from "howler";
 import notificationSound from "./assets/audio/notification.mp3";
 import { useHistory } from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import httpIntercept from "./interceptor/interceptor";
 
 var sound = new Howl({
   src: notificationSound,
 });
 
 const App = () => {
+  httpIntercept();
   Howler.volume(1.0);
   let history = useHistory();
   const dispatch = useDispatch();
@@ -33,6 +36,40 @@ const App = () => {
       progress: undefined,
     });
 
+  const currUser = useSelector((state) => state.user.user);
+
+  useEffect(() => {
+    socket.on("backend-notify", (msg) => {
+      if (currUser?.department === "admin") {
+        notify(msg);
+        sound.play();
+      }
+    });
+
+    socket.on("sale-closed", (msg) => {
+      if (currUser?.department === "admin") {
+        notify(msg);
+        sound.play();
+      }
+    });
+
+    socket.on("logout", (msg) => {
+      console.log("msg", msg.userId);
+      console.log("local", currUser?._id);
+      if (msg.userId === currUser?._id) {
+        dispatch(
+          userActions.logout({
+            cb: () => {
+              localStorage.removeItem("user");
+              localStorage.removeItem("selectedCompany");
+              history.replace("/login");
+            },
+          })
+        );
+      }
+    });
+  }, [currUser, dispatch, history]);
+
   useEffect(() => {
     const jwt = localStorage.getItem("user");
 
@@ -44,20 +81,6 @@ const App = () => {
         user = "";
       }
 
-      // user = JSON.parse(user);
-      socket.on("backend-notify", (msg) => {
-        if (user.department === "admin") {
-          notify(msg);
-          sound.play();
-          // fetch selectedCompany and set colors
-        }
-      });
-      socket.on("sale-closed", (msg) => {
-        if (user.department === "admin") {
-          notify(msg);
-          sound.play();
-        }
-      });
       if (user.department === "admin") {
         var selectedCompany = localStorage.getItem("selectedCompany");
         if (selectedCompany) {
@@ -85,7 +108,6 @@ const App = () => {
           dispatch(themeActions.setColor("theme-color-blue"));
         }
       } else {
-        console.log("login user");
         dispatch(
           userActions.login({
             user,

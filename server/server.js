@@ -14,6 +14,9 @@ const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
 
+const User = require("./models/user");
+const jwt = require("jsonwebtoken");
+
 const app = express();
 const httpServer = createServer(app);
 
@@ -42,16 +45,17 @@ mongoose
     throw err;
   });
 
-// middlewares
-app.use(express.json({ limit: "5mb", extended: true }));
-app.use(helmet());
-app.use(compression());
-app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(
   cors({
     origin: "*",
   })
 );
+
+// middlewares
+app.use(express.json({ limit: "5mb", extended: true }));
+app.use(helmet());
+app.use(compression());
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 
 // sockets
 const io = new Server(httpServer, {
@@ -70,13 +74,37 @@ io.on("connection", (socket) => {
   });
 });
 
+// check every request for user token and validate token from database
+app.use(async (req, res, next) => {
+  if (req.path === "/login") {
+    next();
+  } else {
+    let token = req.header("x-auth-token");
+    if (!token) return res.status(400).send("Token Not Provided");
+    try {
+      let user = jwt.verify(token, process.env.JWT);
+      let userObj = await User.findById(user._id);
+      if (!userObj) {
+        console.log("checking", user);
+        io.sockets.emit("logout", { userId: user._id });
+        res.status(401).send({ msg: "no user in database" });
+      } else {
+        next();
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(401).send("Token Invalid");
+    }
+  }
+});
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
+app.use("/", rootRoutes);
+
 app.get("/hello", (req, res) => {
   res.status(200).send({ msg: "hello" });
 });
-app.use("/", rootRoutes);
 
 httpServer.listen(process.env.PORT || 8800, () =>
   console.log("Api is running")

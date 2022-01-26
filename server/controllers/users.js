@@ -45,7 +45,7 @@ const addNewUser = async (req, res) => {
 };
 
 const getUser = (req, res, next) => {
-  console.log("get user",req.body);
+  console.log("get user", req.body);
   User.findOne(req.body)
     .then((user) => {
       res.send(user);
@@ -101,35 +101,32 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const login = (req,res)=>{
+const login = (req, res) => {
   try {
-    console.log("login", req.body)
-    User.findOne({ user_name: req.body.username })
-      .then((user) => {
-        if(user){
-          let userToken = jwt.sign(
-            {
-              _id: user._id,
-              user_name: user.user_name,
-              department: user.department,
-              salary: user.salary,
-              joining_date: user.joining_date,
-              designation: user.designation,
-              notifications: user.notifications,
-              company: user.company,
-            },
-            process.env.JWT
-          );
-          res.status(200).send({userToken,password:user.password});
-        }else{
-          res.status(200).send(null)
-        }
-        
-      });
+    console.log("login", req.body);
+    User.findOne({ user_name: req.body.username }).then((user) => {
+      if (user) {
+        let userToken = jwt.sign(
+          {
+            _id: user._id,
+            user_name: user.user_name,
+            department: user.department,
+            salary: user.salary,
+            joining_date: user.joining_date,
+            designation: user.designation,
+            company: user.company,
+          },
+          process.env.JWT
+        );
+        res.status(200).send({ userToken, password: user.password });
+      } else {
+        res.status(200).send(null);
+      }
+    });
   } catch (err) {
     res.status(500).send({ msg: err.message });
   }
-}
+};
 
 module.exports = {
   addNewUser,
@@ -137,5 +134,5 @@ module.exports = {
   getUsers,
   updateUser,
   deleteUser,
-  login
+  login,
 };

@@ -64,7 +64,7 @@ const renderBody = (item, index) => (
           type="view"
           onClick={() => {
             const pdfWindow = window.open();
-            pdfWindow.location.href = `${process.env.REACT_APP_BACKEND_URL}${item.ratecons}`;
+            pdfWindow.location.href = `${item.ratecon}`;
           }}
         />
       </div>

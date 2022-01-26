@@ -34,7 +34,6 @@ const Dialer = () => {
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: {
           c_status: "appointment",
           comment: commentRef.current.value,
@@ -48,7 +47,6 @@ const Dialer = () => {
     postdidnotPickCarriers({
       url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
       body: {
         c_status: "didnotpick",
       },
@@ -76,7 +74,6 @@ const Dialer = () => {
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: {
           c_status: "rejected",
           comment: commentrRef.current.value,
