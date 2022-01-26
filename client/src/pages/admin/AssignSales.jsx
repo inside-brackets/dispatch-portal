@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Table from "../../components/table/Table";
-// import TruckForm from "../Form/NewTruckForm";
-// import Button from "../UI/Button";
 import useHttp from "../../hooks/use-https";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
-import Button from "../../components/UI/Button";
+import Button from "../../components/UI/MyButton";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
@@ -116,7 +114,7 @@ const AssignSales = () => {
   if (isLoading && !httpError) {
     return (
       <div className="spreadsheet__loader">
-        <Loader type="TailSpin" color="#A9A9A9" height={100} width={100} />
+        <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
       </div>
     );
   } else if (!isLoading && httpError) {

@@ -1,7 +1,7 @@
 import React from "react";
 import "boxicons";
 import "./card.css";
-import Button from "../UI/Button";
+import MyButton from "../UI/MyButton";
 
 const DialerCard = (props) => {
   return (
@@ -12,7 +12,7 @@ const DialerCard = (props) => {
       {props.buttons && (
         <div className="card__footer">
           {props.buttons.map((item, index) => (
-            <Button
+            <MyButton
               key={index}
               color={item.color}
               onClick={item.onClick}

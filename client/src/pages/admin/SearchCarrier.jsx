@@ -65,7 +65,7 @@ const SearchCarrier = () => {
   if (isLoading && !error) {
     searching = (
       <center style={{ marginTop: "10%" }}>
-        <Loader type="TailSpin" color="#A9A9A9" height={100} width={100} />
+        <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
       </center>
     );
   } else if (!isLoading && error) {

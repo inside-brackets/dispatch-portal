@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import Table from "../../components/table/Table";
-// import TruckForm from "../Form/NewTruckForm";
-// import Button from "../UI/Button";
-// import useHttp from "../../hooks/use-https";
 import { Row, Col } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import Input from "../../components/UI/MyInput";
@@ -135,7 +132,12 @@ const Loads = () => {
     <>
       {!loads ? (
         <div className="spreadsheet__loader">
-          <Loader type="TailSpin" color="#A9A9A9" height={100} width={100} />
+          <Loader
+            type="MutatingDots"
+            color="#349eff"
+            height={100}
+            width={100}
+          />
         </div>
       ) : (
         <div>

@@ -3,7 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import Card from "../../components/cards/Card";
 import Input from "../../components/UI/MyInput";
 import TruckTable from "../../components/table/TruckTable";
-import Button from "../../components/UI/Button";
+import Button from "../../components/UI/MyButton";
 import Modal from "../../components/modals/MyModal";
 import TextArea from "../../components/UI/TextArea";
 import useHttp from "../../hooks/use-https";
@@ -322,7 +322,7 @@ const AppointmentDetail = () => {
   if (isLoading && !httpError) {
     return (
       <div className="spreadsheet__loader">
-        <Loader type="TailSpin" color="#A9A9A9" height={100} width={100} />
+        <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
       </div>
     );
   } else if (!isLoading && httpError) {

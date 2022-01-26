@@ -1,0 +1,24 @@
+.mybutton {
+  border: none;
+  background-color: var(--main-color-blue);
+}
+
+.mybutton:hover {
+  transform: scale(1.02) !important;
+  transition: transform 0.3s ease 0s !important;
+}
+
+.mybutton:disabled {
+  background: grey !important;
+}
+
+.red {
+  background-color: var(--main-color-red) !important;
+}
+
+.green {
+  background-color: var(--main-color-green) !important;
+}
+.green:disabled {
+  background: #dddddd !important;
+}
