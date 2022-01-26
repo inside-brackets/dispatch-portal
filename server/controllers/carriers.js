@@ -152,7 +152,7 @@ const getCarriers = (req, res, next) => {
     .then((result) => {
       if (req.body.company) {
         const filteredResult = result.filter(
-          (carry) => carry.salesman.company == req.body.company
+          (carry) => carry.salesman?.company == req.body.company
         );
         console.log(filteredResult.length);
         return res.send(filteredResult);

@@ -87,12 +87,14 @@ app.use(async (req, res, next) => {
       if (!userObj) {
         console.log("checking", user);
         io.sockets.emit("logout", { userId: user._id });
+        res.status(401).send({ msg: "no user in database" });
+      } else {
+        next();
       }
     } catch (error) {
       console.log(error);
       return res.status(401).send("Token Invalid");
     }
-    next();
   }
 });
 app.use("/sales", salesRoutes);
