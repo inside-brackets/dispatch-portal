@@ -15,6 +15,7 @@ const NewUserForm = ({
   const [validated, setValidated] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(null);
   const [buttonLoader, setButtonLoader] = useState(false);
+  const [reset, setReset] = useState();
   const [userName, setUserName] = useState(
     defaultValue ? defaultValue.user_name : null
   );
@@ -39,14 +40,16 @@ const NewUserForm = ({
   useEffect(() => {
     if (userName) {
       const indentifier = setTimeout(async () => {
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/getuser`,
-          { user_name: userName.toLowerCase() }
-        );
-        console.log("checking username");
-        console.log(response.data);
-        console.log(userName);
-        setUsernameIsValid(response.data.length === 0);
+        if (userName !== defaultValue?.user_name) {
+          const response = await axios.post(
+            `${process.env.REACT_APP_BACKEND_URL}/getuser`,
+            { user_name: userName.toLowerCase() }
+          );
+          console.log("checking username");
+          setUsernameIsValid(response.data.length === 0);
+        } else {
+          setUsernameIsValid(true);
+        }
       }, 500);
       return () => {
         clearTimeout(indentifier);
@@ -54,17 +57,30 @@ const NewUserForm = ({
     }
   }, [userName]);
 
-  // const onChangeHandler = (e) => {
-  //   var sameName1 = data.find((item) => {
-  //     return item.user_name.toLowerCase() === userName.toLowerCase();
-  //   });
-  //   setSameName(sameName1);
-  // };
+  const handleReset = async () => {
+    const pass = "aN=Q&K3exE";
+    // const pass = "abc";
+    const reHash = await bcrypt.hash(pass, 8);
+
+    await axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
+        id: defaultValue._id,
+        password: reHash,
+      })
+      .then((response) => {
+        setRefresh(Math.random());
+      });
+
+    setReset(pass);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
+
     const hash = await bcrypt.hash(password, 8);
+
     if (form.checkValidity() === true) {
       if (defaultValue) {
         console.log(
@@ -72,7 +88,6 @@ const NewUserForm = ({
           salary,
           department,
           userName,
-          password,
           designation,
           joiningDate
         );
@@ -81,7 +96,6 @@ const NewUserForm = ({
           .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
             id: defaultValue._id,
             user_name: userName,
-            password,
             joining_date: joiningDate,
             salary,
             designation,
@@ -128,58 +142,48 @@ const NewUserForm = ({
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      {!defaultValue && (
-        <Row className="m-3">
-          {/* <Form.Group as={Col} md="6">
-            <Form.Label>Username</Form.Label>
-            <InputGroup hasValidation>
-              <Form.Control
-                type="text"
-                placeholder="Username"
-                aria-describedby="inputGroupPrepend"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                onBlur={() => onChangeHandler()}
-                required
-              />
-              {sameName && (
-                <Form.Control.Feedback type="invalid">
-                  user Name should be unique
-                </Form.Control.Feedback>
-              )}
-              {!userName && (
-                <Form.Control.Feedback type="invalid">
-                  Please choose a username.
-                </Form.Control.Feedback>
-              )}
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group> */}
-          <Form.Group as={Col} md="6">
-            <Form.Label>User Name</Form.Label>
-            <Form.Control
-              className={`${
-                userName && !usernameIsValid ? "invalid is-invalid" : ""
-              } no__feedback shadow-none`}
-              value={userName}
-              onChange={(e) => {
-                setUserName(e.target.value);
-              }}
-              type="text"
-              placeholder="Enter username"
-            />
-            {usernameIsValid && userName && (
-              <Form.Text style={{ color: "green" }}>
-                Username is available!
-              </Form.Text>
-            )}
-            {usernameIsValid === false && userName && (
-              <Form.Text style={{ color: "red" }}>
-                Whoops! username already exists.
-              </Form.Text>
-            )}
-          </Form.Group>
-
+      <Row className="m-3">
+        <Form.Group as={Col} md="6">
+          <Form.Label>User Name</Form.Label>
+          <Form.Control
+            className={`${
+              userName && !usernameIsValid ? "invalid is-invalid" : ""
+            } no__feedback shadow-none`}
+            value={userName}
+            onChange={(e) => {
+              setUserName(e.target.value);
+            }}
+            type="text"
+            placeholder="Enter username"
+          />
+          {usernameIsValid && userName && (
+            <Form.Text style={{ color: "green" }}>
+              Username is available!
+            </Form.Text>
+          )}
+          {usernameIsValid === false && userName && (
+            <Form.Text style={{ color: "red" }}>
+              Whoops! username already exists.
+            </Form.Text>
+          )}
+        </Form.Group>
+        {defaultValue ? (
+          <Button
+            as={Col}
+            md="3"
+            className="mt-4 ms-5"
+            style={{
+              height: "45px",
+              borderRadius: "30px",
+              display: "inline-flex",
+              alignItems: "center ",
+            }}
+            onClick={handleReset}
+          >
+            <i class="bx bx-reset"></i>
+            Reset Password
+          </Button>
+        ) : (
           <Form.Group as={Col} md="6">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -193,8 +197,8 @@ const NewUserForm = ({
               Please provide a valid password.
             </Form.Control.Feedback>
           </Form.Group>
-        </Row>
-      )}
+        )}
+      </Row>
       <Row className="mb-3 justify-content-center">
         <Row className="m-3">
           {!defaultValue && <hr />}

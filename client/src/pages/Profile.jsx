@@ -18,7 +18,6 @@ const Profile = () => {
   const [dateOfBirth, setDateOfBirth] = useState(
     user.date_of_birth ? moment(user.date_of_birth).format("YYYY-MM-DD") : ""
   );
-  console.log("dob", dateOfBirth, user.date_of_birth);
   const [address, setAddress] = useState(user ? user.address : "");
   const [email, setEmail] = useState(user ? user.email_address : "");
   const [phone, setPhone] = useState(user ? user.phone_number : "");
@@ -33,6 +32,7 @@ const Profile = () => {
     if (!oldPassword && !newPassword && !confirmPassword) {
       setError("Please fill all fields");
     } else if (oldPassword !== user.password) {
+      console.log("user.password", newPassword);
       setError("Old Password is Not Correct");
     } else if (newPassword !== confirmPassword) {
       setError("Confirm Password is not same");
