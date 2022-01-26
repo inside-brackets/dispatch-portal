@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Message from "../components/Message";
 import MyModal from "../components/modals/MyModal";
 import moment from "moment";
+import bcrypt from "bcryptjs";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
@@ -29,25 +30,42 @@ const Profile = () => {
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
 
+    const passwordCheck = await bcrypt.compare(oldPassword, user.password);
     if (!oldPassword && !newPassword && !confirmPassword) {
       setError("Please fill all fields");
-    } else if (oldPassword !== user.password) {
-      console.log("user.password", newPassword);
+    } else if (!passwordCheck) {
+      console.log("user.password", passwordCheck);
       setError("Old Password is Not Correct");
     } else if (newPassword !== confirmPassword) {
       setError("Confirm Password is not same");
     } else {
       setShowModal(false);
+      const pass = await bcrypt.hash(newPassword, 8);
       await axios
         .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
           id: user._id,
-          password: newPassword,
+          password: pass,
         })
         .then((response) => {
-          let data = response.data;
-          dispatch(userActions.login(data));
-          localStorage.setItem("user", JSON.stringify(data));
           console.log("updated User", response);
+
+          let data = response.data;
+          dispatch(
+            userActions.login({
+              user: data,
+              company:
+                data.company === "alpha"
+                  ? {
+                      label: "Alpha Dispatch Service",
+                      value: "alpha",
+                    }
+                  : {
+                      label: "Elite Dispatch Service",
+                      value: "elite",
+                    },
+            })
+          );
+          localStorage.setItem("user", JSON.stringify(data));
         });
     }
   };
