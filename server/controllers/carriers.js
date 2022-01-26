@@ -127,11 +127,8 @@ const getCarrier = (req, res, next) => {
     });
 };
 
-const getCarriers = (req, res, next) => {
-  console.log("get carriers", req.body);
-  const defaultFilter = {
-    c_status: { $nin: ["unassigned", "rejected", "didnotpick"] },
-  };
+const getTableCarriers = async (req, res, next) => {
+  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } };
   var filter = defaultFilter;
   if (!req.body.company) {
     filter =
@@ -146,23 +143,80 @@ const getCarriers = (req, res, next) => {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
+  let status =
+    req.query.status && req.query.status !== "undefined"
+      ? req.query.status.split(",")
+      : "";
+  let search = req.query.search ? req.query.search : "";
+  if (search !== "") {
+    // filter = {
+    //   $or: [{ mc_number: search }, { name: search }, { nickname: search }],
+    // };
+  }
+  console.log(status);
+  if (status && status !== "undefined") {
+    filter.c_status = { $in: status };
+  }
 
-  Carrier.find(filter)
-    .populate("salesman trucks.dispatcher", { user_name: 1, company: 1 })
-    .then((result) => {
-      if (req.body.company) {
-        const filteredResult = result.filter(
-          (carry) => carry.salesman?.company == req.body.company
-        );
-        console.log(filteredResult.length);
-        return res.send(filteredResult);
-      }
-      console.log(result.length);
-      res.send(result);
-    })
-    .catch((err) => {
-      res.status(500).send({ msg: "error in getCarriers carrier.find" });
-    });
+  try {
+    const result = await Carrier.find(filter).populate(
+      "salesman trucks.dispatcher",
+      { user_name: 1, company: 1 }
+    );
+
+    if (req.body.company) {
+      const filteredResult = result.filter(
+        (carry) => carry.salesman.company == req.body.company
+      );
+      console.log(filteredResult.length);
+      const filterResult = filteredResult.slice(
+        req.body.skip,
+        req.body.limit + req.body.skip
+      );
+      return res.send({ data: filterResult, length: filteredResult.length });
+    }
+    const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
+    console.log(result.length);
+    res.send({ data: fResult, length: result.length });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCarriers = async (req, res, next) => {
+  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } };
+  var filter = defaultFilter;
+  if (!req.body.company) {
+    filter =
+      req.body && Object.keys(req.body).length !== 0
+        ? { ...req.body, ...defaultFilter }
+        : defaultFilter;
+  }
+  if (req.body.salesman && req.body.c_status) {
+    filter = req.body;
+  }
+  if (req.body.c_status === "registered") {
+    const { company, ...newFilter } = req.body;
+    filter = newFilter;
+  }
+  try {
+    const result = await Carrier.find(filter).populate(
+      "salesman trucks.dispatcher",
+      { user_name: 1, company: 1 }
+    );
+
+    if (req.body.company) {
+      const filteredResult = result.filter(
+        (carry) => carry.salesman.company == req.body.company
+      );
+      const filterResult = filteredResult.slice(req.body.skip, req.body.limit);
+      return res.send(filterResult);
+    }
+    const fResult = result.slice(req.body.skip, req.body.limit);
+    res.send(fResult);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const addNewCarrier = (req, res, next) => {
@@ -320,6 +374,7 @@ module.exports = {
   addNewCarrier,
   addNewTruck,
   deleteTruck,
+  getTableCarriers,
   getCarrier,
   getCarriers,
   updateCarrier,

@@ -20,6 +20,7 @@ const auth = require("../middlewares/auth");
 
 route.post("/addnewtruck", carriersController.addNewTruck);
 route.post("/getcarrier", carriersController.getCarrier);
+route.post("/get-table-carriers", carriersController.getTableCarriers);
 route.post("/getcarriers", carriersController.getCarriers);
 route.put("/updatecarrier/:mcNumber", carriersController.updateCarrier);
 route.put("/addnewTruck/:mcNumber", carriersController.addNewTruck);
