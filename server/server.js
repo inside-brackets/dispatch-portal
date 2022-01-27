@@ -76,7 +76,9 @@ io.on("connection", (socket) => {
 
 // check every request for user token and validate token from database
 app.use(async (req, res, next) => {
-  if (req.path === "/login") {
+  if (
+    ["/login", "/whitelist"].filter((s) => req.path.includes(s)).length !== 0
+  ) {
     next();
   } else {
     let token = req.header("x-auth-token");
