@@ -53,7 +53,13 @@ const Appointments = () => {
         <h5>Email:</h5>
 
         <Row>
-          <h6>{carrier.email}</h6>
+          <h6>
+            {carrier.email?.length >= 19
+              ? `${carrier.email
+                  .substring(0, Math.min(carrier.email.length, 19))
+                  .trim()}...`
+              : carrier.email}
+          </h6>
         </Row>
       </Row>
       <Row>
@@ -117,7 +123,13 @@ const Appointments = () => {
                 }}
               >
                 <Card.Body>
-                  <Card.Title>{item.company_name}</Card.Title>
+                  <Card.Title
+                    style={{
+                      height: "40px",
+                    }}
+                  >
+                    {item.company_name}
+                  </Card.Title>
                   <hr />
                   <Card.Text className="">{body(item)}</Card.Text>
                   <Card.Footer className="card-title ">
