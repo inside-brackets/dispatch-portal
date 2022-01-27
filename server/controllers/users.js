@@ -115,6 +115,7 @@ const login = (req, res) => {
             joining_date: user.joining_date,
             designation: user.designation,
             company: user.company,
+            password: user.password,
           },
           process.env.JWT
         );
