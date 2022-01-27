@@ -1,11 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import Table from "../../components/table/Table";
-import useHttp from "../../hooks/use-https";
 import Badge from "../../components/badge/Badge";
-import Input from "../../components/UI/MyInput";
 import { Col, Row } from "react-bootstrap";
-import MySelect from "../../components/UI/MySelect";
-import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import status_map from "../../assets/JsonData/status_map.json";
 
@@ -13,7 +9,6 @@ const carrierTableHead = [
   "#",
   "MC",
   "Carrier Name",
-  // "Address",
   "Phone Number",
   "Email",
   "Sales Person",
@@ -23,81 +18,13 @@ const carrierTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const Carriers = () => {
-  const searchRef = useRef();
-  // const [carriers, setCarriers] = useState([]);
-  const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
-
   const { company: selectedCompany } = useSelector((state) => state.user);
-
-  // search
-  // const [searchedCarrier, setSearchedCarrier] = useState(null);
-  // const search = (e) => {
-  //   if (e.key === "Enter") {
-  //     var searchValue = searchRef.current.value.trim();
-
-  //     const searched = carriers.filter((carrier) => {
-  //       if (!isNaN(searchValue)) {
-  //         return carrier.mc_number === parseInt(searchRef.current.value.trim());
-  //       } else {
-  //         searchValue = searchValue.toLowerCase();
-  //         if (carrier.salesman) {
-  //           return carrier.salesman.user_name.toLowerCase() === searchValue;
-  //         } else if (carrier.trucks.length) {
-  //           return carrier.trucks.filter(
-  //             (truck) => truck.dispatcher.name.toLowerCase() === searchValue
-  //           );
-  //         }
-  //         return false;
-  //       }
-  //     });
-
-  //     if (searched.length) {
-  //       setSearchedCarrier(searched);
-  //     } else {
-  //       setSearchedCarrier(null);
-  //     }
-  //   }
-  // };
-
-  // // filter
-  // const [filteredCarrier, setFilteredCarrier] = useState(null);
-  // const [selectedFilter, setSelectedFilter] = useState([]);
-
-  // const searchByFilter = (values) => {
-  //   setSelectedFilter(values);
-  //   if (values.length !== 0) {
-  //     const filters = values.map((item) => item.value);
-  //     setFilteredCarrier(
-  //       carriers.filter((item) => filters.includes(item.c_status))
-  //     );
-  //   } else {
-  //     setFilteredCarrier(null);
-  //   }
-  // };
-
-  // useEffect(() => {
-  // const transformData = (data) => {
-  //   setCarriers(data);
-  // };
-  // fetchCarriers(
-  //   {
-  //     url: `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: {
-  //       company: selectedCompany.value,
-  //     },
-  //   },
-  //   transformData
-  // );
-  // }, [fetchCarriers, selectedCompany]);
 
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
       <td>{item.mc_number}</td>
       <td>{item.company_name}</td>
-      {/* <td style={{ maxWidth: "10vh" }}>{item.address}</td> */}
       <td style={{ width: "200px" }}>{item.phone_number}</td>
       <td>{item.email}</td>
       <td>{item.salesman ? item.salesman.user_name : "N/A"}</td>
@@ -107,55 +34,12 @@ const Carriers = () => {
       </td>
     </tr>
   );
-  // if (isLoading && !httpError) {
-  //   return (
-  //     <div className="spreadsheet__loader">
-  //       <Loader type="TailSpin" color="#A9A9A9" height={100} width={100} />
-  //     </div>
-  //   );
-  // } else if (!isLoading && httpError) {
-  //   return (
-  //     <div className="spreadsheet__loader">
-  //       <h2 style={{ color: "red" }}>ERROR: SERVER MIGHT BE DOWN</h2>
-  //     </div>
-  //   );
-  // } else if (carriers === null)
-  //   return (
-  //     <div className="spreadsheet__loader">
-  //       <h2 style={{ color: "green" }}>No more carriers to show.</h2>
-  //     </div>
-  //   );
 
   return (
     <div>
       <h2> Carriers Database: </h2>
       <br />
       <Row>
-        {/* <Col>
-          <Input
-            type="text"
-            placeholder="MC/ Sales Man/ Dsipatcher"
-            icon="bx bx-search"
-            ref={searchRef}
-            onKeyDown={search}
-            // ref={Driver1NameRef}
-          />
-        </Col>
-        <Col>
-          <MySelect
-            isMulti={true}
-            value={selectedFilter}
-            onChange={searchByFilter}
-            // icon="bx bx-filter-alt"
-            options={[
-              { label: "Appointment ", value: "appointment" },
-              { label: "Registered", value: "registered" },
-              { label: "Deactivated ", value: "deactivated" },
-              { label: "Unreached ", value: "unreached" },
-            ]}
-          />
-        </Col> */}
-
         <Col></Col>
         <Col></Col>
       </Row>

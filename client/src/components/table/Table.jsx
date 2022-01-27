@@ -29,17 +29,7 @@ const Table = (props) => {
 
   useEffect(() => {
     getData();
-  }, [filter]);
-
-  console.log("setFilter", filter);
-  console.log("search", search);
-
-  useEffect(() => {
-    getData();
-  }, [currPage]);
-  useEffect(() => {
-    getData();
-  }, [search]);
+  }, [search, filter, currPage]);
 
   useEffect(() => {
     const start = Number(props.limit) * currPage;
@@ -54,7 +44,6 @@ const Table = (props) => {
   const searchData = (e) => {
     if (e.key === "Enter") {
       setSearch(e.target.value);
-      setCurrPage(0);
       setBodyData([]);
       getData();
     }

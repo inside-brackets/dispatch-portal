@@ -148,35 +148,54 @@ const getTableCarriers = async (req, res, next) => {
       ? req.query.status.split(",")
       : "";
   let search = req.query.search ? req.query.search : "";
-  if (search !== "") {
-    // filter = {
-    //   $or: [{ mc_number: search }, { name: search }, { nickname: search }],
-    // };
-  }
-  console.log(status);
+  console.log("search", search);
   if (status && status !== "undefined") {
     filter.c_status = { $in: status };
   }
 
   try {
-    const result = await Carrier.find(filter).populate(
+    let result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
       { user_name: 1, company: 1 }
     );
 
     if (req.body.company) {
-      const filteredResult = result.filter(
+      result = result.filter(
         (carry) => carry.salesman.company == req.body.company
       );
-      console.log(filteredResult.length);
-      const filterResult = filteredResult.slice(
-        req.body.skip,
-        req.body.limit + req.body.skip
-      );
-      return res.send({ data: filterResult, length: filteredResult.length });
     }
-    const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
+    if (search !== "") {
+      search = search.trim().toLowerCase();
+      result = result.filter((carrier) => {
+        console.log(
+          "company name",
+          carrier.company_name.toLowerCase().includes(search),
+          carrier.company_name
+        );
+        console.log(
+          "condition first=> sales man",
+          carrier.salesman?.user_name,
+          carrier.salesman?.user_name.toLowerCase().includes(search)
+        );
+        console.log(
+          "condition second=> sales man",
+          carrier.trucks.filter((truck) =>
+            truck.dispatcher?.user_name.toLowerCase().includes(search)
+          )
+        );
+        return (
+          carrier.salesman?.user_name.toLowerCase().includes(search) ||
+          carrier.trucks.filter((truck) =>
+            truck.dispatcher?.user_name?.toLowerCase().includes(search)
+          ).length !== 0 ||
+          carrier.company_name.toLowerCase().includes(search)
+        );
+      });
+    }
     console.log(result.length);
+    console.log("result", result);
+    const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
+    console.log("final result", fResult);
     res.send({ data: fResult, length: result.length });
   } catch (error) {
     console.log(error);
