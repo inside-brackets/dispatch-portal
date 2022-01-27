@@ -195,7 +195,12 @@ const TruckDetail = ({ match }) => {
     <>
       {!data ? (
         <div className="spreadsheet__loader">
-          <Loader type="TailSpin" color="#A9A9A9" height={100} width={100} />
+          <Loader
+            type="MutatingDots"
+            color="#349eff"
+            height={100}
+            width={100}
+          />
         </div>
       ) : (
         <div>

@@ -2,8 +2,7 @@ import React, { useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/user";
-import Input from "../components/UI/MyInput";
-import Button from "../components/UI/Button";
+import MyButton from "../components/UI/MyButton";
 import { Col, Row, Form, Image } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
@@ -107,39 +106,38 @@ const Login = () => {
       <Row className="vh-100 vw-100" style={{ backgroundColor: "#ebf2fa" }}>
         <Col md={6}>
           <FormContainer size="4" title="Login">
-            <Row>
-              <Col>
-                <Form>
-                  <div className="d-flex  flex-column align-items-center">
-                    <Form.Group className="justify-content-center">
-                      <Input
-                        type="text"
-                        label="Username:"
-                        ref={usernameRef}
-                        placeholder="Enter username..."
-                      />
-                    </Form.Group>
-                    <Form.Group>
-                      <Input
-                        type="password"
-                        label="Password:"
-                        ref={passwordRef}
-                        placeholder="Enter password..."
-                      />
-                    </Form.Group>
-                    {loginError.status && (
-                      <p className="error-text">{loginError.msg}</p>
-                    )}
-                  </div>
+            <Form>
+              <Row style={{ margin: "10px" }}>
+                <Form.Label>Username:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="username..."
+                  ref={usernameRef}
+                />
+              </Row>
 
-                  <Button
-                    onClick={handleLogin}
-                    className="float-right"
-                    buttonText="Login"
-                  ></Button>
-                </Form>
-              </Col>
-            </Row>
+              <Row style={{ margin: "10px" }}>
+                <Form.Label>Password:</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="password"
+                  ref={passwordRef}
+                />
+              </Row>
+              {loginError.status && (
+                <Form.Text style={{ color: "red", margin: "10px" }}>
+                  {loginError.msg}
+                </Form.Text>
+              )}
+              <Row style={{ margin: "10px" }}>
+                <MyButton
+                  onClick={handleLogin}
+                  className="float-right"
+                  buttonText="Login"
+                  style={{ height: "40px" }}
+                ></MyButton>
+              </Row>
+            </Form>
           </FormContainer>
         </Col>
         <Col md={6}>
