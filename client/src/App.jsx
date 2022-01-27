@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { useSelector } from "react-redux";
-import Layout from "./components/layout/Layout";
-import Login from "./pages/Login";
 import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import { useDispatch } from "react-redux";
@@ -15,6 +13,11 @@ import notificationSound from "./assets/audio/notification.mp3";
 import { useHistory } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import httpIntercept from "./interceptor/interceptor";
+
+import Loader from "react-loader-spinner";
+
+const Layout = lazy(() => import("./components/layout/Layout"));
+const Login = lazy(() => import("./pages/Login"));
 
 var sound = new Howl({
   src: notificationSound,
@@ -129,25 +132,37 @@ const App = () => {
     }
   }, [dispatch, history]);
   return (
-    <>
+    <Suspense
+      fallback={
+        <div className="spreadsheet__loader">
+          <Loader
+            type="MutatingDots"
+            color="#349eff"
+            height={100}
+            width={100}
+          />
+        </div>
+      }
+    >
       <Switch>
         <Route path="/login" exact component={Login} />
+
         <PrivateRoute path="/">
           <Layout />
-          <ToastContainer
-            position="bottom-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
         </PrivateRoute>
       </Switch>
-    </>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </Suspense>
   );
 };
 export default App;
