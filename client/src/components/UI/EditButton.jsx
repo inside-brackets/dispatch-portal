@@ -3,13 +3,7 @@ import React from "react";
 const EditButton = (props) => {
   return (
     <>
-      <span
-        // className={
-        //   props.type === "edit" ? "table__row__edit " : "table__row__delete "
-        // }
-        className="table__row__edit"
-        onClick={props.onClick}
-      >
+      <span className="table__row__edit" onClick={props.onClick}>
         {props.type === "edit" ? (
           <i class="bx bx-edit"></i>
         ) : props.type === "view" ? (

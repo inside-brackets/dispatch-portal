@@ -2,8 +2,7 @@ import React, { useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/user";
-import MyButton from "../components/UI/MyButton";
-import { Col, Row, Form, Image } from "react-bootstrap";
+import { Col, Row, Form, Image, Button } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
 import axios from "axios";
@@ -122,6 +121,11 @@ const Login = () => {
                   type="password"
                   placeholder="password"
                   ref={passwordRef}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleLogin(e);
+                    }
+                  }}
                 />
               </Row>
               {loginError.status && (
@@ -129,13 +133,8 @@ const Login = () => {
                   {loginError.msg}
                 </Form.Text>
               )}
-              <Row style={{ margin: "10px" }}>
-                <MyButton
-                  onClick={handleLogin}
-                  className="float-right"
-                  buttonText="Login"
-                  style={{ height: "40px" }}
-                ></MyButton>
+              <Row style={{ margin: "10px" }} className="mt-4">
+                <Button onClick={handleLogin}>Login</Button>
               </Row>
             </Form>
           </FormContainer>

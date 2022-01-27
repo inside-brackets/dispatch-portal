@@ -15,7 +15,6 @@ const NewUserForm = ({
   const [validated, setValidated] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(null);
   const [buttonLoader, setButtonLoader] = useState(false);
-  const [reset, setReset] = useState();
   const [userName, setUserName] = useState(
     defaultValue ? defaultValue.user_name : null
   );
@@ -55,7 +54,7 @@ const NewUserForm = ({
         clearTimeout(indentifier);
       };
     }
-  }, [userName]);
+  }, [userName, defaultValue]);
 
   const handleReset = async () => {
     const pass = "aN=Q&K3exE";
@@ -70,8 +69,6 @@ const NewUserForm = ({
       .then((response) => {
         setRefresh(Math.random());
       });
-
-    setReset(pass);
   };
 
   const handleSubmit = async (event) => {
