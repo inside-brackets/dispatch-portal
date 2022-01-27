@@ -149,8 +149,6 @@ const Dialer = () => {
           <h6> {carrier.email} </h6>
           <h5>Address: </h5>
           <h6>{carrier.address}</h6>
-          <h5>Power Units: </h5>
-          <h6>{carrier.power_units}</h6>
         </DialerCard>
 
         {/* {modal && ( */}
