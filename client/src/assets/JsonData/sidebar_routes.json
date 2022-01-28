@@ -16,7 +16,7 @@
       "icon": "bx bx-spreadsheet"
     },
     {
-      "display_name": "Dialer",
+      "display_name": "Fetch leads",
       "route": "/dialer",
       "icon": "bx bx-phone-outgoing"
     }

@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/user";
+import { themeActions } from "../store/theme";
 import { Col, Row, Form, Image, Button } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
@@ -73,6 +74,7 @@ const Login = () => {
                       },
               })
             );
+            dispatch(themeActions.setColor("theme-color-blue"));
 
             setLoginError(false);
             history.replace(from);

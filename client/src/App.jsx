@@ -92,6 +92,7 @@ const App = () => {
           dispatch(
             userActions.login({ user, company: JSON.parse(selectedCompany) })
           );
+
           var color =
             JSON.parse(selectedCompany).value === "elite"
               ? "theme-color-blue"

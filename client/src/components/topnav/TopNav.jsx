@@ -9,6 +9,9 @@ import SearchBar from "../UI/SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../store/user";
 import Cookies from "universal-cookie";
+import Badge from "../badge/Badge";
+import company_status_map from "../../assets/JsonData/company.json";
+
 const cookies = new Cookies();
 
 const Topnav = () => {
@@ -64,7 +67,14 @@ const Topnav = () => {
       <div className="topnav__right">
         <div class="bd-brand-item">
           <span class="h3">
-            {user.department === "admin" ? company.label : ""}
+            {user.department === "admin" ? (
+              <Badge
+                type={company_status_map[company.value]}
+                content={company.label}
+              />
+            ) : (
+              ""
+            )}
           </span>
         </div>
         <div className="topnav__right-item">
