@@ -89,7 +89,7 @@ const Login = () => {
         setLoginError({ status: true, msg: "User does not exists" });
       }
     } catch (err) {
-      if (err.response.status === 501) {
+      if (err.response.status === 401) {
         setUnAuthorized({
           status: true,
           msg: "Your computer is not authorized",
