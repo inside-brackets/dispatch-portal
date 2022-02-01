@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const loadSchema = new mongoose.Schema(
   {
     load_number: {
-      type: Number,
+      type: String,
       require: true,
     },
     l_status: {
