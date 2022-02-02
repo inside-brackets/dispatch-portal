@@ -16,6 +16,10 @@ import httpIntercept from "./interceptor/interceptor";
 
 import Loader from "react-loader-spinner";
 
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
+
 const Layout = lazy(() => import("./components/layout/Layout"));
 const Login = lazy(() => import("./pages/Login"));
 
@@ -57,13 +61,13 @@ const App = () => {
     });
 
     socket.on("logout", (msg) => {
-      console.log("msg", msg.userId);
-      console.log("local", currUser?._id);
       if (msg.userId === currUser?._id) {
         dispatch(
           userActions.logout({
             cb: () => {
               localStorage.removeItem("user");
+              cookies.remove("user");
+
               localStorage.removeItem("selectedCompany");
               history.replace("/login");
             },
@@ -81,6 +85,8 @@ const App = () => {
         var user = jwtDecode(jwt);
       } catch (error) {
         localStorage.removeItem("user");
+        cookies.remove("user");
+
         user = "";
       }
 
@@ -130,6 +136,7 @@ const App = () => {
       }
     } else {
       localStorage.removeItem("user");
+      cookies.remove("user");
     }
   }, [dispatch, history]);
   return (
