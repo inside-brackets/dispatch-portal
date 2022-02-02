@@ -118,7 +118,7 @@ const Users = () => {
       <td>{item.email_address ? item.email_address : "N/A"}</td>
       <td>{item.designation}</td>
       <td>{item.department}</td>
-      <td>{moment(item.joining_date).format("YYYY-MM-DD")}</td>
+      <td>{moment(item.joining_date).format("ll")}</td>
       <td>{item.salary}</td>
       <td>
         <div className="edit__class">

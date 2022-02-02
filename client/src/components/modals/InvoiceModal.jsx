@@ -48,15 +48,15 @@ const InvoiceModal = ({
 
       <td>
         {item.pick_up ? item.pick_up.address : "NA"} <br />{" "}
-        {item.pick_up ? moment(item.pick_up.date).format("MMMM Do YYYY") : "NA"}
+        {item.pick_up ? moment(item.pick_up.date).format("ll") : "NA"}
         <br />
-        {item.pick_up ? moment(item.pick_up.date).format("h:mm:ss a") : "NA"}
+        {item.pick_up ? moment(item.pick_up.date).format("LT") : "NA"}
       </td>
       <td>
         {item.drop ? item.drop.address : "NA"} <br />{" "}
-        {item.drop ? moment(item.drop.date).format("MMMM Do YYYY") : "NA"}
+        {item.drop ? moment(item.drop.date).format("ll") : "NA"}
         <br />
-        {item.drop ? moment(item.drop.date).format("h:mm:ss a") : "NA"}
+        {item.drop ? moment(item.drop.date).format("LT") : "NA"}
       </td>
       <td>{item.l_status ? item.l_status : "NA"}</td>
       <td>{item.pay ? item.pay : "NA"}</td>
