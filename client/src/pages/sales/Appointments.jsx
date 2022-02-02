@@ -6,6 +6,8 @@ import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
+import moment from "moment";
+
 const Appointments = () => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
@@ -134,9 +136,9 @@ const Appointments = () => {
                   <Card.Text className="">{body(item)}</Card.Text>
                   <Card.Footer className="card-title ">
                     {
-                      <h5>{`Time: ${new Date(
-                        item.appointment
-                      ).toLocaleString()}`}</h5>
+                      <h5>{`Time: ${moment(item.appointment).format(
+                        "llll"
+                      )}`}</h5>
                     }
                   </Card.Footer>
                 </Card.Body>
