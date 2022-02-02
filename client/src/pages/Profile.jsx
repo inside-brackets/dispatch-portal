@@ -17,7 +17,7 @@ const Profile = () => {
   const [firstName, setFirstName] = useState(user ? user.first_name : "");
   const [lastName, setLastName] = useState(user ? user.last_name : "");
   const [dateOfBirth, setDateOfBirth] = useState(
-    user.date_of_birth ? moment(user.date_of_birth).format("YYYY-MM-DD") : ""
+    user.date_of_birth ? moment(user.date_of_birth).format("ll") : ""
   );
   const [address, setAddress] = useState(user ? user.address : "");
   const [email, setEmail] = useState(user ? user.email_address : "");

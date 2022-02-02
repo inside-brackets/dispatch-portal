@@ -38,20 +38,14 @@ const Invoice = () => {
       <td>{item.truckNumber ? item.truckNumber : "NA"}</td>
 
       <td>
-        {item.startingDate
-          ? moment(item.startingDate).format("MMMM Do YYYY")
-          : "NA"}
+        {item.startingDate ? moment(item.startingDate).format("ll") : "NA"}
         <br />
-        {item.startingDate
-          ? moment(item.startingDate).format("h:mm:ss a")
-          : "NA"}
+        {item.startingDate ? moment(item.startingDate).format("LT") : "NA"}
       </td>
       <td>
-        {item.endingDate
-          ? moment(item.endingDate).format("MMMM Do YYYY")
-          : "NA"}
+        {item.endingDate ? moment(item.endingDate).format("ll") : "NA"}
         <br />
-        {item.endingDate ? moment(item.endingDate).format("h:mm:ss a") : "NA"}
+        {item.endingDate ? moment(item.endingDate).format("LT") : "NA"}
       </td>
       <td>{item.totalGross ? item.totalGross : "NA"}</td>
 

@@ -95,13 +95,11 @@ const TruckCard = ({ item }) => {
         >
           {item.out_of ? (
             <div>
-              {`Next load : ${moment(new Date(item.next)).format(
-                "MMM Do YYYY"
-              )}`}
+              {`Next load : ${moment(new Date(item.next)).format("ll")}`}
               <br />
               {`Time: \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 ${moment(
                 new Date(item.next)
-              ).format("h:mm:ss a")}`}
+              ).format("LT")}`}
               <br />
               {`Out of:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  ${item.out_of}`}
             </div>
