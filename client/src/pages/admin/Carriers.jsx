@@ -1,5 +1,5 @@
 import React from "react";
-import Table from "../../components/table/Table";
+import Table from "../../components/table/SmartTable";
 import Badge from "../../components/badge/Badge";
 import { Col, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";

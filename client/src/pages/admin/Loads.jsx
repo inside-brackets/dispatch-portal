@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import Table from "../../components/table/Table";
+import Table from "../../components/table/SmartTable";
+// import TruckForm from "../Form/NewTruckForm";
+// import Button from "../UI/Button";
+// import useHttp from "../../hooks/use-https";
 import { Row, Col } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import Input from "../../components/UI/MyInput";
@@ -70,90 +73,79 @@ const renderBody = (item, index) => (
 );
 
 const Loads = () => {
-  const [loads, setLoads] = useState("");
   const { company: selectedCompany } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    const fetchLoads = async () => {
-      axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
-          company: selectedCompany.value,
-        })
-        .then((res) => setLoads(res.data))
-        .catch((err) => console.log(err));
-    };
-    fetchLoads();
-  }, [selectedCompany]);
+  // useEffect(() => {
+  //   const fetchLoads = async () => {
+  //     axios
+  //       .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
+  //         company: selectedCompany.value,
+  //       })
+  //       .then((res) => setLoads(res.data))
+  //       .catch((err) => console.log(err));
+  //   };
+  //   fetchLoads();
+  // }, [selectedCompany]);
   //search
-  const searchRef = useRef();
+  // const searchRef = useRef();
 
-  const [searchedCarrier, setSearchedCarrier] = useState([]);
-  const search = (e) => {
-    if (e.key === "Enter") {
-      var searchValue = searchRef.current.value.trim();
-      const searched = loads.filter((load) => {
-        if (!isNaN(searchValue)) {
-          return load.load_number === parseInt(searchRef.current.value.trim());
-        } else {
-          searchValue = searchValue.toLowerCase();
-          if (load.broker.toLowerCase().includes(searchValue.toLowerCase())) {
-            return true;
-            // return load.broker === searchRef.current.value.trim();
-          }
-          return false;
-        }
-      });
-      if (searched.length !== 0) {
-        setSearchedCarrier(searched);
-      } else {
-        setSearchedCarrier([]);
-      }
-    }
-  };
+  // const [searchedCarrier, setSearchedCarrier] = useState([]);
+  // const search = (e) => {
+  //   if (e.key === "Enter") {
+  //     var searchValue = searchRef.current.value.trim();
+  //     const searched = loads.filter((load) => {
+  //       if (!isNaN(searchValue)) {
+  //         return load.load_number === parseInt(searchRef.current.value.trim());
+  //       } else {
+  //         searchValue = searchValue.toLowerCase();
+  //         if (load.broker.toLowerCase().includes(searchValue.toLowerCase())) {
+  //           return true;
+  //           // return load.broker === searchRef.current.value.trim();
+  //         }
+  //         return false;
+  //       }
+  //     });
+  //     if (searched.length !== 0) {
+  //       setSearchedCarrier(searched);
+  //     } else {
+  //       setSearchedCarrier([]);
+  //     }
+  //   }
+  // };
 
   // filter
-  const [filteredCarrier, setFilteredCarrier] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState([]);
+  // const [filteredCarrier, setFilteredCarrier] = useState(null);
+  // const [selectedFilter, setSelectedFilter] = useState([]);
 
-  const searchByFilter = (values) => {
-    setSelectedFilter(values);
-    if (values.length !== 0) {
-      const filters = values.map((item) => item.value);
-      setFilteredCarrier(
-        loads.filter((item) => filters.includes(item.l_status))
-      );
-    } else {
-      setFilteredCarrier(null);
-    }
-  };
+  // const searchByFilter = (values) => {
+  //   setSelectedFilter(values);
+  //   if (values.length !== 0) {
+  //     const filters = values.map((item) => item.value);
+  //     setFilteredCarrier(
+  //       loads.filter((item) => filters.includes(item.l_status))
+  //     );
+  //   } else {
+  //     setFilteredCarrier(null);
+  //   }
+  // };
 
-  console.log(loads);
+  // console.log(loads);
   return (
     <>
-      {!loads ? (
-        <div className="spreadsheet__loader">
-          <Loader
-            type="MutatingDots"
-            color="#349eff"
-            height={100}
-            width={100}
-          />
-        </div>
-      ) : (
-        <div>
-          <Row>
-            <Col md={3}>
-              <Input
-                type="text"
-                placeholder="Load Number / Broker"
-                icon="bx bx-search"
-                ref={searchRef}
-                onKeyDown={search}
-                // ref={Driver1NameRef}
-              />
-            </Col>
-            <Col style={{ display: "flex", alignItems: "center" }}>
-              <MySelect
+      <div>
+        <Row>
+          <Col md={3}>
+            {/* <Input
+              type="text"
+              placeholder="Load Number / Broker"
+              icon="bx bx-search"
+              ref={searchRef}
+              onKeyDown={search}
+              // ref={Driver1NameRef}
+            /> */}
+          </Col>
+          <Col style={{ display: "flex", alignItems: "center" }}>
+            {/* <MySelect
                 isMulti={true}
                 value={selectedFilter}
                 onChange={searchByFilter}
@@ -163,43 +155,33 @@ const Loads = () => {
                   { label: "Delivered ", value: "delivered" },
                   { label: "Canceled ", value: "canceled" },
                 ]}
-              />
-            </Col>
+              /> */}
+          </Col>
 
-            <div className="card">
-              <div className="card__body">
-                {searchedCarrier.length !== 0 && !filteredCarrier && (
-                  <Table
-                    key={Math.random()}
-                    headData={loadTableHead}
-                    renderHead={(item, index) => renderHead(item, index)}
-                    bodyData={searchedCarrier}
-                    renderBody={(item, index) => renderBody(item, index)}
-                  />
-                )}
-                {searchedCarrier.length === 0 && filteredCarrier && (
-                  <Table
-                    key={filteredCarrier.length}
-                    headData={loadTableHead}
-                    renderHead={(item, index) => renderHead(item, index)}
-                    bodyData={filteredCarrier}
-                    renderBody={(item, index) => renderBody(item, index)}
-                  />
-                )}
-                {searchedCarrier.length === 0 && !filteredCarrier && (
-                  <Table
-                    key={Math.random()}
-                    headData={loadTableHead}
-                    renderHead={(item, index) => renderHead(item, index)}
-                    bodyData={loads}
-                    renderBody={(item, index) => renderBody(item, index)}
-                  />
-                )}
-              </div>
+          <div className="card">
+            <div className="card__body">
+              <Table
+                limit={3}
+                headData={loadTableHead}
+                renderHead={(item, index) => renderHead(item, index)}
+                api={{
+                  url: `${process.env.REACT_APP_BACKEND_URL}/get-table-loads`,
+                  body: {
+                    company: selectedCompany.value,
+                  },
+                }}
+                filter={[
+                  { label: "Booked ", value: "booked" },
+                  { label: "Ongoing ", value: "ongoing" },
+                  { label: "Delivered ", value: "delivered" },
+                  { label: "Canceled ", value: "canceled" },
+                ]}
+                renderBody={(item, index) => renderBody(item, index)}
+              />
             </div>
-          </Row>
-        </div>
-      )}
+          </div>
+        </Row>
+      </div>
     </>
   );
 };

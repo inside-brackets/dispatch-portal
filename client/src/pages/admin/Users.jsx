@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import Table from "../../components/table/Table";
+import Table from "../../components/table/SmartTable";
 import EditButton from "../../components/UI/EditButton";
 import MyModal from "../../components/modals/MyModal";
 import NewUserForm from "../../components/Form/NewUserForm";
@@ -174,7 +174,26 @@ const Users = () => {
         <Col>
           <div className="card">
             <div className="card__body">
-              {searchedCarrier.length !== 0 && !filteredCarrier && (
+              <Table
+                limit={3}
+                headData={customerTableHead}
+                renderHead={(item, index) => renderHead(item, index)}
+                api={{
+                  url: `${process.env.REACT_APP_BACKEND_URL}/get-table-users`,
+                  body: {
+                    company: selectedCompany.value,
+                  },
+                }}
+                filter={[
+                  { label: "sales ", value: "sales" },
+                  { label: "dispatch ", value: "dispatch" },
+                  { label: "HR", value: "HR" },
+                  { label: "admin", value: "admin" },
+                  { label: "accounts", value: "accounts" },
+                ]}
+                renderBody={(item, index) => renderBody(item, index)}
+              />
+              {/* {searchedCarrier.length !== 0 && !filteredCarrier && (
                 <Table
                   key={Math.random()}
                   limit="10"
@@ -204,7 +223,7 @@ const Users = () => {
                   bodyData={users}
                   renderBody={(item, index) => renderBody(item, index)}
                 />
-              )}
+              )} */}
             </div>
           </div>
         </Col>

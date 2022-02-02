@@ -6,6 +6,7 @@ const carriersController = require("../controllers/carriers");
 const {
   addNewInvoice,
   getInvoices,
+  getTableInvoices,
   updateInvoiceStatus,
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
@@ -36,15 +37,19 @@ route.put(
 // user
 route.post("/getuser", userController.getUser);
 route.post("/getusers", userController.getUsers);
+route.post("/get-table-users", userController.getTableUsers);
 route.post("/updateuser", userController.updateUser);
 
 // invoices
 route.post("/getinvoices", getInvoices);
+route.post("/get-table-invoices", getTableInvoices);
+
 route.post("/createinvoice", addNewInvoice);
 route.put("/updateinvoice", updateInvoiceStatus);
 
 // loads
 route.post("/getloads", loadsController.getLoads);
+route.post("/get-table-loads", loadsController.getTableLoads);
 route.post("/getload", loadsController.getLoad);
 
 // security

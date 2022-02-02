@@ -12,6 +12,50 @@ const addNewInvoice = async (req, res) => {
   }
 };
 
+const getTableInvoices = (req, res, next) => {
+  var filter = {};
+  if (!req.body.company) {
+    filter =
+      req.body && Object.keys(req.body).length !== 0
+        ? { ...req.body, ...defaultFilter }
+        : defaultFilter;
+  }
+  let status =
+    req.query.status && req.query.status !== "undefined"
+      ? req.query.status.split(",")
+      : "";
+  if (status && status !== "undefined") {
+    filter.invoiceStatus = { $in: status };
+  }
+  let search = req.query.search ? req.query.search : "";
+  if (search !== "") {
+    filter.mc_number = parseInt(search);
+  }
+  Invoice.find(filter, null, {
+    sort: {
+      createdAt: -1, //Sort by Date Added DESC
+    },
+  })
+    .populate("dispatcher loads")
+    .then((invoices) => {
+      if (req.body.company) {
+        invoices = invoices.filter(
+          (invoice) => invoice.dispatcher.company == req.body.company
+        );
+        const fResult = invoices.slice(
+          req.body.skip,
+          req.body.limit + req.body.skip
+        );
+        console.log("fresultfresult ", fResult);
+        return res.send({ data: fResult, length: invoices.length });
+      }
+      res.send(invoices);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
 const getInvoices = (req, res, next) => {
   var filter = req.body;
   if (req.body.company) {
@@ -118,6 +162,7 @@ const clearInvoice = async (req, res) => {
 module.exports = {
   addNewInvoice,
   getInvoices,
+  getTableInvoices,
   updateInvoiceStatus,
   clearInvoice,
 };

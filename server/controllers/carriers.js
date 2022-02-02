@@ -192,10 +192,7 @@ const getTableCarriers = async (req, res, next) => {
         );
       });
     }
-    console.log(result.length);
-    console.log("result", result);
     const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
-    console.log("final result", fResult);
     res.send({ data: fResult, length: result.length });
   } catch (error) {
     console.log(error);

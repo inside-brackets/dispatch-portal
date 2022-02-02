@@ -12,6 +12,59 @@ const addNewLoad = async (req, res) => {
   }
 };
 
+const getTableLoads = (req, res, next) => {
+  var filter = {};
+  if (!req.body.company) {
+    filter =
+      req.body && Object.keys(req.body).length !== 0
+        ? { ...req.body, ...defaultFilter }
+        : defaultFilter;
+  }
+  let status =
+    req.query.status && req.query.status !== "undefined"
+      ? req.query.status.split(",")
+      : "";
+
+  if (status && status !== "undefined") {
+    filter.l_status = { $in: status };
+  }
+  let search = req.query.search ? req.query.search : "";
+  search = search.trim().toLowerCase();
+  // if (search !== "") {
+  //   if (!isNaN(search)) {
+  //     filter.load_number = parseInt(search);
+  //   }
+  // }
+  Load.find(filter, null, {
+    sort: {
+      "drop.date": -1, //Sort by Date Added DESC
+    },
+  })
+    .populate("dispatcher", { user_name: 1, company: 1 })
+    .then((loads) => {
+      if (req.body.company) {
+        loads = loads.filter(
+          (load) => load.dispatcher.company == req.body.company
+        );
+        if (search !== "") {
+          search = search.trim().toLowerCase();
+          loads = loads.filter((load) => {
+            return load.broker.includes(search);
+          });
+        }
+        const fResult = loads.slice(
+          req.body.skip,
+          req.body.limit + req.body.skip
+        );
+        return res.send({ data: fResult, length: loads.length });
+      }
+      res.send(loads);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
 const getLoads = (req, res, next) => {
   var filter = req.body;
   if (req.body.company) {
@@ -77,6 +130,7 @@ const getLoad = (req, res, next) => {
 module.exports = {
   addNewLoad,
   getLoads,
+  getTableLoads,
   getLoad,
   updateLoad,
 };
