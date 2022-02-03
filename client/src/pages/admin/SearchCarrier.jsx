@@ -107,7 +107,7 @@ const SearchCarrier = () => {
                 variant="outline-secondary"
                 id="button-addon2"
               >
-                <i class="bx bx-search-alt"></i>
+                <i className="bx bx-search-alt"></i>
               </Button>
             </InputGroup>
           </Col>

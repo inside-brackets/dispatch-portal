@@ -49,7 +49,6 @@ const getUser = (req, res, next) => {
   User.findOne(req.body)
     .then((user) => {
       res.send(user);
-      console.log("respo", user);
     })
     .catch((err) => {
       res.status(500).send(err);
@@ -73,7 +72,7 @@ const getUsers = (req, res, next) => {
 };
 
 const updateUser = async (req, res) => {
-  console.log("rescieved");
+  console.log("updateUser", req.body);
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.body.id,
@@ -84,9 +83,9 @@ const updateUser = async (req, res) => {
     );
     res.status(200);
     res.send(updatedUser);
-    console.log("done");
   } catch (error) {
     console.log(error);
+    res.status(500).send(error);
   }
 };
 

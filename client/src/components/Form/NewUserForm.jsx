@@ -177,7 +177,7 @@ const NewUserForm = ({
             }}
             onClick={handleReset}
           >
-            <i class="bx bx-reset"></i>
+            <i className="bx bx-reset"></i>
             Reset Password
           </Button>
         ) : (

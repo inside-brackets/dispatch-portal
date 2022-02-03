@@ -65,8 +65,8 @@ const Topnav = () => {
     <div className="topnav">
       <SearchBar className="topnav__search" placeholder="Search here..." />
       <div className="topnav__right">
-        <div class="bd-brand-item">
-          <span class="h3">
+        <div className="bd-brand-item">
+          <span className="h3">
             {user.department === "admin" ? (
               <Badge
                 type={company_status_map[company.value]}

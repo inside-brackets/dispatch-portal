@@ -5,11 +5,11 @@ const EditButton = (props) => {
     <>
       <span className="table__row__edit" onClick={props.onClick}>
         {props.type === "edit" ? (
-          <i class="bx bx-edit"></i>
+          <i className="bx bx-edit"></i>
         ) : props.type === "view" ? (
-          <i class="bx bx-file"></i>
+          <i className="bx bx-file"></i>
         ) : (
-          <i class="bx bx-trash-alt"></i>
+          <i className="bx bx-trash-alt"></i>
         )}
       </span>
     </>
