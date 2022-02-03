@@ -72,10 +72,17 @@ const Profile = () => {
       if (user) {
         const formData = new FormData(event.currentTarget);
         const userInfo = Object.fromEntries(formData.entries());
-        await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/updateuser`,
-          userInfo
-        );
+        console.log("hello", userInfo.date_of_birth);
+
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
+          id: user._id,
+          address: userInfo.address,
+          date_of_birth: userInfo.date_of_birth,
+          email_address: userInfo.email_address,
+          first_name: userInfo.first_name,
+          last_name: userInfo.last_name,
+          phone_number: userInfo.phone_number,
+        });
         toast.success("Profile Updated Successfully!", {
           position: "bottom-right",
           autoClose: 5000,
@@ -128,9 +135,9 @@ const Profile = () => {
                 <Form.Control
                   type="date"
                   name="date_of_birth"
-                  defaultValue={
+                  Value={
                     dbUser
-                      ? moment(user.date_of_birth).format("YYYY-MM-DD")
+                      ? moment(dbUser.date_of_birth).format("YYYY-MM-DD")
                       : ""
                   }
                 />

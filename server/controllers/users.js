@@ -83,6 +83,7 @@ const updateUser = async (req, res) => {
     );
     res.status(200);
     res.send(updatedUser);
+    console.log("updatedUser", req.body);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
