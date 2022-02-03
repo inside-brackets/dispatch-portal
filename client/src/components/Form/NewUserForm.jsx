@@ -22,13 +22,13 @@ const NewUserForm = ({
     defaultValue ? defaultValue.password : null
   );
   const [department, setDepartment] = useState(
-    defaultValue ? defaultValue.department : null
+    defaultValue ? defaultValue.department : "sales"
   );
   const [designation, setDesignation] = useState(
-    defaultValue ? defaultValue.designation : null
+    defaultValue ? defaultValue.designation : "Employee"
   );
   const [salary, setSalary] = useState(
-    defaultValue ? defaultValue.salary : null
+    defaultValue ? defaultValue.salary : 30000
   );
   const [joiningDate, setJoiningDate] = useState(
     defaultValue ? defaultValue.joining_date : null
