@@ -6,6 +6,8 @@ import Loader from "react-loader-spinner";
 import useHttp from "../../hooks/use-https";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import axios from "axios";
+
 import TextArea from "../../components/UI/TextArea";
 
 const Dialer = () => {
@@ -43,15 +45,28 @@ const Dialer = () => {
       transformData
     );
   };
-  const didnotPickHandler = () => {
-    postdidnotPickCarriers({
-      url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
-      method: "PUT",
-      body: {
-        c_status: "didnotpick",
+  const didnotPickHandler = async () => {
+    const transformData = (data) => {
+      console.log(data);
+      setrefresh(!refresh);
+    };
+    await postdidnotPickCarriers(
+      {
+        url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+        method: "PUT",
+        body: {
+          c_status: "didnotpick",
+        },
       },
-    });
-    setrefresh(!refresh);
+      transformData
+    );
+    // await axios.put(
+    //   `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+    //   {
+    //     c_status: "didnotpick",
+    //   }
+    // );
+    // transformData();
   };
   const buttonClickHandler = () => {
     setModal(true);
