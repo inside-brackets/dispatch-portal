@@ -12,9 +12,6 @@ import jwtDecode from "jwt-decode";
 
 import Message from "../components/Message";
 
-import Cookies from "universal-cookie";
-const cookies = new Cookies();
-
 const Login = () => {
   let history = useHistory();
   let location = useLocation();
@@ -54,8 +51,6 @@ const Login = () => {
           const userToken = loginResponse.data.userToken;
           localStorage.setItem("user", userToken);
           const user = jwtDecode(userToken);
-
-          cookies.set("user", userToken, { path: "/" });
 
           if (user) {
             console.log("login");

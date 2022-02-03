@@ -17,7 +17,6 @@ import httpIntercept from "./interceptor/interceptor";
 import Loader from "react-loader-spinner";
 
 import Cookies from "universal-cookie";
-
 const cookies = new Cookies();
 
 const Layout = lazy(() => import("./components/layout/Layout"));
@@ -85,8 +84,6 @@ const App = () => {
         var user = jwtDecode(jwt);
       } catch (error) {
         localStorage.removeItem("user");
-        cookies.remove("user");
-
         user = "";
       }
 

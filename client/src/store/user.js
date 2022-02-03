@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
+
 const initialState = {
   isAuthenticated: false,
   user: null,
@@ -14,6 +17,15 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload.user;
       state.company = action.payload.company;
+      const jwt = localStorage.getItem("user");
+      if (jwt) {
+        // set cookies expiration date
+        const current = new Date();
+        const nextYear = new Date();
+
+        nextYear.setFullYear(current.getFullYear() + 1);
+        cookies.set("user", jwt, { path: "/", expires: nextYear });
+      }
     },
     logout(state, action) {
       state = initialState;
