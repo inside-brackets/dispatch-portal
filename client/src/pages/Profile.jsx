@@ -48,29 +48,19 @@ const Profile = () => {
     } else {
       setShowModal(false);
       const pass = await bcrypt.hash(newPassword, 8);
-      await axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
-          id: user._id,
-          password: pass,
-        })
-        .then((response) => {
-          let data = response.data;
-          dispatch(
-            userActions.login({
-              user: data,
-              company:
-                data.company === "alpha"
-                  ? {
-                      label: "Alpha Dispatch Service",
-                      value: "alpha",
-                    }
-                  : {
-                      label: "Elite Dispatch Service",
-                      value: "elite",
-                    },
-            })
-          );
-        });
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
+        id: user._id,
+        password: pass,
+      });
+      toast.success("Password Updated Successfully!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
