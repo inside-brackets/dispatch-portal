@@ -75,7 +75,7 @@ const updateUser = async (req, res) => {
   console.log("updateUser", req.body);
   try {
     const updatedUser = await User.findByIdAndUpdate(
-      req.body.id,
+      req.params.id,
       {
         $set: req.body,
       },
@@ -83,7 +83,6 @@ const updateUser = async (req, res) => {
     );
     res.status(200);
     res.send(updatedUser);
-    console.log("updatedUser", req.body);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);

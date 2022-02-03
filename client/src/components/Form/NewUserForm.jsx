@@ -62,10 +62,12 @@ const NewUserForm = ({
     const reHash = await bcrypt.hash(pass, 8);
 
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
-        id: defaultValue._id,
-        password: reHash,
-      })
+      .post(
+        `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
+        {
+          password: reHash,
+        }
+      )
       .then((response) => {
         setRefresh(Math.random());
       });
@@ -90,14 +92,16 @@ const NewUserForm = ({
         );
         setButtonLoader(true);
         await axios
-          .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser`, {
-            id: defaultValue._id,
-            user_name: userName,
-            joining_date: joiningDate,
-            salary,
-            designation,
-            department,
-          })
+          .post(
+            `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
+            {
+              user_name: userName,
+              joining_date: joiningDate,
+              salary,
+              designation,
+              department,
+            }
+          )
           .then((response) => {
             setRefresh(Math.random());
             setEditModal(false);
