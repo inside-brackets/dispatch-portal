@@ -130,15 +130,6 @@ const getCarrier = (req, res, next) => {
 const getTableCarriers = async (req, res, next) => {
   const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } };
   var filter = defaultFilter;
-  if (!req.body.company) {
-    filter =
-      req.body && Object.keys(req.body).length !== 0
-        ? { ...req.body, ...defaultFilter }
-        : defaultFilter;
-  }
-  if (req.body.salesman && req.body.c_status) {
-    filter = req.body;
-  }
   if (req.body.c_status === "registered") {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
@@ -148,9 +139,11 @@ const getTableCarriers = async (req, res, next) => {
       ? req.query.status.split(",")
       : "";
   let search = req.query.search ? req.query.search : "";
-  console.log("search", search);
   if (status && status !== "undefined") {
     filter.c_status = { $in: status };
+  }
+  if (req.body.salesman) {
+    filter.salesman = req.body.salesman;
   }
 
   try {
@@ -215,12 +208,13 @@ const getCarriers = async (req, res, next) => {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
+
   try {
     const result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
       { user_name: 1, company: 1 }
     );
-
+    console.log("get carrier ", result);
     if (req.body.company) {
       const filteredResult = result.filter(
         (carry) => carry.salesman.company == req.body.company

@@ -57,6 +57,7 @@ const Carriers = () => {
                     company: selectedCompany.value,
                   },
                 }}
+                placeholder={"Company / Salesman / Dispatcher"}
                 filter={[
                   { label: "Appointment ", value: "appointment" },
                   { label: "Registered", value: "registered" },

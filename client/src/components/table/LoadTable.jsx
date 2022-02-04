@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import EditButton from "../UI/EditButton";
-import Table from "./Table";
+import Table from "./SmartTable";
 import "./loadtable.css";
 import useHttp from "../../hooks/use-https";
 import Modal from "../modals/MyModal";
@@ -84,24 +84,6 @@ const LoadTable = ({ truck_number, carrier }) => {
   };
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    const transformData = (data) => {
-      dispatch(loadsActions.set(data));
-    };
-    fetchLoads(
-      {
-        url: `${process.env.REACT_APP_BACKEND_URL}/getloads`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-
-        body: {
-          "carrier.mc_number": carrier.mc_number,
-          "carrier.truck_number": truck_number,
-        },
-      },
-      transformData
-    );
-  }, [fetchLoads, carrier, truck_number, dispatch]);
 
   const closeLoadModal = () => {
     setLoadModal(false);
@@ -172,20 +154,6 @@ const LoadTable = ({ truck_number, carrier }) => {
     <div>
       <Row>
         <h2>Loads:</h2>
-
-        <Col style={{ display: "flex", alignItems: "center" }}>
-          <MySelect
-            isMulti={true}
-            value={selectedFilter}
-            onChange={searchByFilter}
-            options={[
-              { label: "Booked ", value: "booked" },
-              { label: "Ongoing ", value: "ongoing" },
-              { label: "Delivered ", value: "delivered" },
-              { label: "Canceled ", value: "canceled" },
-            ]}
-          />
-        </Col>
         <Col>
           <Input
             type="text"
@@ -211,42 +179,25 @@ const LoadTable = ({ truck_number, carrier }) => {
       <Row>
         <div className="card">
           <div className="card__body">
-            {searchedCarrier && !filteredCarrier && (
-              <Table
-                key={Math.random()}
-                headData={customerTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={searchedCarrier}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )}
-            {!searchedCarrier && filteredCarrier && (
-              <Table
-                key={filteredCarrier.length}
-                headData={customerTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={filteredCarrier}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )}
-            {!searchedCarrier && !filteredCarrier && (
-              <Table
-                key={Math.random()}
-                headData={customerTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={getLoads}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )}
-            {searchedCarrier && filteredCarrier && (
-              <Table
-                key={Math.random()}
-                headData={customerTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={[]}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )}
+            <Table
+              limit={3}
+              headData={customerTableHead}
+              renderHead={(item, index) => renderHead(item, index)}
+              api={{
+                url: `${process.env.REACT_APP_BACKEND_URL}/get-table-loads`,
+                body: {
+                  "carrier.mc_number": carrier.mc_number,
+                  "carrier.truck_number": truck_number,
+                },
+              }}
+              filter={[
+                { label: "Booked ", value: "booked" },
+                { label: "Ongoing ", value: "ongoing" },
+                { label: "Delivered ", value: "delivered" },
+                { label: "Canceled ", value: "canceled" },
+              ]}
+              renderBody={(item, index) => renderBody(item, index)}
+            />
           </div>
         </div>
       </Row>

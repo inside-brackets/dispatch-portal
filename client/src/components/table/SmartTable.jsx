@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Loader from "react-loader-spinner";
 import MySelect from "../UI/MySelect";
 import "./table.css";
-import Input from "../../components/UI/MyInput";
+import { Row, Col } from "react-bootstrap";
 
 const Table = (props) => {
   const [bodyData, setBodyData] = useState([]);
@@ -76,23 +76,31 @@ const Table = (props) => {
   };
   return (
     <div>
-      <MySelect
-        isMulti={true}
-        value={filter}
-        onChange={(value) => {
-          setFilter(value);
-          setBodyData([]);
-          getData();
-        }}
-        label="Status"
-        options={props.filter}
-      />
-      <Input
-        type="text"
-        placeholder="MC/ Sales Man/ Dispatcher"
-        icon="bx bx-search"
-        onKeyDown={searchData}
-      />
+      <Row>
+        <Col md={3}>
+          <MySelect
+            isMulti={true}
+            value={filter}
+            onChange={(value) => {
+              setFilter(value);
+              setBodyData([]);
+              getData();
+            }}
+            label="Status"
+            options={props.filter}
+          />
+        </Col>
+        <Col style={{ marginTop: "3px" }} md={3}>
+          <label>Search</label>
+          <input
+            type="text"
+            placeholder={props.placeholder}
+            className="form-control"
+            icon="bx bx-search"
+            onKeyDown={searchData}
+          />
+        </Col>
+      </Row>
       <div
         className={`table-wrapper ${
           props.overflowHidden ? "overflow__hidden" : ""
