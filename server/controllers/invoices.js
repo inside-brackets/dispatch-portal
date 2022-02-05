@@ -14,12 +14,6 @@ const addNewInvoice = async (req, res) => {
 
 const getTableInvoices = (req, res, next) => {
   var filter = {};
-  if (!req.body.company) {
-    filter =
-      req.body && Object.keys(req.body).length !== 0
-        ? { ...req.body, ...defaultFilter }
-        : defaultFilter;
-  }
   let status =
     req.query.status && req.query.status !== "undefined"
       ? req.query.status.split(",")

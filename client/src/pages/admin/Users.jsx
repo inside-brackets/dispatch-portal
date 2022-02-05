@@ -169,6 +169,7 @@ const Users = () => {
                     company: selectedCompany.value,
                   },
                 }}
+                placeholder={"Name"}
                 filter={[
                   { label: "sales ", value: "sales" },
                   { label: "dispatch ", value: "dispatch" },

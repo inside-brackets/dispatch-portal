@@ -190,6 +190,7 @@ const LoadTable = ({ truck_number, carrier }) => {
                   "carrier.truck_number": truck_number,
                 },
               }}
+              placeholder={"Load Number / Broker"}
               filter={[
                 { label: "Booked ", value: "booked" },
                 { label: "Ongoing ", value: "ongoing" },
