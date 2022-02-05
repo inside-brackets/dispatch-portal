@@ -62,7 +62,6 @@ const Carriers = () => {
                   { label: "Appointment ", value: "appointment" },
                   { label: "Registered", value: "registered" },
                   { label: "Deactivated ", value: "deactivated" },
-                  { label: "Unreached ", value: "unreached" },
                 ]}
                 renderBody={(item, index) => renderBody(item, index)}
               />

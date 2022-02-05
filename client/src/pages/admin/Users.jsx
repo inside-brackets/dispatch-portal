@@ -123,32 +123,8 @@ const Users = () => {
   return (
     <>
       <Row className="m-3">
-        <Col md={3}>
-          <Input
-            type="text"
-            placeholder="Search user"
-            icon="bx bx-search"
-            ref={searchRef}
-            // onChange={search}
-            onKeyDown={search}
-            // ref={Driver1NameRef}
-          />
-        </Col>
-        <Col md={5}>
-          <MySelect
-            isMulti={true}
-            value={selectedFilter}
-            onChange={searchByFilter}
-            // icon="bx bx-filter-alt"
-            options={[
-              { label: "sales ", value: "sales" },
-              { label: "dispatch ", value: "dispatch" },
-              { label: "HR", value: "HR" },
-              { label: "admin", value: "admin" },
-              { label: "accounts", value: "accounts" },
-            ]}
-          />
-        </Col>
+        <Col md={3}></Col>
+        <Col md={5}></Col>
         <Col md={4}>
           <Button onClick={addUserHandler} style={{ float: "right" }}>
             Add User
@@ -169,13 +145,10 @@ const Users = () => {
                     company: selectedCompany.value,
                   },
                 }}
-                placeholder={"Name"}
+                placeholder={"User Name"}
                 filter={[
                   { label: "sales ", value: "sales" },
                   { label: "dispatch ", value: "dispatch" },
-                  { label: "HR", value: "HR" },
-                  { label: "admin", value: "admin" },
-                  { label: "accounts", value: "accounts" },
                 ]}
                 renderBody={(item, index) => renderBody(item, index)}
               />

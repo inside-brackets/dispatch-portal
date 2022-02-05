@@ -126,6 +126,7 @@ const InvoiceModal = ({
       return prev.map((item) => (item._id === res.data._id ? res.data : item));
     });
   };
+
   return (
     <div>
       <Row>
@@ -186,7 +187,8 @@ const InvoiceModal = ({
                 value={
                   invoice
                     ? invoice.trailerType
-                    : totalLoads[0].carrier.trailer_type
+                    : carrier.trucks.find((t) => t.truck_number == truck_number)
+                        .trailer_type
                 }
               />
             </Col>
@@ -201,7 +203,8 @@ const InvoiceModal = ({
                 value={
                   invoice
                     ? invoice.driver.name
-                    : totalLoads[0].carrier.driver.name
+                    : carrier.trucks.find((t) => t.truck_number == truck_number)
+                        .drivers[0].name
                 }
               />
             </Col>
