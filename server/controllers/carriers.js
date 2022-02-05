@@ -128,7 +128,9 @@ const getCarrier = (req, res, next) => {
 };
 
 const getTableCarriers = async (req, res, next) => {
-  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } };
+  const defaultFilter = {
+    c_status: { $nin: ["unassigned", "rejected", "didnotpick", "unreached"] },
+  };
   var filter = defaultFilter;
   if (req.body.c_status === "registered") {
     const { company, ...newFilter } = req.body;
@@ -196,7 +198,9 @@ const getTableCarriers = async (req, res, next) => {
 };
 
 const getCarriers = async (req, res, next) => {
-  const defaultFilter = { c_status: { $nin: ["unassigned", "rejected"] } };
+  const defaultFilter = {
+    c_status: { $nin: ["unassigned", "rejected", "didnotpick", "unreached"] },
+  };
   var filter = defaultFilter;
   if (!req.body.company) {
     filter =

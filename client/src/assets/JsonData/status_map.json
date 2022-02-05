@@ -1,7 +1,5 @@
 {
-  "unreached": "brown",
   "appointment": "yellow",
-  "rejected": "danger",
   "registered": "success",
-  "deactivated": "black"
+  "deactivated": "danger"
 }
