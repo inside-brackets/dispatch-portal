@@ -1,7 +1,6 @@
 .select {
   height: 50px;
   width: 300px;
-  margin: 5px 10px 0 6%;
   font-size: large;
   color: var(--text-color);
 }

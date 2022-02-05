@@ -23,6 +23,9 @@ const getTableLoads = (req, res, next) => {
     filter.l_status = { $in: status };
   }
   let search = req.query.search ? req.query.search : "";
+  if (!isNaN(search) && search !== "") {
+    filter.load_number = search;
+  }
   search = search.trim().toLowerCase();
   Load.find(filter, null, {
     sort: {
@@ -31,7 +34,7 @@ const getTableLoads = (req, res, next) => {
   })
     .populate("dispatcher", { user_name: 1, company: 1 })
     .then((loads) => {
-      if (search !== "") {
+      if (search !== "" && isNaN(search)) {
         search = search.trim().toLowerCase();
         loads = loads.filter((load) => {
           return load.broker.includes(search);

@@ -76,7 +76,7 @@ const Table = (props) => {
   };
   return (
     <div>
-      <Row>
+      <Row className="align-items-center">
         <Col md={3}>
           <MySelect
             isMulti={true}
@@ -90,7 +90,7 @@ const Table = (props) => {
             options={props.filter}
           />
         </Col>
-        <Col style={{ marginTop: "3px" }} md={3}>
+        <Col className="mb-2" md={3}>
           <label>Search</label>
           <input
             type="text"

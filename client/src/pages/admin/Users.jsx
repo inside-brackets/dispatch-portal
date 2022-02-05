@@ -55,7 +55,6 @@ const Users = () => {
   };
 
   useEffect(() => {
-    console.log("useeffect");
     const fetchUsers = async () => {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/getusers`,
@@ -87,20 +86,6 @@ const Users = () => {
   const closeEditModel = () => {
     setEditModal(false);
   };
-  // delete feature implemented later
-  // const deleteUserHandler = async (id) => {
-  //   var result = window.confirm("Want to delete");
-
-  //   if (result) {
-  //     await axios
-  //       .delete(`${process.env.REACT_APP_BACKEND_URL}/admin/deleteuser`, {
-  //         data: { id },
-  //       })
-  //       .then(() => {
-  //         setUsers((prev) => prev.filter((item) => item._id !== id));
-  //       });
-  //   }
-  // };
   const editModalHnadler = (item) => {
     setEditModal(true);
     console.log(item);
@@ -193,37 +178,6 @@ const Users = () => {
                 ]}
                 renderBody={(item, index) => renderBody(item, index)}
               />
-              {/* {searchedCarrier.length !== 0 && !filteredCarrier && (
-                <Table
-                  key={Math.random()}
-                  limit="10"
-                  headData={customerTableHead}
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={searchedCarrier}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
-              )}
-              {searchedCarrier.length === 0 && filteredCarrier && (
-                <Table
-                  key={filteredCarrier.length}
-                  limit="10"
-                  headData={customerTableHead}
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={filteredCarrier}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
-              )}
-              {searchedCarrier.length === 0 && !filteredCarrier && (
-                <Table
-                  limit="10"
-                  key={Math.random()}
-                  headData={customerTableHead}
-                  overflowHidden
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={users}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
-              )} */}
             </div>
           </div>
         </Col>

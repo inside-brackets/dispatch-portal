@@ -170,6 +170,7 @@ const Loads = () => {
                     company: selectedCompany.value,
                   },
                 }}
+                placeholder={"Load Number / Broker"}
                 filter={[
                   { label: "Booked ", value: "booked" },
                   { label: "Ongoing ", value: "ongoing" },

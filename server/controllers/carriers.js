@@ -142,6 +142,9 @@ const getTableCarriers = async (req, res, next) => {
   if (status && status !== "undefined") {
     filter.c_status = { $in: status };
   }
+  if (!isNaN(search) && search !== "") {
+    filter.mc_number = search;
+  }
   if (req.body.salesman) {
     filter.salesman = req.body.salesman;
   }
@@ -157,7 +160,7 @@ const getTableCarriers = async (req, res, next) => {
         (carry) => carry.salesman.company == req.body.company
       );
     }
-    if (search !== "") {
+    if (search !== "" && isNaN(search)) {
       search = search.trim().toLowerCase();
       result = result.filter((carrier) => {
         console.log(
@@ -170,12 +173,12 @@ const getTableCarriers = async (req, res, next) => {
           carrier.salesman?.user_name,
           carrier.salesman?.user_name.toLowerCase().includes(search)
         );
-        console.log(
-          "condition second=> sales man",
-          carrier.trucks.filter((truck) =>
-            truck.dispatcher?.user_name.toLowerCase().includes(search)
-          )
-        );
+        // console.log(
+        //   "condition second=> sales man",
+        //   carrier.trucks.filter((truck) =>
+        //     truck.dispatcher?.user_name.toLowerCase().includes(search)
+        //   )
+        // );
         return (
           carrier.salesman?.user_name.toLowerCase().includes(search) ||
           carrier.trucks.filter((truck) =>

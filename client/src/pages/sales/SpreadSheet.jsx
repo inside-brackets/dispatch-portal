@@ -1,6 +1,5 @@
 import React from "react";
 import Table from "../../components/table/SmartTable";
-// import axios from "axios";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 import status_map from "../../assets/JsonData/status_map.json";
@@ -33,7 +32,6 @@ const renderBody = (item, index) => (
 
 const Customers = () => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
-  // on mount fetch carrier
 
   return (
     <div>
@@ -52,6 +50,7 @@ const Customers = () => {
                     salesman: currUserId,
                   },
                 }}
+                placeholder={"MC / Carrier Name"}
                 filter={[
                   { label: "Appointment ", value: "appointment" },
                   { label: "Registered", value: "registered" },
