@@ -6,16 +6,12 @@ import "./table.css";
 import { Row, Col } from "react-bootstrap";
 
 const Table = (props) => {
-  const [bodyData, setBodyData] = useState([]);
-  const initDataShow =
-    props.limit && bodyData ? bodyData.slice(0, Number(props.limit)) : bodyData;
-  const [dataShow, setDataShow] = useState(initDataShow);
+  const [bodyData, setBodyData] = useState({});
   const [filter, setFilter] = useState([]);
   const [currPage, setCurrPage] = useState(0);
   const [totalLength, setTotalLength] = useState(0);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-
   let pages = 1;
   let range = [];
 
@@ -24,18 +20,12 @@ const Table = (props) => {
     pages = totalLength % Number(props.limit) === 0 ? page : page + 1;
     range = [...Array(pages).keys()];
   }
-  props.api.body.skip = bodyData.length;
+  props.api.body.skip = currPage * props.limit;
   props.api.body.limit = props.limit;
 
   useEffect(() => {
     getData();
   }, [search, filter, currPage]);
-
-  useEffect(() => {
-    const start = Number(props.limit) * currPage;
-    const end = start + Number(props.limit);
-    setDataShow(bodyData.slice(start, end));
-  }, [bodyData, currPage]);
 
   const selectPage = (page) => {
     setCurrPage(page);
@@ -50,8 +40,8 @@ const Table = (props) => {
   };
 
   const getData = () => {
-    if (props.api) {
-      if (bodyData.length === currPage * props.limit) {
+    if (!bodyData[`page${currPage}`]) {
+      if (props.api) {
         setLoading(true);
         if (filter && filter[0]?.label) {
           var status = filter.map((item) => item.value);
@@ -62,8 +52,12 @@ const Table = (props) => {
             props.api.body
           )
           .then((res) => {
-            console.log("loads", res.data);
-            setBodyData((prevData) => [...prevData, ...res.data.data]);
+            const pageKey = `page${currPage}`;
+            setBodyData((prev) => {
+              let temp = prev;
+              temp[pageKey] = res.data.data;
+              return temp;
+            });
             setTotalLength(res.data.length);
             setLoading(false);
           })
@@ -84,6 +78,7 @@ const Table = (props) => {
             onChange={(value) => {
               setFilter(value);
               setBodyData([]);
+              setCurrPage(0);
               getData();
             }}
             label="Status"
@@ -129,7 +124,9 @@ const Table = (props) => {
 
             {bodyData && props.renderBody ? (
               <tbody>
-                {dataShow.map((item, index) => props.renderBody(item, index))}
+                {bodyData[`page${currPage}`]?.map((item, index) =>
+                  props.renderBody(item, index)
+                )}
               </tbody>
             ) : null}
           </table>
