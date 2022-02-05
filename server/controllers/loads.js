@@ -39,7 +39,7 @@ const getLoads = (req, res, next) => {
 };
 
 const updateLoad = async (req, res) => {
-  console.log("rescieved");
+  console.log("rescieved", req.body);
   try {
     const updatedLoad = await Load.findByIdAndUpdate(
       req.body.id,
