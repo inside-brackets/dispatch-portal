@@ -79,11 +79,6 @@ const Invoice = () => {
       <Row>
         <div className="card">
           <div className="card__body">
-            {/* <Table
-              headData={invoiceTableHead}
-              renderHead={(item, index) => renderHead(item, index)}
-              renderBody={(item, index) => renderBody(item, index)}
-            /> */}
             <Table
               limit={3}
               headData={invoiceTableHead}
@@ -94,6 +89,7 @@ const Invoice = () => {
                   company: selectedCompany.value,
                 },
               }}
+              placeholder={"MC"}
               filter={[
                 { label: "cancelled", value: "cancelled" },
                 { label: "cleared ", value: "cleared" },
