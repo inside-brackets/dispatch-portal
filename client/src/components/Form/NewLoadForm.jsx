@@ -27,13 +27,15 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   );
   const [pickupDate, setPickupDate] = useState(
     defaultValue
-      ? moment(defaultValue.pick_up.date).format("YYYY-MM-DDTHH:mm")
+      ? moment(defaultValue.pick_up.date)
+          .zone("+0500")
+          .format("YYYY-MM-DDTHH:mm")
       : ""
   );
 
   const [dropDate, setDropDate] = useState(
     defaultValue
-      ? moment(defaultValue.drop.date).format("YYYY-MM-DDTHH:mm")
+      ? moment(defaultValue.drop.date).zone("+0500").format("YYYY-MM-DDTHH:mm")
       : ""
   );
 
