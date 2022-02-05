@@ -98,12 +98,12 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         broker: broker,
         pick_up: {
           address: pickupAddress,
-          date: pickupDate,
+          date: new Date(pickupDate),
         },
 
         drop: {
           address: dropAddress,
-          date: dropDate,
+          date: new Date(dropDate),
         },
 
         carrier: {
@@ -150,12 +150,12 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         broker: broker,
         pick_up: {
           address: pickupAddress,
-          date: pickupDate,
+          date: new Date(pickupDate),
         },
 
         drop: {
           address: dropAddress,
-          date: dropDate,
+          date: new Date(dropDate),
         },
         carrier: {
           mc_number: carrier.mc_number,
