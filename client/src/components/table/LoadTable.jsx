@@ -135,7 +135,7 @@ const LoadTable = ({ truck_number, carrier }) => {
           : "NA"}
         <br />
         {item.pick_up
-          ? moment(new Date(item.pick_up.date)).format("h:MM a")
+          ? moment(new Date(item.pick_up.date)).format("h:mm a")
           : "NA"}
       </td>
       <td>
@@ -145,7 +145,7 @@ const LoadTable = ({ truck_number, carrier }) => {
             moment(new Date(item.pick_up.date)).format("DD-MM-YY")
           : "NA"}
         <br />
-        {item.drop ? moment(new Date(item.drop.date)).format("h:MM a") : "NA"}
+        {item.drop ? moment(new Date(item.drop.date)).format("h:mm a") : "NA"}
       </td>
       <td>
         <Badge
