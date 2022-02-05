@@ -130,19 +130,20 @@ const LoadTable = ({ truck_number, carrier }) => {
       <td>{item.broker ? item.broker : "NA"}</td>
       <td>
         {item.pick_up ? item.pick_up.address : "NA"} <br />{" "}
-        {item.pick_up
-          ? moment(item.pick_up.date).zone("+0500").format("LL")
-          : "NA"}
-        <br />
+        {item.pick_up ? new Date(item.pick_up.date) : "NA"}
+        {/* <br />
         {item.pick_up
           ? moment(item.pick_up.date).zone("+0500").format("LT")
-          : "NA"}
+          : "NA"} */}
       </td>
       <td>
         {item.drop ? item.drop.address : "NA"} <br />{" "}
-        {item.drop ? moment(item.drop.date).zone("+0500").format("LL") : "NA"}
-        <br />
-        {item.drop ? moment(item.drop.date).zone("+0500").format("LT") : "NA"}
+        {item.drop
+          ? // moment(item.drop.date).zone("+0500").format("LL")
+            new Date(item.drop.date)
+          : "NA"}
+        {/* <br />
+        {item.drop ? moment(item.drop.date).zone("+0500").format("LT") : "NA"} */}
       </td>
       <td>
         <Badge

@@ -287,9 +287,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             <Form.Control
               type="datetime-local"
               placeholder="Enter here"
-              value={moment(pickupDate)
-                .zone("+0500")
-                .format("YYYY-MM-DDTHH:mm")}
+              value={moment(pickupDate).format("YYYY-MM-DDTHH:mm")}
               onChange={(e) => {
                 setPickupDate(e.target.value);
               }}
@@ -321,7 +319,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             <Form.Control
               type="datetime-local"
               placeholder="Enter here"
-              value={moment(dropDate).zone("+0500").format("YYYY-MM-DDTHH:mm")}
+              value={moment(dropDate).format("YYYY-MM-DDTHH:mm")}
               onChange={(e) => setDropDate(e.target.value)}
               required
             />
