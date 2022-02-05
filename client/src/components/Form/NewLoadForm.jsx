@@ -26,17 +26,11 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     defaultValue ? defaultValue.drop.address : ""
   );
   const [pickupDate, setPickupDate] = useState(
-    defaultValue
-      ? moment(defaultValue.pick_up.date)
-          .zone("+0500")
-          .format("YYYY-MM-DDTHH:mm")
-      : ""
+    defaultValue ? new Date(defaultValue.pick_up.date) : ""
   );
 
   const [dropDate, setDropDate] = useState(
-    defaultValue
-      ? moment(defaultValue.drop.date).zone("+0500").format("YYYY-MM-DDTHH:mm")
-      : ""
+    defaultValue ? new Date(defaultValue.drop.date) : ""
   );
 
   const dispatch = useDispatch();
@@ -293,9 +287,10 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             <Form.Control
               type="datetime-local"
               placeholder="Enter here"
-              value={pickupDate}
+              value={moment(pickupDate)
+                .zone("+0500")
+                .format("YYYY-MM-DDTHH:mm")}
               onChange={(e) => {
-                console.log(e.target.value);
                 setPickupDate(e.target.value);
               }}
               required
@@ -326,7 +321,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             <Form.Control
               type="datetime-local"
               placeholder="Enter here"
-              value={dropDate}
+              value={moment(dropDate).zone("+0500").format("YYYY-MM-DDTHH:mm")}
               onChange={(e) => setDropDate(e.target.value)}
               required
             />
