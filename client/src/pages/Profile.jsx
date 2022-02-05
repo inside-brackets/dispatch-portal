@@ -1,7 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { userActions } from "../store/user";
 import { Row, Col, Button, Form, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -14,7 +12,6 @@ import { toast } from "react-toastify";
 const Profile = () => {
   const { user } = useSelector((state) => state.user);
   const [dbUser, setDbUser] = useState();
-  const dispatch = useDispatch();
   const [validated, setValidated] = useState(false);
   const [showModal, setShowModal] = useState(false);
 

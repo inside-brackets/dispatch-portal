@@ -6,7 +6,6 @@ import Loader from "react-loader-spinner";
 import useHttp from "../../hooks/use-https";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import axios from "axios";
 
 import TextArea from "../../components/UI/TextArea";
 
@@ -26,6 +25,7 @@ const Dialer = () => {
 
   const { sendRequest: postrejectCarriers } = useHttp();
 
+  // make appointment
   const onConfirm = () => {
     const transformData = (data) => {
       console.log(data);
@@ -45,6 +45,7 @@ const Dialer = () => {
       transformData
     );
   };
+
   const didnotPickHandler = async () => {
     const transformData = (data) => {
       console.log(data);
@@ -60,13 +61,6 @@ const Dialer = () => {
       },
       transformData
     );
-    // await axios.put(
-    //   `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
-    //   {
-    //     c_status: "didnotpick",
-    //   }
-    // );
-    // transformData();
   };
   const buttonClickHandler = () => {
     setModal(true);
@@ -79,9 +73,9 @@ const Dialer = () => {
     setrModal(false);
   };
 
+  // reject
   const onrConfirm = () => {
     const transformData = (data) => {
-      console.log(data);
       setrefresh(!refresh);
       setrModal(false);
     };
@@ -101,21 +95,18 @@ const Dialer = () => {
   const buttonrClickHandler = () => {
     setrModal(true);
   };
-  console.log(user);
+
+  // fetch new
   useEffect(() => {
-    const transformData = (data) => {
-      setCarrier(data);
-    };
     fetchCarriers(
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/sales/fetchlead`,
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: {
           _id: user._id,
         },
       },
-      transformData
+      (data) => setCarrier(data)
     );
   }, [fetchCarriers, refresh, user]);
 

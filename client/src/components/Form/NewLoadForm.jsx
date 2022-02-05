@@ -26,11 +26,15 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     defaultValue ? defaultValue.drop.address : ""
   );
   const [pickupDate, setPickupDate] = useState(
-    defaultValue ? moment(defaultValue.pick_up.date).format("llll") : ""
+    defaultValue
+      ? moment(defaultValue.pick_up.date).format("YYYY-MM-DDTHH:mm")
+      : ""
   );
 
   const [dropDate, setDropDate] = useState(
-    defaultValue ? moment(defaultValue.drop.date).format("lll") : ""
+    defaultValue
+      ? moment(defaultValue.drop.date).format("YYYY-MM-DDTHH:mm")
+      : ""
   );
 
   const dispatch = useDispatch();
@@ -69,6 +73,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const truck = carrier.trucks.find((item) => {
     return item.truck_number.toString() === truck_number.toString();
   });
+
   const uploadFileHandler = async (e) => {
     console.log("hello world");
     const file = e.target.files[0];
@@ -286,7 +291,10 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
               type="datetime-local"
               placeholder="Enter here"
               value={pickupDate}
-              onChange={(e) => setPickupDate(e.target.value)}
+              onChange={(e) => {
+                console.log(e.target.value);
+                setPickupDate(e.target.value);
+              }}
               required
             />
             <Form.Control.Feedback type="invalid">
@@ -326,7 +334,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         </Row>
         <Row>
           <Form.Group>
-            <Form.Label>Image</Form.Label>
+            <Form.Label>RateCon</Form.Label>
             <Form.Control
               type="text"
               name="image"

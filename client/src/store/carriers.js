@@ -1,18 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  list: [],
-};
+const initialState = [];
 
 const carriersSlice = createSlice({
   name: "carriers",
   initialState,
   reducers: {
     set(state, action) {
-      state.list = action.payload;
+      state = action.payload;
     },
     append(state, action) {
-      state.list.push(action.payload);
+      state.push(action.payload);
     },
   },
 });
