@@ -78,7 +78,7 @@ const assignDispatcher = (req, res, next) => {
 };
 //assigns carriers to salesmen and changes c_status to unreached
 
-const fetchLead = (req, res, next) => {
+const fetchLead = async (req, res, next) => {
   console.log("fetchLead", req.body);
   const pst = moment().tz("US/Pacific");
   Carrier.findOne({
@@ -87,24 +87,32 @@ const fetchLead = (req, res, next) => {
     address: { $regex: callAbleStates(pst), $options: "i" },
   })
     .populate("salesman", { user_name: 1 })
-    .then((result) => {
+    .then(async (result) => {
+      console.log("result", result);
       if (result === null) {
-        Carrier.findOneAndUpdate(
-          {
-            c_status: "unassigned",
-            address: { $regex: callAbleStates(pst), $options: "i" },
-          },
-          {
-            $set: {
+        const carrier = await Carrier.find({
+          salesman: mongoose.Types.ObjectId(req.body._id),
+          c_status: "unassigned",
+          address: { $regex: callAbleStates(pst), $options: "i" },
+        })
+          .sort({ mc_number: -1 })
+          .limit(1);
+        if (carrier) {
+          await Carrier.findByIdAndUpdate(
+            carrier[0]._id,
+            {
               salesman: req.body._id,
               c_status: "unreached",
             },
-          },
-          { new: true }
-        ).then((newLead) => {
-          console.log("new load");
-          res.send(newLead);
-        });
+            { new: true }
+          )
+            .then((resp) => {
+              res.send(resp);
+            })
+            .catch((err) => console.log(err));
+        } else {
+          res.status(404).send("Unable to find unassigned carrier");
+        }
       } else {
         console.log("old lead");
         res.send(result);

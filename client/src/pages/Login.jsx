@@ -3,7 +3,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/user";
 import { themeActions } from "../store/theme";
-import { Col, Row, Form, Image, Button } from "react-bootstrap";
+import { Col, Row, Form, Image, Button, Spinner } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
 import axios from "axios";
@@ -20,6 +20,7 @@ const Login = () => {
   const passwordRef = useRef();
   const [loginError, setLoginError] = useState({ status: false, msg: "" });
   const [unAuthorized, setUnAuthorized] = useState({ status: false, msg: "" });
+  const [loading, setLoading] = useState(false);
 
   let { from } = location.state || { from: { pathname: "/" } };
 
@@ -31,6 +32,7 @@ const Login = () => {
     e.preventDefault();
     setLoginError({ status: false, msg: "" });
     setUnAuthorized({ status: false, msg: "" });
+    setLoading(true);
 
     try {
       const loginResponse = await axios({
@@ -75,13 +77,16 @@ const Login = () => {
             history.replace(from);
           } else {
             setLoginError({ status: true, msg: "No Such user in local" });
+            setLoading(false);
           }
         } else {
           // passwrong
           setLoginError({ status: true, msg: "Incorrect Password" });
+          setLoading(false);
         }
       } else {
         setLoginError({ status: true, msg: "User does not exists" });
+        setLoading(false);
       }
     } catch (err) {
       if (err.response.status === 401) {
@@ -89,11 +94,13 @@ const Login = () => {
           status: true,
           msg: "Your computer is not authorized",
         });
+        setLoading(false);
       } else {
         setUnAuthorized({
           status: true,
           msg: "Something wrong with the server",
         });
+        setLoading(false);
       }
     }
   };
@@ -131,7 +138,18 @@ const Login = () => {
                 </Form.Text>
               )}
               <Row style={{ margin: "10px" }} className="mt-4">
-                <Button onClick={handleLogin}>Login</Button>
+                <Button disabled={loading} onClick={handleLogin}>
+                  {loading && (
+                    <Spinner
+                      as="span"
+                      animation="grow"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  )}{" "}
+                  Login{" "}
+                </Button>
               </Row>
             </Form>
           </FormContainer>
