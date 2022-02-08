@@ -91,7 +91,7 @@ const fetchLead = async (req, res, next) => {
       console.log("result", result);
       if (result === null) {
         const carrier = await Carrier.find({
-          salesman: mongoose.Types.ObjectId(req.body._id),
+          // salesman: mongoose.Types.ObjectId(req.body._id),
           c_status: "unassigned",
           address: { $regex: callAbleStates(pst), $options: "i" },
         })
