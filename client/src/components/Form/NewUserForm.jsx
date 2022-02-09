@@ -57,8 +57,7 @@ const NewUserForm = ({
   }, [userName, defaultValue]);
 
   const handleReset = async () => {
-    const pass = "aN=Q&K3exE";
-    // const pass = "abc";
+    const pass = "12345";
     const reHash = await bcrypt.hash(pass, 8);
 
     await axios
