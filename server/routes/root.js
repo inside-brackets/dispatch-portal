@@ -10,7 +10,7 @@ const {
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
-const { rename, test } = require("../controllers/db");
+const { rename, test, changeAppointment } = require("../controllers/db");
 
 const { setIp, getIpList } = require("../util/ipList");
 const { generateUploadURL } = require("../util/s3");
@@ -69,5 +69,6 @@ route.get("/s3url/:folder/:fileName", async (req, res) => {
 // edit database
 route.post("/rename", rename);
 route.post("/test", test);
+route.post("/changeappointment", changeAppointment);
 
 module.exports = route;

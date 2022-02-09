@@ -168,7 +168,7 @@ const Dialer = () => {
             <Input
               type="datetime-local"
               label="Call back time:"
-              defaultValue={moment(new Date()).format("llll")}
+              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
               ref={appointmentRef}
             />
             <TextArea

@@ -23,7 +23,27 @@ const test = async (req, res) => {
   }
 };
 
+const changeAppointment = async (req, res) => {
+  try {
+    const today = new Date();
+    const tomorrow = new Date();
+
+    // Add 1 Day
+    tomorrow.setDate(today.getDate() + 1);
+    const carriers = await Carrier.updateMany(
+      { appointment: "" },
+      { $set: { appointment: tomorrow } },
+      { multi: true, new: true }
+    );
+    res.status(200).send(carriers);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+};
+
 module.exports = {
   rename,
   test,
+  changeAppointment,
 };
