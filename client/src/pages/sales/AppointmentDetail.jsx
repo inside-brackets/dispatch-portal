@@ -155,10 +155,6 @@ const AppointmentDetail = () => {
 
   useEffect(() => {
     const transformData = (data) => {
-      var date = new Date(data.appointment);
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      date = date.toISOString().slice(0, 16);
-      data["appointment"] = date;
       setCarrier(data);
       setTrucks(data.trucks);
       if (data.tax_id_number) {
