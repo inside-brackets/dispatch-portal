@@ -21,6 +21,7 @@ const SearchCarrier = lazy(() => import("../pages/admin/SearchCarrier"));
 const Loads = lazy(() => import("../pages/admin/Loads"));
 const TruckDetails = lazy(() => import("../pages/admin/TruckDetails"));
 const Users = lazy(() => import("../pages/admin/Users"));
+const PdfTest = lazy(() => import("../components/PdfTest"));
 
 // sales routes
 const Dashboard = lazy(() => import("../pages/sales/Dashboard"));
@@ -126,6 +127,7 @@ const Routes = () => {
         <Route path="/assignsales" exact component={AssignSales} />
         <Route path="/profile" component={Profile} />
         <Route path="/loads" component={Loads} />
+        <Route path="/pdf" component={PdfTest} />
         <Route path="/invoices" component={Invoice} />
         <Route path="/users" exact component={Users} />
         <Route path="*">

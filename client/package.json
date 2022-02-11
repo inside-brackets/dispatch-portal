@@ -16,6 +16,8 @@
     "boxicons": "^2.0.9",
     "date-fns": "^2.28.0",
     "howler": "^2.2.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
