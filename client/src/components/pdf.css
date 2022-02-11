@@ -21,6 +21,7 @@
 .invoice th {
   padding-top: 12px;
   padding-bottom: 12px;
+  font-size: larger;
   text-align: left;
   background-color: #000000;
   color: white;
