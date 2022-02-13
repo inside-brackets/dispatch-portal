@@ -80,6 +80,7 @@ const Invoice = () => {
         <div className="card">
           <div className="card__body">
             <Table
+              key={Math.random()}
               limit={3}
               headData={invoiceTableHead}
               renderHead={(item, index) => renderHead(item, index)}
