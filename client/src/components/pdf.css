@@ -39,6 +39,7 @@
   font-size: larger;
   padding: 20px;
   text-decoration: underline;
+  text-transform: capitalize;
 }
 .box {
   box-sizing: border-box;

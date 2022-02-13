@@ -44,7 +44,8 @@ const Carriers = () => {
             return carrier.salesman.user_name.toLowerCase() === searchValue;
           } else if (carrier.trucks.length) {
             return carrier.trucks.filter(
-              (truck) => truck.dispatcher.name.toLowerCase() === searchValue
+              (truck) =>
+                truck.dispatcher.user_name.toLowerCase() === searchValue
             );
           }
           return false;

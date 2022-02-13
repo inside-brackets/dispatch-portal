@@ -212,7 +212,6 @@ const Invoice = () => {
       </MyModal>
       <MyModal
         show={PdfmodalHandler}
-        heading="Invoice"
         // onConfirm={rejectHandler}
         size="xl"
         onClose={() => {

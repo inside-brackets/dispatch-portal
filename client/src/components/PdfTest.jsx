@@ -8,17 +8,20 @@ import "./pdf.css";
 
 const PdfTest = ({ load, invoice }) => {
   const ref = useRef();
+
   const printDocument = () => {
     const input = document.getElementById("div-to-print");
     console.log(input);
     html2canvas(input).then((canvas) => {
       console.log("canvas", canvas);
+
       const imgData = canvas.toDataURL("image/png");
       console.log(imgData);
-      const pdf = new jsPDF();
       console.log("hello");
-      pdf.addImage(imgData, "JPEG", 0, 0);
-      console.log(" 33hello");
+      var pdf = new jsPDF({ orientation: "landscape" });
+      var width = pdf.internal.pageSize.getWidth();
+      var height = pdf.internal.pageSize.getHeight();
+      pdf.addImage(imgData, "JPEG", 0, 0, width, height);
       // pdf.output("dataurlnewwindow");
       pdf.save("download.pdf");
     });
@@ -41,13 +44,13 @@ const PdfTest = ({ load, invoice }) => {
           style={{ marginBottom: "50px", marginTop: "20px" }}
           className="text-center"
         >
-          Customer Weekly Report
+          Customer Report
         </h1>
         <p className="d-flex">
           <h5 className="header">Carrier Name</h5>
           <h5 className="name me-5">{invoice?.carrierCompany}</h5>
           <h5 className="header">Agent Name </h5>
-          <h5 className="name">{invoice?.dispatcher.name}</h5>
+          <h5 className="name">{invoice?.dispatcher.user_name}</h5>
         </p>
         <table className="table invoice">
           <thead
