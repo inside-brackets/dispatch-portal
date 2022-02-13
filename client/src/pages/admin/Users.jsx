@@ -137,6 +137,7 @@ const Users = () => {
             <div className="card__body">
               <Table
                 limit={3}
+                key={Math.random()}
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{

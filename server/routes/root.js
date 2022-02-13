@@ -38,7 +38,8 @@ route.put(
 route.post("/getuser", userController.getUser);
 route.post("/getusers", userController.getUsers);
 route.post("/get-table-users", userController.getTableUsers);
-route.post("/updateuser", userController.updateUser);
+// route.post("/updateuser", userController.updateUser);
+route.post("/updateuser/:id", userController.updateUser);
 
 // invoices
 route.post("/getinvoices", getInvoices);
