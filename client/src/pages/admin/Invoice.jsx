@@ -11,6 +11,7 @@ import InvoiceModal from "../../components/modals/InvoiceModal";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
+import PdfTest from "../../components/PdfTest";
 
 const invoiceTableHead = [
   "#",
@@ -23,6 +24,7 @@ const invoiceTableHead = [
   "Payable",
   "Status",
   "Action",
+  "Print",
 ];
 
 const Invoice = () => {
@@ -65,9 +67,16 @@ const Invoice = () => {
           <EditButton type="view" onClick={() => viewInvoiceModal(item)} />
         </div>
       </td>
+      <td>
+        <div className="edit__class">
+          {/* <EditButton type="edit" onClick={() => viewPdfModal(item)} /> */}
+          <i class="bx bx-printer" onClick={() => viewPdfModal(item)}></i>
+        </div>
+      </td>
     </tr>
   );
   const [modalHandler, setModalHandler] = useState(false);
+  const [PdfmodalHandler, setPdfModalHandler] = useState(false);
   const [loads, setLoads] = useState([]);
   const [invoice, setInvoice] = useState("");
   const viewInvoiceModal = (item) => {
@@ -75,8 +84,13 @@ const Invoice = () => {
     setModalHandler(true);
     setInvoice(item);
   };
+  const viewPdfModal = (item) => {
+    setLoads(item.loads);
+    setPdfModalHandler(true);
+    setInvoice(item);
+  };
   const [invoices, setInvoices] = useState([]);
-
+  console.log("load", loads);
   useEffect(() => {
     const fetchLoads = async () => {
       axios
@@ -195,6 +209,16 @@ const Invoice = () => {
           totalGross={invoices}
           setInvoices={setInvoices}
         />
+      </MyModal>
+      <MyModal
+        show={PdfmodalHandler}
+        // onConfirm={rejectHandler}
+        size="xl"
+        onClose={() => {
+          setPdfModalHandler(false);
+        }}
+      >
+        <PdfTest load={loads} invoice={invoice} />
       </MyModal>
     </>
   );

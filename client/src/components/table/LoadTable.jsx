@@ -142,7 +142,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         {item.drop ? item.drop.address : "NA"} <br />{" "}
         {item.drop
           ? // moment(item.drop.date).zone("+0500").format("LL")
-            moment(new Date(item.pick_up.date)).format("DD-MM-YY")
+            moment(new Date(item.drop.date)).format("DD-MM-YY")
           : "NA"}
         <br />
         {item.drop ? moment(new Date(item.drop.date)).format("h:mm a") : "NA"}

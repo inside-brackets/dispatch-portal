@@ -159,7 +159,7 @@ const InvoiceModal = ({
                 type="text"
                 placeholder="Readonly input here..."
                 readOnly
-                value={invoice ? invoice.dispatcher.name : currUserName}
+                value={invoice ? invoice.dispatcher.user_name : currUserName}
               />
             </Col>
           </Row>
