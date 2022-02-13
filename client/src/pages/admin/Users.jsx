@@ -146,6 +146,7 @@ const Users = () => {
                   },
                 }}
                 placeholder={"User Name"}
+                status_placeholder={"Designation:"}
                 filter={[
                   { label: "sales ", value: "sales" },
                   { label: "dispatch ", value: "dispatch" },

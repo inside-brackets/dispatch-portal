@@ -81,7 +81,9 @@ const Table = (props) => {
               setCurrPage(0);
               getData();
             }}
-            label="Status"
+            label={
+              props.status_placeholder ? props.status_placeholder : "Status:"
+            }
             options={props.filter}
           />
         </Col>

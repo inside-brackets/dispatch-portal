@@ -97,25 +97,6 @@ const Invoice = () => {
               ]}
               renderBody={(item, index) => renderBody(item, index)}
             />
-
-            {/* {searchedCarrier.length === 0 && filteredCarrier && (
-              <Table
-                key={filteredCarrier.length}
-                headData={invoiceTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={filteredCarrier}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )} */}
-            {/* {searchedCarrier.length === 0 && !filteredCarrier && (
-              <Table
-                key={Math.random()}
-                headData={invoiceTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={invoices}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )} */}
           </div>
         </div>
       </Row>
