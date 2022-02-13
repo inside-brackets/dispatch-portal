@@ -14,6 +14,7 @@ const GenerateInvoice = ({ loads, truck_number, carrier, closeModal }) => {
   const [loadedMilesTotal, setLoadedMilesTotal] = useState(0);
   const { dispatcher_fee } = carrier;
 
+  console.log("loads", loads);
   const search = () => {
     const to = new Date(endDate);
     to.setDate(to.getDate() + 1);
