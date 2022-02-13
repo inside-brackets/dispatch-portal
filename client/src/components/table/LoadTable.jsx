@@ -160,18 +160,14 @@ const LoadTable = ({ truck_number, carrier }) => {
     <div>
       <Row>
         <h2>Loads:</h2>
-        <Col>
-          <Input
-            type="text"
-            placeholder="Load Number / Br"
-            icon="bx bx-search"
-            ref={searchRef}
-            onKeyDown={search}
-            // ref={Driver1NameRef}
-          />
-        </Col>
+        <Col></Col>
         <Col className="text-center">
-          <BButton variant="success" size="lg" onClick={invoiceModalHandler}>
+          <BButton
+            variant="success"
+            size="lg"
+            onClick={invoiceModalHandler}
+            className="mb-4"
+          >
             Generate Invoice
           </BButton>{" "}
         </Col>
@@ -186,6 +182,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         <div className="card">
           <div className="card__body">
             <Table
+              key={Math.random()}
               limit={3}
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}

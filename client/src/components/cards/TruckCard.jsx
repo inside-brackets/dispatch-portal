@@ -84,13 +84,14 @@ const TruckCard = ({ item }) => {
       }}
     >
       <Card.Body>
-        <Card.Title>{item.company_name}</Card.Title>
+        <Card.Title style={{ height: "35px" }}>{item.company_name}</Card.Title>
 
         <hr />
         <Card.Text className="">{body(item)}</Card.Text>
         <Card.Footer
           style={{
             width: "auto",
+            height: "90px",
           }}
         >
           {item.out_of ? (
