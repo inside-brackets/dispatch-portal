@@ -5,13 +5,7 @@ import { DateRangePicker } from "react-date-range";
 import { Button, Col, Row } from "react-bootstrap";
 import InvoiceModal from "./modals/InvoiceModal";
 
-const GenerateInvoice = ({
-  loads,
-  truck_number,
-  carrier,
-  setModalHandler,
-  closeModal,
-}) => {
+const GenerateInvoice = ({ loads, truck_number, carrier, closeModal }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [dispatcherFee, setDispatcherFee] = useState(0);

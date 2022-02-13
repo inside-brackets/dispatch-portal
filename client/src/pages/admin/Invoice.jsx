@@ -1,11 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Row, Col } from "react-bootstrap";
-import Table from "../../components/table/Table";
-import MySelect from "../../components/UI/MySelect";
-import MyInput from "../../components/UI/MyInput";
+import React, { useState } from "react";
+import { Row } from "react-bootstrap";
+import Table from "../../components/table/SmartTable";
 import EditButton from "../../components/UI/EditButton";
 import moment from "moment";
-import axios from "axios";
 import MyModal from "../../components/modals/MyModal";
 import InvoiceModal from "../../components/modals/InvoiceModal";
 import Badge from "../../components/badge/Badge";
@@ -90,106 +87,30 @@ const Invoice = () => {
     setInvoice(item);
   };
   const [invoices, setInvoices] = useState([]);
-  console.log("load", loads);
-  useEffect(() => {
-    const fetchLoads = async () => {
-      axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/getinvoices`, {
-          company: selectedCompany.value,
-        })
-        .then((res) => setInvoices(res.data))
-        .catch((err) => console.log(err));
-    };
-    fetchLoads();
-  }, [selectedCompany]);
-  //Search
-  const searchRef = useRef();
-  const [searchedCarrier, setSearchedCarrier] = useState([]);
-  const search = (e) => {
-    if (e.key === "Enter") {
-      const searched = invoices.filter((inv) => {
-        return inv.mc_number === parseInt(searchRef.current.value);
-      });
-
-      if (searched) {
-        setSearchedCarrier(searched);
-      } else {
-        setSearchedCarrier([]);
-      }
-    }
-  };
-  // Filter
-  const [filteredCarrier, setFilteredCarrier] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState([]);
-
-  const searchByFilter = (values) => {
-    setSelectedFilter(values);
-    if (values.length !== 0) {
-      const filters = values.map((item) => item.value);
-      setFilteredCarrier(
-        invoices.filter((item) => filters.includes(item.invoiceStatus))
-      );
-    } else {
-      setFilteredCarrier(null);
-    }
-  };
   return (
     <>
       <Row>
-        <Col md={3}>
-          <MyInput
-            type="text"
-            placeholder="MC"
-            icon="bx bx-search"
-            ref={searchRef}
-            // value={searchInput}
-            onKeyDown={search}
-            // onChange={(e) => setSearchInput(e.target.value)}
-          />
-        </Col>
-        <Col>
-          <MySelect
-            isMulti={true}
-            value={selectedFilter}
-            onChange={searchByFilter}
-            options={[
-              { label: "cancelled", value: "cancelled" },
-              { label: "cleared ", value: "cleared" },
-              { label: "pending ", value: "pending" },
-            ]}
-          />
-        </Col>
-      </Row>
-      <Row>
         <div className="card">
           <div className="card__body">
-            {searchedCarrier.length !== 0 && !filteredCarrier && (
-              <Table
-                key={Math.random()}
-                headData={invoiceTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={searchedCarrier}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )}
-            {searchedCarrier.length === 0 && filteredCarrier && (
-              <Table
-                key={filteredCarrier.length}
-                headData={invoiceTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={filteredCarrier}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )}
-            {searchedCarrier.length === 0 && !filteredCarrier && (
-              <Table
-                key={Math.random()}
-                headData={invoiceTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                bodyData={invoices}
-                renderBody={(item, index) => renderBody(item, index)}
-              />
-            )}
+            <Table
+              key={Math.random()}
+              limit={3}
+              headData={invoiceTableHead}
+              renderHead={(item, index) => renderHead(item, index)}
+              api={{
+                url: `${process.env.REACT_APP_BACKEND_URL}/get-table-invoices`,
+                body: {
+                  company: selectedCompany.value,
+                },
+              }}
+              placeholder={"MC"}
+              filter={[
+                { label: "cancelled", value: "cancelled" },
+                { label: "cleared ", value: "cleared" },
+                { label: "pending ", value: "pending" },
+              ]}
+              renderBody={(item, index) => renderBody(item, index)}
+            />
           </div>
         </div>
       </Row>

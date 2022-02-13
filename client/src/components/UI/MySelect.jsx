@@ -5,7 +5,7 @@ import "./mySelect.css";
 
 const MySelect = (props) => {
   return props.isMulti ? (
-    <div className="__input">
+    <div className="">
       {props.label && <label htmlFor={props.label}>{props.label}</label>}
       {props.icon && <i className={`icon ${props.icon}`}></i>}
       <MultiSelect
@@ -19,7 +19,7 @@ const MySelect = (props) => {
       />
     </div>
   ) : (
-    <div className="__input" style={{ marginLeft: "-20px", zIndex: "10" }}>
+    <div className="__input">
       {props.label && <label htmlFor={props.label}>{props.label}</label>}
       {props.icon && <i className={`icon ${props.icon}`}></i>}
       <Select

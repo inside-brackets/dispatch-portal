@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import Table from "../../components/table/Table";
+import Table from "../../components/table/SmartTable";
 import EditButton from "../../components/UI/EditButton";
 import MyModal from "../../components/modals/MyModal";
 import NewUserForm from "../../components/Form/NewUserForm";
@@ -55,7 +55,6 @@ const Users = () => {
   };
 
   useEffect(() => {
-    console.log("useeffect");
     const fetchUsers = async () => {
       const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/getusers`,
@@ -87,20 +86,6 @@ const Users = () => {
   const closeEditModel = () => {
     setEditModal(false);
   };
-  // delete feature implemented later
-  // const deleteUserHandler = async (id) => {
-  //   var result = window.confirm("Want to delete");
-
-  //   if (result) {
-  //     await axios
-  //       .delete(`${process.env.REACT_APP_BACKEND_URL}/admin/deleteuser`, {
-  //         data: { id },
-  //       })
-  //       .then(() => {
-  //         setUsers((prev) => prev.filter((item) => item._id !== id));
-  //       });
-  //   }
-  // };
   const editModalHnadler = (item) => {
     setEditModal(true);
     console.log(item);
@@ -138,32 +123,8 @@ const Users = () => {
   return (
     <>
       <Row className="m-3">
-        <Col md={3}>
-          <Input
-            type="text"
-            placeholder="Search user"
-            icon="bx bx-search"
-            ref={searchRef}
-            // onChange={search}
-            onKeyDown={search}
-            // ref={Driver1NameRef}
-          />
-        </Col>
-        <Col md={5}>
-          <MySelect
-            isMulti={true}
-            value={selectedFilter}
-            onChange={searchByFilter}
-            // icon="bx bx-filter-alt"
-            options={[
-              { label: "sales ", value: "sales" },
-              { label: "dispatch ", value: "dispatch" },
-              { label: "HR", value: "HR" },
-              { label: "admin", value: "admin" },
-              { label: "accounts", value: "accounts" },
-            ]}
-          />
-        </Col>
+        <Col md={3}></Col>
+        <Col md={5}></Col>
         <Col md={4}>
           <Button onClick={addUserHandler} style={{ float: "right" }}>
             Add User
@@ -174,37 +135,24 @@ const Users = () => {
         <Col>
           <div className="card">
             <div className="card__body">
-              {searchedCarrier.length !== 0 && !filteredCarrier && (
-                <Table
-                  key={Math.random()}
-                  limit="10"
-                  headData={customerTableHead}
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={searchedCarrier}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
-              )}
-              {searchedCarrier.length === 0 && filteredCarrier && (
-                <Table
-                  key={filteredCarrier.length}
-                  limit="10"
-                  headData={customerTableHead}
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={filteredCarrier}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
-              )}
-              {searchedCarrier.length === 0 && !filteredCarrier && (
-                <Table
-                  limit="10"
-                  key={Math.random()}
-                  headData={customerTableHead}
-                  overflowHidden
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={users}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
-              )}
+              <Table
+                limit={3}
+                headData={customerTableHead}
+                renderHead={(item, index) => renderHead(item, index)}
+                api={{
+                  url: `${process.env.REACT_APP_BACKEND_URL}/get-table-users`,
+                  body: {
+                    company: selectedCompany.value,
+                  },
+                }}
+                placeholder={"User Name"}
+                status_placeholder={"Designation:"}
+                filter={[
+                  { label: "sales ", value: "sales" },
+                  { label: "dispatch ", value: "dispatch" },
+                ]}
+                renderBody={(item, index) => renderBody(item, index)}
+              />
             </div>
           </div>
         </Col>

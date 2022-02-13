@@ -126,6 +126,7 @@ const InvoiceModal = ({
       return prev.map((item) => (item._id === res.data._id ? res.data : item));
     });
   };
+
   return (
     <div>
       <Row>

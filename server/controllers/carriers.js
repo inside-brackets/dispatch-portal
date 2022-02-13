@@ -134,10 +134,79 @@ const getCarrier = (req, res, next) => {
     });
 };
 
-const getCarriers = (req, res, next) => {
-  console.log("get carriers", req.body);
+const getTableCarriers = async (req, res, next) => {
   const defaultFilter = {
-    c_status: { $nin: ["unassigned", "rejected", "didnotpick"] },
+    c_status: { $nin: ["unassigned", "rejected", "didnotpick", "unreached"] },
+  };
+  var filter = defaultFilter;
+  if (req.body.c_status === "registered") {
+    const { company, ...newFilter } = req.body;
+    filter = newFilter;
+  }
+  let status =
+    req.query.status && req.query.status !== "undefined"
+      ? req.query.status.split(",")
+      : "";
+  let search = req.query.search ? req.query.search : "";
+  if (status && status !== "undefined") {
+    filter.c_status = { $in: status };
+  }
+  if (!isNaN(search) && search !== "") {
+    filter.mc_number = search;
+  }
+  if (req.body.salesman) {
+    filter.salesman = req.body.salesman;
+  }
+
+  try {
+    let result = await Carrier.find(filter).populate(
+      "salesman trucks.dispatcher",
+      { user_name: 1, company: 1 }
+    );
+
+    if (req.body.company) {
+      result = result.filter(
+        (carry) => carry.salesman.company == req.body.company
+      );
+    }
+    if (search !== "" && isNaN(search)) {
+      search = search.trim().toLowerCase();
+      result = result.filter((carrier) => {
+        console.log(
+          "company name",
+          carrier.company_name.toLowerCase().includes(search),
+          carrier.company_name
+        );
+        console.log(
+          "condition first=> sales man",
+          carrier.salesman?.user_name,
+          carrier.salesman?.user_name.toLowerCase().includes(search)
+        );
+        // console.log(
+        //   "condition second=> sales man",
+        //   carrier.trucks.filter((truck) =>
+        //     truck.dispatcher?.user_name.toLowerCase().includes(search)
+        //   )
+        // );
+        return (
+          carrier.salesman?.user_name.toLowerCase().includes(search) ||
+          carrier.trucks.filter((truck) =>
+            truck.dispatcher?.user_name?.toLowerCase().includes(search)
+          ).length !== 0 ||
+          carrier.company_name.toLowerCase().includes(search)
+        );
+      });
+    }
+    const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
+    res.send({ data: fResult, length: result.length });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCarriers = async (req, res, next) => {
+  const defaultFilter = {
+    c_status: { $nin: ["unassigned", "rejected", "didnotpick", "unreached"] },
   };
   var filter = defaultFilter;
   if (!req.body.company) {
@@ -154,22 +223,24 @@ const getCarriers = (req, res, next) => {
     filter = newFilter;
   }
 
-  Carrier.find(filter)
-    .populate("salesman trucks.dispatcher", { user_name: 1, company: 1 })
-    .then((result) => {
-      if (req.body.company) {
-        const filteredResult = result.filter(
-          (carry) => carry.salesman?.company == req.body.company
-        );
-        console.log(filteredResult.length);
-        return res.send(filteredResult);
-      }
-      console.log(result.length);
-      res.send(result);
-    })
-    .catch((err) => {
-      res.status(500).send({ msg: "error in getCarriers carrier.find" });
-    });
+  try {
+    const result = await Carrier.find(filter).populate(
+      "salesman trucks.dispatcher",
+      { user_name: 1, company: 1 }
+    );
+    console.log("get carrier ", result);
+    if (req.body.company) {
+      const filteredResult = result.filter(
+        (carry) => carry.salesman.company == req.body.company
+      );
+      const filterResult = filteredResult.slice(req.body.skip, req.body.limit);
+      return res.send(filterResult);
+    }
+    const fResult = result.slice(req.body.skip, req.body.limit);
+    res.send(fResult);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const addNewCarrier = (req, res, next) => {
@@ -327,6 +398,7 @@ module.exports = {
   addNewCarrier,
   addNewTruck,
   deleteTruck,
+  getTableCarriers,
   getCarrier,
   getCarriers,
   updateCarrier,

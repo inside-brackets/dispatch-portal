@@ -54,6 +54,42 @@ const getUser = (req, res, next) => {
       res.status(500).send(err);
     });
 };
+const getTableUsers = (req, res, next) => {
+  filter = {};
+  filter.company = req.body.company;
+  let status =
+    req.query.status && req.query.status !== "undefined"
+      ? req.query.status.split(",")
+      : "";
+  let search = req.query.search ? req.query.search : "";
+
+  if (status && status !== "undefined") {
+    filter.department = { $in: status };
+  }
+  User.find(filter, null, {
+    // skip: 0, // Starting Row
+    // limit: 1, // Ending Row
+    sort: {
+      joining_date: -1, //Sort by Date Added DESC
+    },
+  })
+    .then((users) => {
+      if (search !== "") {
+        search = search.trim().toLowerCase();
+        users = users.filter((user) => {
+          return user.user_name.toLowerCase().includes(search);
+        });
+      }
+      const fResult = users.slice(
+        req.body.skip,
+        req.body.limit + req.body.skip
+      );
+      res.send({ data: fResult, length: users.length });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
 
 const getUsers = (req, res, next) => {
   console.log("getusers", req.body);
@@ -132,6 +168,7 @@ module.exports = {
   addNewUser,
   getUser,
   getUsers,
+  getTableUsers,
   updateUser,
   deleteUser,
   login,
