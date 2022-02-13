@@ -75,30 +75,30 @@ io.on("connection", (socket) => {
 });
 
 // check every request for user token and validate token from database
-app.use(async (req, res, next) => {
-  if (
-    ["/login", "/whitelist"].filter((s) => req.path.includes(s)).length !== 0
-  ) {
-    next();
-  } else {
-    let token = req.header("x-auth-token");
-    if (!token) return res.status(400).send("Token Not Provided");
-    try {
-      let user = jwt.verify(token, process.env.JWT);
-      let userObj = await User.findById(user._id);
-      if (!userObj) {
-        console.log("checking", user);
-        io.sockets.emit("logout", { userId: user._id });
-        res.status(401).send({ msg: "no user in database" });
-      } else {
-        next();
-      }
-    } catch (error) {
-      console.log(error);
-      return res.status(401).send("Token Invalid");
-    }
-  }
-});
+// app.use(async (req, res, next) => {
+//   if (
+//     ["/login", "/whitelist"].filter((s) => req.path.includes(s)).length !== 0
+//   ) {
+//     next();
+//   } else {
+//     let token = req.header("x-auth-token");
+//     if (!token) return res.status(400).send("Token Not Provided");
+//     try {
+//       let user = jwt.verify(token, process.env.JWT);
+//       let userObj = await User.findById(user._id);
+//       if (!userObj) {
+//         console.log("checking", user);
+//         io.sockets.emit("logout", { userId: user._id });
+//         res.status(401).send({ msg: "no user in database" });
+//       } else {
+//         next();
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       return res.status(401).send("Token Invalid");
+//     }
+//   }
+// });
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);

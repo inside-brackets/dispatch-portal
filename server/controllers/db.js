@@ -29,7 +29,7 @@ const changeAppointment = async (req, res) => {
     const tomorrow = new Date();
 
     // Add 1 Day
-    tomorrow.setDate(today.getDate() + 1);
+    tomorrow.setDate(today.getDate() + 3);
     const carriers = await Carrier.updateMany(
       { appointment: "" },
       { $set: { appointment: tomorrow } },
