@@ -69,7 +69,8 @@ const Invoice = () => {
       </td>
       <td>
         <div className="edit__class">
-          <EditButton type="edit" onClick={() => viewPdfModal(item)} />
+          {/* <EditButton type="edit" onClick={() => viewPdfModal(item)} /> */}
+          <i class="bx bx-printer" onClick={() => viewPdfModal(item)}></i>
         </div>
       </td>
     </tr>
