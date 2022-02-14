@@ -6,14 +6,12 @@ import useHttp from "../../hooks/use-https";
 import Modal from "../modals/MyModal";
 import LoadForm from "../Form/NewLoadForm";
 import { Row, Col, Button as BButton } from "react-bootstrap";
-import MySelect from "../../components/UI/MySelect";
-import Input from "../../components/UI/MyInput";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
-import { loadsActions } from "../../store/loads";
 import GenerateInvoice from "../GenerateInvoice";
 import Badge from "../../components/badge/Badge";
 import status_map from "../../assets/JsonData/load_status_map.json";
+import axios from "axios";
 
 const customerTableHead = [
   "#",
@@ -31,59 +29,65 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const LoadTable = ({ truck_number, carrier }) => {
-  const { sendRequest: fetchLoads } = useHttp();
   const [loadModal, setLoadModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const { loads: getLoads } = useSelector((state) => state.loads);
   const [invoiceModal, setInvoiceModal] = useState(false);
-  // console.log(getLoads);
+  const [loads, setLoads] = useState("");
   const [load, setLoad] = useState("");
   const closeEditModel = () => {
     setEditModal(false);
   };
 
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
+        "carrier.mc_number": carrier.mc_number,
+        "carrier.truck_number": truck_number,
+      })
+      .then((res) => setLoads(res.data))
+      .catch((err) => console.log(err));
+  }, []);
+
   //Search
-  const searchRef = useRef();
-  const [searchedCarrier, setSearchedCarrier] = useState(null);
-  const search = (e) => {
-    if (e.key === "Enter") {
-      var searchValue = searchRef.current.value.trim();
-      const searched = getLoads.filter((load) => {
-        if (!isNaN(searchValue)) {
-          return load.load_number === parseInt(searchRef.current.value.trim());
-        } else {
-          searchValue = searchValue.toLowerCase();
-          if (load.broker.toLowerCase().includes(searchValue.toLowerCase())) {
-            return true;
-          }
-          return false;
-        }
-      });
-      if (searched.length !== 0) {
-        setSearchedCarrier(searched);
-      } else {
-        setSearchedCarrier(null);
-      }
-    }
-  };
+  // const searchRef = useRef();
+  // const [searchedCarrier, setSearchedCarrier] = useState(null);
+  // const search = (e) => {
+  //   if (e.key === "Enter") {
+  //     var searchValue = searchRef.current.value.trim();
+  //     const searched = getLoads.filter((load) => {
+  //       if (!isNaN(searchValue)) {
+  //         return load.load_number === parseInt(searchRef.current.value.trim());
+  //       } else {
+  //         searchValue = searchValue.toLowerCase();
+  //         if (load.broker.toLowerCase().includes(searchValue.toLowerCase())) {
+  //           return true;
+  //         }
+  //         return false;
+  //       }
+  //     });
+  //     if (searched.length !== 0) {
+  //       setSearchedCarrier(searched);
+  //     } else {
+  //       setSearchedCarrier(null);
+  //     }
+  //   }
+  // };
 
   // filter
-  const [filteredCarrier, setFilteredCarrier] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState([]);
+  // const [filteredCarrier, setFilteredCarrier] = useState(null);
+  // const [selectedFilter, setSelectedFilter] = useState([]);
 
-  const searchByFilter = (values) => {
-    setSelectedFilter(values);
-    if (values.length !== 0) {
-      const filters = values.map((item) => item.value);
-      setFilteredCarrier(
-        getLoads.filter((item) => filters.includes(item.l_status))
-      );
-    } else {
-      setFilteredCarrier(null);
-    }
-  };
-
-  const dispatch = useDispatch();
+  // const searchByFilter = (values) => {
+  //   setSelectedFilter(values);
+  //   if (values.length !== 0) {
+  //     const filters = values.map((item) => item.value);
+  //     setFilteredCarrier(
+  //       getLoads.filter((item) => filters.includes(item.l_status))
+  //     );
+  //   } else {
+  //     setFilteredCarrier(null);
+  //   }
+  // };
 
   const closeLoadModal = () => {
     setLoadModal(false);
@@ -155,7 +159,6 @@ const LoadTable = ({ truck_number, carrier }) => {
       </td>
     </tr>
   );
-  // console.log(searchedCarrier);
   return (
     <div>
       <Row>
@@ -167,7 +170,6 @@ const LoadTable = ({ truck_number, carrier }) => {
             size="lg"
             onClick={invoiceModalHandler}
             className="mb-4"
-            disabled
           >
             Generate Invoice
           </BButton>{" "}
@@ -215,7 +217,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         <GenerateInvoice
           truck_number={truck_number}
           carrier={carrier}
-          loads={getLoads}
+          loads={loads}
           closeModal={() => setInvoiceModal(false)}
         />
       </Modal>
