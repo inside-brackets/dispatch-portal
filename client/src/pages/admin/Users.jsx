@@ -136,7 +136,7 @@ const Users = () => {
           <div className="card">
             <div className="card__body">
               <Table
-                limit={3}
+                limit={10}
                 key={Math.random()}
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}

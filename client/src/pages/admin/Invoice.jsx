@@ -94,7 +94,7 @@ const Invoice = () => {
           <div className="card__body">
             <Table
               key={Math.random()}
-              limit={3}
+              limit={10}
               headData={invoiceTableHead}
               renderHead={(item, index) => renderHead(item, index)}
               api={{

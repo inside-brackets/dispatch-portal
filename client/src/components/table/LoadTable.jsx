@@ -184,7 +184,7 @@ const LoadTable = ({ truck_number, carrier }) => {
           <div className="card__body">
             <Table
               key={Math.random()}
-              limit={3}
+              limit={10}
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}
               api={{
