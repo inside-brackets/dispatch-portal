@@ -13,7 +13,7 @@ const addNewLoad = async (req, res) => {
 };
 
 const getTableLoads = (req, res, next) => {
-  var { limit, skip, ...filter } = req.body;
+  var { company, limit, skip, ...filter } = req.body;
   let status =
     req.query.status && req.query.status !== "undefined"
       ? req.query.status.split(",")
@@ -40,10 +40,8 @@ const getTableLoads = (req, res, next) => {
           );
         });
       }
-      if (req.body.company) {
-        loads = loads.filter(
-          (load) => load.dispatcher.company == req.body.company
-        );
+      if (company) {
+        loads = loads.filter((load) => load.dispatcher.company == company);
         const fResult = loads.slice(skip, limit + skip);
         return res.send({ data: fResult, length: loads.length });
       }
