@@ -167,6 +167,7 @@ const LoadTable = ({ truck_number, carrier }) => {
             size="lg"
             onClick={invoiceModalHandler}
             className="mb-4"
+            disabled
           >
             Generate Invoice
           </BButton>{" "}

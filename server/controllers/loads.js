@@ -13,7 +13,7 @@ const addNewLoad = async (req, res) => {
 };
 
 const getTableLoads = (req, res, next) => {
-  var filter = {};
+  var { limit, skip, ...filter } = req.body;
   let status =
     req.query.status && req.query.status !== "undefined"
       ? req.query.status.split(",")
@@ -24,7 +24,7 @@ const getTableLoads = (req, res, next) => {
   }
   let search = req.query.search ? req.query.search : "";
   search = search.trim().toLowerCase();
-
+  console.log("filter", filter);
   Load.find(filter, null, {
     sort: {
       "drop.date": -1, //Sort by Date Added DESC
@@ -44,16 +44,10 @@ const getTableLoads = (req, res, next) => {
         loads = loads.filter(
           (load) => load.dispatcher.company == req.body.company
         );
-        const fResult = loads.slice(
-          req.body.skip,
-          req.body.limit + req.body.skip
-        );
+        const fResult = loads.slice(skip, limit + skip);
         return res.send({ data: fResult, length: loads.length });
       }
-      const fResult = loads.slice(
-        req.body.skip,
-        req.body.limit + req.body.skip
-      );
+      const fResult = loads.slice(skip, limit + skip);
       res.send({ data: fResult, length: loads.length });
     })
     .catch((err) => {
