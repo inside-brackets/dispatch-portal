@@ -218,8 +218,6 @@ const InvoiceModal = ({
           height: "100px",
         }}
       >
-        {/* <Col md={1}></Col>
-        <Col md={2}>Driver Name: </Col> */}
         <Col md={9}>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <TextArea
