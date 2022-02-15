@@ -118,7 +118,6 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
           },
         },
       };
-      setEditModal(false);
       await axios
         .post(
           `${process.env.REACT_APP_BACKEND_URL}/dispatch/addnewload`,
@@ -127,6 +126,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         .then((res) => {
           dispatch(loadsActions.append(res.data));
           setButtonLoader(false);
+          setEditModal(false);
         })
         .catch((err) => console.log(err));
     }

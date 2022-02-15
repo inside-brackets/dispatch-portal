@@ -29,6 +29,7 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const LoadTable = ({ truck_number, carrier }) => {
+  const [rerenderTable, setRerenderTable] = useState(null);
   const [loadModal, setLoadModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [invoiceModal, setInvoiceModal] = useState(false);
@@ -47,47 +48,6 @@ const LoadTable = ({ truck_number, carrier }) => {
       .then((res) => setLoads(res.data))
       .catch((err) => console.log(err));
   }, []);
-
-  //Search
-  // const searchRef = useRef();
-  // const [searchedCarrier, setSearchedCarrier] = useState(null);
-  // const search = (e) => {
-  //   if (e.key === "Enter") {
-  //     var searchValue = searchRef.current.value.trim();
-  //     const searched = getLoads.filter((load) => {
-  //       if (!isNaN(searchValue)) {
-  //         return load.load_number === parseInt(searchRef.current.value.trim());
-  //       } else {
-  //         searchValue = searchValue.toLowerCase();
-  //         if (load.broker.toLowerCase().includes(searchValue.toLowerCase())) {
-  //           return true;
-  //         }
-  //         return false;
-  //       }
-  //     });
-  //     if (searched.length !== 0) {
-  //       setSearchedCarrier(searched);
-  //     } else {
-  //       setSearchedCarrier(null);
-  //     }
-  //   }
-  // };
-
-  // filter
-  // const [filteredCarrier, setFilteredCarrier] = useState(null);
-  // const [selectedFilter, setSelectedFilter] = useState([]);
-
-  // const searchByFilter = (values) => {
-  //   setSelectedFilter(values);
-  //   if (values.length !== 0) {
-  //     const filters = values.map((item) => item.value);
-  //     setFilteredCarrier(
-  //       getLoads.filter((item) => filters.includes(item.l_status))
-  //     );
-  //   } else {
-  //     setFilteredCarrier(null);
-  //   }
-  // };
 
   const closeLoadModal = () => {
     setLoadModal(false);
@@ -185,7 +145,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         <div className="card">
           <div className="card__body">
             <Table
-              key={Math.random()}
+              rerender={rerenderTable}
               limit={10}
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}
@@ -242,7 +202,10 @@ const LoadTable = ({ truck_number, carrier }) => {
         style={{ width: "auto" }}
       >
         <LoadForm
-          setEditModal={setEditModal}
+          setEditModal={(data) => {
+            setEditModal(data);
+            setRerenderTable(Math.random());
+          }}
           defaultValue={load}
           truck_number={truck_number}
           carrier={carrier}
