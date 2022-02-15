@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Table from "../../components/table/SmartTable";
 import EditButton from "../../components/UI/EditButton";
 import MyModal from "../../components/modals/MyModal";
 import NewUserForm from "../../components/Form/NewUserForm";
-import MySelect from "../../components/UI/MySelect";
-import Input from "../../components/UI/MyInput";
 import moment from "moment";
 import { useSelector } from "react-redux";
 
@@ -16,44 +14,9 @@ const Users = () => {
   const [user, setUser] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const searchRef = useRef();
-  const [searchedCarrier, setSearchedCarrier] = useState([]);
+  const [rerenderTable, setRerenderTable] = useState(null);
 
   const { company: selectedCompany } = useSelector((state) => state.user);
-
-  const search = (e) => {
-    console.log("ref", searchRef);
-    if (e.key === "Enter") {
-      const searched = users.filter((user) => {
-        return user.user_name
-          .toLowerCase()
-          .includes(searchRef.current.value.toLowerCase());
-      });
-      console.log("searched", searched);
-
-      if (searched) {
-        setSearchedCarrier(searched);
-      } else {
-        setSearchedCarrier([]);
-      }
-    }
-  };
-  // filter
-  const [filteredCarrier, setFilteredCarrier] = useState(null);
-  const [selectedFilter, setSelectedFilter] = useState([]);
-
-  const searchByFilter = (values) => {
-    setSelectedFilter(values);
-    if (values.length !== 0) {
-      const filters = values.map((item) => item.value);
-      setFilteredCarrier(
-        users.filter((item) => filters.includes(item.department))
-      );
-    } else {
-      setFilteredCarrier(null);
-    }
-  };
-
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await axios.post(
@@ -108,13 +71,6 @@ const Users = () => {
       <td>
         <div className="edit__class">
           <EditButton type="edit" onClick={() => editModalHnadler(item)} />
-          {/* 
-          <EditButton
-            type="delete"
-            onClick={() => {
-              deleteUserHandler(item._id);
-            }}
-          /> */}
         </div>
       </td>
     </tr>
@@ -136,8 +92,8 @@ const Users = () => {
           <div className="card">
             <div className="card__body">
               <Table
+                key={rerenderTable}
                 limit={10}
-                key={Math.random()}
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
@@ -165,7 +121,10 @@ const Users = () => {
           style={{ width: "auto" }}
         >
           <NewUserForm
-            setShowModal={setShowModal}
+            setShowModal={(data) => {
+              setShowModal(data);
+              setRerenderTable(Math.random());
+            }}
             data={users}
             setRefresh={setRefresh}
           />
@@ -178,7 +137,10 @@ const Users = () => {
           style={{ width: "auto" }}
         >
           <NewUserForm
-            setEditModal={setEditModal}
+            setEditModal={(data) => {
+              setEditModal(data);
+              setRerenderTable(Math.random());
+            }}
             data={users}
             defaultValue={user}
             setRefresh={setRefresh}

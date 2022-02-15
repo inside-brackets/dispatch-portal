@@ -25,6 +25,7 @@ const Table = (props) => {
 
   useEffect(() => {
     getData();
+    // eslint-disable-next-line
   }, [search, filter, currPage]);
 
   const selectPage = (page) => {

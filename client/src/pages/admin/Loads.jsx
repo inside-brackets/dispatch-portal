@@ -1,13 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import Table from "../../components/table/SmartTable";
-// import TruckForm from "../Form/NewTruckForm";
-// import Button from "../UI/Button";
-// import useHttp from "../../hooks/use-https";
 import { Row, Col } from "react-bootstrap";
-import MySelect from "../../components/UI/MySelect";
-import Input from "../../components/UI/MyInput";
-import Loader from "react-loader-spinner";
-import axios from "axios";
 import moment from "moment";
 import EditButton from "../../components/UI/EditButton";
 import Badge from "../../components/badge/Badge";
@@ -74,89 +67,12 @@ const renderBody = (item, index) => (
 
 const Loads = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
-
-  // useEffect(() => {
-  //   const fetchLoads = async () => {
-  //     axios
-  //       .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
-  //         company: selectedCompany.value,
-  //       })
-  //       .then((res) => setLoads(res.data))
-  //       .catch((err) => console.log(err));
-  //   };
-  //   fetchLoads();
-  // }, [selectedCompany]);
-  //search
-  // const searchRef = useRef();
-
-  // const [searchedCarrier, setSearchedCarrier] = useState([]);
-  // const search = (e) => {
-  //   if (e.key === "Enter") {
-  //     var searchValue = searchRef.current.value.trim();
-  //     const searched = loads.filter((load) => {
-  //       if (!isNaN(searchValue)) {
-  //         return load.load_number === parseInt(searchRef.current.value.trim());
-  //       } else {
-  //         searchValue = searchValue.toLowerCase();
-  //         if (load.broker.toLowerCase().includes(searchValue.toLowerCase())) {
-  //           return true;
-  //           // return load.broker === searchRef.current.value.trim();
-  //         }
-  //         return false;
-  //       }
-  //     });
-  //     if (searched.length !== 0) {
-  //       setSearchedCarrier(searched);
-  //     } else {
-  //       setSearchedCarrier([]);
-  //     }
-  //   }
-  // };
-
-  // filter
-  // const [filteredCarrier, setFilteredCarrier] = useState(null);
-  // const [selectedFilter, setSelectedFilter] = useState([]);
-
-  // const searchByFilter = (values) => {
-  //   setSelectedFilter(values);
-  //   if (values.length !== 0) {
-  //     const filters = values.map((item) => item.value);
-  //     setFilteredCarrier(
-  //       loads.filter((item) => filters.includes(item.l_status))
-  //     );
-  //   } else {
-  //     setFilteredCarrier(null);
-  //   }
-  // };
-
-  // console.log(loads);
   return (
     <>
       <div>
         <Row>
-          <Col md={3}>
-            {/* <Input
-              type="text"
-              placeholder="Load Number / Broker"
-              icon="bx bx-search"
-              ref={searchRef}
-              onKeyDown={search}
-              // ref={Driver1NameRef}
-            /> */}
-          </Col>
-          <Col style={{ display: "flex", alignItems: "center" }}>
-            {/* <MySelect
-                isMulti={true}
-                value={selectedFilter}
-                onChange={searchByFilter}
-                options={[
-                  { label: "Booked ", value: "booked" },
-                  { label: "Ongoing ", value: "ongoing" },
-                  { label: "Delivered ", value: "delivered" },
-                  { label: "Canceled ", value: "canceled" },
-                ]}
-              /> */}
-          </Col>
+          <Col md={3}></Col>
+          <Col style={{ display: "flex", alignItems: "center" }}></Col>
 
           <div className="card">
             <div className="card__body">

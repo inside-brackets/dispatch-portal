@@ -76,6 +76,7 @@ const Invoice = () => {
   const [PdfmodalHandler, setPdfModalHandler] = useState(false);
   const [loads, setLoads] = useState([]);
   const [invoice, setInvoice] = useState("");
+  const [rerenderTable, setRerenderTable] = useState(null);
   const viewInvoiceModal = (item) => {
     setLoads(item.loads);
     setModalHandler(true);
@@ -93,7 +94,7 @@ const Invoice = () => {
         <div className="card">
           <div className="card__body">
             <Table
-              key={Math.random()}
+              key={rerenderTable}
               limit={10}
               headData={invoiceTableHead}
               renderHead={(item, index) => renderHead(item, index)}
@@ -117,14 +118,16 @@ const Invoice = () => {
       <MyModal
         show={modalHandler}
         heading="Invoice"
-        // onConfirm={rejectHandler}
         size="lg"
         onClose={() => {
           setModalHandler(false);
         }}
       >
         <InvoiceModal
-          setModalHandler={setModalHandler}
+          setModalHandler={(data) => {
+            setModalHandler(data);
+            setRerenderTable(Math.random());
+          }}
           load={loads}
           invoice={invoice}
           totalGross={invoices}
@@ -133,7 +136,6 @@ const Invoice = () => {
       </MyModal>
       <MyModal
         show={PdfmodalHandler}
-        // onConfirm={rejectHandler}
         size="xl"
         onClose={() => {
           setPdfModalHandler(false);

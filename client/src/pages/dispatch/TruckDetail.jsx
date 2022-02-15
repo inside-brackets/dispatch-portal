@@ -174,9 +174,6 @@ const TruckDetail = ({ match }) => {
     }
   };
 
-  // const openModal = () => {
-  //   setrModal(true);
-  // };
   const rejectHandler = async () => {
     await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${data.mc_number}`,
@@ -260,16 +257,7 @@ const TruckDetail = ({ match }) => {
                       </Col>
                     </Row>
                   </Form.Group>
-                  {/* <h4>Address: {data.address} </h4> */}
                 </Row>
-                {/* <Row style={{ marginTop: "40px" }}>
-                  <Col>
-                    <h4>Phone No : {data.phone_number}</h4>
-                  </Col>
-                  <Col>
-                    <h4>Email : {data.email.toLowerCase()} </h4>
-                  </Col>
-                </Row> */}
                 <Row style={{ marginTop: "40px" }}>
                   <Form.Group as={Col} md="6" controlId="validationCustom03">
                     <Row>
@@ -770,17 +758,6 @@ const TruckDetail = ({ match }) => {
                     <Button variant="success" size="lg" type="submit">
                       Update Carrier
                     </Button>
-                  </Col>
-                  <Col md={6}>
-                    {/* <Button
-                      style={{ float: "right" }}
-                      size="lg"
-                      variant="danger"
-                      onClick={openModal}
-
-                    >
-                      Deactivate Carrier
-                    </Button> */}
                   </Col>
                 </Row>
               </Card.Body>

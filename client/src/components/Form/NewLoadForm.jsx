@@ -170,8 +170,6 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         },
       };
 
-      setEditModal(false);
-
       await axios
         .put(
           `${process.env.REACT_APP_BACKEND_URL}/dispatch/updateload`,
@@ -180,6 +178,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         .then((res) => {
           dispatch(loadsActions.replace(res.data));
           setButtonLoader(false);
+          setEditModal(false);
         })
         .catch((err) => console.log(err));
     }

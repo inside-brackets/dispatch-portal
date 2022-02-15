@@ -114,7 +114,6 @@ const InvoiceModal = ({
     setModalHandler(false);
   };
   const cancelledStatusHandler = async () => {
-    setModalHandler(false);
     let res = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updateinvoice`,
       {
@@ -122,6 +121,7 @@ const InvoiceModal = ({
         invoiceStatus: "cancelled",
       }
     );
+    setModalHandler(false);
     setInvoices((prev) => {
       return prev.map((item) => (item._id === res.data._id ? res.data : item));
     });
@@ -187,7 +187,8 @@ const InvoiceModal = ({
                 value={
                   invoice
                     ? invoice.trailerType
-                    : carrier.trucks.find((t) => t.truck_number == truck_number)
+                    : // eslint-disable-next-line
+                      carrier.trucks.find((t) => t.truck_number == truck_number)
                         .trailer_type
                 }
               />
@@ -203,7 +204,8 @@ const InvoiceModal = ({
                 value={
                   invoice
                     ? invoice.driver.name
-                    : carrier.trucks.find((t) => t.truck_number == truck_number)
+                    : // eslint-disable-next-line
+                      carrier.trucks.find((t) => t.truck_number == truck_number)
                         .drivers[0].name
                 }
               />

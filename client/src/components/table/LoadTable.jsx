@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditButton from "../UI/EditButton";
 import Table from "./SmartTable";
 import "./loadtable.css";
-import useHttp from "../../hooks/use-https";
 import Modal from "../modals/MyModal";
 import LoadForm from "../Form/NewLoadForm";
 import { Row, Col, Button as BButton } from "react-bootstrap";
 import moment from "moment";
-import { useSelector, useDispatch } from "react-redux";
 import GenerateInvoice from "../GenerateInvoice";
 import Badge from "../../components/badge/Badge";
 import status_map from "../../assets/JsonData/load_status_map.json";
@@ -47,7 +45,7 @@ const LoadTable = ({ truck_number, carrier }) => {
       })
       .then((res) => setLoads(res.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [carrier.mc_number, truck_number]);
 
   const closeLoadModal = () => {
     setLoadModal(false);
@@ -145,7 +143,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         <div className="card">
           <div className="card__body">
             <Table
-              rerender={rerenderTable}
+              key={rerenderTable}
               limit={10}
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}
@@ -191,7 +189,10 @@ const LoadTable = ({ truck_number, carrier }) => {
         <LoadForm
           truck_number={truck_number}
           carrier={carrier}
-          setEditModal={setLoadModal}
+          setEditModal={(data) => {
+            setLoadModal(data);
+            setRerenderTable(Math.random());
+          }}
         />
       </Modal>
       <Modal
