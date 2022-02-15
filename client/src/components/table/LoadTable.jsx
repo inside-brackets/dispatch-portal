@@ -183,7 +183,11 @@ const LoadTable = ({ truck_number, carrier }) => {
         <div className="card">
           <div className="card__body">
             <Table
+<<<<<<< Updated upstream
               key={Math.random()}
+=======
+              key={rerenderTable}
+>>>>>>> Stashed changes
               limit={10}
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}
@@ -229,7 +233,10 @@ const LoadTable = ({ truck_number, carrier }) => {
         <LoadForm
           truck_number={truck_number}
           carrier={carrier}
-          setEditModal={setLoadModal}
+          setEditModal={(data) => {
+            setLoadModal(data);
+            setRerenderTable(Math.random());
+          }}
         />
       </Modal>
       <Modal
