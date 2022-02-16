@@ -53,6 +53,7 @@ const Table = (props) => {
           )
           .then((res) => {
             const pageKey = `page${currPage}`;
+            console.log("hello carrier", res.data.data);
             setBodyData((prev) => {
               let temp = prev;
               temp[pageKey] = res.data.data;

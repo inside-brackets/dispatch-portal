@@ -4,6 +4,7 @@ import Badge from "../../components/badge/Badge";
 import { Col, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import status_map from "../../assets/JsonData/status_map.json";
+import { useHistory } from "react-router-dom";
 
 const carrierTableHead = [
   "#",
@@ -12,6 +13,7 @@ const carrierTableHead = [
   "Phone Number",
   "Email",
   "Sales Person",
+  "Trucks",
   "Status",
 ];
 
@@ -19,22 +21,38 @@ const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const Carriers = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
+  const history = useHistory();
+  let color;
 
-  const renderBody = (item, index) => (
-    <tr key={index}>
-      <td>{index + 1}</td>
-      <td>{item.mc_number}</td>
-      <td>{item.company_name}</td>
-      <td style={{ width: "200px" }}>{item.phone_number}</td>
-      <td>{item.email}</td>
-      <td>{item.salesman ? item.salesman.user_name : "N/A"}</td>
-
-      <td>
-        {<Badge type={status_map[item.c_status]} content={item.c_status} />}
-      </td>
-    </tr>
-  );
-
+  const renderBody = (item, index) => {
+    if (item.c_status === "deactivated") {
+      color = "red";
+    } else if (
+      item.trucks.length > 0 &&
+      item.trucks.some((truck) => truck.t_status === "active")
+    ) {
+      color = "green";
+    } else {
+      color = "blue";
+    }
+    return (
+      <tr
+        key={index}
+        onClick={() => history.push(`/carrierview/${item.mc_number}`)}
+      >
+        <td>{index + 1}</td>
+        <td>{item.mc_number}</td>
+        <td>{item.company_name}</td>
+        <td style={{ width: "200px" }}>{item.phone_number}</td>
+        <td>{item.email}</td>
+        <td>{item.salesman ? item.salesman.user_name : "N/A"}</td>
+        <td style={{ color: color }}>{item.trucks.length}</td>
+        <td>
+          {<Badge type={status_map[item.c_status]} content={item.c_status} />}
+        </td>
+      </tr>
+    );
+  };
   return (
     <div>
       <h2> Carriers Database: </h2>
@@ -62,6 +80,7 @@ const Carriers = () => {
                   { label: "Appointment ", value: "appointment" },
                   { label: "Registered", value: "registered" },
                   { label: "Deactivated ", value: "deactivated" },
+                  { label: "Pending Trucks ", value: "pending" },
                 ]}
                 renderBody={(item, index) => renderBody(item, index)}
               />
