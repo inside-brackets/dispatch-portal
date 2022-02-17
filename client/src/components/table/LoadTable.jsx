@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import EditButton from "../UI/EditButton";
 import Table from "./SmartTable";
 import "./loadtable.css";
@@ -9,7 +9,6 @@ import moment from "moment";
 import GenerateInvoice from "../GenerateInvoice";
 import Badge from "../../components/badge/Badge";
 import status_map from "../../assets/JsonData/load_status_map.json";
-import axios from "axios";
 
 const customerTableHead = [
   "#",
@@ -31,21 +30,10 @@ const LoadTable = ({ truck_number, carrier }) => {
   const [loadModal, setLoadModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [invoiceModal, setInvoiceModal] = useState(false);
-  const [loads, setLoads] = useState("");
   const [load, setLoad] = useState("");
   const closeEditModel = () => {
     setEditModal(false);
   };
-
-  useEffect(() => {
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
-        "carrier.mc_number": carrier.mc_number,
-        "carrier.truck_number": truck_number,
-      })
-      .then((res) => setLoads(res.data))
-      .catch((err) => console.log(err));
-  }, [carrier.mc_number, truck_number]);
 
   const closeLoadModal = () => {
     setLoadModal(false);
@@ -175,7 +163,6 @@ const LoadTable = ({ truck_number, carrier }) => {
         <GenerateInvoice
           truck_number={truck_number}
           carrier={carrier}
-          loads={loads}
           closeModal={() => setInvoiceModal(false)}
         />
       </Modal>
