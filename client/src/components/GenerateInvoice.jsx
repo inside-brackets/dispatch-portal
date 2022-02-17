@@ -1,20 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRangePicker } from "react-date-range";
 import { Button, Col, Row } from "react-bootstrap";
 import InvoiceModal from "./modals/InvoiceModal";
+import axios from "axios";
 
-const GenerateInvoice = ({ loads, truck_number, carrier, closeModal }) => {
+const GenerateInvoice = ({ truck_number, carrier, closeModal }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [dispatcherFee, setDispatcherFee] = useState(0);
   const [load, setLoad] = useState([]);
   const [grossTotal, setGrossTotal] = useState(0);
   const [loadedMilesTotal, setLoadedMilesTotal] = useState(0);
+  const [loads, setLoads] = useState("");
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
+        "carrier.mc_number": carrier.mc_number,
+        "carrier.truck_number": truck_number,
+      })
+      .then((res) => setLoads(res.data))
+      .catch((err) => console.log(err));
+  }, [carrier.mc_number, truck_number]);
   const { dispatcher_fee } = carrier;
 
-  console.log("loads", loads);
   const search = () => {
     const to = new Date(endDate);
     to.setDate(to.getDate() + 1);
