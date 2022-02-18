@@ -130,7 +130,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         })
         .catch((err) => console.log(err));
     }
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleEditSubmit = async (event) => {
@@ -183,7 +183,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         })
         .catch((err) => console.log(err));
     }
-    window.location.reload();
+    // window.location.reload();
   };
 
   const body = (
