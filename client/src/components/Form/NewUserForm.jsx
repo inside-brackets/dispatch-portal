@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Form, Col, Row, Button } from "react-bootstrap";
 import bcrypt from "bcryptjs";
 import { useSelector } from "react-redux";
+import Select from "react-select";
 
 const NewUserForm = ({
   data,
@@ -33,7 +34,14 @@ const NewUserForm = ({
   const [joiningDate, setJoiningDate] = useState(
     defaultValue ? defaultValue.joining_date : null
   );
-
+  const [userStatus, setUserStatus] = useState(
+    defaultValue
+      ? {
+          label: defaultValue.u_status,
+          value: defaultValue.u_status,
+        }
+      : null
+  );
   const { company: selectedCompany } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -99,6 +107,7 @@ const NewUserForm = ({
               salary,
               designation,
               department,
+              u_status: userStatus.value,
             }
           )
           .then((response) => {
@@ -251,7 +260,7 @@ const NewUserForm = ({
               Please provide a valid Salary.
             </Form.Control.Feedback>
           </Form.Group>
-          {!defaultValue && (
+          {!defaultValue ? (
             <Form.Group as={Col} md="6">
               <Form.Label>Joining Date</Form.Label>
               <Form.Control
@@ -260,6 +269,23 @@ const NewUserForm = ({
                 value={joiningDate}
                 onChange={(e) => setJoiningDate(e.target.value)}
                 required
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid Date.
+              </Form.Control.Feedback>
+            </Form.Group>
+          ) : (
+            <Form.Group as={Col} md="6">
+              <Form.Label>User Status</Form.Label>
+              <Select
+                label="Region"
+                value={userStatus}
+                onChange={setUserStatus}
+                options={[
+                  { label: "Active", value: "active" },
+                  { label: "Fired", value: "fired" },
+                  { label: "Inactive", value: "inactive" },
+                ]}
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a valid Date.

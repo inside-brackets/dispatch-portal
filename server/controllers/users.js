@@ -56,6 +56,9 @@ const getUser = (req, res, next) => {
 };
 const getTableUsers = (req, res, next) => {
   filter = {};
+  filter.u_status = {
+    $nin: ["fired"],
+  };
   filter.company = req.body.company;
   let status =
     req.query.status && req.query.status !== "undefined"
@@ -66,6 +69,7 @@ const getTableUsers = (req, res, next) => {
   if (status && status !== "undefined") {
     filter.department = { $in: status };
   }
+  console.log(filter);
   User.find(filter, null, {
     // skip: 0, // Starting Row
     // limit: 1, // Ending Row
@@ -139,7 +143,13 @@ const deleteUser = async (req, res) => {
 const login = (req, res) => {
   try {
     console.log("login", req.body);
-    User.findOne({ user_name: req.body.username }).then((user) => {
+    const filter = {};
+    filter.u_status = filter.u_status = {
+      $nin: ["fired", "inactive"],
+    };
+    filter.user_name = req.body.username;
+
+    User.findOne(filter).then((user) => {
       if (user) {
         let userToken = jwt.sign(
           {
@@ -156,7 +166,7 @@ const login = (req, res) => {
         );
         res.status(200).send({ userToken, password: user.password });
       } else {
-        res.status(200).send(null);
+        res.status(200).send("Unable to Login");
       }
     });
   } catch (err) {
