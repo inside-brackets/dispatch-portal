@@ -39,6 +39,16 @@ const Table = (props) => {
       getData();
     }
   };
+  const status = [];
+  const truck = [];
+  const filterData = (e, i) => {
+    console.log("filter coinsole", e);
+    if (i === 0) {
+      status.push(e.map((item) => item.value));
+      console.log("status", status);
+    }
+    // setFilter((oldValue) => [...oldValue, ...local]);
+  };
 
   const getData = () => {
     if (!bodyData[`page${currPage}`]) {
@@ -73,22 +83,31 @@ const Table = (props) => {
   return (
     <div>
       <Row className="align-items-center">
-        <Col md={3} className="mb-2">
-          <MySelect
-            isMulti={true}
-            value={filter}
-            onChange={(value) => {
-              setFilter(value);
-              setBodyData([]);
-              setCurrPage(0);
-              getData();
-            }}
-            label={
-              props.status_placeholder ? props.status_placeholder : "Status:"
-            }
-            options={props.filter}
-          />
-        </Col>
+        {props.filter.map((f, index) => {
+          console.log("filter", f);
+          return (
+            <Col md={3} className="mb-2">
+              <MySelect
+                isMulti={true}
+                value={filter}
+                onChange={(value) => {
+                  // setFilter(value);
+                  filterData(value, index);
+                  setBodyData([]);
+                  setCurrPage(0);
+                  getData();
+                }}
+                label={
+                  props.status_placeholder
+                    ? props.status_placeholder
+                    : "Status:"
+                }
+                options={f.filter}
+              />
+            </Col>
+          );
+        })}
+
         <Col className="mb-4 ms-5" md={3}>
           <label>Search</label>
           <input
