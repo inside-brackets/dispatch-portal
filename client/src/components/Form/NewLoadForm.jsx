@@ -71,7 +71,6 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   });
 
   const uploadFileHandler = async (e) => {
-    console.log("hello world");
     const file = e.target.files[0];
 
     const { data: url } = await axios(
@@ -88,14 +87,14 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     if (form.checkValidity() === true && loadNumberIsValid) {
       setButtonLoader(true);
       const loadObject = {
-        load_number: loadNumber,
+        load_number: loadNumber.toLowerCase(),
         l_status: "booked",
         weight: weight,
         miles: miles,
         pay: pay,
         ratecon: image,
         dispatcher: currUserId,
-        broker: broker,
+        broker: broker.toLowerCase(),
         pick_up: {
           address: pickupAddress,
           date: new Date(pickupDate),
@@ -142,13 +141,13 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
       console.log("pick up", pickupDate);
       const loadEditObject = {
         id: defaultValue._id,
-        load_number: loadNumber,
+        load_number: loadNumber.toLowerCase(),
         l_status: lstatus.value,
         weight: weight,
         miles: miles,
         pay: pay,
         dispatcher: currUserId,
-        broker: broker,
+        broker: broker.toLowerCase(),
         pick_up: {
           address: pickupAddress,
           date: new Date(pickupDate),

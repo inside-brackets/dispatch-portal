@@ -83,7 +83,12 @@ const Carriers = () => {
                     { label: "Deactivated ", value: "deactivated" },
                   ],
 
-                  trucks: [{ label: "Pending", value: "pending" }],
+                  trucks: [
+                    { label: "Pending", value: "pending" },
+                    // { label: "new", value: "new" },
+                    // { label: "active", value: "active" },
+                    // { label: "inactive", value: "inactive" },
+                  ],
                 }}
                 renderBody={(item, index) => renderBody(item, index)}
               />
