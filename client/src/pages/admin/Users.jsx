@@ -104,10 +104,17 @@ const Users = () => {
                 }}
                 placeholder={"User Name"}
                 status_placeholder={"Designation:"}
-                filter={[
-                  { label: "sales ", value: "sales" },
-                  { label: "dispatch ", value: "dispatch" },
-                ]}
+                filter={{
+                  department: [
+                    { label: "sales ", value: "sales" },
+                    { label: "dispatch", value: "dispatch" },
+                  ],
+                  status: [
+                    { label: "Fired ", value: "fired" },
+                    { label: "Inactive", value: "inactive" },
+                    { label: "Active", value: "active" },
+                  ],
+                }}
                 renderBody={(item, index) => renderBody(item, index)}
               />
             </div>

@@ -87,12 +87,14 @@ const Loads = () => {
                   },
                 }}
                 placeholder={"Load Number / Broker"}
-                filter={[
-                  { label: "Booked ", value: "booked" },
-                  { label: "Ongoing ", value: "ongoing" },
-                  { label: "Delivered ", value: "delivered" },
-                  { label: "Canceled ", value: "canceled" },
-                ]}
+                filter={{
+                  status: [
+                    { label: "Booked ", value: "booked" },
+                    { label: "Ongoing ", value: "ongoing" },
+                    { label: "Delivered ", value: "delivered" },
+                    { label: "Canceled ", value: "canceled" },
+                  ],
+                }}
                 renderBody={(item, index) => renderBody(item, index)}
               />
             </div>

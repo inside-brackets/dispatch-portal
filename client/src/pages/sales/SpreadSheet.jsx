@@ -51,12 +51,13 @@ const Customers = () => {
                   },
                 }}
                 placeholder={"MC / Carrier Name"}
-                filter={[
-                  { label: "Appointment ", value: "appointment" },
-                  { label: "Registered", value: "registered" },
-                  { label: "Deactivated ", value: "deactivated" },
-                  { label: "Unreached ", value: "unreached" },
-                ]}
+                filter={{
+                  status: [
+                    { label: "Appointment ", value: "appointment" },
+                    { label: "Registered", value: "registered" },
+                    { label: "Deactivated ", value: "deactivated" },
+                  ],
+                }}
                 renderBody={(item, index) => renderBody(item, index)}
               />
             </div>

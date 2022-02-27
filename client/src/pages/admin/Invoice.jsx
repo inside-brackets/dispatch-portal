@@ -105,11 +105,13 @@ const Invoice = () => {
                 },
               }}
               placeholder={"MC"}
-              filter={[
-                { label: "cancelled", value: "cancelled" },
-                { label: "cleared ", value: "cleared" },
-                { label: "pending ", value: "pending" },
-              ]}
+              filter={{
+                status: [
+                  { label: "cancelled", value: "cancelled" },
+                  { label: "cleared ", value: "cleared" },
+                  { label: "pending ", value: "pending" },
+                ],
+              }}
               renderBody={(item, index) => renderBody(item, index)}
             />
           </div>

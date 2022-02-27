@@ -1,19 +1,23 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Loader from "react-loader-spinner";
-import MySelect from "../UI/MySelect";
+import Select from "react-select";
 import "./table.css";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 
 const Table = (props) => {
   const [bodyData, setBodyData] = useState({});
-  const [filter, setFilter] = useState([]);
+  const [filter, setFilter] = useState(
+    Object.keys(props.filter).reduce((pre, curr) => ((pre[curr] = []), pre), {})
+  );
   const [currPage, setCurrPage] = useState(0);
   const [totalLength, setTotalLength] = useState(0);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   let pages = 1;
   let range = [];
+
+  console.log(filter);
 
   if (props.limit !== undefined) {
     let page = Math.floor(totalLength / Number(props.limit));
@@ -39,32 +43,25 @@ const Table = (props) => {
       getData();
     }
   };
-  const status = [];
-  const truck = [];
-  const filterData = (e, i) => {
-    console.log("filter coinsole", e);
-    if (i === 0) {
-      status.push(e.map((item) => item.value));
-      console.log("status", status);
-    }
-    // setFilter((oldValue) => [...oldValue, ...local]);
+  const filterData = (value, key) => {
+    setFilter((oldValue) => {
+      const temp = { ...oldValue };
+      temp[key] = value;
+      return temp;
+    });
   };
 
   const getData = () => {
     if (!bodyData[`page${currPage}`]) {
       if (props.api) {
         setLoading(true);
-        if (filter && filter[0]?.label) {
-          var status = filter.map((item) => item.value);
-        }
         axios
-          .post(
-            `${props.api.url}/?status=${status}&search=${search}`,
-            props.api.body
-          )
+          .post(`${props.api.url}/?search=${search}`, {
+            ...props.api.body,
+            filter,
+          })
           .then((res) => {
             const pageKey = `page${currPage}`;
-            console.log("hello carrier", res.data.data);
             setBodyData((prev) => {
               let temp = prev;
               temp[pageKey] = res.data.data;
@@ -83,32 +80,7 @@ const Table = (props) => {
   return (
     <div>
       <Row className="align-items-center">
-        {props.filter.map((f, index) => {
-          console.log("filter", f);
-          return (
-            <Col md={3} className="mb-2">
-              <MySelect
-                isMulti={true}
-                value={filter}
-                onChange={(value) => {
-                  // setFilter(value);
-                  filterData(value, index);
-                  setBodyData([]);
-                  setCurrPage(0);
-                  getData();
-                }}
-                label={
-                  props.status_placeholder
-                    ? props.status_placeholder
-                    : "Status:"
-                }
-                options={f.filter}
-              />
-            </Col>
-          );
-        })}
-
-        <Col className="mb-4 ms-5" md={3}>
+        <Col md={3}>
           <label>Search</label>
           <input
             type="text"
@@ -118,6 +90,26 @@ const Table = (props) => {
             onKeyDown={searchData}
           />
         </Col>
+        {Object.keys(props.filter).map((key, index) => {
+          return (
+            <Col md={3} className="mb-2">
+              <Form.Label className="text-capitalize">{key}</Form.Label>
+              <Select
+                label={key}
+                isMulti={true}
+                value={filter[key]}
+                onChange={(value) => {
+                  // setFilter(value);
+                  filterData(value, key);
+                  setBodyData([]);
+                  setCurrPage(0);
+                  getData();
+                }}
+                options={props.filter[key]}
+              />
+            </Col>
+          );
+        })}
       </Row>
       <div
         className={`table-wrapper ${

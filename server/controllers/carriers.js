@@ -143,21 +143,20 @@ const getTableCarriers = async (req, res, next) => {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
-  let status =
-    req.query.status && req.query.status !== "undefined"
-      ? req.query.status.split(",")
-      : "";
+  console.log("body", req.body);
   let search = req.query.search ? req.query.search : "";
-  if (status && status !== "undefined") {
-    if (!status.includes("pending")) {
-      filter.c_status = { $in: status };
-    } else {
-      filter = { "trucks.t_status": "pending" };
-    }
-  }
   if (!isNaN(search) && search !== "") {
     filter.mc_number = search;
   }
+  if (req.body.filter.status.length > 0) {
+    filter.c_status = { $in: req.body.filter.status.map((item) => item.value) };
+  }
+  if (req.body.filter.trucks?.length > 0) {
+    filter["trucks.t_status"] = { $in: req.body.filter.trucks.map((item) => item.value) };
+  }
+
+  console.log('filter',filter);
+  
   if (req.body.salesman) {
     filter.salesman = req.body.salesman;
   }
@@ -232,7 +231,6 @@ const getCarriers = async (req, res, next) => {
       "salesman trucks.dispatcher",
       { user_name: 1, company: 1 }
     );
-    console.log("get carrier ", result);
     if (req.body.company) {
       const filteredResult = result.filter(
         (carry) => carry.salesman.company == req.body.company

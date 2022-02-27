@@ -76,18 +76,15 @@ const Carriers = () => {
                   },
                 }}
                 placeholder={"Company / Salesman / Dispatcher"}
-                filter={[
-                  {
-                    filter: [
-                      { label: "Appointment ", value: "appointment" },
-                      { label: "Registered", value: "registered" },
-                      { label: "Deactivated ", value: "deactivated" },
-                    ],
-                  },
-                  {
-                    filter: [{ label: "Pending", value: "pending" }],
-                  },
-                ]}
+                filter={{
+                  status: [
+                    { label: "Appointment ", value: "appointment" },
+                    { label: "Registered", value: "registered" },
+                    { label: "Deactivated ", value: "deactivated" },
+                  ],
+
+                  trucks: [{ label: "Pending", value: "pending" }],
+                }}
                 renderBody={(item, index) => renderBody(item, index)}
               />
             </div>

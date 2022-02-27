@@ -14,12 +14,8 @@ const addNewInvoice = async (req, res) => {
 
 const getTableInvoices = (req, res, next) => {
   var filter = {};
-  let status =
-    req.query.status && req.query.status !== "undefined"
-      ? req.query.status.split(",")
-      : "";
-  if (status && status !== "undefined") {
-    filter.invoiceStatus = { $in: status };
+  if (req.body.filter.status.length > 0) {
+    filter.invoiceStatus = { $in: req.body.filter.status.map((item) => item.value) };
   }
   let search = req.query.search ? req.query.search : "";
   if (search !== "") {

@@ -13,19 +13,13 @@ const addNewLoad = async (req, res) => {
 };
 
 const getTableLoads = (req, res, next) => {
-  var { company, limit, skip, ...filter } = req.body;
-  let status =
-    req.query.status && req.query.status !== "undefined"
-      ? req.query.status.split(",")
-      : "";
-
-  if (status && status !== "undefined") {
-    filter.l_status = { $in: status };
+  var { company, limit, skip, filter, ...body } = req.body;
+  if (filter.status.length > 0) {
+    body.l_status = { $in: filter.status.map((item) => item.value) };
   }
   let search = req.query.search ? req.query.search : "";
   search = search.trim().toLowerCase();
-  console.log("filter", filter);
-  Load.find(filter, null, {
+  Load.find(body, null, {
     sort: {
       "drop.date": -1, //Sort by Date Added DESC
     },

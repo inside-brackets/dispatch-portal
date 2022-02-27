@@ -60,14 +60,16 @@ const getTableUsers = (req, res, next) => {
     $nin: ["fired"],
   };
   filter.company = req.body.company;
-  let status =
-    req.query.status && req.query.status !== "undefined"
-      ? req.query.status.split(",")
-      : "";
   let search = req.query.search ? req.query.search : "";
-
-  if (status && status !== "undefined") {
-    filter.department = { $in: status };
+  if (req.body.filter.department.length > 0) {
+    filter.department = {
+      $in: req.body.filter.department.map((item) => item.value),
+    };
+  }
+  if (req.body.filter.status.length > 0) {
+    filter.u_status = {
+      $in: req.body.filter.status.map((item) => item.value),
+    };
   }
   console.log(filter);
   User.find(filter, null, {
