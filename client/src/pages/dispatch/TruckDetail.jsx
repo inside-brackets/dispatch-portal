@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Col, Row, Form, Button } from "react-bootstrap";
+import { Card, Col, Row, Form, Button, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import LoadTable from "../../components/table/LoadTable";
 import TextArea from "../../components/UI/TextArea";
@@ -54,6 +54,8 @@ const TruckDetail = ({ match }) => {
   const [factPhone, setFactPhone] = useState("");
   const [factAgentName, setFactAgentName] = useState("");
   const [factAgentEmail, setfactAgentEmail] = useState("");
+  const [buttonLoader, setButtonLoader] = useState("");
+
   const history = useHistory();
 
   useEffect(() => {
@@ -103,6 +105,7 @@ const TruckDetail = ({ match }) => {
     const form = event.currentTarget;
     setValidated(true);
     if (form.checkValidity() === true) {
+      setButtonLoader(true);
       const upObj = {
         comment: commentRef.current.value,
         // here
@@ -153,8 +156,12 @@ const TruckDetail = ({ match }) => {
           setPhone(response.data.insurance.phone_no);
           setAgentName(response.data.insurance.agent_name);
           setAgentEmail(response.data.insurance.agent_email);
+          setButtonLoader(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setButtonLoader(false);
+        });
       const truckObj = {
         "trucks.$.trailer_type": trailerType.value,
         "trucks.$.carry_limit": carryLimit,
@@ -169,8 +176,14 @@ const TruckDetail = ({ match }) => {
           `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${data.mc_number}/${match.params.truck}`,
           truckObj
         )
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res);
+          setButtonLoader(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setButtonLoader(false);
+        });
     }
   };
 
@@ -755,7 +768,21 @@ const TruckDetail = ({ match }) => {
                 >
                   <hr />
                   <Col md={6}>
-                    <Button variant="success" size="lg" type="submit">
+                    <Button
+                      disabled={buttonLoader}
+                      variant="success"
+                      size="lg"
+                      type="submit"
+                    >
+                      {buttonLoader && (
+                        <Spinner
+                          as="span"
+                          animation="grow"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                      )}
                       Update Carrier
                     </Button>
                   </Col>

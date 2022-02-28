@@ -3,7 +3,7 @@ import Table from "../../components/table/Table";
 import useHttp from "../../hooks/use-https";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
-import Button from "../../components/UI/MyButton";
+import { Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
@@ -28,12 +28,13 @@ const AssignSales = () => {
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   const { sendRequest: fetchDispatchers } = useHttp();
   const [selectedDispatcher, setSelectedDispatcher] = useState([]);
+  const [buttonLoader, setButtonLoader] = useState(null);
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
   const onAssign = async (mc, truckNumber) => {
-    console.log(selectedDispatcher);
     if (selectedDispatcher.length === 0) return;
+    setButtonLoader(mc);
 
     const assignedDispatcher = dispatchers.find((item) => {
       return item.user_name === selectedDispatcher.value;
@@ -50,6 +51,7 @@ const AssignSales = () => {
     const newCarriers = carriers.filter((item) => {
       return !(item.truck_number === truckNumber && item.mc_number === mc);
     });
+    setButtonLoader(null)
     dispatch(salesActions.set(newCarriers));
   };
   useEffect(() => {
@@ -100,14 +102,23 @@ const AssignSales = () => {
       {/* <td>{item.salesman}</td> */}
       <td>
         <Button
-          buttonText="Assign"
-          color="inherit"
+          style={{ paddingLeft: "40px", paddingRight: "40px" }}
           onClick={() => {
             onAssign(item.mc_number, item.truck_number);
           }}
-          className="button__class assign"
-          // disabled={!modalFormIsValid}
-        />
+          disabled={buttonLoader}
+        >
+          {buttonLoader === item.truck_number && (
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+          )}
+          Assign
+        </Button>
       </td>
     </tr>
   );
