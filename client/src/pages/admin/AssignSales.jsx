@@ -7,6 +7,7 @@ import { Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
+import { toast } from "react-toastify";
 
 const carrierTableHead = [
   "#",
@@ -32,10 +33,13 @@ const AssignSales = () => {
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
-  const onAssign = async (mc, truckNumber) => {
-    if (selectedDispatcher.length === 0) return;
-    setButtonLoader(mc);
+  const onAssign = async (mc, truckNumber,index) => {
+   
 
+    if (selectedDispatcher.length === 0) {
+      return toast.warn("Please select any dispacther")
+    };
+    setButtonLoader(index);
     const assignedDispatcher = dispatchers.find((item) => {
       return item.user_name === selectedDispatcher.value;
     });
@@ -104,11 +108,11 @@ const AssignSales = () => {
         <Button
           style={{ paddingLeft: "40px", paddingRight: "40px" }}
           onClick={() => {
-            onAssign(item.mc_number, item.truck_number);
+            onAssign(item.mc_number, item.truck_number,index);
           }}
           disabled={buttonLoader}
         >
-          {buttonLoader === item.truck_number && (
+          {buttonLoader === index && (
             <Spinner
               as="span"
               animation="grow"
