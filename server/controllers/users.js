@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const { response } = require("express");
 
 const addNewUser = async (req, res) => {
-  console.log(req.body.joining_date);
   const {
     user_name,
     password,
@@ -98,14 +97,12 @@ const getTableUsers = (req, res, next) => {
 };
 
 const getUsers = (req, res, next) => {
-  console.log("getusers", req.body);
   User.find(req.body, null, {
     sort: {
       joining_date: -1, //Sort by Date Added DESC
     },
   })
     .then((users) => {
-      console.log(users);
       res.send(users);
     })
     .catch((err) => {

@@ -245,51 +245,8 @@ const getCarriers = async (req, res, next) => {
   }
 };
 
-const addNewCarrier = (req, res, next) => {
-  const factoring = {
-    name: "name",
-    address: "addres",
-    phone_no: "phone_no",
-    agent_name: "agent_name",
-    agent_email: "agent_email",
-  };
-
-  const insurance = {
-    name: "name",
-    address: "addres",
-    phone_no: "phone_no",
-    agent_name: "agent_name",
-    agent_email: "agent_email",
-  };
-  // const address = new Address(street="street", state="state", )
-  const address = { street: "street", state: "state" };
-  const truck = {
-    truck_number: 123,
-    vin_number: 123,
-    trailer_type: "dryvan",
-    carry_limit: 40000,
-    dispatcher: mongoose.Types.ObjectId("123"),
-    drivers: [
-      {
-        name: "name",
-        email_address: "asf@sada.com",
-        phone_number: "123",
-      },
-    ],
-  };
-  const carrier = new Carrier({
-    mc_number: 123,
-    company_name: "ML TRUCKING INC",
-    usdot_number: "2952582",
-    c_satus: "unreached",
-    dispatcher_fee: 250,
-    phone_number: "(952) 300-7811",
-    factoring: factoring,
-    insurance: insurance,
-    address: address,
-    trucks: [truck],
-    comment: "some comment",
-  });
+const addNewCarrier = (req, res) => {
+  const carrier = new Carrier(req.body);
   carrier.save().then(() => {
     res.send("<h1>Carriers added</h1>");
   });
