@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import MySelect from "../../components/UI/MySelect";
 import BackButton from "../../components/UI/BackButton";
 import Loader from "react-loader-spinner";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const transformToSelectValue = (value) => {
   if (value.constructor === Array) {
@@ -786,7 +786,6 @@ const TruckDetail = ({ match }) => {
             carrier={data}
             truck={truckObj}
           />
-          <ToastContainer />
         </div>
       )}
     </>

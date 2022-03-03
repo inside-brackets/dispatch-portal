@@ -2,18 +2,25 @@ import axios from "axios";
 import { useState } from "react";
 import { Form, Col, Row, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import { str } from "../../data/usStates";
 
-const AddNewCarrierModal = ({ mc,closeModal }) => {
+const AddNewCarrierModal = ({ mc, closeModal }) => {
   const [validated, setValidated] = useState(false);
   const [buttonLoader, setButtonLoader] = useState(false);
-const history = useHistory()
+  
+  const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
 
-    if (form.checkValidity() === true) {
+    let re = new RegExp(str);
+    let result = event.target.address.value.match(re);
+    if (!result) {
+      return toast.warn("Please Enter a Valid Address")
+    } else if (form.checkValidity() === true) {
       setButtonLoader(true);
       const obj = {
         mc_number: event.target.mc_number.value,
@@ -28,8 +35,8 @@ const history = useHistory()
         .post(`${process.env.REACT_APP_BACKEND_URL}/add-new-carrier`, obj)
         .then((response) => {
           console.log("response", response);
-          history.push(`/addCarrier/${event.target.mc_number.value}`);     
-               closeModal();
+          history.push(`/addCarrier/${event.target.mc_number.value}`);
+          closeModal();
         });
     }
   };
