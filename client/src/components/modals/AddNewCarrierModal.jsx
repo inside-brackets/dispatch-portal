@@ -15,12 +15,7 @@ const AddNewCarrierModal = ({ mc, closeModal }) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
-
-    let re = new RegExp(str);
-    let result = event.target.address.value.match(re);
-    if (!result) {
-      return toast.warn("Please Enter a Valid Address")
-    } else if (form.checkValidity() === true) {
+     if (form.checkValidity() === true) {
       setButtonLoader(true);
       const obj = {
         mc_number: event.target.mc_number.value,
@@ -78,11 +73,12 @@ const AddNewCarrierModal = ({ mc, closeModal }) => {
               type="text"
               placeholder="Address"
               name="address"
+              pattern={`^(?!.*(cat)).*(${str}).*`}
               required
             ></Form.Control>
 
             <Form.Control.Feedback type="invalid">
-              Please provide a valid Address.
+              Please provide a valid Address<br></br> e.g(11 LAKESHORE DR HOLLAND, MA   01521).
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="6">
