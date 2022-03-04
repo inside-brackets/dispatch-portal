@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -62,6 +62,7 @@ const MyTrucks = () => {
           });
 
           setCarriersList(newTrucks.concat(oldTrucks));
+          setSearchedCarrier(newTrucks.concat(oldTrucks));
           setIsLoading(false);
 
           console.log("finished");
@@ -82,6 +83,23 @@ const MyTrucks = () => {
         console.log(err);
       });
   }, [currUserId]);
+
+  //search
+  const searchRef = useRef();
+
+  const [searchedCarrier, setSearchedCarrier] = useState([]);
+  const search = (e) => {
+    if (e.key === "Enter") {
+      const searched = carriersList.filter((c) => {
+        return c.mc_number === parseInt(searchRef.current.value);
+      });
+      if (searched.length !== 0) {
+        setSearchedCarrier(searched);
+      } else {
+        setSearchedCarrier(carriersList);
+      }
+    }
+  };
 
   if (isLoading && !httpError) {
     return (
@@ -104,7 +122,20 @@ const MyTrucks = () => {
   console.log("carrier ", carriersList);
   return (
     <div className="row">
-      {carriersList.map((item, index) => (
+      <div className="row justify-content-center align-items-center mb-3">
+        <div className="col-md-3">
+          <label>Search</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Company / MC"
+            icon="bx bx-search"
+            ref={searchRef}
+            onKeyDown={search}
+          />
+        </div>
+      </div>
+      {searchedCarrier.map((item, index) => (
         <div className="col-4" key={index}>
           <Link to={`/trucks/${item.mc_number}/${item.truck_number}`}>
             {<TruckCard item={item} />}

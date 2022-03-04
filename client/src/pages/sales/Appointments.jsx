@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 // import SimpleCard from "../components/cards/SimpleCard";
 import { Link } from "react-router-dom";
 import useHttp from "../../hooks/use-https";
@@ -22,6 +22,7 @@ const Appointments = () => {
         return new Date(a.appointment) - new Date(b.appointment);
       });
       setCarriersList(data);
+      setSearchedCarrier(data);
     };
     fetchCarriers(
       {
@@ -35,6 +36,38 @@ const Appointments = () => {
       transformData
     );
   }, [fetchCarriers, currUserId]);
+
+  //search
+  const searchRef = useRef();
+
+  const [searchedCarrier, setSearchedCarrier] = useState([]);
+  const search = (e) => {
+    if (e.key === "Enter") {
+      var searchValue = searchRef.current.value.trim();
+      const searched = carriersList.filter((carrier) => {
+        if (!isNaN(searchValue)) {
+          return carrier.mc_number === parseInt(searchRef.current.value.trim());
+        } else {
+          searchValue = searchValue.toLowerCase();
+          if (
+            carrier.company_name
+              .toLowerCase()
+              .includes(searchValue.toLowerCase())
+          ) {
+            return true;
+            // return load.broker === searchRef.current.value.trim();
+          }
+          return false;
+        }
+      });
+      if (searched.length !== 0) {
+        setSearchedCarrier(searched);
+      } else {
+        setSearchedCarrier(carriersList);
+      }
+    }
+  };
+
   const body = (carrier) => (
     <Row>
       <Col>
@@ -112,7 +145,20 @@ const Appointments = () => {
 
   return (
     <div className="row">
-      {carriersList.map((item, index) => (
+      <div className="row justify-content-center align-items-center mb-3">
+        <div className="col-md-3">
+          <label>Search</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Company / MC"
+            icon="bx bx-search"
+            ref={searchRef}
+            onKeyDown={search}
+          />
+        </div>
+      </div>
+      {searchedCarrier.map((item, index) => (
         <div className="col-4" key={index}>
           <Link to={`/appointments/${item.mc_number}`}>
             {
