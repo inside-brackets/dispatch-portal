@@ -138,8 +138,6 @@ const AppointmentDetail = () => {
           <Card
             className="truck-detail-card"
             style={{
-              width: "auto",
-              height: "auto",
               marginLeft: "60px",
               marginRight: "30px",
             }}
