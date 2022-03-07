@@ -128,7 +128,7 @@ const MyTrucks = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Company / MC"
+            placeholder="MC"
             icon="bx bx-search"
             ref={searchRef}
             onKeyDown={search}
