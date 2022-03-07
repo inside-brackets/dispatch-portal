@@ -102,7 +102,7 @@ const NewUserForm = ({
           .post(
             `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
             {
-              user_name: userName,
+              user_name: userName.replace(/\s+/g, ' ').trim(),
               joining_date: joiningDate,
               salary,
               designation,
@@ -128,7 +128,7 @@ const NewUserForm = ({
         setButtonLoader(true);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
-            user_name: userName,
+            user_name: userName.replace(/\s+/g, ' ').trim(),
             password: hash,
             joining_date: joiningDate,
             salary,
