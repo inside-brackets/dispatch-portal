@@ -183,11 +183,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         <div className="card">
           <div className="card__body">
             <Table
-<<<<<<< Updated upstream
-              key={Math.random()}
-=======
               key={rerenderTable}
->>>>>>> Stashed changes
               limit={10}
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}
