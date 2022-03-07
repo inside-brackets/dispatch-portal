@@ -165,8 +165,7 @@ const Appointments = () => {
               <Card
                 className="my-card"
                 style={{
-                  width: "auto",
-                  height: "auto",
+                  minHeight: "430px",
                   border: "light",
                 }}
               >

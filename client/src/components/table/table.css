@@ -27,7 +27,7 @@ td {
 }
 
 tbody > tr:hover {
-  background-color: var(--main-color);
+  background-color: #83c8f2;
   color: var(--txt-white);
 }
 
