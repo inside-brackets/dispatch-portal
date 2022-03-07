@@ -80,15 +80,7 @@ const AppointmentDetail = () => {
         )
         .then((response) => {
           console.log(response.data);
-          toast.success("Carrier Saved", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          toast.success("Carrier Saved");
           setCarrier(response.data);
           setloaderButton(false);
         })
@@ -647,6 +639,7 @@ const AppointmentDetail = () => {
                     size="lg"
                     variant="danger"
                     onClick={openModal}
+                    disabled={carrier.c_status !== "registered"}
                   >
                     Deactivate Carrier
                   </Button>
