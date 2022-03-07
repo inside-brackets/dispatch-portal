@@ -6,7 +6,7 @@ import Loader from "react-loader-spinner";
 import BackButton from "../../components/UI/BackButton";
 import Modal from "../../components/modals/MyModal";
 import axios from "axios";
-import { Form, Card, Row, Col, Button } from "react-bootstrap";
+import { Form, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const AppointmentDetail = () => {
@@ -630,6 +630,15 @@ const AppointmentDetail = () => {
                     size="lg"
                     type="submit"
                   >
+                    {loaderButton && (
+                      <Spinner
+                        as="span"
+                        animation="grow"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    )}
                     Update Carrier
                   </Button>
                 </Col>
