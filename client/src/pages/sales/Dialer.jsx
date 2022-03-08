@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 
 import TextArea from "../../components/UI/TextArea";
+import { incrementCounter } from "../../utils/utils";
 
 const Dialer = () => {
   const { user } = useSelector((state) => state.user);
@@ -19,7 +20,7 @@ const Dialer = () => {
   const [carrier, setCarrier] = useState(null);
   const [refresh, setrefresh] = useState(false);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
-
+  let counter = JSON.parse(localStorage.getItem("counters"));
   const { sendRequest: postCarriers } = useHttp();
   const { sendRequest: postdidnotPickCarriers } = useHttp();
 
@@ -27,6 +28,7 @@ const Dialer = () => {
 
   // make appointment
   const onConfirm = () => {
+    incrementCounter();
     const transformData = (data) => {
       console.log(data);
       setrefresh(!refresh);
@@ -47,6 +49,7 @@ const Dialer = () => {
   };
 
   const didnotPickHandler = async () => {
+    incrementCounter();
     const transformData = (data) => {
       console.log(data);
       setrefresh(!refresh);
@@ -75,6 +78,7 @@ const Dialer = () => {
 
   // reject
   const onrConfirm = () => {
+    incrementCounter();
     const transformData = (data) => {
       setrefresh(!refresh);
       setrModal(false);
@@ -156,7 +160,20 @@ const Dialer = () => {
           <h5>Address: </h5>
           <h6>{carrier.address}</h6>
         </DialerCard>
-
+        <div
+          className="row
+        justify-content-center mt-5"
+        >
+          <div className="col-8">
+            <label>Counter</label>
+            <input
+              className="form-control"
+              defaultValue={counter ? counter.counter : 0}
+              type="text"
+              readOnly
+            />
+          </div>
+        </div>
         {/* {modal && ( */}
         <Modal
           show={modal}
