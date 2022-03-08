@@ -50,7 +50,7 @@ const NewUserForm = ({
         if (userName !== defaultValue?.user_name) {
           const response = await axios.post(
             `${process.env.REACT_APP_BACKEND_URL}/getuser`,
-            { user_name: userName.toLowerCase() }
+            { user_name: userName.replace(/\s+/g, ' ').trim().toLowerCase() }
           );
           console.log("checking username");
           setUsernameIsValid(response.data.length === 0);
