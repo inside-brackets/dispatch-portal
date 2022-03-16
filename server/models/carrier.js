@@ -146,7 +146,7 @@ const carrierSchema = new mongoose.Schema(
     },
 
     appointment: {
-      type: String,
+      type: Date,
     },
     mc_file: String,
     noa_file: String,

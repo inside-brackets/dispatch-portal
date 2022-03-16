@@ -5,7 +5,6 @@ try {
     let createNoti = await Notification.create(  {
         user: req.body.user,
         msg: req.body.msg,
-        read: req.body.read,
       });
       res.status(201).json(createNoti);    
 } catch (error) {
@@ -56,7 +55,7 @@ const updateNoti = async (req, res) => {
 };
 
 const deleteNoti = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
     await Notification.findByIdAndDelete({ _id: id });

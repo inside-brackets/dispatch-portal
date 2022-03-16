@@ -166,10 +166,10 @@ const getTableCarriers = async (req, res, next) => {
       "salesman trucks.dispatcher",
       { user_name: 1, company: 1 }
     );
-
+console.log("result",result)
     if (req.body.company) {
       result = result.filter(
-        (carry) => carry.salesman.company == req.body.company
+        (carry) => carry.salesman.company === req.body.company
       );
     }
     if (search !== "" && isNaN(search)) {
@@ -353,6 +353,50 @@ const countCarriers = async (req, res, next) => {
   res.send(stats);
 };
 
+const nearestAppointment = async (req, res, next) => {
+
+const closetAppointment= await Carrier.aggregate([
+  { $match : { c_status : "appointment" ,
+    appointment: {$gte: new Date()},
+    salesman:mongoose.Types.ObjectId(req.params.id)
+  } },
+  {
+      $project : {
+          appointment : 1,
+          mc_number : 1,
+          salesman:1,
+          difference : {
+              $abs : {
+                  $subtract : [new Date(), "$appointment"]
+              }
+          }
+      }
+  },
+  {
+      $sort : {difference : 1}
+  },
+  {
+      $limit : 1
+  }
+  ])
+
+return res.status(200).send(closetAppointment)
+};
+
+
+const changeTypeController = async (req,res)=>{
+ const appointment= await Carrier.find({c_status:'appointment' }  )
+ 
+ 
+ appointment.forEach(async (x)=> { 
+   x.appointment = new Date(x.appointment);
+   console.log(x)
+   var user = new Carrier(x)
+Carrier.findByIdAndUpdate({_id: user._id},{"appointment": user.appointment}).then(res=> console.log(res)).catch(err=> console.log(err))
+  });
+   
+}
+
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -365,4 +409,6 @@ module.exports = {
   fetchLead,
   assignDispatcher,
   countCarriers,
+  nearestAppointment,
+  changeTypeController,
 };

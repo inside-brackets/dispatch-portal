@@ -39,7 +39,7 @@ const Dialer = () => {
         body: {
           c_status: "appointment",
           comment: commentRef.current.value,
-          appointment: appointmentRef.current.value,
+          appointment:new Date(appointmentRef.current.value),
         },
       },
       transformData
