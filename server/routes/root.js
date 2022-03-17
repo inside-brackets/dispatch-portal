@@ -36,7 +36,7 @@ route.put(
   carriersController.updateTruck
 );
 // user
-route.post("/getuser", userController.getUser);
+route.get("/getuser/:id", userController.getUser);
 route.post("/getusers", userController.getUsers);
 route.post("/get-table-users", userController.getTableUsers);
 // route.post("/updateuser", userController.updateUser);

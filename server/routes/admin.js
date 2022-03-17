@@ -11,5 +11,6 @@ route.post(
 route.post("/createuser", usersController.addNewUser);
 route.delete("/deleteuser", usersController.deleteUser);
 route.put("/clearinvoice", invoiceController.clearInvoice);
+route.post("/registered-and-rejected",carriersController.rejectAndRegistered);
 
 module.exports = route;

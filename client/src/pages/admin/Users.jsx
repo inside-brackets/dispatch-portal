@@ -7,6 +7,7 @@ import MyModal from "../../components/modals/MyModal";
 import NewUserForm from "../../components/Form/NewUserForm";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const Users = () => {
   const [users, setUsers] = useState("");
@@ -15,7 +16,7 @@ const Users = () => {
   const [showModal, setShowModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [rerenderTable, setRerenderTable] = useState(null);
-
+const history = useHistory()
   const { company: selectedCompany } = useSelector((state) => state.user);
   useEffect(() => {
     const fetchUsers = async () => {
@@ -59,7 +60,7 @@ const Users = () => {
   };
 
   const renderBody = (item, index) => (
-    <tr key={index}>
+    <tr key={index}         onClick={() => history.push(`/user/${item._id}`)}>
       <td>{index + 1}</td>
       <td>{item.user_name}</td>
       <td>{item.phone_number ? item.phone_number : "N/A"}</td>
