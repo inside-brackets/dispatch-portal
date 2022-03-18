@@ -32,7 +32,7 @@ const NewUserForm = ({
     defaultValue ? defaultValue.salary : 30000
   );
   const [joiningDate, setJoiningDate] = useState(
-    defaultValue ? defaultValue.joining_date : null
+    defaultValue ? new Date(defaultValue.joining_date) : null
   );
   const [userStatus, setUserStatus] = useState(
     defaultValue
@@ -89,21 +89,13 @@ const NewUserForm = ({
 
     if (form.checkValidity() === true) {
       if (defaultValue) {
-        console.log(
-          "defaulvalue",
-          salary,
-          department,
-          userName,
-          designation,
-          joiningDate
-        );
         setButtonLoader(true);
         await axios
           .post(
             `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
             {
               user_name: userName,
-              joining_date: joiningDate,
+              joining_date: new Date(joiningDate),
               salary,
               designation,
               department,
@@ -115,22 +107,12 @@ const NewUserForm = ({
             setEditModal(false);
           });
       } else if (usernameIsValid) {
-        console.log(
-          "value",
-          defaultValue,
-          salary,
-          department,
-          userName,
-          password,
-          designation,
-          joiningDate
-        );
         setButtonLoader(true);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
             user_name: userName,
             password: hash,
-            joining_date: joiningDate,
+            joining_date:new Date(joiningDate),
             salary,
             designation,
             department,
