@@ -72,6 +72,16 @@ io.on("connection", (socket) => {
   socket.on("sale-closed", (msg) => {
     io.sockets.emit("sale-closed", msg);
   });
+  socket.on("deactivate-carrier", (msg) => {
+    io.sockets.emit("backend-deactivate-carrier", msg);
+  });
+
+  socket.on("user-fired", (msg) => {
+    console.log(msg)
+    io.sockets.emit("backend-user-fired", msg);
+  });
+
+
 });
 
 // check every request for user token and validate token from database

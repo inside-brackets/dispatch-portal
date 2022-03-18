@@ -74,6 +74,22 @@ const App = () => {
         );
       }
     });
+
+    socket.on("backend-user-fired", (msg) => {
+      if (msg === currUser?._id) {
+        dispatch(
+          userActions.logout({
+            cb: () => {
+              localStorage.removeItem("user");
+              cookies.remove("user");
+
+              localStorage.removeItem("selectedCompany");
+              history.replace("/login");
+            },
+          })
+        );
+      }
+    });
   }, [currUser, dispatch, history]);
 
   useEffect(() => {

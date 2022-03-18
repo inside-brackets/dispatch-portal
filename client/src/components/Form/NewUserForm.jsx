@@ -5,6 +5,7 @@ import { Form, Col, Row, Button } from "react-bootstrap";
 import bcrypt from "bcryptjs";
 import { useSelector } from "react-redux";
 import Select from "react-select";
+import {socket} from '../../index'
 
 const NewUserForm = ({
   data,
@@ -111,6 +112,9 @@ const NewUserForm = ({
             }
           )
           .then((response) => {
+if(response.data.u_status === 'fired'){
+  socket.emit("user-fired", `${defaultValue._id}`);
+}
             setRefresh(Math.random());
             setEditModal(false);
           });
