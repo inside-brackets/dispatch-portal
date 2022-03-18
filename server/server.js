@@ -72,7 +72,10 @@ io.on("connection", (socket) => {
   socket.on("sale-closed", (msg) => {
     io.sockets.emit("sale-closed", msg);
   });
-});
+  socket.on("deactivate-carrier", (msg) => {
+    console.log("heel")
+    io.sockets.emit("backend-deactivate-carrier", msg);
+  });});
 
 // check every request for user token and validate token from database
 app.use(async (req, res, next) => {

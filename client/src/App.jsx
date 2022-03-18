@@ -59,6 +59,18 @@ const App = () => {
       }
     });
 
+    socket.on("backend-deactivate-carrier", (msg) => {
+      if (currUser?.department === "dispatch") {
+        console.log("currrent location", window.location.pathname);
+        if (window.location.pathname === "/mytrucks") {
+          window.location.reload();
+        } else if (window.location.pathname.includes(`/trucks/${msg}`)) {
+         
+          history.push("/mytrucks");
+        }
+      }
+    });
+
     socket.on("logout", (msg) => {
       if (msg.userId === currUser?._id) {
         dispatch(

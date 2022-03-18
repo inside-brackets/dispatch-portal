@@ -8,6 +8,7 @@ import Modal from "../../components/modals/MyModal";
 import axios from "axios";
 import { Form, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { socket } from "../../index";
 
 const AppointmentDetail = () => {
   // const [selectedPayment, setSelectedPayment] = useState("");
@@ -103,6 +104,7 @@ const AppointmentDetail = () => {
         c_status: "deactivated",
       }
     );
+    socket.emit("deactivate-carrier", `${params.mc}`);
     setloaderButton(false);
     setrModal(false);
     // history.push("/mytrucks");
