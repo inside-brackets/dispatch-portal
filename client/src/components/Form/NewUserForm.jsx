@@ -5,7 +5,7 @@ import { Form, Col, Row, Button } from "react-bootstrap";
 import bcrypt from "bcryptjs";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import {socket} from '../../index'
+import { socket } from "../../index";
 
 const NewUserForm = ({
   data,
@@ -33,7 +33,7 @@ const NewUserForm = ({
     defaultValue ? defaultValue.salary : 30000
   );
   const [joiningDate, setJoiningDate] = useState(
-    defaultValue ? defaultValue.joining_date : null
+    defaultValue ? new Date(defaultValue.joining_date) : null
   );
   const [userStatus, setUserStatus] = useState(
     defaultValue
@@ -51,7 +51,7 @@ const NewUserForm = ({
         if (userName !== defaultValue?.user_name) {
           const response = await axios.post(
             `${process.env.REACT_APP_BACKEND_URL}/getuser`,
-            { user_name: userName.replace(/\s+/g, ' ').trim().toLowerCase() }
+            { user_name: userName.replace(/\s+/g, " ").trim().toLowerCase() }
           );
           console.log("checking username");
           setUsernameIsValid(response.data.length === 0);
@@ -90,21 +90,13 @@ const NewUserForm = ({
 
     if (form.checkValidity() === true) {
       if (defaultValue) {
-        console.log(
-          "defaulvalue",
-          salary,
-          department,
-          userName,
-          designation,
-          joiningDate
-        );
         setButtonLoader(true);
         await axios
           .post(
             `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
             {
-              user_name: userName.replace(/\s+/g, ' ').trim(),
-              joining_date: joiningDate,
+              user_name: userName.replace(/\s+/g, " ").trim(),
+              joining_date: new Date(joiningDate),
               salary,
               designation,
               department,
@@ -112,29 +104,19 @@ const NewUserForm = ({
             }
           )
           .then((response) => {
-if(response.data.u_status === 'fired'){
-  socket.emit("user-fired", `${defaultValue._id}`);
-}
+            if (response.data.u_status === "fired") {
+              socket.emit("user-fired", `${defaultValue._id}`);
+            }
             setRefresh(Math.random());
             setEditModal(false);
           });
       } else if (usernameIsValid) {
-        console.log(
-          "value",
-          defaultValue,
-          salary,
-          department,
-          userName,
-          password,
-          designation,
-          joiningDate
-        );
         setButtonLoader(true);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
-            user_name: userName.replace(/\s+/g, ' ').trim(),
+            user_name: userName.replace(/\s+/g, " ").trim(),
             password: hash,
-            joining_date: joiningDate,
+            joining_date: new Date(joiningDate),
             salary,
             designation,
             department,
