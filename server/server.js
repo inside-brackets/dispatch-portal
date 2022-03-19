@@ -13,6 +13,7 @@ const salesRoutes = require("./routes/sales");
 const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
+const notificationsRoutes = require('./routes/notification')
 
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
@@ -113,6 +114,7 @@ app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
 app.use("/", rootRoutes);
+app.use("/notification",notificationsRoutes)
 
 app.get("/hello", (req, res) => {
   res.status(200).send({ msg: "hello" });
