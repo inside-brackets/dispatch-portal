@@ -661,13 +661,13 @@ const AppointmentDetail = () => {
         </Form>
         <Modal
           show={rmodal}
-          heading="Reject Carrier"
+          heading="Deactivate Carrier"
           onConfirm={!loaderButton && rejectHandler}
           onClose={() => {
             setrModal(false);
           }}
         >
-          <p>Are You Sure you want to deavtivate?</p>
+          <p>Are You Sure you want to deactivate?</p>
         </Modal>
 
         <TruckTable
