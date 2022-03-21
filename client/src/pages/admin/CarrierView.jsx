@@ -543,11 +543,10 @@ const AppointmentDetail = () => {
                     <Form.Label>Salesman:</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Salesman"
                       readOnly
                       defaultValue={
                         carrier && carrier.salesman &&
-                        `${carrier.salesman.first_name} ${carrier.salesman.last_name}`
+                        carrier.salesman.user_name
                       }
                       required
                     />
