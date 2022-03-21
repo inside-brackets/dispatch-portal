@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import moment from "moment";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, Tooltip,ResponsiveContainer } from "recharts";
 
 const UserDetail = () => {
   const params = useParams();
@@ -15,7 +15,6 @@ const UserDetail = () => {
       .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${params.id}`)
       .then((res) => {
         setUser(res.data);
-        console.log(res.data);
       })
       .catch((err) => console.log(err));
 
@@ -225,9 +224,8 @@ const UserDetail = () => {
                         />
                       ))}
                     </Pie>
-                    <Tooltip/>
                   </PieChart>
-                // </ResponsiveContainer>
+// {/* </ResponsiveContainer> */}
               )}
             </Row>
           </Card>
