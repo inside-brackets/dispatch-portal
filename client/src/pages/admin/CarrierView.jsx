@@ -105,8 +105,9 @@ const AppointmentDetail = () => {
       }
     );
     socket.emit("deactivate-carrier", `${params.mc}`);
-    setloaderButton(false);
-    setrModal(false);
+ setTimeout(() => {
+  setrModal(false);   
+ }, 3000);
     // history.push("/mytrucks");
   };
 
