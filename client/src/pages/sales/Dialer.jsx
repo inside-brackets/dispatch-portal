@@ -19,6 +19,7 @@ const Dialer = () => {
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
   const [refresh, setrefresh] = useState(false);
+  const [loading, setLoading] = useState(false)
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   let counter = JSON.parse(localStorage.getItem("counters"));
   const { sendRequest: postCarriers } = useHttp();
@@ -27,14 +28,15 @@ const Dialer = () => {
   const { sendRequest: postrejectCarriers } = useHttp();
 
   // make appointment
-  const onConfirm = () => {
+  const onConfirm =async ()  => {
+    setLoading(true)
     incrementCounter();
     const transformData = (data) => {
       console.log(data);
       setrefresh(!refresh);
       setModal(false);
     };
-    postCarriers(
+await    postCarriers(
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
@@ -46,9 +48,11 @@ const Dialer = () => {
       },
       transformData
     );
+    setLoading(false)
   };
 
   const didnotPickHandler = async () => {
+    setLoading(true)
     incrementCounter();
     const transformData = (data) => {
       console.log(data);
@@ -64,6 +68,7 @@ const Dialer = () => {
       },
       transformData
     );
+  setLoading(false)
   };
   const buttonClickHandler = () => {
     setModal(true);
@@ -71,19 +76,22 @@ const Dialer = () => {
 
   const onClose = () => {
     setModal(false);
+    setLoading(false)
   };
   const onrClose = () => {
     setrModal(false);
+    setLoading(false)
   };
 
   // reject
-  const onrConfirm = () => {
+  const onrConfirm = async () => {
+    setLoading(true)
     incrementCounter();
     const transformData = (data) => {
       setrefresh(!refresh);
       setrModal(false);
     };
-    postrejectCarriers(
+await    postrejectCarriers(
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
@@ -94,10 +102,12 @@ const Dialer = () => {
       },
       transformData
     );
+    setLoading(false)
   };
 
   const buttonrClickHandler = () => {
     setrModal(true);
+    setLoading(false)
   };
 
   // fetch new
@@ -144,7 +154,7 @@ const Dialer = () => {
               color: "red",
               onClick: buttonrClickHandler,
             },
-            { buttonText: "Didn't Pick", onClick: didnotPickHandler },
+            { buttonText: "Didn't Pick", onClick: didnotPickHandler, disabled:loading },
             {
               buttonText: "Appointment",
               onClick: buttonClickHandler,
@@ -178,6 +188,7 @@ const Dialer = () => {
         <Modal
           show={modal}
           heading="Make Appointment"
+          disabled={loading}
           onConfirm={onConfirm}
           onClose={onClose}
         >
@@ -208,6 +219,7 @@ const Dialer = () => {
           show={rmodal}
           heading="Reject Carrier"
           onConfirm={onrConfirm}
+          disabled={loading}
           onClose={onrClose}
         >
           <form>
