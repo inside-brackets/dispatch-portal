@@ -29,9 +29,9 @@ const Invoice = () => {
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
-  const renderBody = (item, index) => (
+  const renderBody = (item, index,currPage) => (
     <tr key={index}>
-      <td>{index + 1}</td>
+      <td>{(index + 1) + (currPage*10)}</td>
       <td>{item.mc_number ? item.mc_number : "NA"}</td>
       <td>{item.carrierCompany ? item.carrierCompany : "NA"}</td>
       <td>{item.truckNumber ? item.truckNumber : "NA"}</td>
@@ -112,7 +112,7 @@ const Invoice = () => {
                   { label: "pending ", value: "pending" },
                 ],
               }}
-              renderBody={(item, index) => renderBody(item, index)}
+              renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
             />
           </div>
         </div>
