@@ -149,7 +149,15 @@ const AppointmentDetail = () => {
   const { sendRequest: updateCarrier } = useHttp();
 
   useEffect(() => {
-    const transformData = (data) => {
+
+     axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
+      {
+        c_status: "in-progress",
+      }
+    ).then(({data})=>{
+      
+      console.log("updated carrier response",data)
       setCarrier(data);
       setTrucks(data.trucks);
       if (data.tax_id_number) {
@@ -189,19 +197,8 @@ const AppointmentDetail = () => {
           target: { value: `${data.insurance.agent_email}` },
         });
       }
-    };
-    fetchCarrier(
-      {
-        url: `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
 
-        body: {
-          mc_number: params.mc,
-        },
-      },
-      transformData
-    );
+    })
   }, [
     feeChangeHandler,
     fetchCarrier,

@@ -24,7 +24,7 @@ const AddNewCarrierModal = ({ mc, closeModal }) => {
         phone_number: event.target.phone_number.value,
         usdot_number: event.target.usdot_number.value,
         email: event.target.email.value,
-        c_status: "unassigned",
+        c_status: "in-progress",
       };
       await axios
         .post(`${process.env.REACT_APP_BACKEND_URL}/add-new-carrier`, obj)
