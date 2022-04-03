@@ -75,6 +75,9 @@ const Table = (props) => {
       }
     }
   };
+
+  console.log('range',range)
+  console.log("curr ",currPage)
   return (
     <div>
       <Row className="align-items-center">
@@ -139,7 +142,7 @@ const Table = (props) => {
               {bodyData && props.renderBody ? (
                 <tbody>
                   {bodyData[`page${currPage}`]?.map((item, index) =>
-                    props.renderBody(item, index)
+                    props.renderBody(item, index,currPage)
                   )}
                 </tbody>
               ) : null}
@@ -160,7 +163,7 @@ const Table = (props) => {
                   </button>
                   <button
                     className="table__pagination-item"
-                    onClick={() => selectPage(currPage - 1)}
+                    onClick={() => selectPage(currPage === 0 ? currPage : currPage - 1)}
                   >
                     {" "}
                     {`<`}{" "}
@@ -178,10 +181,9 @@ const Table = (props) => {
                   ))}
                   <button
                     className="table__pagination-item"
-                    onClick={() => selectPage(currPage + 1)}
+                    onClick={() => selectPage(currPage=== range.length -1 ?  currPage :currPage + 1)}
                   >
-                    {" "}
-                    {`>`}{" "}
+                    {`>`}
                   </button>
                   <button
                     className="table__pagination-item"

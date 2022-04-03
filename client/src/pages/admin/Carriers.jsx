@@ -24,7 +24,7 @@ const Carriers = () => {
   const history = useHistory();
   let color;
 
-  const renderBody = (item, index) => {
+  const renderBody = (item, index,currPage) => {
     if (item.c_status === "deactivated") {
       color = "red";
     } else if (
@@ -40,7 +40,7 @@ const Carriers = () => {
         key={index}
         onClick={() => history.push(`/carrierview/${item.mc_number}`)}
       >
-        <td>{index + 1}</td>
+        <td>{(index + 1) + (currPage*10)}</td>
         <td>{item.mc_number}</td>
         <td>{item.company_name}</td>
         <td style={{ width: "200px" }}>{item.phone_number}</td>
@@ -90,7 +90,7 @@ const Carriers = () => {
                     // { label: "inactive", value: "inactive" },
                   ],
                 }}
-                renderBody={(item, index) => renderBody(item, index)}
+                renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
               />
             </div>
           </div>
