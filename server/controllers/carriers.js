@@ -136,7 +136,15 @@ const getCarrier = (req, res, next) => {
 
 const getTableCarriers = async (req, res, next) => {
   const defaultFilter = {
-    c_status: { $nin: ["unassigned", "rejected", "didnotpick", "unreached"] },
+    c_status: {
+      $nin: [
+        "unassigned",
+        "rejected",
+        "didnotpick",
+        "unreached",
+        "in-progress",
+      ],
+    },
   };
   var filter = defaultFilter;
   if (req.body.c_status === "registered") {
@@ -152,11 +160,13 @@ const getTableCarriers = async (req, res, next) => {
     filter.c_status = { $in: req.body.filter.status.map((item) => item.value) };
   }
   if (req.body.filter.trucks?.length > 0) {
-    filter["trucks.t_status"] = { $in: req.body.filter.trucks.map((item) => item.value) };
+    filter["trucks.t_status"] = {
+      $in: req.body.filter.trucks.map((item) => item.value),
+    };
   }
 
-  console.log('filter',filter);
-  
+  console.log("filter", filter);
+
   if (req.body.salesman) {
     filter.salesman = req.body.salesman;
   }
@@ -166,10 +176,10 @@ const getTableCarriers = async (req, res, next) => {
       "salesman trucks.dispatcher",
       { user_name: 1, company: 1 }
     );
-console.log("result",result)
+    console.log("result", result);
     if (req.body.company) {
       result = result.filter(
-        (carry) => carry.salesman.company === req.body.company
+        (carry) => carry.salesman?.company === req.body.company
       );
     }
     if (search !== "" && isNaN(search)) {
@@ -354,48 +364,52 @@ const countCarriers = async (req, res, next) => {
 };
 
 const nearestAppointment = async (req, res, next) => {
+  const closetAppointment = await Carrier.aggregate([
+    {
+      $match: {
+        c_status: "appointment",
+        appointment: { $gte: new Date() },
+        salesman: mongoose.Types.ObjectId(req.params.id),
+      },
+    },
+    {
+      $project: {
+        appointment: 1,
+        mc_number: 1,
+        salesman: 1,
+        difference: {
+          $abs: {
+            $subtract: [new Date(), "$appointment"],
+          },
+        },
+      },
+    },
+    {
+      $sort: { difference: 1 },
+    },
+    {
+      $limit: 1,
+    },
+  ]);
 
-const closetAppointment= await Carrier.aggregate([
-  { $match : { c_status : "appointment" ,
-    appointment: {$gte: new Date()},
-    salesman:mongoose.Types.ObjectId(req.params.id)
-  } },
-  {
-      $project : {
-          appointment : 1,
-          mc_number : 1,
-          salesman:1,
-          difference : {
-              $abs : {
-                  $subtract : [new Date(), "$appointment"]
-              }
-          }
-      }
-  },
-  {
-      $sort : {difference : 1}
-  },
-  {
-      $limit : 1
-  }
-  ])
-
-return res.status(200).send(closetAppointment)
+  return res.status(200).send(closetAppointment);
 };
 
+const changeTypeController = async (req, res) => {
+  const appointment = await Carrier.find({ c_status: "appointment" });
 
-const changeTypeController = async (req,res)=>{
- const appointment= await Carrier.find({c_status:'appointment' }  )
- 
- 
- appointment.forEach(async (x)=> { 
-   x.appointment = new Date(x.appointment);
-   console.log(x)
-   var user = new Carrier(x)
-Carrier.findByIdAndUpdate({_id: user._id},{"appointment": user.appointment}).then(res=> console.log(res)).catch(err=> console.log(err))
+  appointment.forEach(async (x) => {
+    x.appointment = new Date(x.appointment);
+    console.log(x);
+    var user = new Carrier(x);
+    Carrier.findByIdAndUpdate(
+      { _id: user._id },
+      { appointment: user.appointment }
+    )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   });
-   
-}
+};
 
 module.exports = {
   addNewCarrier,
