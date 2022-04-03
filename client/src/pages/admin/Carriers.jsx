@@ -81,6 +81,7 @@ const Carriers = () => {
                     { label: "Appointment ", value: "appointment" },
                     { label: "Registered", value: "registered" },
                     { label: "Deactivated ", value: "deactivated" },
+                    { label: "In Progress ", value: "inprogress" },
                   ],
 
                   trucks: [

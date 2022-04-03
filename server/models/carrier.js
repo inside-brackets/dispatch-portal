@@ -32,6 +32,7 @@ const carrierSchema = new mongoose.Schema(
         "rejected",
         "registered",
         "deactivated",
+        "inprogress"
       ],
     },
     dispatcher_fee: {
