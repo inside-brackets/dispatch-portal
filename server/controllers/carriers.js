@@ -136,7 +136,7 @@ const getCarrier = (req, res, next) => {
 
 const getTableCarriers = async (req, res, next) => {
   const defaultFilter = {
-    c_status: { $nin: ["unassigned", "rejected", "didnotpick", "unreached"] },
+    c_status: { $nin: ["unassigned", "rejected", "didnotpick", "unreached","inprogress"] },
   };
   var filter = defaultFilter;
   if (req.body.c_status === "registered") {
@@ -169,7 +169,7 @@ const getTableCarriers = async (req, res, next) => {
 console.log("result",result)
     if (req.body.company) {
       result = result.filter(
-        (carry) => carry.salesman.company === req.body.company
+        (carry) => carry.salesman?.company === req.body.company
       );
     }
     if (search !== "" && isNaN(search)) {

@@ -140,7 +140,7 @@ const SearchCarrier = () => {
                     <CardRow field="With" value="N/A" />
                   )}
                 </Card.Body>
-                {carrier.c_status === "unassigned" || carrier.c_status === "in-progress" || carrier.c_status === "rejected" ? (
+                {carrier.c_status === "unassigned" || carrier.c_status === "inprogress" || carrier.c_status === "rejected" ? (
                   <Button
                     onClick={() => clickHandler("addcarrier")}
                     variant="primary"

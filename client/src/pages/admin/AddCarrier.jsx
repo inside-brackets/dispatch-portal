@@ -153,7 +153,7 @@ const AppointmentDetail = () => {
      axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
       {
-        c_status: "in-progress",
+        c_status: "inprogress",
       }
     ).then(({data})=>{
       
