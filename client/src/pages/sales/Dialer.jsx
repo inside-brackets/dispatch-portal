@@ -144,13 +144,13 @@ await    postrejectCarriers(
     );
 
   return (
-    <div className="row dialer__container">
-      <div className="col-6">
+    <div className="row justify-content-center ">
+      <div className="col-5">
         <DialerCard
           title={carrier.company_name}
           buttons={[
             {
-              buttonText: "rejected",
+              buttonText: "Rejected",
               color: "red",
               onClick: buttonrClickHandler,
             },
@@ -172,16 +172,18 @@ await    postrejectCarriers(
         </DialerCard>
         <div
           className="row
-        justify-content-center mt-5"
+        justify-content-center align-items-center mt-5"
         >
-          <div className="col-8">
-            <label>Counter</label>
-            <input
+          <div className="col-6">
+            <h2>Fetch Counter : <span>{counter ? counter.counter : 0}</span> </h2>
+            <h4></h4>
+            
+            {/* <input
               className="form-control"
               defaultValue={counter ? counter.counter : 0}
               type="text"
               readOnly
-            />
+            /> */}
           </div>
         </div>
         {/* {modal && ( */}
