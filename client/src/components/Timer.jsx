@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 
 const Timer = () => {
   useEffect(() => {
-console.log("1st")
+    console.log("1st");
 
     let counter = JSON.parse(localStorage.getItem("counters"));
     const date = new Date().setHours(5, 0, 0);
@@ -26,7 +26,7 @@ console.log("1st")
           date,
         })
       );
-      console.log("3rd")
+      console.log("3rd");
     }, timeOut);
     return () => clearTimeout(timer);
   }, []);
