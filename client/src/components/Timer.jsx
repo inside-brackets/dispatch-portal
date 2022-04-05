@@ -26,7 +26,6 @@ const Timer = () => {
           date,
         })
       );
-      console.log("3rd");
     }, timeOut);
     return () => clearTimeout(timer);
   }, []);
