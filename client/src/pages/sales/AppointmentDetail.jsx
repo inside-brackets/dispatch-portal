@@ -11,6 +11,7 @@ import BackButton from "../../components/UI/BackButton";
 import MySelect from "../../components/UI/MySelect";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import moment from 'moment'
 import useInput from "../../hooks/use-input";
 import { socket } from "../..";
 
@@ -348,6 +349,9 @@ const AppointmentDetail = () => {
     );
   }
 
+  console.log('appointment',moment(carrier.appointment).format('YYYY-MM-DDTH:m'),appointmentRef.current)
+
+
   return (
     <>
       <BackButton onClick={() => history.push("/appointments")} />
@@ -418,7 +422,7 @@ const AppointmentDetail = () => {
                 <h4>Appointment:</h4>
                 <Input
                   type="datetime-local"
-                  defaultValue={carrier.appointment}
+                  defaultValue={moment(carrier.appointment).format('YYYY-MM-DDTH:m')}
                   ref={appointmentRef}
                 />
               </div>
