@@ -7,6 +7,10 @@ import { useSelector, useDispatch } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
+import Table from "../../components/table/Table";
+const carrierTableHead = ["#", "User Name", "Total Dispacther Fee"];
+
+const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
@@ -15,6 +19,8 @@ const DashboardAdmin = () => {
   const [appointment, setAppointment] = useState(0);
   const [active, setActive] = useState(0);
   const [pending, setPending] = useState(0);
+  const [data, setData] = useState(null);
+  const [topDispatcher, setTopDispatcher] = useState(null)
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
@@ -77,7 +83,33 @@ const DashboardAdmin = () => {
         setActive(data.activeTrucks);
         setPending(data.pendingTrucks);
       });
+
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/top-sales`, {
+        company: selectedCompany.value,
+      })
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => console.log(err));
+
+      axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/top-dispatcher`, {
+        company: selectedCompany.value,
+      })
+      .then((res) => {
+        setTopDispatcher(res.data);
+      })
+      .catch((err) => console.log(err));
   }, [selectedCompany]);
+
+  const renderBody = (item, index) => (
+    <tr key={index}>
+      <td>{index + 1}</td>
+      <td>{item.user_name}</td>
+      <td>{item.total}</td>
+    </tr>
+  );
 
   return (
     <div>
@@ -172,7 +204,7 @@ const DashboardAdmin = () => {
             className="my-card"
             style={{
               width: "auto",
-              height: "280px",
+              height: "580px",
               border: "light",
             }}
           >
@@ -180,6 +212,18 @@ const DashboardAdmin = () => {
               <Card.Title>Top Dispatchers</Card.Title>
               <hr />
               <Card.Text className="">Top Dispatchers</Card.Text>
+              {!topDispatcher ? (
+                <>Loading...</>
+              ) : (
+                <Table
+                  key={Math.random()}
+                  limit="5"
+                  headData={carrierTableHead}
+                  renderHead={(item, index) => renderHead(item, index)}
+                  bodyData={topDispatcher}
+                  renderBody={(item, index) => renderBody(item, index)}
+                />
+              )}
             </Card.Body>
           </Card>
         </Col>
@@ -188,7 +232,7 @@ const DashboardAdmin = () => {
             className="my-card"
             style={{
               width: "auto",
-              height: "280px",
+              height: "auto",
               border: "light",
             }}
           >
@@ -196,6 +240,18 @@ const DashboardAdmin = () => {
               <Card.Title>Sales Stats</Card.Title>
               <hr />
               <Card.Text className="">Sales Stats</Card.Text>
+              {!data ? (
+                <>Loading...</>
+              ) : (
+                <Table
+                  key={Math.random()}
+                  limit="5"
+                  headData={carrierTableHead}
+                  renderHead={(item, index) => renderHead(item, index)}
+                  bodyData={data}
+                  renderBody={(item, index) => renderBody(item, index)}
+                />
+              )}
             </Card.Body>
           </Card>
         </Col>
