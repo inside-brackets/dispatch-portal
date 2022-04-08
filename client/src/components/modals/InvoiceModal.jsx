@@ -294,7 +294,7 @@ const InvoiceModal = ({
           invoice && (
             <Row className="justify-content-end align-items-center">
               <Col md={2} className="text-end">
-                <Button className="w-100" variant="success" onClick={changeStatusHandler}>Cleared</Button>
+                <Button className="w-100" variant="success" onClick={changeStatusHandler}>Clear</Button>
               </Col>
               <Col md={2} className="text-end">
                 <Button className="w-100" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
