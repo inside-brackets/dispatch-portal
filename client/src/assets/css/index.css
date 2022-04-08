@@ -307,3 +307,25 @@ a {
   background: #9e9e9e;
   border-radius: 50px;
 }
+.tableFixHead {
+  overflow: scroll;
+  height: 345px;
+}
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Just common table stuff. Really. */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  padding: 16px 16px;
+}
+th {
+  background: #eee;
+}

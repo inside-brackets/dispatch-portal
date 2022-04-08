@@ -7,10 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
-import Table from "../../components/table/Table";
-const carrierTableHead = ["#", "User Name", "Total Dispacther Fee"];
 
-const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
@@ -102,14 +99,6 @@ const DashboardAdmin = () => {
       })
       .catch((err) => console.log(err));
   }, [selectedCompany]);
-
-  const renderBody = (item, index) => (
-    <tr key={index}>
-      <td>{index + 1}</td>
-      <td>{item.user_name}</td>
-      <td>{item.total}</td>
-    </tr>
-  );
 
   return (
     <div>
@@ -204,25 +193,31 @@ const DashboardAdmin = () => {
             className="my-card"
             style={{
               width: "auto",
-              height: "580px",
+              height: "480px",
               border: "light",
             }}
           >
             <Card.Body>
               <Card.Title>Top Dispatchers</Card.Title>
               <hr />
-              <Card.Text className="">Top Dispatchers</Card.Text>
               {!topDispatcher ? (
                 <>Loading...</>
               ) : (
-                <Table
-                  key={Math.random()}
-                  limit="5"
-                  headData={carrierTableHead}
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={topDispatcher}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
+                <div class="tableFixHead">
+                <table>
+                  <thead>
+                    <tr ><th>#</th><th>User Name</th><th>Total Gross</th></tr>
+                  </thead>
+                  <tbody>
+                    {topDispatcher.map((item,index)=>{
+                      return (
+                        <tr className={index === 0 && "bg-success text-white" }><td>{index +1}</td><td className="text-capitalize">{item.user_name}</td><td>{item.total}</td></tr>
+                      )
+                    })}
+              
+                  </tbody>
+                </table>
+              </div>              
               )}
             </Card.Body>
           </Card>
@@ -232,26 +227,33 @@ const DashboardAdmin = () => {
             className="my-card"
             style={{
               width: "auto",
-              height: "auto",
+              height: "480px",
               border: "light",
             }}
           >
             <Card.Body>
               <Card.Title>Sales Stats</Card.Title>
               <hr />
-              <Card.Text className="">Sales Stats</Card.Text>
               {!data ? (
                 <>Loading...</>
               ) : (
-                <Table
-                  key={Math.random()}
-                  limit="5"
-                  headData={carrierTableHead}
-                  renderHead={(item, index) => renderHead(item, index)}
-                  bodyData={data}
-                  renderBody={(item, index) => renderBody(item, index)}
-                />
-              )}
+<div class="tableFixHead">
+  <table>
+    <thead>
+      <tr><th>#</th><th>User Name</th><th>Total Gross</th></tr>
+    </thead>
+    <tbody>
+      {data.map((item,index)=>{
+        return (
+          <tr className={index === 0 && "bg-success text-white" }><td>{index +1}</td><td className="text-capitalize">{item.user_name}</td><td>{item.total}</td></tr>
+        )
+      })}
+
+    </tbody>
+  </table>
+</div>
+
+)}
             </Card.Body>
           </Card>
         </Col>
