@@ -292,12 +292,12 @@ const InvoiceModal = ({
           <Button onClick={submitHandler}>Submit</Button>
         ) : (
           invoice && (
-            <Row className="justify-content-center align-items-center">
-              <Col className="text-center">
-                <Button onClick={changeStatusHandler}>Cleared</Button>
+            <Row className="justify-content-end align-items-center">
+              <Col md={2} className="text-end">
+                <Button className="w-100" variant="success" onClick={changeStatusHandler}>Cleared</Button>
               </Col>
-              <Col className="text-center">
-                <Button onClick={cancelledStatusHandler}>Canceled</Button>
+              <Col md={2} className="text-end">
+                <Button className="w-100" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
               </Col>
             </Row>
           )
