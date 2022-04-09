@@ -39,7 +39,7 @@ const Users = () => {
     "Department",
     "Joining Date",
     "Basic Salary",
-    "",
+    "Actions",
   ];
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
@@ -57,9 +57,9 @@ const Users = () => {
     setShowModal(true);
   };
 
-  const renderBody = (item, index,currPage) => (
+  const renderBody = (item, index, currPage) => (
     <tr key={index}>
-      <td>{(index + 1) + (currPage*10)}</td>
+      <td>{index + 1 + currPage * 10}</td>
       <td>{item.user_name}</td>
       <td>{item.phone_number ? item.phone_number : "N/A"}</td>
       <td>{item.email_address ? item.email_address : "N/A"}</td>
@@ -114,7 +114,9 @@ const Users = () => {
                     { label: "Active", value: "active" },
                   ],
                 }}
-                renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
+                renderBody={(item, index, currPage) =>
+                  renderBody(item, index, currPage)
+                }
               />
             </div>
           </div>

@@ -9,7 +9,6 @@ import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 import PdfTest from "../../components/PdfTest";
-
 const invoiceTableHead = [
   "#",
   "MC",
@@ -28,9 +27,9 @@ const Invoice = () => {
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
-  const renderBody = (item, index,currPage) => (
+  const renderBody = (item, index, currPage) => (
     <tr key={index}>
-      <td>{(index + 1) + (currPage*10)}</td>
+      <td>{index + 1 + currPage * 10}</td>
       <td>{item.mc_number ? item.mc_number : "NA"}</td>
       <td>{item.carrierCompany ? item.carrierCompany : "NA"}</td>
       <td>{item.truckNumber ? item.truckNumber : "NA"}</td>
@@ -59,9 +58,18 @@ const Invoice = () => {
         )}
       </td>
       <td>
-        <div style={{display:"flex",justifyContent:"space-around",alignItems:"center"}}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
           <EditButton type="open" onClick={() => viewInvoiceModal(item)} />
-          <i class="bx bx-printer" onClick={() => viewPdfModal(item)}></i>
+          <i
+            class="bx bx-printer action-button"
+            onClick={() => viewPdfModal(item)}
+          ></i>
         </div>
       </td>
     </tr>
@@ -106,7 +114,9 @@ const Invoice = () => {
                   { label: "pending ", value: "pending" },
                 ],
               }}
-              renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
+              renderBody={(item, index, currPage) =>
+                renderBody(item, index, currPage)
+              }
             />
           </div>
         </div>

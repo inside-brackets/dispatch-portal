@@ -76,17 +76,17 @@ const Table = (props) => {
     }
   };
 
-  console.log('range',range)
-  console.log("curr ",currPage)
+  console.log("range", range);
+  console.log("curr ", currPage);
   return (
     <div>
       <Row className="align-items-center">
         <Col md={3}>
-          <label>Search</label>
+          <label className="pb-2">Search</label>
           <input
             type="text"
             placeholder={props.placeholder}
-            className="form-control"
+            className="form-control mb-2"
             icon="bx bx-search"
             onKeyDown={searchData}
           />
@@ -142,7 +142,7 @@ const Table = (props) => {
               {bodyData && props.renderBody ? (
                 <tbody>
                   {bodyData[`page${currPage}`]?.map((item, index) =>
-                    props.renderBody(item, index,currPage)
+                    props.renderBody(item, index, currPage)
                   )}
                 </tbody>
               ) : null}
@@ -151,9 +151,11 @@ const Table = (props) => {
               <>
                 <div className="table__pagination">
                   Showing {currPage * props.limit + 1} -{" "}
-                  
-                  {!bodyData[`page${currPage}`] ? null : currPage * props.limit + bodyData[`page${currPage}`].length} 
-              &nbsp;    of {totalLength} records &nbsp;
+                  {!bodyData[`page${currPage}`]
+                    ? null
+                    : currPage * props.limit +
+                      bodyData[`page${currPage}`].length}
+                  &nbsp; of {totalLength} records &nbsp;
                   <button
                     className="table__pagination-item"
                     onClick={() => selectPage(0)}
@@ -163,7 +165,9 @@ const Table = (props) => {
                   </button>
                   <button
                     className="table__pagination-item"
-                    onClick={() => selectPage(currPage === 0 ? currPage : currPage - 1)}
+                    onClick={() =>
+                      selectPage(currPage === 0 ? currPage : currPage - 1)
+                    }
                   >
                     {" "}
                     {`<`}{" "}
@@ -181,7 +185,11 @@ const Table = (props) => {
                   ))}
                   <button
                     className="table__pagination-item"
-                    onClick={() => selectPage(currPage=== range.length -1 ?  currPage :currPage + 1)}
+                    onClick={() =>
+                      selectPage(
+                        currPage === range.length - 1 ? currPage : currPage + 1
+                      )
+                    }
                   >
                     {`>`}
                   </button>

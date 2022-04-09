@@ -329,3 +329,13 @@ td {
 th {
   background: #eee;
 }
+
+.action-button {
+  font-size: x-large;
+  color: var(--main-color-blue);
+}
+.action-button:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+  color: #118cff;
+}
