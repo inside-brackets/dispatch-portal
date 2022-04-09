@@ -8,7 +8,6 @@ import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
 
-
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
 
@@ -17,7 +16,7 @@ const DashboardAdmin = () => {
   const [active, setActive] = useState(0);
   const [pending, setPending] = useState(0);
   const [data, setData] = useState(null);
-  const [topDispatcher, setTopDispatcher] = useState(null)
+  const [topDispatcher, setTopDispatcher] = useState(null);
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
@@ -90,7 +89,7 @@ const DashboardAdmin = () => {
       })
       .catch((err) => console.log(err));
 
-      axios
+    axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/admin/top-dispatcher`, {
         company: selectedCompany.value,
       })
@@ -190,7 +189,6 @@ const DashboardAdmin = () => {
       <Row>
         <Col>
           <Card
-            className="my-card"
             style={{
               width: "auto",
               height: "480px",
@@ -204,27 +202,37 @@ const DashboardAdmin = () => {
                 <>Loading...</>
               ) : (
                 <div class="tableFixHead">
-                <table>
-                  <thead>
-                    <tr ><th>#</th><th>User Name</th><th>Total Gross</th></tr>
-                  </thead>
-                  <tbody>
-                    {topDispatcher.map((item,index)=>{
-                      return (
-                        <tr className={index === 0 && "bg-success text-white" }><td>{index +1}</td><td className="text-capitalize">{item.user_name}</td><td>{item.total}</td></tr>
-                      )
-                    })}
-              
-                  </tbody>
-                </table>
-              </div>              
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>User Name</th>
+                        <th>Total Gross</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {topDispatcher.map((item, index) => {
+                        return (
+                          <tr
+                            className={index === 0 && "bg-success text-white"}
+                          >
+                            <td>{index + 1}</td>
+                            <td className="text-capitalize">
+                              {item.user_name}
+                            </td>
+                            <td>{item.total}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </Card.Body>
           </Card>
         </Col>
         <Col>
           <Card
-            className="my-card"
             style={{
               width: "auto",
               height: "480px",
@@ -237,23 +245,33 @@ const DashboardAdmin = () => {
               {!data ? (
                 <>Loading...</>
               ) : (
-<div class="tableFixHead">
-  <table>
-    <thead>
-      <tr><th>#</th><th>User Name</th><th>Total Gross</th></tr>
-    </thead>
-    <tbody>
-      {data.map((item,index)=>{
-        return (
-          <tr className={index === 0 && "bg-success text-white" }><td>{index +1}</td><td className="text-capitalize">{item.user_name}</td><td>{item.total}</td></tr>
-        )
-      })}
-
-    </tbody>
-  </table>
-</div>
-
-)}
+                <div class="tableFixHead">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>User Name</th>
+                        <th>Total Gross</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((item, index) => {
+                        return (
+                          <tr
+                            className={index === 0 && "bg-success text-white"}
+                          >
+                            <td>{index + 1}</td>
+                            <td className="text-capitalize">
+                              {item.user_name}
+                            </td>
+                            <td>{item.total}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </Card.Body>
           </Card>
         </Col>
