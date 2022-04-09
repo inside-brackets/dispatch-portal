@@ -132,7 +132,7 @@ const fetchLead = async (req, res, next) => {
 const getCarrier = (req, res, next) => {
   console.log("get carrier", req.body);
   Carrier.findOne(req.body)
-    .populate("salesman trucks.dispatcher", { user_name: 1, company: 1 })
+    .populate("salesman trucks.dispatcher", { user_name: 1, company: 1,first_name:1,last_name:1 })
     .then((carriers) => {
       res.status(200).send(carriers);
     })
