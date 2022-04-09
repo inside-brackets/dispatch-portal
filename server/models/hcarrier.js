@@ -6,6 +6,11 @@ const hCarrierSchema = new mongoose.Schema(
       type: Number,
     },
     truck_number: Number,
+    user:{
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required:true
+    },
     change: String,
   },
   {

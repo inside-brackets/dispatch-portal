@@ -1,13 +1,9 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
-
 import { Route, Switch, Redirect } from "react-router-dom";
-
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../store/sales";
 import { socket } from "..";
-
 import useHttp from "../hooks/use-https";
-
 import Loader from "react-loader-spinner";
 
 // admin routes
@@ -22,6 +18,7 @@ const Loads = lazy(() => import("../pages/admin/Loads"));
 const TruckDetails = lazy(() => import("../pages/admin/TruckDetails"));
 const Users = lazy(() => import("../pages/admin/Users"));
 const PdfTest = lazy(() => import("../components/PdfTest"));
+const UserDetail = lazy(() => import("../pages/admin/UserDetail"));
 
 // sales routes
 const Dashboard = lazy(() => import("../pages/sales/Dashboard"));
@@ -130,6 +127,8 @@ const Routes = () => {
         <Route path="/pdf" component={PdfTest} />
         <Route path="/invoices" component={Invoice} />
         <Route path="/users" exact component={Users} />
+        <Route path="/user/:id" exact component={UserDetail} />
+        
         <Route path="*">
           <h1>Not found</h1>
         </Route>

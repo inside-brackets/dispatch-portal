@@ -3,6 +3,7 @@ const Carrier = require("../models/carrier");
 const Hcarrier = require("../models/hcarrier");
 var moment = require("moment-timezone");
 const { callAbleStates } = require("../util/convertTZ");
+const { getToken } = require("../util/getToken");
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
@@ -18,8 +19,11 @@ const updateCarrier = (req, res, next) => {
       res.status(200).send(carrier);
       console.log("done");
       if (req.body.c_status) {
+        let token = req.header("x-auth-token");
+        const userId = getToken(token);
         Hcarrier.create({
           mc_number: parseInt(req.params.mcNumber),
+          user: userId,
           change: req.body.c_status,
         });
       }
@@ -53,6 +57,9 @@ const updateTruck = async (req, res) => {
 const assignDispatcher = (req, res, next) => {
   console.log(req.body);
   console.log(req.params);
+  let token = req.header("x-auth-token");
+  const userId = getToken(token);
+  console.log("userId ", userId);
   Carrier.updateOne(
     { mc_number: req.params.mc, "trucks.truck_number": req.params.truckNumber },
     {
@@ -63,11 +70,11 @@ const assignDispatcher = (req, res, next) => {
     }
   )
     .then((result) => {
-      console.log(result);
       res.send(result);
       Hcarrier.create({
         mc_number: req.params.mc,
         truck_number: req.params.truckNumber,
+        user: userId,
         change: "dispatcher assigned",
       });
     })
@@ -170,31 +177,14 @@ const getTableCarriers = async (req, res, next) => {
       "salesman trucks.dispatcher",
       { user_name: 1, company: 1 }
     );
-    console.log("result", result);
     if (req.body.company) {
       result = result.filter(
-        (carry) => carry.salesman?.company === req.body.company
+        (carry) => carry.salesman?.company == req.body.company
       );
     }
     if (search !== "" && isNaN(search)) {
       search = search.trim().toLowerCase();
       result = result.filter((carrier) => {
-        // console.log(
-        //   "company name",
-        //   carrier.company_name.toLowerCase().includes(search),
-        //   carrier.company_name
-        // );
-        // console.log(
-        //   "condition first=> sales man",
-        //   carrier.salesman?.user_name,
-        //   carrier.salesman?.user_name.toLowerCase().includes(search)
-        // );
-        // console.log(
-        //   "condition second=> sales man",
-        //   carrier.trucks.filter((truck) =>
-        //     truck.dispatcher?.user_name.toLowerCase().includes(search)
-        //   )
-        // );
         return (
           carrier.salesman?.user_name.toLowerCase().includes(search) ||
           carrier.trucks.filter((truck) =>
@@ -207,6 +197,7 @@ const getTableCarriers = async (req, res, next) => {
     const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
     res.send({ data: fResult, length: result.length });
   } catch (error) {
+    res.status(500).send(error);
     console.log(error);
   }
 };
@@ -353,7 +344,6 @@ const countCarriers = async (req, res, next) => {
       stats.pendingTrucks = pendingCount;
       stats.activeTrucks = activeCount;
     });
-  console.log(stats);
   res.send(stats);
 };
 
@@ -405,6 +395,28 @@ const changeTypeController = async (req, res) => {
   });
 };
 
+const rejectAndRegistered = async (req, res, next) => {
+  try {
+    var date = new Date(),
+      y = date.getFullYear(),
+      m = date.getMonth();
+    var firstDay = new Date(y, m, 1);
+    var lastDay = new Date(y, m + 1, 0);
+    const carrier = await Hcarrier.find({
+      updatedAt: {
+        $gte: firstDay,
+        $lte: lastDay,
+      },
+      change: req.body.change,
+      user: req.body.user_id,
+    });
+
+    res.send(carrier);
+  } catch (err) {
+    res.send(err);
+  }
+};
+
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -419,4 +431,5 @@ module.exports = {
   countCarriers,
   nearestAppointment,
   changeTypeController,
+  rejectAndRegistered,
 };
