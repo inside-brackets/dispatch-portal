@@ -1,5 +1,6 @@
 const Invoice = require("../models/invoice");
 const Carrier = require("../models/carrier");
+const User = require("../models/user")
 
 const addNewInvoice = async (req, res) => {
   console.log(req.body);
@@ -149,10 +150,97 @@ const clearInvoice = async (req, res) => {
   }
 };
 
+const topSales = async (req, res, next) => {
+  try {
+    const user = await User.aggregate([
+      {
+        $match: {
+          department: "sales",
+          company:req.body.company
+        },
+      },
+      {
+        $lookup: {
+                from: "invoices",
+                let: {
+                  sales_id: "$_id"
+                },
+                pipeline: [
+                  { $match: {
+                      $expr: { $and: [
+                          { $eq: [ "$sales", "$$sales_id" ] },
+                          { $eq: [ "$invoiceStatus", "cleared" ] },
+                          { $eq: [ {$month: "$endingDate"},{$month: new Date()} ] }
+                      ] }
+                  } }
+                ],
+                as: "invoices"
+            }
+    },
+    { $project: {
+      user_name:1,
+      total: { $sum: "$invoices.dispatcherFee" }
+    }}
+    ,{ $sort : { total : -1} }
+    ]);
+  return res.send(user)
+      
+  } catch (error) {
+    res.send(error.message)
+  }
+
+};
+
+const topDispatcher = async (req, res, next) => {
+  try {
+    const user = await User.aggregate([
+      {
+        $match: {
+          department: "dispatch",
+          company:req.body.company
+        },
+      },
+      {
+        $lookup: {
+                from: "invoices",
+                let: {
+                  dispatch_id: "$_id"
+                },
+                pipeline: [
+                  { $match: {
+                      $expr: { $and: [
+                          { $eq: [ "$dispatcher", "$$dispatch_id" ] },
+                          { $eq: [ "$invoiceStatus", "cleared" ] },
+                          { $eq: [ {$month: "$endingDate"},{$month: new Date()} ] }
+                      ] }
+                  } }
+                ],
+                as: "invoices"
+            }
+    },
+    { $project: {
+      user_name:1,
+      total: { $sum: "$invoices.dispatcherFee" }
+    }}
+    ,{ $sort : { total : -1} }
+    ]);
+  return res.send(user)
+      
+  } catch (error) {
+    res.send(error.message)
+  }
+
+};
+
+
+
+
 module.exports = {
   addNewInvoice,
   getInvoices,
   getTableInvoices,
   updateInvoiceStatus,
   clearInvoice,
+  topSales,
+  topDispatcher,
 };

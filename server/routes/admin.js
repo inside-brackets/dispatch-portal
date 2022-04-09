@@ -12,4 +12,7 @@ route.post("/createuser", usersController.addNewUser);
 route.delete("/deleteuser", usersController.deleteUser);
 route.put("/clearinvoice", invoiceController.clearInvoice);
 
+route.post("/top-sales",invoiceController.topSales)
+route.post("/top-dispatcher",invoiceController.topDispatcher)
+
 module.exports = route;
