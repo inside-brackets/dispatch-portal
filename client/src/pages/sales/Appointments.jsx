@@ -19,7 +19,7 @@ const Appointments = () => {
         return;
       }
       data.sort((a, b) => {
-        return new Date(b.appointment - new Date(a.appointment));
+        return new Date(new Date(a.appointment - b.appointment));
       });
       setCarriersList(data);
       setSearchedCarrier(data);
