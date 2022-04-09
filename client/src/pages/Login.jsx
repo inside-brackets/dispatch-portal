@@ -89,7 +89,7 @@ const Login = () => {
         setLoading(false);
       }
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response?.status === 401) {
         setUnAuthorized({
           status: true,
           msg: "Your computer is not authorized",

@@ -13,7 +13,6 @@ import notificationSound from "./assets/audio/notification.mp3";
 import { useHistory } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import httpIntercept from "./interceptor/interceptor";
-import Timer from "./components/Timer";
 
 import Loader from "react-loader-spinner";
 import Cookies from "universal-cookie";
@@ -166,7 +165,6 @@ const App = () => {
         </div>
       }
     >
-      <Timer />
       <Switch>
         <Route path="/login" exact component={Login} />
 

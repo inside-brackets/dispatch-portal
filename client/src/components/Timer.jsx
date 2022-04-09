@@ -7,7 +7,7 @@ const Timer = () => {
   const { user } = useSelector((state) => state.user);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/sales/get-closet/${user._id}`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/sales/get-closet/${user?._id}`)
       .then((res) => {
         console.log(res.data);
         setTimeout(() => {
