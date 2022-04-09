@@ -177,7 +177,7 @@ const getTableCarriers = async (req, res, next) => {
     );
     if (req.body.company) {
       result = result.filter(
-        (carry) => carry.salesman.company == req.body.company
+        (carry) => carry.salesman?.company == req.body.company
       );
     }
     if (search !== "" && isNaN(search)) {
@@ -195,6 +195,7 @@ const getTableCarriers = async (req, res, next) => {
     const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
     res.send({ data: fResult, length: result.length });
   } catch (error) {
+    res.status(500).send(error);
     console.log(error);
   }
 };

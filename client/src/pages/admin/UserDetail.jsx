@@ -4,12 +4,18 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import moment from "moment";
-import { PieChart, Pie, Cell, Tooltip ,  BarChart,
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  Legend } from "recharts";
+  Legend,
+} from "recharts";
 
 const UserDetail = () => {
   const params = useParams();
@@ -50,8 +56,6 @@ const UserDetail = () => {
         }
       })
       .catch((err) => console.log(err));
-
-
   }, [params.id]);
 
   const data01 = [
@@ -64,40 +68,39 @@ const UserDetail = () => {
       name: "month",
       salary: 3000,
       dispactherFee: 1398,
-      amt: 2210
+      amt: 2210,
     },
     {
       name: "Page C",
       salary: 2000,
       dispactherFee: 9800,
-      amt: 2290
+      amt: 2290,
     },
     {
       name: "Page D",
       salary: 2780,
       dispactherFee: 3908,
-      amt: 2000
+      amt: 2000,
     },
     {
       name: "Page E",
       salary: 1890,
       dispactherFee: 4800,
-      amt: 2181
+      amt: 2181,
     },
     {
       name: "Page F",
       salary: 2390,
       dispactherFee: 3800,
-      amt: 2500
+      amt: 2500,
     },
     {
       name: "Page G",
       salary: 3490,
       dispactherFee: 4300,
-      amt: 2100
-    }
+      amt: 2100,
+    },
   ];
-  
 
   const COLORS = ["#0088FE", "#00C49F"];
 
@@ -138,6 +141,7 @@ const UserDetail = () => {
             <Form>
               <Row className="m-3">
                 <h1 className="text-center">User Detail</h1>
+                <hr />
                 <Form.Group as={Col} md="6">
                   <Form.Label>User Name</Form.Label>
                   <Form.Control
@@ -263,56 +267,57 @@ const UserDetail = () => {
           <Card>
             <Row>
               <h1 className="text-center">Stats</h1>
-              
-                  <Col>
-                  <h3>Monthly Dialing report</h3>
-                  {!data ?           <Alert variant="primary">{message}</Alert>
-:  
-                    <PieChart width={400} height={400}>
-                      <Pie
-                        data={data}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={renderCustomizedLabel}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {data.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                    </PieChart>
-}
-   </Col>
-                  <Col>
-                  <h3>Profit Loss Analysis</h3>
-                  <BarChart
-      width={500}
-      height={300}
-      data={data01}
-      margin={{
-        top: 20,
-        right: 30,
-        left: 20,
-        bottom: 5
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="dispactherFee" stackId="a" fill="#8884d8" />
-      <Bar dataKey="salary" stackId="a" fill="#82ca9d" />
-    </BarChart>
-                  </Col>
-            
+              <hr />
+
+              <Col>
+                <h3>Monthly Dialing report</h3>
+                {!data ? (
+                  <Alert variant="primary">{message}</Alert>
+                ) : (
+                  <PieChart width={400} height={400}>
+                    <Pie
+                      data={data}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderCustomizedLabel}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {data.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                )}
+              </Col>
+              <Col>
+                <h3>Profit Loss Analysis</h3>
+                <BarChart
+                  width={500}
+                  height={300}
+                  data={data01}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="dispactherFee" stackId="a" fill="#8884d8" />
+                  <Bar dataKey="salary" stackId="a" fill="#82ca9d" />
+                </BarChart>
+              </Col>
             </Row>
           </Card>
         </Col>
