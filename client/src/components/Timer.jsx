@@ -5,14 +5,14 @@ const Timer = () => {
     console.log("1st");
 
     let counter = JSON.parse(localStorage.getItem("counters"));
-    const date = new Date().setHours(5, 0, 0);
+    const date = new Date().setHours(17, 0, 0);
 
     // if counter
     var timeOut;
     if (counter) {
       const now = new Date();
       const then = new Date(counter.date);
-      then.setDate(then.getDate() + 1);
+      // then.setDate(then.getDate());
       timeOut = Math.max(then - now, 1000);
     } else {
       timeOut = 3000;
