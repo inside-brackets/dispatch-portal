@@ -15,6 +15,8 @@ const DashboardAdmin = () => {
   const [appointment, setAppointment] = useState(0);
   const [active, setActive] = useState(0);
   const [pending, setPending] = useState(0);
+  const [data, setData] = useState(null);
+  const [topDispatcher, setTopDispatcher] = useState(null);
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
@@ -77,6 +79,24 @@ const DashboardAdmin = () => {
         setActive(data.activeTrucks);
         setPending(data.pendingTrucks);
       });
+
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/top-sales`, {
+        company: selectedCompany.value,
+      })
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => console.log(err));
+
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/top-dispatcher`, {
+        company: selectedCompany.value,
+      })
+      .then((res) => {
+        setTopDispatcher(res.data);
+      })
+      .catch((err) => console.log(err));
   }, [selectedCompany]);
 
   return (
@@ -169,33 +189,89 @@ const DashboardAdmin = () => {
       <Row>
         <Col>
           <Card
-            className="my-card"
             style={{
               width: "auto",
-              height: "280px",
+              height: "480px",
               border: "light",
             }}
           >
             <Card.Body>
               <Card.Title>Top Dispatchers</Card.Title>
               <hr />
-              <Card.Text className="">Top Dispatchers</Card.Text>
+              {!topDispatcher ? (
+                <>Loading...</>
+              ) : (
+                <div class="tableFixHead">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>User Name</th>
+                        <th>Total Gross</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {topDispatcher.map((item, index) => {
+                        return (
+                          <tr
+                            className={index === 0 && "bg-success text-white"}
+                          >
+                            <td>{index + 1}</td>
+                            <td className="text-capitalize">
+                              {item.user_name}
+                            </td>
+                            <td>{item.total}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </Card.Body>
           </Card>
         </Col>
         <Col>
           <Card
-            className="my-card"
             style={{
               width: "auto",
-              height: "280px",
+              height: "480px",
               border: "light",
             }}
           >
             <Card.Body>
               <Card.Title>Sales Stats</Card.Title>
               <hr />
-              <Card.Text className="">Sales Stats</Card.Text>
+              {!data ? (
+                <>Loading...</>
+              ) : (
+                <div class="tableFixHead">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>User Name</th>
+                        <th>Total Gross</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((item, index) => {
+                        return (
+                          <tr
+                            className={index === 0 && "bg-success text-white"}
+                          >
+                            <td>{index + 1}</td>
+                            <td className="text-capitalize">
+                              {item.user_name}
+                            </td>
+                            <td>{item.total}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </Card.Body>
           </Card>
         </Col>

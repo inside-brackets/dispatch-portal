@@ -163,7 +163,7 @@ const Appointments = () => {
           <Link to={`/appointments/${item.mc_number}`}>
             {
               <Card
-                className="my-card"
+                className="hvr-scale"
                 style={{
                   minHeight: "430px",
                   border: "light",
