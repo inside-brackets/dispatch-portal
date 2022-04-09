@@ -181,7 +181,7 @@ const Appointments = () => {
                   <Card.Text className="">{body(item)}</Card.Text>
                   <Card.Footer className="card-title ">
                     {
-                      <h5>{`Time: ${moment(item.appointment).format(
+                      <h5>{`Time: ${moment(new Date(item.appointment)).format(
                         "llll"
                       )}`}</h5>
                     }
