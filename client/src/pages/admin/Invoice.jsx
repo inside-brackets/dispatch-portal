@@ -21,7 +21,6 @@ const invoiceTableHead = [
   "Payable",
   "Status",
   "Action",
-  "Print",
 ];
 
 const Invoice = () => {
@@ -60,13 +59,8 @@ const Invoice = () => {
         )}
       </td>
       <td>
-        <div className="edit__class">
-          <EditButton type="view" onClick={() => viewInvoiceModal(item)} />
-        </div>
-      </td>
-      <td>
-        <div className="edit__class">
-          {/* <EditButton type="edit" onClick={() => viewPdfModal(item)} /> */}
+        <div style={{display:"flex",justifyContent:"space-around",alignItems:"center"}}>
+          <EditButton type="open" onClick={() => viewInvoiceModal(item)} />
           <i class="bx bx-printer" onClick={() => viewPdfModal(item)}></i>
         </div>
       </td>

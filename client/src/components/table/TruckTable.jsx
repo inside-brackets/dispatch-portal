@@ -106,7 +106,7 @@ const TruckTable = (props) => {
             </>
           ) : user.department === "admin" && item.t_status !== "new" ? (
             <EditButton
-              type="view"
+              type="open"
               onClick={() => {
                 setTruck(item);
                 setShowReassingModal(true);
@@ -118,7 +118,7 @@ const TruckTable = (props) => {
             item.t_status === "new" && (
               <>
                 <EditButton
-                  type="view"
+                  type="open"
                   onClick={() => {
                     setTruck(item);
                     setShowReassingModal(true);
