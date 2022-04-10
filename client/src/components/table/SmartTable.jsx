@@ -172,7 +172,7 @@ const Table = (props) => {
                     {" "}
                     {`<`}{" "}
                   </button>
-                  {range.map((item, index) => (
+                  {/* {range.map((item, index) => (
                     <div
                       key={index}
                       className={`table__pagination-item ${
@@ -182,7 +182,7 @@ const Table = (props) => {
                     >
                       {item + 1}
                     </div>
-                  ))}
+                  ))} */}
                   <button
                     className="table__pagination-item"
                     onClick={() =>
