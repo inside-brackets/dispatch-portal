@@ -152,11 +152,13 @@ const getTableCarriers = async (req, res, next) => {
     filter.c_status = { $in: req.body.filter.status.map((item) => item.value) };
   }
   if (req.body.filter.trucks?.length > 0) {
-    filter["trucks.t_status"] = { $in: req.body.filter.trucks.map((item) => item.value) };
+    filter["trucks.t_status"] = {
+      $in: req.body.filter.trucks.map((item) => item.value),
+    };
   }
 
-  console.log('filter',filter);
-  
+  console.log("filter", filter);
+
   if (req.body.salesman) {
     filter.salesman = req.body.salesman;
   }
@@ -169,7 +171,7 @@ const getTableCarriers = async (req, res, next) => {
 
     if (req.body.company) {
       result = result.filter(
-        (carry) => carry.salesman.company == req.body.company
+        (carry) => carry.salesman?.company == req.body.company
       );
     }
     if (search !== "" && isNaN(search)) {
