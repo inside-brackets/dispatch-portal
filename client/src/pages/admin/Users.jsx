@@ -51,7 +51,6 @@ const Users = () => {
   };
   const editModalHnadler = (item) => {
     setEditModal(true);
-    console.log("default user", item);
     setUser(item);
   };
   const addUserHandler = () => {

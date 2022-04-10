@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 
 import TextArea from "../../components/UI/TextArea";
+import { incrementCounter } from "../../utils/utils";
 
 const Dialer = () => {
   const { user } = useSelector((state) => state.user);
@@ -18,21 +19,24 @@ const Dialer = () => {
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
   const [refresh, setrefresh] = useState(false);
+  const [loading, setLoading] = useState(false)
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
-
+  let counter = JSON.parse(localStorage.getItem("counters"));
   const { sendRequest: postCarriers } = useHttp();
   const { sendRequest: postdidnotPickCarriers } = useHttp();
 
   const { sendRequest: postrejectCarriers } = useHttp();
 
   // make appointment
-  const onConfirm = () => {
+  const onConfirm =async ()  => {
+    setLoading(true)
+    incrementCounter();
     const transformData = (data) => {
       console.log(data);
       setrefresh(!refresh);
       setModal(false);
     };
-    postCarriers(
+await    postCarriers(
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
@@ -44,9 +48,12 @@ const Dialer = () => {
       },
       transformData
     );
+    setLoading(false)
   };
 
   const didnotPickHandler = async () => {
+    setLoading(true)
+    incrementCounter();
     const transformData = (data) => {
       console.log(data);
       setrefresh(!refresh);
@@ -61,6 +68,7 @@ const Dialer = () => {
       },
       transformData
     );
+  setLoading(false)
   };
   const buttonClickHandler = () => {
     setModal(true);
@@ -68,18 +76,22 @@ const Dialer = () => {
 
   const onClose = () => {
     setModal(false);
+    setLoading(false)
   };
   const onrClose = () => {
     setrModal(false);
+    setLoading(false)
   };
 
   // reject
-  const onrConfirm = () => {
+  const onrConfirm = async () => {
+    setLoading(true)
+    incrementCounter();
     const transformData = (data) => {
       setrefresh(!refresh);
       setrModal(false);
     };
-    postrejectCarriers(
+await    postrejectCarriers(
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
@@ -90,10 +102,12 @@ const Dialer = () => {
       },
       transformData
     );
+    setLoading(false)
   };
 
   const buttonrClickHandler = () => {
     setrModal(true);
+    setLoading(false)
   };
 
   // fetch new
@@ -130,17 +144,17 @@ const Dialer = () => {
     );
 
   return (
-    <div className="row dialer__container">
-      <div className="col-6">
+    <div className="row justify-content-center ">
+      <div className="col-5">
         <DialerCard
           title={carrier.company_name}
           buttons={[
             {
-              buttonText: "rejected",
+              buttonText: "Rejected",
               color: "red",
               onClick: buttonrClickHandler,
             },
-            { buttonText: "Didn't Pick", onClick: didnotPickHandler },
+            { buttonText: "Didn't Pick", onClick: didnotPickHandler, disabled:loading },
             {
               buttonText: "Appointment",
               onClick: buttonClickHandler,
@@ -156,11 +170,27 @@ const Dialer = () => {
           <h5>Address: </h5>
           <h6>{carrier.address}</h6>
         </DialerCard>
-
+        <div
+          className="row
+        justify-content-center align-items-center mt-5"
+        >
+          <div className="col-6">
+            <h2>Fetch Counter : <span>{counter ? counter.counter : 0}</span> </h2>
+            <h4></h4>
+            
+            {/* <input
+              className="form-control"
+              defaultValue={counter ? counter.counter : 0}
+              type="text"
+              readOnly
+            /> */}
+          </div>
+        </div>
         {/* {modal && ( */}
         <Modal
           show={modal}
           heading="Make Appointment"
+          disabled={loading}
           onConfirm={onConfirm}
           onClose={onClose}
         >
@@ -191,6 +221,7 @@ const Dialer = () => {
           show={rmodal}
           heading="Reject Carrier"
           onConfirm={onrConfirm}
+          disabled={loading}
           onClose={onrClose}
         >
           <form>

@@ -26,6 +26,7 @@ const MyModal = (props) => {
               <Button
                 buttonText="Submit"
                 color="inherit"
+                disabled={props.disabled}
                 onClick={props.onConfirm}
                 className="button__class"
               />
