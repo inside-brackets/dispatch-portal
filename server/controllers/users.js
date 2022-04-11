@@ -44,7 +44,7 @@ const addNewUser = async (req, res) => {
 };
 
 const getUser = (req, res) => {
-  User.findById(req.params.id)
+  User.find(req.body)
     .then((user) => {
       res.send(user);
     })
