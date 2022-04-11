@@ -11,7 +11,7 @@ import BackButton from "../../components/UI/BackButton";
 import MySelect from "../../components/UI/MySelect";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import moment from 'moment'
+import moment from "moment";
 import useInput from "../../hooks/use-input";
 import { socket } from "../..";
 
@@ -254,7 +254,7 @@ const AppointmentDetail = () => {
   }
   const saveCarrier = () => {
     const upObj = {
-      appointment: appointmentRef.current.value,
+      appointment: new Date(appointmentRef.current.value),
       comment: commentRef.current.value,
       owner_name: ownerNameRef.current.value,
       tax_id_number: taxId,
@@ -349,8 +349,11 @@ const AppointmentDetail = () => {
     );
   }
 
-  console.log('appointment',moment(carrier.appointment).format('YYYY-MM-DDTH:m'),appointmentRef.current)
-
+  console.log(
+    "appointment",
+    moment(carrier.appointment).format("YYYY-MM-DDTH:m"),
+    appointmentRef.current
+  );
 
   return (
     <>
@@ -422,7 +425,9 @@ const AppointmentDetail = () => {
                 <h4>Appointment:</h4>
                 <Input
                   type="datetime-local"
-                  defaultValue={moment(carrier.appointment).format('YYYY-MM-DDTH:m')}
+                  defaultValue={moment(new Date(carrier.appointment)).format(
+                    "YYYY-MM-DDTHH:mm"
+                  )}
                   ref={appointmentRef}
                 />
               </div>
