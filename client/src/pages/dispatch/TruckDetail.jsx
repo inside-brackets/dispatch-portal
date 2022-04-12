@@ -55,6 +55,7 @@ const TruckDetail = ({ match }) => {
   const [factAgentName, setFactAgentName] = useState("");
   const [factAgentEmail, setfactAgentEmail] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
+  const [t_status, setT_status] = useState(``)
 
   const history = useHistory();
 
@@ -96,6 +97,7 @@ const TruckDetail = ({ match }) => {
       setTripDurration(truck.trip_durration);
       setRegion(transformToSelectValue(truck.region));
       setTrailerType(transformToSelectValue(truck.trailer_type));
+      setT_status(transformToSelectValue(truck.t_status));
     };
     fetch();
   }, [currUserId, match]);
@@ -169,21 +171,16 @@ const TruckDetail = ({ match }) => {
         "trucks.$.temperature_restriction": temperatureRestrictions,
         "trucks.$.vin_number": vinNumber,
         "trucks.$.region": region.map((item) => item.value),
+        "trucks.$.t_status": t_status.value,
       };
 
-      await axios
+ const res=   await axios
         .put(
           `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${data.mc_number}/${match.params.truck}`,
           truckObj
         )
-        .then((res) => {
-          console.log(res);
-          setButtonLoader(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setButtonLoader(false);
-        });
+        console.log('truck aupdated',res)
+        setButtonLoader(false)
     }
   };
 
@@ -631,18 +628,17 @@ const TruckDetail = ({ match }) => {
                         Please provide a valid Vin Number.
                       </Form.Control.Feedback>
                     </Form.Group>
-                  </Row>
-                  <Row>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Carry Limit:</Form.Label>
                       <Form.Control
                         type="number"
-                        placeholder="carry limit"
+                        placeholder="Carry limit"
                         value={carryLimit}
                         onChange={(e) => setCarryLimit(e.target.value)}
                       />
                     </Form.Group>
-
+                  </Row>
+                  <Row>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Temperature Restrictions:</Form.Label>
                       <Form.Control
@@ -654,8 +650,6 @@ const TruckDetail = ({ match }) => {
                         }
                       />
                     </Form.Group>
-                  </Row>
-                  <Row>
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Trip Durration:</Form.Label>
                       <Form.Control
@@ -666,13 +660,10 @@ const TruckDetail = ({ match }) => {
                         // defaultValue={data.tax_id_number}
                       />
                     </Form.Group>
+
                   </Row>
                   <Row>
-                    <Col
-                      style={{
-                        marginLeft: "-30px",
-                      }}
-                    >
+                    <Col>
                       <MySelect
                         label="Region"
                         isMulti={true}
@@ -709,6 +700,25 @@ const TruckDetail = ({ match }) => {
                       />
                     </Col>
                   </Row>
+                  <Col
+                      style={{
+                        marginLeft: "-300px",
+                      }}
+                    >
+                      <MySelect
+                        label="Truck Status:"
+                        isMulti={false}
+                        value={t_status}
+                        onChange={setT_status}
+                        options={[
+                          { label: "New", value: "new" },
+                          { label: "Pending", value: "pending" },
+                          { label: "Active", value: "active" },
+                          { label: "Inactive ", value: "inactive" },
+                        ]}
+                      />
+                    </Col>
+
                 </Row>
                 <hr />
                 <h3>Carrier Documents:</h3>

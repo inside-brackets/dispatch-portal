@@ -135,7 +135,7 @@ const MyTrucks = () => {
           />
         </div>
       </div>
-      {searchedCarrier.map((item, index) => (
+      {searchedCarrier.filter(truck=> truck.truck_status !== "inactive").map((item, index) => (
         <div className="col-4" key={index}>
           <Link to={`/trucks/${item.mc_number}/${item.truck_number}`}>
             {<TruckCard item={item} />}

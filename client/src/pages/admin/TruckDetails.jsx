@@ -7,6 +7,7 @@ import BackButton from "../../components/UI/BackButton";
 import axios from "axios";
 import { Form, Card, Row, Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { socket } from "../..";
 
 const TruckDetails = () => {
   const transformToSelectValue = (value) => {
@@ -30,6 +31,7 @@ const TruckDetails = () => {
   const [region, setRegion] = useState("");
   const [loadButton, setLoadButton] = useState(false);
   const [trailerType, setTrailerType] = useState("");
+  const [t_status, setT_status] = useState("")
   //   const [rmodal, setrModal] = useState();
   const [error, setError] = useState(false);
   const [truck, setTruck] = useState(null);
@@ -63,21 +65,17 @@ const TruckDetails = () => {
         "trucks.$.vin_number": event.target.vin_number.value,
         "trucks.$.region": region.map((item) => item.value),
         "trucks.$.off_days": offDays.map((item) => item.value),
+        "trucks.$.t_status": t_status.value,
       };
-      await axios
+ await axios
         .put(
           `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
           truckObj
         )
-        .then((res) => {
-          console.log(res);
-          setLoadButton(false);
-        })
-        .catch((err) => {
-          setLoadButton(false);
-          console.log(err);
-        });
-      console.log(truckObj);
+        if(t_status.value === "inactive"){
+          socket.emit("truck-inactive", `${params.mc}/${truck.truck_number}`);
+        }
+        setLoadButton(false)
     }
   };
 
@@ -99,6 +97,7 @@ const TruckDetails = () => {
           setRegion(transformToSelectValue(truck.region));
           setoffDays(transformToSelectValue(truck.off_days));
           setTrailerType(transformToSelectValue(truck.trailer_type));
+          setT_status(transformToSelectValue(truck.t_status))
           if (truck.t_status !== "new") {
             setSelectedDispatcher({
               value: truck.dispatcher._id,
@@ -256,6 +255,7 @@ const TruckDetails = () => {
                   />
                 </Form.Group>
               </Row>
+              <Row>
               <Form.Group as={Col} md="4" controlId="validationCustom03">
                 <Form.Label>Off Days:</Form.Label>
                 <Select
@@ -273,6 +273,22 @@ const TruckDetails = () => {
                   ]}
                 />
               </Form.Group>
+              <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <Form.Label>Status:</Form.Label>
+                  <Select
+                    label="Truck Status"
+                    isMulti={false}
+                    value={t_status}
+                    onChange={setT_status}
+                    options={[
+                      { label: "New", value: "new" },
+                      { label: "Pending", value: "pending" },
+                      { label: "Active", value: "active" },
+                      { label: "Inactive ", value: "inactive" },
+                    ]}
+                  />
+                </Form.Group>
+              </Row>
               {truck?.t_status !== "new" && (
                 <Row className="justify-content-center align-items-center">
                   <Form.Group as={Col} md="4" controlId="validationCustom03">

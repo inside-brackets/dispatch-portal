@@ -81,6 +81,13 @@ io.on("connection", (socket) => {
     console.log(msg);
     io.sockets.emit("backend-user-fired", msg);
   });
+
+  socket.on("truck-inactive", (msg) => {
+    console.log(msg)
+    io.sockets.emit("backend-truck-inactive", msg);
+  });
+
+
 });
 
 // check every request for user token and validate token from database

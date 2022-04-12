@@ -59,8 +59,29 @@ const App = () => {
       }
     });
 
-    socket.on("backend-deactivate-carrier", (msg) => {
+
+    socket.on("sale-closed", (msg) => {
+      if (currUser?.department === "admin") {
+        notify(msg);
+        sound.play();
+      }
+    });
+
+    socket.on("backend-truck-inactive", (msg) => {
       if (currUser?.department === "dispatch") {
+        console.log("currrent location", window.location.pathname);
+        if (window.location.pathname === "/mytrucks") {
+          window.location.reload();
+        } else if (window.location.pathname.includes(`/trucks/${msg}`)) {
+         
+          history.push("/mytrucks");
+        }
+      }
+    });
+
+
+socket.on("backend-deactivate-carrier", (msg) => {     
+if (currUser?.department === "dispatch") {
         console.log("currrent location", window.location.pathname);
         if (window.location.pathname === "/mytrucks") {
           window.location.reload();
