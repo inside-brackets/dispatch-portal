@@ -19,7 +19,7 @@ const Dialer = () => {
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
   const [refresh, setrefresh] = useState(false);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   let counter = JSON.parse(localStorage.getItem("counters"));
   const { sendRequest: postCarriers } = useHttp();
@@ -28,31 +28,31 @@ const Dialer = () => {
   const { sendRequest: postrejectCarriers } = useHttp();
 
   // make appointment
-  const onConfirm =async ()  => {
-    setLoading(true)
+  const onConfirm = async () => {
+    setLoading(true);
     incrementCounter();
     const transformData = (data) => {
       console.log(data);
       setrefresh(!refresh);
       setModal(false);
     };
-await    postCarriers(
+    await postCarriers(
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
         body: {
           c_status: "appointment",
           comment: commentRef.current.value,
-          appointment:new Date(appointmentRef.current.value),
+          appointment: new Date(appointmentRef.current.value),
         },
       },
       transformData
     );
-    setLoading(false)
+    setLoading(false);
   };
 
   const didnotPickHandler = async () => {
-    setLoading(true)
+    setLoading(true);
     incrementCounter();
     const transformData = (data) => {
       console.log(data);
@@ -68,7 +68,7 @@ await    postCarriers(
       },
       transformData
     );
-  setLoading(false)
+    setLoading(false);
   };
   const buttonClickHandler = () => {
     setModal(true);
@@ -76,22 +76,22 @@ await    postCarriers(
 
   const onClose = () => {
     setModal(false);
-    setLoading(false)
+    setLoading(false);
   };
   const onrClose = () => {
     setrModal(false);
-    setLoading(false)
+    setLoading(false);
   };
 
   // reject
   const onrConfirm = async () => {
-    setLoading(true)
+    setLoading(true);
     incrementCounter();
     const transformData = (data) => {
       setrefresh(!refresh);
       setrModal(false);
     };
-await    postrejectCarriers(
+    await postrejectCarriers(
       {
         url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
@@ -102,12 +102,12 @@ await    postrejectCarriers(
       },
       transformData
     );
-    setLoading(false)
+    setLoading(false);
   };
 
   const buttonrClickHandler = () => {
     setrModal(true);
-    setLoading(false)
+    setLoading(false);
   };
 
   // fetch new
@@ -154,7 +154,11 @@ await    postrejectCarriers(
               color: "red",
               onClick: buttonrClickHandler,
             },
-            { buttonText: "Didn't Pick", onClick: didnotPickHandler, disabled:loading },
+            {
+              buttonText: "Didn't Pick",
+              onClick: didnotPickHandler,
+              disabled: loading,
+            },
             {
               buttonText: "Appointment",
               onClick: buttonClickHandler,
@@ -170,7 +174,7 @@ await    postrejectCarriers(
           <h5>Address: </h5>
           <h6>{carrier.address}</h6>
         </DialerCard>
-        <div
+        {/* <div
           className="row
         justify-content-center align-items-center mt-5"
         >
@@ -178,14 +182,9 @@ await    postrejectCarriers(
             <h2>Fetch Counter : <span>{counter ? counter.counter : 0}</span> </h2>
             <h4></h4>
             
-            {/* <input
-              className="form-control"
-              defaultValue={counter ? counter.counter : 0}
-              type="text"
-              readOnly
-            /> */}
+         
           </div>
-        </div>
+        </div> */}
         {/* {modal && ( */}
         <Modal
           show={modal}
