@@ -30,7 +30,7 @@ const TruckDetail = ({ match }) => {
   const commentRef = useRef();
   // here
   const dispatcherCommentRef = useRef();
-  const [truckObj, setTruckObj] = useState("");
+  const [truck, setTruck] = useState("");
   const [validated, setValidated] = useState(false);
   const [data, setData] = useState(null);
   const [rmodal, setrModal] = useState();
@@ -56,6 +56,7 @@ const TruckDetail = ({ match }) => {
   const [factAgentEmail, setfactAgentEmail] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [t_status, setT_status] = useState(``)
+  const [showSecondDriver, setShowSecondDriver] = useState(false)
 
   const history = useHistory();
 
@@ -89,7 +90,7 @@ const TruckDetail = ({ match }) => {
       const truck = response.data.trucks.find((item) => {
         return item.truck_number.toString() === match.params.truck.toString();
       });
-      setTruckObj(truck);
+      setTruck(truck);
       setTruckNumber(truck.truck_number);
       setVinNumber(truck.vin_number);
       setCarryLimit(truck.carry_limit);
@@ -164,6 +165,20 @@ const TruckDetail = ({ match }) => {
           console.log(err);
           setButtonLoader(false);
         });
+        const drivers = [
+          {
+            name: event.target.driver_name.value,
+            email_address: event.target.driver_email.value,
+            phone_number: event.target.driver_phone.value,
+          },
+        ];
+       if(showSecondDriver || truck.drivers.length > 1){
+          drivers.push({
+            name: event.target.driver2_name.value,
+            email_address: event.target.driver2_email.value,
+            phone_number: event.target.driver2_phone.value,
+          });
+        }
       const truckObj = {
         "trucks.$.trailer_type": trailerType.value,
         "trucks.$.carry_limit": carryLimit,
@@ -172,6 +187,7 @@ const TruckDetail = ({ match }) => {
         "trucks.$.vin_number": vinNumber,
         "trucks.$.region": region.map((item) => item.value),
         "trucks.$.t_status": t_status.value,
+        "trucks.$.drivers": drivers,
       };
 
  const res=   await axios
@@ -183,6 +199,8 @@ const TruckDetail = ({ match }) => {
         setButtonLoader(false)
     }
   };
+
+  console.log('trucks',truck);
 
   const rejectHandler = async () => {
     await axios.put(
@@ -720,6 +738,100 @@ const TruckDetail = ({ match }) => {
                     </Col>
 
                 </Row>
+                <Row>
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <Form.Label>Driver Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    required
+                    placeholder="Driver Name"
+                    name="driver_name"
+                    defaultValue={truck ? truck.drivers[0].name : ""}
+                  />
+                </Form.Group>
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <Form.Label>Driver Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    required
+                    placeholder="Driver Name"
+                    name="driver_email"
+                    defaultValue={
+                      truck ? truck.drivers[0].email_address : ""
+                    }
+                  />
+                </Form.Group>
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <Form.Label>Driver Phone</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Driver Name"
+                    required
+                    name="driver_phone"
+                    defaultValue={truck ? truck.drivers[0].phone_number : ""}
+                  />
+                </Form.Group>
+              </Row>
+              {truck && truck.drivers.length > 1 ? (
+                <></>
+              ) : (
+<Row className="mt-3">
+                  <Col md={2}>
+                    <Button
+                      onClick={() => setShowSecondDriver(!showSecondDriver)}
+                    >
+                      {showSecondDriver ? "Remove" : "Add"}
+                    </Button>
+                  </Col>
+                </Row>
+              )}
+              {truck && (truck.drivers.length > 1 || showSecondDriver) && (
+                <Row>
+                  <Form.Group as={Col} md="4" controlId="validationCustom03">
+                    <Form.Label>Driver Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Driver Name"
+                      name="driver2_name"
+                      required={showSecondDriver ? true : false}
+                      defaultValue={
+                        truck && truck.drivers.length > 1
+                          ? truck.drivers[1].name
+                          : ""
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col} md="4" controlId="validationCustom03">
+                    <Form.Label>Driver Email</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Driver Name"
+                      required={showSecondDriver ? true : false}
+                      name="driver2_email"
+                      defaultValue={
+                        truck && truck.drivers.length > 1
+                          ? truck.drivers[1].email_address
+                          : ""
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group as={Col} md="4" controlId="validationCustom03">
+                    <Form.Label>Driver Phone</Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="Driver Name"
+                      required={showSecondDriver ? true : false}
+                      name="driver2_phone"
+                      defaultValue={
+                        truck && truck.drivers.length > 1
+                          ? truck.drivers[1].phone_number
+                          : ""
+                      }
+                    />
+                  </Form.Group>
+                </Row>
+              )}
+
                 <hr />
                 <h3>Carrier Documents:</h3>
                 <Row xs="auto" className="m-3">
@@ -821,7 +933,7 @@ const TruckDetail = ({ match }) => {
             setModal={setrModal}
             truck_number={match.params.truck}
             carrier={data}
-            truck={truckObj}
+            truck={truck}
           />
         </div>
       )}
