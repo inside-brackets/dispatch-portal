@@ -28,6 +28,7 @@ const MySelect = (props) => {
         value={props.value}
         onChange={props.onChange}
         isSearchable={true}
+        isDisabled={props.isDisabled}
       />
     </div>
   );
