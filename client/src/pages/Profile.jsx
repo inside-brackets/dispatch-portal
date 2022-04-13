@@ -22,9 +22,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getuser`, {
-        _id: user._id,
-      })
+      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${user._id}`)
       .then(({ data }) => {
         console.log(data);
         setDbUser(data);
