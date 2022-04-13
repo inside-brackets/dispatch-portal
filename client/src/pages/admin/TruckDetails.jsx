@@ -9,21 +9,21 @@ import { Form, Card, Row, Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { socket } from "../..";
 
+const transformToSelectValue = (value) => {
+  if (value.constructor === Array) {
+    return value.map((item) => ({
+      label: `${item.charAt(0).toUpperCase() + item.slice(1)} `,
+      value: item.trim(),
+    }));
+  } else {
+    return {
+      label: `${value.charAt(0).toUpperCase() + value.slice(1)} `,
+      value: value.trim(),
+    };
+  }
+};
+
 const TruckDetails = () => {
-  const transformToSelectValue = (value) => {
-    if (value.constructor === Array) {
-      return value.map((item) => ({
-        label: `${item.charAt(0).toUpperCase() + item.slice(1)} `,
-        value: item.trim(),
-      }));
-    } else {
-      return {
-        label: `${value.charAt(0).toUpperCase() + value.slice(1)} `,
-        value: value.trim(),
-      };
-    }
-  };
-  //   const [selectedPayment, setSelectedPayment] = useState("");
   const history = useHistory();
   const params = useParams();
   const [carrier, setCarrier] = useState({});
@@ -31,8 +31,6 @@ const TruckDetails = () => {
   const [region, setRegion] = useState("");
   const [loadButton, setLoadButton] = useState(false);
   const [trailerType, setTrailerType] = useState("");
-  const [t_status, setT_status] = useState("");
-  //   const [rmodal, setrModal] = useState();
   const [error, setError] = useState(false);
   const [truck, setTruck] = useState(null);
   const [offDays, setoffDays] = useState("");
@@ -41,6 +39,7 @@ const TruckDetails = () => {
   const [dispatchers, setDispatchers] = useState([]);
   const [showSecondDriver, setShowSecondDriver] = useState(false);
   const { company } = useSelector((state) => state.user);
+
   const reassign = async () => {
     axios
       .put(
@@ -51,6 +50,30 @@ const TruckDetails = () => {
         console.log("reassing", result.data.trucks);
       });
   };
+
+  const changeStatusHandler = () => {
+    let status = truck.t_status;
+    if (status === "active") {
+      status = "inactive";
+    } else if (status === "inactive") {
+      status = "active";
+    } else {
+      return;
+    }
+    axios
+      .put(
+        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
+        { "trucks.$.t_status": status }
+      )
+      .then((result) => {
+        if (status === "inactive") {
+          socket.emit("truck-inactive", `${params.mc}/${truck.truck_number}`);
+        }
+        setTruck((prev) => ({ ...prev, t_status: status }));
+        console.log("status changed");
+      });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -64,7 +87,7 @@ const TruckDetails = () => {
           phone_number: event.target.driver_phone.value,
         },
       ];
-      if(showSecondDriver || truck.drivers.length > 1){
+      if (showSecondDriver || truck.drivers.length > 1) {
         drivers.push({
           name: event.target.driver2_name.value,
           email_address: event.target.driver2_email.value,
@@ -80,16 +103,13 @@ const TruckDetails = () => {
         "trucks.$.vin_number": event.target.vin_number.value,
         "trucks.$.region": region.map((item) => item.value),
         "trucks.$.off_days": offDays.map((item) => item.value),
-        "trucks.$.t_status": t_status.value,
         "trucks.$.drivers": drivers,
       };
       await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
         truckObj
       );
-      if (t_status.value === "inactive") {
-        socket.emit("truck-inactive", `${params.mc}/${truck.truck_number}`);
-      }
+
       setLoadButton(false);
     }
   };
@@ -112,7 +132,6 @@ const TruckDetails = () => {
           setRegion(transformToSelectValue(truck.region));
           setoffDays(transformToSelectValue(truck.off_days));
           setTrailerType(transformToSelectValue(truck.trailer_type));
-          setT_status(transformToSelectValue(truck.t_status));
           if (truck.t_status !== "new") {
             setSelectedDispatcher({
               value: truck.dispatcher._id,
@@ -290,21 +309,6 @@ const TruckDetails = () => {
                     ]}
                   />
                 </Form.Group>
-                <Form.Group as={Col} md="4" controlId="validationCustom03">
-                  <Form.Label>Status:</Form.Label>
-                  <Select
-                    label="Truck Status"
-                    isMulti={false}
-                    value={t_status}
-                    onChange={setT_status}
-                    options={[
-                      { label: "New", value: "new" },
-                      { label: "Pending", value: "pending" },
-                      { label: "Active", value: "active" },
-                      { label: "Inactive ", value: "inactive" },
-                    ]}
-                  />
-                </Form.Group>
               </Row>
               <Row>
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
@@ -343,7 +347,7 @@ const TruckDetails = () => {
               {truck && truck.drivers.length > 1 ? (
                 <></>
               ) : (
-<Row className="mt-3">
+                <Row className="mt-3">
                   <Col md={2}>
                     <Button
                       onClick={() => setShowSecondDriver(!showSecondDriver)}
@@ -429,12 +433,22 @@ const TruckDetails = () => {
                 </Row>
               )}
             </Row>
+          </Card.Body>
+          <Card.Footer className="d-flex justify-content-end">
+            {["active", "inactive"].find((s) => s === truck?.t_status) && (
+              <Button
+                variant={truck.t_status === "active" ? "danger" : "success"}
+                style={{ marginRight: "5px" }}
+                onClick={changeStatusHandler}
+              >
+                {truck.t_status === "inactive" ? "Activate" : "Deactivate"}
+              </Button>
+            )}
 
             <Button disabled={loadButton} type="submit">
-              {" "}
               Submit
             </Button>
-          </Card.Body>
+          </Card.Footer>
         </Card>
       </Form>
     </>
