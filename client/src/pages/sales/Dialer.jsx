@@ -213,10 +213,11 @@ const Dialer = () => {
         justify-content-center align-items-center mt-5"
         >
           <div className="col-6">
-            <h2>
-              Dialed Today: <span>{counter}</span>{" "}
-            </h2>
-            <h4></h4>
+            <div className="card" style={{ width: "160px" }}>
+              <h2 className="justify-content-center align-items-center">
+                <i class="bx bxs-phone-outgoing"> :</i> <span>{counter}</span>{" "}
+              </h2>
+            </div>
           </div>
         </div>
         {/* {modal && ( */}
