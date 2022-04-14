@@ -85,7 +85,9 @@ const DashboardAdmin = () => {
         company: selectedCompany.value,
       })
       .then((res) => {
+        console.log("top sales",res.data)
         setData(res.data);
+
       })
       .catch((err) => console.log(err));
 
@@ -198,8 +200,8 @@ const DashboardAdmin = () => {
             <Card.Body>
               <Card.Title>Top Dispatchers</Card.Title>
               <hr />
-              {!topDispatcher ? (
-                <>Loading...</>
+              {!topDispatcher || topDispatcher.length === 0 ? (
+                <>Not Enough Data to show</>
               ) : (
                 <div class="tableFixHead">
                   <table>
@@ -242,8 +244,8 @@ const DashboardAdmin = () => {
             <Card.Body>
               <Card.Title>Sales Stats</Card.Title>
               <hr />
-              {!data ? (
-                <>Loading...</>
+              {!data||  data.length === 0 ?  (
+                <>Not Enough Data to show</>
               ) : (
                 <div class="tableFixHead">
                   <table>

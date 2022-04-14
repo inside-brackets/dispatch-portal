@@ -156,7 +156,8 @@ const topSales = async (req, res, next) => {
       {
         $match: {
           department: "sales",
-          company:req.body.company
+          company:req.body.company,
+          u_status:"active"
         },
       },
       {
@@ -183,7 +184,8 @@ const topSales = async (req, res, next) => {
     }}
     ,{ $sort : { total : -1} }
     ]);
-  return res.send(user)
+    const result= user.filter((item)=> item.total > 0)
+  return res.send(result)
       
   } catch (error) {
     res.send(error.message)
@@ -197,7 +199,8 @@ const topDispatcher = async (req, res, next) => {
       {
         $match: {
           department: "dispatch",
-          company:req.body.company
+          company:req.body.company,
+          u_status:"active"
         },
       },
       {
@@ -224,7 +227,10 @@ const topDispatcher = async (req, res, next) => {
     }}
     ,{ $sort : { total : -1} }
     ]);
-  return res.send(user)
+    console.log('beofre',user)
+   const result= user.filter((item)=> item.total > 0)
+    console.log('after',result)
+  return res.send(result)
       
   } catch (error) {
     res.send(error.message)
