@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   return (
     <div>
-  <Timer/>
+      {/* <Timer/> */}
       <h2 className="page-header">Dashboard</h2>
       <div className="row">
         <div className="col-8">

@@ -1,9 +1,13 @@
-export const incrementCounter = ()=>{
-    let counters = JSON.parse(localStorage.getItem("counters"));
-    if (counters) {
-      localStorage.setItem(
-        "counters",
-        JSON.stringify({ ...counters, counter: parseInt(counters.counter) + 1 })
-      );
-    }
-}
+export const transformToSelectValue = (value) => {
+  if (value.constructor === Array) {
+    return value.map((item) => ({
+      label: `${item.charAt(0).toUpperCase() + item.slice(1)} `,
+      value: item.trim(),
+    }));
+  } else {
+    return {
+      label: `${value.charAt(0).toUpperCase() + value.slice(1)} `,
+      value: value.trim(),
+    };
+  }
+};

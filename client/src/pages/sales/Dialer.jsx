@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 
 import TextArea from "../../components/UI/TextArea";
-import { incrementCounter } from "../../utils/utils";
 
 const Dialer = () => {
   const { user } = useSelector((state) => state.user);
@@ -20,8 +19,8 @@ const Dialer = () => {
   const [carrier, setCarrier] = useState(null);
   const [refresh, setrefresh] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [counter, setCounter] = useState(0);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
-  let counter = JSON.parse(localStorage.getItem("counters"));
   const { sendRequest: postCarriers } = useHttp();
   const { sendRequest: postdidnotPickCarriers } = useHttp();
 
@@ -124,6 +123,41 @@ const Dialer = () => {
     );
   }, [fetchCarriers, refresh, user]);
 
+  useEffect(() => {
+    let counterObj = JSON.parse(localStorage.getItem("counters"));
+    var timeOut = 1000;
+
+    if (counterObj) {
+      const now = new Date();
+      const reset = new Date(counterObj.reset);
+      timeOut = Math.max(reset - now, 1000);
+      setCounter(counterObj.counter);
+    }
+
+    const timer = setTimeout(() => {
+      let temp = new Date();
+      let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(17, 0, 0);
+
+      // set Date today 5 pm and set count field to 0
+      localStorage.setItem(
+        "counters",
+        JSON.stringify({
+          counter: 0,
+          reset,
+        })
+      );
+      setCounter(0);
+    }, timeOut);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const incrementCounter = () => {
+    let counterObj = JSON.parse(localStorage.getItem("counters"));
+    counterObj.counter = counter + 1;
+    localStorage.setItem("counters", JSON.stringify(counterObj));
+    setCounter((prev) => prev + 1);
+  };
+
   if (isLoading && !httpError) {
     return (
       <div className="spreadsheet__loader">
@@ -174,17 +208,17 @@ const Dialer = () => {
           <h5>Address: </h5>
           <h6>{carrier.address}</h6>
         </DialerCard>
-        {/* <div
+        <div
           className="row
         justify-content-center align-items-center mt-5"
         >
           <div className="col-6">
-            <h2>Fetch Counter : <span>{counter ? counter.counter : 0}</span> </h2>
+            <h2>
+              Dialed Today: <span>{counter}</span>{" "}
+            </h2>
             <h4></h4>
-            
-         
           </div>
-        </div> */}
+        </div>
         {/* {modal && ( */}
         <Modal
           show={modal}
