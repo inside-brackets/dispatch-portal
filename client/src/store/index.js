@@ -4,6 +4,7 @@ import themeSlice from "./theme";
 import salesSlice from "./sales";
 import loadsSlice from "./loads";
 import carriersSlice from "./carriers";
+import appointmentSlice from "./appointment";
 const store = configureStore({
   reducer: {
     theme: themeSlice.reducer,
@@ -11,6 +12,7 @@ const store = configureStore({
     sales: salesSlice.reducer,
     loads: loadsSlice.reducer,
     carriers: carriersSlice.reducer,
+    appointment: appointmentSlice.reducer,
   },
 });
 export default store;

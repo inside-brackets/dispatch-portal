@@ -4,8 +4,9 @@ import Modal from "../../components/modals/MyModal";
 import Input from "../../components/UI/MyInput";
 import Loader from "react-loader-spinner";
 import useHttp from "../../hooks/use-https";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
+import {change} from '../../store/appointment'
 
 import TextArea from "../../components/UI/TextArea";
 
@@ -14,6 +15,7 @@ const Dialer = () => {
   const appointmentRef = useRef();
   const commentRef = useRef();
   const commentrRef = useRef();
+  const dispatch = useDispatch()
   const [rmodal, setrModal] = useState();
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
@@ -47,6 +49,7 @@ const Dialer = () => {
       },
       transformData
     );
+      dispatch(change(Math.random()))
     setLoading(false);
   };
 
