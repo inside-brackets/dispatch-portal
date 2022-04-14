@@ -29,7 +29,6 @@ const UserDetail = () => {
         `${process.env.REACT_APP_BACKEND_URL}/admin/registered-and-rejected`,
         {
           user_id: params.id,
-          change: ["rejected", "registered"],
         }
       )
       .then((res) => {
