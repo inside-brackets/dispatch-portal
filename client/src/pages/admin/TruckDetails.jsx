@@ -37,7 +37,14 @@ const TruckDetails = () => {
   const [validated, setValidated] = useState(false);
   const [selectedDispatcher, setSelectedDispatcher] = useState(null);
   const [dispatchers, setDispatchers] = useState([]);
-  const [showSecondDriver, setShowSecondDriver] = useState(false);
+  const [t_status, setT_status] = useState('')
+  const [drivers, setDrivers] = useState([
+    {
+      name: "",
+      email_address: "",
+      phone_number: "",
+    },
+  ]);
   const { company } = useSelector((state) => state.user);
 
   const reassign = async () => {
@@ -51,28 +58,30 @@ const TruckDetails = () => {
       });
   };
 
-  const changeStatusHandler = () => {
-    let status = truck.t_status;
-    if (status === "active") {
-      status = "inactive";
-    } else if (status === "inactive") {
-      status = "active";
-    } else {
-      return;
-    }
-    axios
-      .put(
-        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
-        { "trucks.$.t_status": status }
-      )
-      .then((result) => {
-        if (status === "inactive") {
-          socket.emit("truck-inactive", `${params.mc}/${truck.truck_number}`);
-        }
-        setTruck((prev) => ({ ...prev, t_status: status }));
-        console.log("status changed");
-      });
-  };
+  // const changeStatusHandler = () => {
+  //   let status = truck.t_status;
+  //   if (status === "active") {
+  //     status = "inactive";
+  //   } else if (status === "inactive") {
+  //     status = "active";
+  //   } else {
+  //     return;
+  //   }
+  //   axios
+  //     .put(
+  //       `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
+  //       { "trucks.$.t_status": status }
+  //     )
+  //     .then((result) => {
+  //       if (status === "inactive") {
+  //         socket.emit("truck-inactive", `${params.mc}/${truck.truck_number}`);
+  //       }
+  //       setTruck((prev) => ({ ...prev, t_status: status }));
+  //       console.log("status changed");
+  //     });
+  // };
+
+  console.log('status',t_status)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -80,20 +89,6 @@ const TruckDetails = () => {
     setValidated(true);
     if (form.checkValidity() === true) {
       setLoadButton(true);
-      const drivers = [
-        {
-          name: event.target.driver_name.value,
-          email_address: event.target.driver_email.value,
-          phone_number: event.target.driver_phone.value,
-        },
-      ];
-      if (showSecondDriver || truck.drivers.length > 1) {
-        drivers.push({
-          name: event.target.driver2_name.value,
-          email_address: event.target.driver2_email.value,
-          phone_number: event.target.driver2_phone.value,
-        });
-      }
       const truckObj = {
         "trucks.$.trailer_type": trailerType.value,
         "trucks.$.carry_limit": event.target.carry_limit.value,
@@ -103,6 +98,7 @@ const TruckDetails = () => {
         "trucks.$.vin_number": event.target.vin_number.value,
         "trucks.$.region": region.map((item) => item.value),
         "trucks.$.off_days": offDays.map((item) => item.value),
+        "trucks.$.t_status": t_status.value,
         "trucks.$.drivers": drivers,
       };
       await axios.put(
@@ -129,9 +125,11 @@ const TruckDetails = () => {
             return item.truck_number.toString() === params.truck.toString();
           });
           setTruck(truck);
+          setDrivers(truck.drivers);
           setRegion(transformToSelectValue(truck.region));
           setoffDays(transformToSelectValue(truck.off_days));
           setTrailerType(transformToSelectValue(truck.trailer_type));
+          setT_status(transformToSelectValue(truck.t_status));
           if (truck.t_status !== "new") {
             setSelectedDispatcher({
               value: truck.dispatcher._id,
@@ -173,7 +171,26 @@ const TruckDetails = () => {
     );
   }
 
-  console.log("truck", truck);
+  let handleChange = (i, e) => {
+    let newFormValues = [...drivers];
+    newFormValues[i][e.target.name] = e.target.value;
+    setDrivers(newFormValues);
+  };
+  let addFormFields = () => {
+    setDrivers([
+      ...drivers,
+      {
+        name: "",
+        email_address: "",
+        phone_number: "",
+      },
+    ]);
+  };
+  let removeFormFields = (i) => {
+    let newFormValues = [...drivers];
+    newFormValues.splice(i, 1);
+    setDrivers(newFormValues);
+  };
 
   return (
     <>
@@ -290,6 +307,22 @@ const TruckDetails = () => {
                     ]}
                   />
                 </Form.Group>
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <Form.Label>Truck Status:</Form.Label>
+                <Select
+                        label="Truck Status:"
+                        isMulti={false}
+                        value={t_status}
+                        onChange={setT_status}
+                        isDisabled={t_status.value === "new"}
+                        options={[
+                          // { label: "New", value: "new" },
+                          { label: "Pending", value: "pending" },
+                          { label: "Active", value: "active" },
+                          { label: "Inactive ", value: "inactive" },
+                        ]}
+                      />
+                      </Form.Group>
               </Row>
               <Row>
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
@@ -309,101 +342,80 @@ const TruckDetails = () => {
                     ]}
                   />
                 </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group as={Col} md="4" controlId="validationCustom03">
-                  <Form.Label>Driver Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    required
-                    placeholder="Driver Name"
-                    name="driver_name"
-                    defaultValue={truck ? truck.drivers[0].name : false}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="4" controlId="validationCustom03">
-                  <Form.Label>Driver Email</Form.Label>
-                  <Form.Control
-                    type="email"
-                    required
-                    placeholder="Driver Name"
-                    name="driver_email"
-                    defaultValue={
-                      truck ? truck.drivers[0].email_address : false
-                    }
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="4" controlId="validationCustom03">
-                  <Form.Label>Driver Phone</Form.Label>
-                  <Form.Control
-                    type="number"
-                    placeholder="Driver Name"
-                    required
-                    name="driver_phone"
-                    defaultValue={truck ? truck.drivers[0].phone_number : false}
-                  />
-                </Form.Group>
-              </Row>
-              {truck && truck.drivers.length > 1 ? (
-                <></>
-              ) : (
-                <Row className="mt-3">
-                  <Col md={2}>
-                    <Button
-                      onClick={() => setShowSecondDriver(!showSecondDriver)}
-                    >
-                      {showSecondDriver ? "Remove" : "Add"}
-                    </Button>
-                  </Col>
-                </Row>
-              )}
-              {truck && (truck.drivers.length > 1 || showSecondDriver) && (
-                <Row>
-                  <Form.Group as={Col} md="4" controlId="validationCustom03">
-                    <Form.Label>Driver Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Driver Name"
-                      name="driver2_name"
-                      required={showSecondDriver ? true : false}
-                      defaultValue={
-                        truck && truck.drivers.length > 1
-                          ? truck.drivers[1].name
-                          : ""
-                      }
-                    />
-                  </Form.Group>
-                  <Form.Group as={Col} md="4" controlId="validationCustom03">
-                    <Form.Label>Driver Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="Driver Name"
-                      required={showSecondDriver ? true : false}
-                      name="driver2_email"
-                      defaultValue={
-                        truck && truck.drivers.length > 1
-                          ? truck.drivers[1].email_address
-                          : ""
-                      }
-                    />
-                  </Form.Group>
-                  <Form.Group as={Col} md="4" controlId="validationCustom03">
-                    <Form.Label>Driver Phone</Form.Label>
-                    <Form.Control
-                      type="number"
-                      placeholder="Driver Name"
-                      required={showSecondDriver ? true : false}
-                      name="driver2_phone"
-                      defaultValue={
-                        truck && truck.drivers.length > 1
-                          ? truck.drivers[1].phone_number
-                          : ""
-                      }
-                    />
-                  </Form.Group>
-                </Row>
-              )}
 
+              </Row>
+              <Row className="mt-3">
+                <hr />
+                <h3>Drivers:</h3>
+                {drivers.map((element, index) => (
+                  <div className="form-inline" key={index}>
+                    <Row className="justify-content-end">
+                      <Col md={3}>
+                        {drivers.length === 2 && (
+                          <i
+                            className="bx bx-trash"
+                            onClick={() => removeFormFields(index)}
+                          ></i>
+                        )}
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationCustom03"
+                      >
+                        <Form.Label>Driver Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder="Driver Name"
+                          required
+                          name="name"
+                          onChange={(e) => handleChange(index, e)}
+                          value={element.name}
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationCustom03"
+                      >
+                        <Form.Label>Driver Email</Form.Label>
+                        <Form.Control
+                          type="email"
+                          placeholder="Driver Name"
+                          required
+                          onChange={(e) => handleChange(index, e)}
+                          name="email_address"
+                          value={element.email_address}
+                        />
+                      </Form.Group>
+                      <Form.Group
+                        as={Col}
+                        md="4"
+                        controlId="validationCustom03"
+                      >
+                        <Form.Label>Driver Phone</Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="Driver Phone"
+                          required
+                          onChange={(e) => handleChange(index, e)}
+                          name="phone_number"
+                          value={element.phone_number}
+                        />
+                      </Form.Group>
+                    </Row>
+                  </div>
+                ))}
+                {drivers.length < 2 ? (
+                  <div className="button-section">
+                    <Button type="button" onClick={() => addFormFields()}>
+                      Add
+                    </Button>
+                  </div>
+                ) : null}
+              </Row>
               {truck?.t_status !== "new" && (
                 <Row className="justify-content-center align-items-center">
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
@@ -435,7 +447,7 @@ const TruckDetails = () => {
             </Row>
           </Card.Body>
           <Card.Footer className="d-flex justify-content-end">
-            {["active", "inactive"].find((s) => s === truck?.t_status) && (
+            {/* {["active", "inactive"].find((s) => s === truck?.t_status) && (
               <Button
                 variant={truck.t_status === "active" ? "danger" : "success"}
                 style={{ marginRight: "5px" }}
@@ -443,7 +455,7 @@ const TruckDetails = () => {
               >
                 {truck.t_status === "inactive" ? "Activate" : "Deactivate"}
               </Button>
-            )}
+            )} */}
 
             <Button disabled={loadButton} type="submit">
               Submit
