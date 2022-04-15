@@ -360,7 +360,17 @@ const rejectAndRegistered = async (req, res, next) => {
       user: req.body.user_id,
     });
 
-    res.send(carrier);
+    let result = Object.values(
+      carrier.reduce((a, b) => {
+        if (a[b.mc_number]) {
+          if (a[b.mc_number].updatedAt < b.updatedAt) a[b.mc_number] = b;
+        } else a[b.mc_number] = b;
+
+        return a;
+      }, {})
+    );
+
+    res.send(result);
   } catch (err) {
     res.send(err);
   }
