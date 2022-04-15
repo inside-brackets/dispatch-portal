@@ -165,7 +165,7 @@ const Appointments = () => {
               <Card
                 className="hvr-scale"
                 style={{
-                  minHeight: "430px",
+                  height: "455px",
                   border: "light",
                 }}
               >
