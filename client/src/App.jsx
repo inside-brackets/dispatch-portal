@@ -16,6 +16,7 @@ import httpIntercept from "./interceptor/interceptor";
 
 import Loader from "react-loader-spinner";
 import Cookies from "universal-cookie";
+import Timer from "./components/Timer";
 
 const cookies = new Cookies();
 
@@ -59,7 +60,6 @@ const App = () => {
       }
     });
 
-
     socket.on("sale-closed", (msg) => {
       if (currUser?.department === "admin") {
         notify(msg);
@@ -73,20 +73,17 @@ const App = () => {
         if (window.location.pathname === "/mytrucks") {
           window.location.reload();
         } else if (window.location.pathname.includes(`/trucks/${msg}`)) {
-         
           history.push("/mytrucks");
         }
       }
     });
 
-
-socket.on("backend-deactivate-carrier", (msg) => {     
-if (currUser?.department === "dispatch") {
+    socket.on("backend-deactivate-carrier", (msg) => {
+      if (currUser?.department === "dispatch") {
         console.log("currrent location", window.location.pathname);
         if (window.location.pathname === "/mytrucks") {
           window.location.reload();
         } else if (window.location.pathname.includes(`/trucks/${msg}`)) {
-         
           history.push("/mytrucks");
         }
       }
@@ -198,6 +195,7 @@ if (currUser?.department === "dispatch") {
         </div>
       }
     >
+      {currUser?.department === "sales" && <Timer />}
       <Switch>
         <Route path="/login" exact component={Login} />
 
