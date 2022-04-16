@@ -8,6 +8,8 @@ import NewUserForm from "../../components/Form/NewUserForm";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import status_map from "../../assets/JsonData/status_map.json";
+import Badge from "../../components/badge/Badge";
 
 const Users = () => {
   const [users, setUsers] = useState("");
@@ -40,6 +42,7 @@ const Users = () => {
     "Department",
     "Joining Date",
     "Basic Salary",
+    "User Status",
     "Actions",
   ];
   const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -68,6 +71,9 @@ const Users = () => {
       <td>{item.department}</td>
       <td>{moment(item.joining_date).format("ll")}</td>
       <td>{item.salary}</td>
+      <td>
+        <Badge type={status_map[item.u_status]} content={item.u_status} />
+      </td>
       <td>
         <div className="edit__class">
           <EditButton type="edit" onClick={() => editModalHnadler(item)} />

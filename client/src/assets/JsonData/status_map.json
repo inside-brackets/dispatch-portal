@@ -1,5 +1,8 @@
 {
   "appointment": "yellow",
   "registered": "success",
-  "deactivated": "danger"
+  "deactivated": "danger",
+  "active":"success",
+  "inactive":"yellow",
+  "fired":"danger"
 }
