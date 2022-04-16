@@ -15,6 +15,7 @@ import {
   YAxis,
   CartesianGrid,
   Legend,
+  Label,
 } from "recharts";
 
 const UserDetail = () => {
@@ -22,6 +23,8 @@ const UserDetail = () => {
   const [user, setUser] = useState(null);
   const [data, setData] = useState(null);
   const [message, setMessage] = useState(`Loading`);
+
+  let totalLenght = 0;
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${params.id}`)
@@ -35,28 +38,60 @@ const UserDetail = () => {
         `${process.env.REACT_APP_BACKEND_URL}/admin/registered-and-rejected`,
         {
           user_id: params.id,
-          change: ["rejected", "registered"],
+          change: ["rejected", "registered", "appointment"],
         }
       )
       .then((res) => {
+        totalLenght = res.data.length;
         const rejected = res.data.filter(
           (carrier) => carrier.change === "rejected"
         );
         const registered = res.data.filter(
           (carrier) => carrier.change === "registered"
         );
+        const appointment = res.data.filter(
+          (carrier) => carrier.change === "appointment"
+        );
 
-        if (rejected.length === 0 && registered.length === 0) {
+        if (
+          rejected.length === 0 &&
+          registered.length === 0 &&
+          appointment.length === 0
+        ) {
           setMessage(`Not enough data to show in graph`);
         } else {
           setData([
             { name: "Registered", value: registered.length },
             { name: "Rejected", value: rejected.length },
+            { name: "Appointment", value: appointment.length },
           ]);
         }
       })
       .catch((err) => console.log(err));
   }, [params.id]);
+
+  function CustomLabel({ viewBox, value1, value2 }) {
+    const { cx, cy } = viewBox;
+    const sum = value1.reduce(function (previousValue, currentValue) {
+      return previousValue + currentValue.value;
+    }, 0);
+    return (
+      <text
+        x={cx}
+        y={cy}
+        fill="#3d405c"
+        className="recharts-text recharts-label"
+        textAnchor="middle"
+        dominantBaseline="central"
+      >
+        <tspan alignmentBaseline="middle" fontSize="26">
+          {sum}
+        </tspan>
+        <br />
+        <tspan fontSize="14">{value2}</tspan>
+      </text>
+    );
+  }
 
   const data01 = [
     {
@@ -102,35 +137,9 @@ const UserDetail = () => {
     },
   ];
 
-  const COLORS = ["#0088FE", "#00C49F"];
+  const COLORS = ["#00FF00", "#FF0000", "#FFFF00"];
 
   const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
-
   return (
     <Row className="justify-content-center">
       {!user ? (
@@ -264,62 +273,73 @@ const UserDetail = () => {
               </Row>
             </Form>
           </Card>
-          <Card>
-            <Row>
-              <h1 className="text-center">Stats</h1>
-              <hr />
-
-              <Col>
-                <h3>Monthly Dialing report</h3>
-                {!data ? (
-                  <Alert variant="primary">{message}</Alert>
-                ) : (
-                  <PieChart width={400} height={400}>
-                    <Pie
-                      data={data}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={renderCustomizedLabel}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {data.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
+          {user.department === "sales" && (
+            <Card>
+              <Row>
+                <h1 className="text-center">Stats</h1>
+                <Col md={6}>
+                  <h3>Monthly Dialing report</h3>
+                </Col>
+                <Col md={6}>
+                  <h3>Profit Loss Analysis</h3>
+                </Col>
+                <Col md={6} style={{ textAlign: "-webkit-center" }}>
+                  {!data ? (
+                    <Alert variant="primary">{message}</Alert>
+                  ) : (
+                    <PieChart width={400} height={400}>
+                      <Pie
+                        data={data}
+                        cx={120}
+                        cy={200}
+                        innerRadius={60}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {data.map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                        <Label
+                          width={30}
+                          position="center"
+                          content={<CustomLabel value1={data} value2="Total" />}
+                        ></Label>
+                      </Pie>
+                      <Tooltip />
+                      <Legend align="left" />
+                    </PieChart>
+                  )}
+                </Col>
+                <Col md={6}>
+                  <h5 className="text-center"> Coming soon.</h5>
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={data01}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
                     <Tooltip />
-                  </PieChart>
-                )}
-              </Col>
-              <Col>
-                <h3>Profit Loss Analysis</h3>
-                <BarChart
-                  width={500}
-                  height={300}
-                  data={data01}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="dispactherFee" stackId="a" fill="#8884d8" />
-                  <Bar dataKey="salary" stackId="a" fill="#82ca9d" />
-                </BarChart>
-              </Col>
-            </Row>
-          </Card>
+                    <Legend />
+                    <Bar dataKey="dispactherFee" stackId="a" fill="#8884d8" />
+                    <Bar dataKey="salary" stackId="a" fill="#82ca9d" />
+                  </BarChart>
+                </Col>
+              </Row>
+            </Card>
+          )}
         </Col>
       )}
     </Row>
