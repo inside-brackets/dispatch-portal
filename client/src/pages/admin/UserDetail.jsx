@@ -63,7 +63,7 @@ const UserDetail = () => {
           setData([
             { name: "Registered", value: registered.length },
             { name: "Rejected", value: rejected.length },
-            { name: "appointment", value: appointment.length },
+            { name: "Appointment", value: appointment.length },
           ]);
         }
       })
