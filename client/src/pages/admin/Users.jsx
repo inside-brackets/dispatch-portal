@@ -149,6 +149,7 @@ const Users = () => {
             setRefresh={setRefresh}
           />
         </MyModal>
+
         <MyModal
           size="lg"
           show={editModal}
