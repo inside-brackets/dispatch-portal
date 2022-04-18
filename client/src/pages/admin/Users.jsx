@@ -59,7 +59,7 @@ const Users = () => {
   };
 
   const renderBody = (item, index) => (
-    <tr key={index} onClick={() => history.push(`/user/${item._id}`)}>
+    <tr key={index}>
       <td>{index + 1}</td>
       <td>{item.user_name}</td>
       <td>{item.phone_number ? item.phone_number : "N/A"}</td>
@@ -71,6 +71,11 @@ const Users = () => {
       <td>
         <div className="edit__class">
           <EditButton type="edit" onClick={() => editModalHnadler(item)} />
+
+          <EditButton
+            type="open"
+            onClick={() => history.push(`/user/${item._id}`)}
+          />
         </div>
       </td>
     </tr>

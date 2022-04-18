@@ -131,197 +131,197 @@ const UserDetail = () => {
     );
   };
 
-  return (
+  return !user ? (
+    <div className="spreadsheet__loader">
+      <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
+    </div>
+  ) : (
     <Row className="justify-content-center">
-      {!user ? (
-        <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
-      ) : (
-        <Col>
-          <Card>
-            <Form>
-              <Row className="m-3">
-                <h1 className="text-center">User Detail</h1>
-                <hr />
-                <Form.Group as={Col} md="6">
-                  <Form.Label>User Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="First Name"
-                    aria-describedby="inputGroupPrepend"
-                    value={user.user_name}
-                    name="user_name"
-                    required
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>User Status</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Last Name"
-                    name="user_status"
-                    value={user.u_status}
-                    required
-                  />
-                </Form.Group>
-              </Row>
+      <Col>
+        <Card>
+          <Form>
+            <Row className="m-3">
+              <h1 className="text-center">User Detail</h1>
               <hr />
-
-              <Row className="m-3">
-                <h3>Personel Info</h3>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>First name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="First name"
-                    name="first_name"
-                    value={user.first_name}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Last name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={user.last_name}
-                    placeholder="Last name"
-                    name="last_name"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Phone #</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Phone #"
-                    name="phone_number"
-                    value={user.phone_number}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Address</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Address"
-                    name="address"
-                    value={user.address}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Date of Birth</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="date_of_birth"
-                    Value={
-                      user.date_of_birth
-                        ? moment(user.date_of_birth).format("YYYY-MM-DD")
-                        : ""
-                    }
-                  />
-                </Form.Group>
-              </Row>
-              <hr />
-              <Row className="m-3">
-                <h3>Company Info</h3>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Department</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Department"
-                    name="first_name"
-                    value={user.department}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Designation</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={user.designation}
-                    placeholder="Last name"
-                    name="last_name"
-                  />
-                </Form.Group>
-
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Salary</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Salary"
-                    name="salary"
-                    value={user.salary}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} md="6">
-                  <Form.Label>Date of Birth</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="date_of_birth"
-                    Value={
-                      user.joining_date
-                        ? moment(user.joining_date).format("YYYY-MM-DD")
-                        : ""
-                    }
-                  />
-                </Form.Group>
-              </Row>
-            </Form>
-          </Card>
-          <Card>
-            <Row>
-              <h1 className="text-center">Stats</h1>
-              <hr />
-
-              <Col>
-                <h3>Monthly Dialing report</h3>
-                {!data ? (
-                  <Alert variant="primary">{message}</Alert>
-                ) : (
-                  <PieChart width={400} height={400}>
-                    <Pie
-                      data={data}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={renderCustomizedLabel}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {data.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                )}
-              </Col>
-              <Col>
-                <h3>Profit Loss Analysis</h3>
-                <BarChart
-                  width={500}
-                  height={300}
-                  data={data01}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="dispactherFee" stackId="a" fill="#8884d8" />
-                  <Bar dataKey="salary" stackId="a" fill="#82ca9d" />
-                </BarChart>
-              </Col>
+              <Form.Group as={Col} md="6">
+                <Form.Label>User Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="First Name"
+                  aria-describedby="inputGroupPrepend"
+                  value={user.user_name}
+                  name="user_name"
+                  required
+                />
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>User Status</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Last Name"
+                  name="user_status"
+                  value={user.u_status}
+                  required
+                />
+              </Form.Group>
             </Row>
-          </Card>
-        </Col>
-      )}
+            <hr />
+
+            <Row className="m-3">
+              <h3>Personel Info</h3>
+              <Form.Group as={Col} md="6">
+                <Form.Label>First name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="First name"
+                  name="first_name"
+                  value={user.first_name}
+                />
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Last name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={user.last_name}
+                  placeholder="Last name"
+                  name="last_name"
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} md="6">
+                <Form.Label>Phone #</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Phone #"
+                  name="phone_number"
+                  value={user.phone_number}
+                />
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Address"
+                  name="address"
+                  value={user.address}
+                />
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="date_of_birth"
+                  Value={
+                    user.date_of_birth
+                      ? moment(user.date_of_birth).format("YYYY-MM-DD")
+                      : ""
+                  }
+                />
+              </Form.Group>
+            </Row>
+            <hr />
+            <Row className="m-3">
+              <h3>Company Info</h3>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Department</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Department"
+                  name="first_name"
+                  value={user.department}
+                />
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Designation</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={user.designation}
+                  placeholder="Last name"
+                  name="last_name"
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} md="6">
+                <Form.Label>Salary</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Salary"
+                  name="salary"
+                  value={user.salary}
+                />
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="date_of_birth"
+                  Value={
+                    user.joining_date
+                      ? moment(user.joining_date).format("YYYY-MM-DD")
+                      : ""
+                  }
+                />
+              </Form.Group>
+            </Row>
+          </Form>
+        </Card>
+        <Card>
+          <Row>
+            <h1 className="text-center">Stats</h1>
+            <hr />
+
+            <Col>
+              <h3>Monthly Dialing report</h3>
+              {!data ? (
+                <Alert variant="primary">{message}</Alert>
+              ) : (
+                <PieChart width={400} height={400}>
+                  <Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              )}
+            </Col>
+            <Col>
+              <h3>Profit Loss Analysis</h3>
+              <BarChart
+                width={500}
+                height={300}
+                data={data01}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="dispactherFee" stackId="a" fill="#8884d8" />
+                <Bar dataKey="salary" stackId="a" fill="#82ca9d" />
+              </BarChart>
+            </Col>
+          </Row>
+        </Card>
+      </Col>
     </Row>
   );
 };
