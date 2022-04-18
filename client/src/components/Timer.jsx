@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 const Timer = () => {
   const { user } = useSelector((state) => state.user);
+  const { value } = useSelector((state) => state.appointment);
 
   useEffect(() => {
     axios
@@ -22,7 +23,8 @@ const Timer = () => {
         }, res.data[0].difference);
       })
       .catch((err) => console.log(err));
-  }, []);
+      console.log("im run")
+  }, [value]);
 
   return <></>;
 };
