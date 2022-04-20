@@ -11,3 +11,17 @@ export const transformToSelectValue = (value) => {
     };
   }
 };
+
+
+export const searchLoads = (startDate,endDate,loads) => {
+  const to = new Date(endDate);
+  to.setDate(to.getDate() + 1);
+  const filteredLoad = loads.filter((item) => {
+    return (
+      new Date(item.pick_up.date) >= new Date(startDate) &&
+      new Date(item.pick_up.date) <= to
+    );
+  });
+
+  return filteredLoad
+}

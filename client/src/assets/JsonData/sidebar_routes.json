@@ -68,6 +68,11 @@
       "display_name": "My Trucks",
       "route": "/mytrucks",
       "icon": "bx bxs-truck"
+    },
+    {
+      "display_name": "Report",
+      "route": "/report",
+      "icon": "bx bxs-truck"
     }
   ]
 }
