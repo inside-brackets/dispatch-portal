@@ -225,7 +225,7 @@ const CarrierReport = ({
         size="lg"
         onClick={printDocument}
       >
-        {defaultValue ? <>Print</> : <>Print and Ssave</>}
+        {defaultValue ? <>Print</> : <>Print and Save</>}
       </Button>
     </>
   );
