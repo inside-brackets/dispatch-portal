@@ -203,7 +203,7 @@ const DashboardAdmin = () => {
               {!topDispatcher || topDispatcher.length === 0 ? (
                 <>Not Enough Data to show</>
               ) : (
-                <div class="tableFixHead">
+                <div className="tableFixHead">
                   <table>
                     <thead>
                       <tr>
@@ -247,7 +247,7 @@ const DashboardAdmin = () => {
               {!data||  data.length === 0 ?  (
                 <>Not Enough Data to show</>
               ) : (
-                <div class="tableFixHead">
+                <div className="tableFixHead">
                   <table>
                     <thead>
                       <tr>

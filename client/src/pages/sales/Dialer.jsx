@@ -218,7 +218,7 @@ const Dialer = () => {
           <div className="col-6">
             <div className="card" style={{ width: "160px" }}>
               <h2 className="justify-content-center align-items-center">
-                <i class="bx bxs-phone-outgoing"> :</i> <span>{counter}</span>{" "}
+                <i className="bx bxs-phone-outgoing"> :</i> <span>{counter}</span>{" "}
               </h2>
             </div>
           </div>

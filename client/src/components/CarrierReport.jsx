@@ -1,12 +1,25 @@
-import React, { useRef } from "react";
-import { Col, Row,Button } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Col, Row, Button } from "react-bootstrap";
 import moment from "moment";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import axios from "axios";
+import {useHistory} from 'react-router-dom'
 
-const CarrierReport = ({ load, carrier, truck, dispatcher }) => {
+const CarrierReport = ({
+  load,
+  carrier,
+  truck,
+  dispatcher,
+  startDate,
+  endDate,
+}) => {
   console.log(carrier, truck);
   const ref = useRef();
+  const history = useHistory()
+  const [workingDays, setWorkingDays] = useState("");
+  const [dispatcherComments, setDispatcherComments] = useState("");
+
   const loadedMiles = load.reduce(
     (previousValue, currentValue) => previousValue + currentValue.miles,
     0
@@ -21,22 +34,13 @@ const CarrierReport = ({ load, carrier, truck, dispatcher }) => {
   } else {
     dollarPerLoadedMiles = amounts / loadedMiles;
   }
-  console.log(
-    "dollar per loaded miles",
-    dollarPerLoadedMiles,
-    amounts,
-    loadedMiles
-  );
 
-  const printDocument = () => {
+  console.log("start and end date",startDate,endDate,carrier)
+
+  const printDocument = async () => {
     const input = document.getElementById("div-to-print");
-    console.log(input);
     html2canvas(input).then((canvas) => {
-      console.log("canvas", canvas);
-
       const imgData = canvas.toDataURL("image/png");
-      console.log(imgData);
-      console.log("hello");
       var pdf = new jsPDF({ orientation: "landscape" });
       var width = pdf.internal.pageSize.getWidth();
       var height = pdf.internal.pageSize.getHeight();
@@ -44,6 +48,20 @@ const CarrierReport = ({ load, carrier, truck, dispatcher }) => {
       // pdf.output("dataurlnewwindow");
       pdf.save("download.pdf");
     });
+
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/addcarrierreport`, {
+      carrier: carrier._id,
+      truck: truck.value,
+      from: startDate,
+      to: endDate,
+      working_days:workingDays,
+      dispatcher_comment:dispatcherComments
+    });
+    if(!workingDays || !dispatcherComments){
+alert("Please add working days and dispatcher comments")
+    }
+
+    history.push("/report")
   };
   return (
     <>
@@ -112,7 +130,12 @@ const CarrierReport = ({ load, carrier, truck, dispatcher }) => {
               <Col md={6}>
                 <h5>
                   Working Days:{" "}
-                  <input className="form-group border" type="number" />
+                  <input
+                    className="form-group border"
+                    value={workingDays}
+                    onChange={(e) => setWorkingDays(e.target.value)}
+                    type="number"
+                  />
                 </h5>
               </Col>
               <Col md={6}></Col>
@@ -121,7 +144,12 @@ const CarrierReport = ({ load, carrier, truck, dispatcher }) => {
               <Col md={6}>
                 <h5>
                   Dispatcher Remarks:{" "}
-                  <input className="form-group border" type="text-area" />
+                  <textarea
+                    value={dispatcherComments}
+                    onChange={(e) => setDispatcherComments(e.target.value)}
+                    className="form-group border"
+          
+                  />
                 </h5>
               </Col>
               <Col md={6}></Col>
@@ -184,9 +212,9 @@ const CarrierReport = ({ load, carrier, truck, dispatcher }) => {
           </Row>
         </Col>
       </Row>
-      <button size="lg" onClick={printDocument}>
+      <Button size="lg" onClick={printDocument}>
         Print
-      </button>
+      </Button>
     </>
   );
 };

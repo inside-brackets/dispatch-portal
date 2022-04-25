@@ -9,7 +9,7 @@ const EditButton = (props) => {
         ) : props.type === "view" ? (
           <i className="bx bx-file action-button"></i>
         ) : props.type === "open" ? (
-          <i class="bx bx-window-open action-button"></i>
+          <i className="bx bx-window-open action-button"></i>
         ) : (
           <i className="bx bx-trash-alt action-button"></i>
         )}

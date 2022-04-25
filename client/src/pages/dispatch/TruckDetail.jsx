@@ -8,7 +8,6 @@ import Modal from "../../components/modals/MyModal";
 import { useHistory } from "react-router-dom";
 import MySelect from "../../components/UI/MySelect";
 import BackButton from "../../components/UI/BackButton";
-import Select from "react-select";
 import Loader from "react-loader-spinner";
 import { toast } from "react-toastify";
 

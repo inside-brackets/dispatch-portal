@@ -33,6 +33,7 @@ const Profile = lazy(() => import("../pages/Profile"));
 // dispatchers
 const TruckDetail = lazy(() => import("../pages/dispatch/TruckDetail"));
 const MyTrucks = lazy(() => import("../pages/dispatch/MyTrucks"));
+const CarrierReport = lazy(()=> import("../pages/dispatch/CarrierReport"))
 const Report = lazy(()=> import("../pages/dispatch/Report"))
 
 const Routes = () => {
@@ -156,7 +157,8 @@ const Routes = () => {
         <Route path="/mytrucks" exact component={MyTrucks} />
         <Route path="/trucks/:mc/:truck?" component={TruckDetail} />
         <Route path="/profile" component={Profile} />
-        <Route path="/report" component={Report} />
+        <Route path="/report" component={CarrierReport} />
+        <Route path="/generate-report/:id?" component={Report} />
 
         <Route path="*">
           <h1>Not found</h1>

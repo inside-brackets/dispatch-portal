@@ -9,14 +9,16 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import ReactSelect from "react-select";
 import CarrierReport from "../../components/CarrierReport";
 import { searchLoads } from "../../utils/utils";
-
+import { useParams } from "react-router-dom";
+import Geocode from "react-geocode";
 const Report = () => {
+  const params = useParams();
   const user = useSelector((state) => state.user.user);
   const [carrier, setCarrier] = useState([]);
   const [selectedCarrier, setSelectedCarrier] = useState(null);
   const [truck, setTruck] = useState(null);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [load, setLoad] = useState();
 
   const selectionDate = {
@@ -25,10 +27,77 @@ const Report = () => {
     key: "Selection",
   };
 
+  const handleSubmit = async (mc, truck_num) => {
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/getloads`,
+      {
+        "carrier.mc_number": mc ,
+        "carrier.truck_number": truck_num
+      }
+    );
+    console.log("hello abcd", startDate, endDate, data);
+    const filteredLoads = searchLoads(startDate, endDate, data);
+    // const loads = await Promise.all(filteredLoads.map( async (load) => {
+    //   let pick_up_coordinates, drop_coordinates;
+    //  await Geocode.fromAddress(load.pick_up.address).then(
+    //     (response) => {
+    //       pick_up_coordinates = response.results[0].geometry.location;
+    //     },
+    //     (error) => {
+    //       console.error(error);
+    //     }
+    //   );
+    // await  Geocode.fromAddress(load.drop.address).then(
+    //     (response) => {
+    //       drop_coordinates = response.results[0].geometry.location;
+    //     },
+    //     (error) => {
+    //       console.error(error);
+    //     }
+    //   );
+    //   return {
+    //     ...load,
+    //     pick_up: {
+    //       ...load.pick_up,
+    //       lat: pick_up_coordinates.lat,
+    //       lng: pick_up_coordinates.lng,
+    //     },
+    //     drop: {
+    //       ...load.pick_up,
+    //       lat: drop_coordinates.lat,
+    //       lng: drop_coordinates.lng,
+    //     },
+    //   };
+    // }));
+    // console.log("findal loads", loads);
+    setLoad(filteredLoads);
+  };
+
   useEffect(() => {
+    if (params.id) {
+      axios
+        .get(
+          `${process.env.REACT_APP_BACKEND_URL}/dispatch/get-carrier-report/${params.id}`
+        )
+        .then((res) => {
+          const { data } = res.data;
+          console.log("report", data);
+          setSelectedCarrier({
+            label: data.carrier.mc_number,
+            value: data.carrier.mc_number,
+          });
+          setTruck({ label: data.truck, value: data.truck });
+          setStartDate(new Date(data.from));
+          setEndDate(new Date(data.to));
+          handleSubmit(data.carrier.mc_number, data.truck);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/getcarriers`, {
-        "trucks.dispatcher":user._id,
+        "trucks.dispatcher": user._id,
         c_status: "registered",
       })
       .then((res) => {
@@ -38,20 +107,13 @@ const Report = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [params.id,user._id]);
 
   const handleSelection = (ranges) => {
     setStartDate(ranges.Selection.startDate);
     setEndDate(ranges.Selection.endDate);
   };
 
-  const handleSubmit = async () => {
-  const {data} =  await axios.post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
-      "carrier.mc_number": selectedCarrier.value,
-      "carrier.truck_number": truck.truck_number,
-    });
-    setLoad(searchLoads(startDate,endDate,data))
-  };
   return (
     <>
       <Row>
@@ -64,10 +126,13 @@ const Report = () => {
                 <ReactSelect
                   value={selectedCarrier}
                   onChange={setSelectedCarrier}
-                  options={carrier.map((carrier) => ({
-                    label: carrier.mc_number,
-                    value: carrier.mc_number,
-                  }))}
+                  options={
+                    !params.id &&
+                    carrier.map((carrier) => ({
+                      label: carrier.mc_number,
+                      value: carrier.mc_number,
+                    }))
+                  }
                 />
               </Col>
               <Col>
@@ -77,6 +142,7 @@ const Report = () => {
                   value={truck}
                   onChange={setTruck}
                   options={
+                    !params.id &&
                     selectedCarrier &&
                     carrier
                       .find(
@@ -95,17 +161,33 @@ const Report = () => {
                   //   minDate={new Date()}
                   showMonthAndYearPickers={false}
                   rangeColors={["#FD5861"]}
-                  direction='horizontal'
+                  direction="horizontal"
                   onChange={handleSelection}
                   fixedHeight={false}
                 />
               </Col>
               <Col>
-                <Button disabled={!selectedCarrier || !truck} onClick={handleSubmit}>Submit</Button>
+                <Button
+                  disabled={!selectedCarrier || !truck || !startDate || !endDate}
+                  onClick={()=>  handleSubmit(selectedCarrier.value,truck.truck_number)}
+                >
+                  Submit
+                </Button>
               </Col>
             </Row>
             <Row>
-             {load && <CarrierReport dispatcher={user} load={load} carrier={carrier.find((item)=> item.mc_number === selectedCarrier.value)} truck={truck} />}
+              {load && (
+                <CarrierReport
+                  dispatcher={user}
+                  load={load}
+                  startDate={startDate}
+                  endDate={endDate}
+                  carrier={carrier.find(
+                    (item) => item.mc_number === selectedCarrier.value
+                  )}
+                  truck={truck}
+                />
+              )}
             </Row>
           </Card>
         </Col>
