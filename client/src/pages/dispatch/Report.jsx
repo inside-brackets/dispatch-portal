@@ -10,7 +10,6 @@ import ReactSelect from "react-select";
 import CarrierReport from "../../components/CarrierReport";
 import { searchLoads } from "../../utils/utils";
 import { useParams } from "react-router-dom";
-import Geocode from "react-geocode";
 const Report = () => {
   const params = useParams();
   const user = useSelector((state) => state.user.user);
@@ -20,6 +19,7 @@ const Report = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [load, setLoad] = useState();
+  const [report, setReport] = useState(null)
 
   const selectionDate = {
     startDate: startDate,
@@ -27,49 +27,20 @@ const Report = () => {
     key: "Selection",
   };
 
-  const handleSubmit = async (mc, truck_num) => {
+  const handleSubmit = async (mc, truck_num, start_date, end_date) => {
     const { data } = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/getloads`,
       {
-        "carrier.mc_number": mc ,
-        "carrier.truck_number": truck_num
+        "carrier.mc_number": mc,
+        "carrier.truck_number": truck_num,
       }
     );
     console.log("hello abcd", startDate, endDate, data);
-    const filteredLoads = searchLoads(startDate, endDate, data);
-    // const loads = await Promise.all(filteredLoads.map( async (load) => {
-    //   let pick_up_coordinates, drop_coordinates;
-    //  await Geocode.fromAddress(load.pick_up.address).then(
-    //     (response) => {
-    //       pick_up_coordinates = response.results[0].geometry.location;
-    //     },
-    //     (error) => {
-    //       console.error(error);
-    //     }
-    //   );
-    // await  Geocode.fromAddress(load.drop.address).then(
-    //     (response) => {
-    //       drop_coordinates = response.results[0].geometry.location;
-    //     },
-    //     (error) => {
-    //       console.error(error);
-    //     }
-    //   );
-    //   return {
-    //     ...load,
-    //     pick_up: {
-    //       ...load.pick_up,
-    //       lat: pick_up_coordinates.lat,
-    //       lng: pick_up_coordinates.lng,
-    //     },
-    //     drop: {
-    //       ...load.pick_up,
-    //       lat: drop_coordinates.lat,
-    //       lng: drop_coordinates.lng,
-    //     },
-    //   };
-    // }));
-    // console.log("findal loads", loads);
+    const filteredLoads = searchLoads(
+      start_date ? start_date : startDate,
+      end_date ? end_date : endDate,
+      data
+    );
     setLoad(filteredLoads);
   };
 
@@ -86,10 +57,11 @@ const Report = () => {
             label: data.carrier.mc_number,
             value: data.carrier.mc_number,
           });
+          setReport(data)
           setTruck({ label: data.truck, value: data.truck });
           setStartDate(new Date(data.from));
           setEndDate(new Date(data.to));
-          handleSubmit(data.carrier.mc_number, data.truck);
+          handleSubmit(data.carrier.mc_number, data.truck, data.from, data.to);
         })
         .catch((err) => {
           console.log(err);
@@ -107,7 +79,7 @@ const Report = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, [params.id,user._id]);
+  }, [params.id, user._id]);
 
   const handleSelection = (ranges) => {
     setStartDate(ranges.Selection.startDate);
@@ -168,8 +140,12 @@ const Report = () => {
               </Col>
               <Col>
                 <Button
-                  disabled={!selectedCarrier || !truck || !startDate || !endDate}
-                  onClick={()=>  handleSubmit(selectedCarrier.value,truck.truck_number)}
+                  disabled={
+                    !selectedCarrier || !truck || !startDate || !endDate
+                  }
+                  onClick={() =>
+                    handleSubmit(selectedCarrier.value, truck.truck_number)
+                  }
                 >
                   Submit
                 </Button>
@@ -186,6 +162,7 @@ const Report = () => {
                     (item) => item.mc_number === selectedCarrier.value
                   )}
                   truck={truck}
+                  defaultValue={report}
                 />
               )}
             </Row>

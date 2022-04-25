@@ -68,10 +68,6 @@ const Users = () => {
                 }}
                 filter={
                   {
-                    //   department: [
-                    //     { label: "sales ", value: "sales" },
-                    //     { label: "dispatch", value: "dispatch" },
-                    //   ],
                   }
                 }
                 renderBody={(item, index, currPage) =>

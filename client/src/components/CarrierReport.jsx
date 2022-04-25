@@ -4,7 +4,7 @@ import moment from "moment";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
-import {useHistory} from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 const CarrierReport = ({
   load,
@@ -13,12 +13,17 @@ const CarrierReport = ({
   dispatcher,
   startDate,
   endDate,
+  defaultValue,
 }) => {
   console.log(carrier, truck);
   const ref = useRef();
-  const history = useHistory()
-  const [workingDays, setWorkingDays] = useState("");
-  const [dispatcherComments, setDispatcherComments] = useState("");
+  const history = useHistory();
+  const [workingDays, setWorkingDays] = useState(
+    defaultValue ? defaultValue.working_days : null
+  );
+  const [dispatcherComments, setDispatcherComments] = useState(
+    defaultValue ? defaultValue.dispatcher_comment : null
+  );
 
   const loadedMiles = load.reduce(
     (previousValue, currentValue) => previousValue + currentValue.miles,
@@ -35,9 +40,12 @@ const CarrierReport = ({
     dollarPerLoadedMiles = amounts / loadedMiles;
   }
 
-  console.log("start and end date",startDate,endDate,carrier)
+  console.log("start and end date", startDate, endDate, carrier);
 
   const printDocument = async () => {
+    if (!workingDays || !dispatcherComments) {
+      return alert("Please add working days and dispatcher comments");
+    }
     const input = document.getElementById("div-to-print");
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
@@ -49,19 +57,20 @@ const CarrierReport = ({
       pdf.save("download.pdf");
     });
 
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/addcarrierreport`, {
-      carrier: carrier._id,
-      truck: truck.value,
-      from: startDate,
-      to: endDate,
-      working_days:workingDays,
-      dispatcher_comment:dispatcherComments
-    });
-    if(!workingDays || !dispatcherComments){
-alert("Please add working days and dispatcher comments")
+    if (!defaultValue) {
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/dispatch/addcarrierreport`,
+        {
+          carrier: carrier._id,
+          truck: truck.value,
+          from: startDate,
+          to: endDate,
+          working_days: workingDays,
+          dispatcher_comment: dispatcherComments,
+        }
+      );
     }
-
-    history.push("/report")
+    history.push("/report");
   };
   return (
     <>
@@ -148,7 +157,6 @@ alert("Please add working days and dispatcher comments")
                     value={dispatcherComments}
                     onChange={(e) => setDispatcherComments(e.target.value)}
                     className="form-group border"
-          
                   />
                 </h5>
               </Col>
@@ -212,8 +220,12 @@ alert("Please add working days and dispatcher comments")
           </Row>
         </Col>
       </Row>
-      <Button size="lg" onClick={printDocument}>
-        Print
+      <Button
+        variant={defaultValue ? "primary" : "success"}
+        size="lg"
+        onClick={printDocument}
+      >
+        {defaultValue ? <>Print</> : <>Print and Ssave</>}
       </Button>
     </>
   );
