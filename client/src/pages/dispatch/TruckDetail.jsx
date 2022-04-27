@@ -455,7 +455,7 @@ const TruckDetail = ({ match }) => {
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Tax Id:</Form.Label>
                       <Form.Control
-                        type="text"
+                        type="number"
                         placeholder="Tax Id"
                         disabled
                         defaultValue={data.tax_id_number}
