@@ -74,7 +74,7 @@ const SearchCarrier = () => {
     );
   } else if (!isLoading && error) {
     searching = (
-      <div style={{marginTop:'10%'}} className="text-center">
+      <div style={{ marginTop: "10%" }} className="text-center">
         <h2 style={{ color: "grey" }}>No record Found</h2>
         <Button onClick={() => setAddCarrierModal(true)}>
           Add New Carrier
@@ -140,7 +140,11 @@ const SearchCarrier = () => {
                     <CardRow field="With" value="N/A" />
                   )}
                 </Card.Body>
-                {carrier.c_status === "unassigned" || carrier.c_status === "inprogress" || carrier.c_status === "rejected" || carrier.c_status === "didnotpick" ? (
+                {carrier.c_status === "unassigned" ||
+                carrier.c_status === "inprogress" ||
+                carrier.c_status === "rejected" ||
+                carrier.c_status === "appointment" ||
+                carrier.c_status === "didnotpick" ? (
                   <Button
                     onClick={() => clickHandler("addcarrier")}
                     variant="primary"
@@ -175,7 +179,10 @@ const SearchCarrier = () => {
         onClose={() => setAddCarrierModal(false)}
         style={{ width: "auto" }}
       >
-        <AddNewCarrierModal mc={searchedMc} closeModal={()=> setAddCarrierModal(false)}  />
+        <AddNewCarrierModal
+          mc={searchedMc}
+          closeModal={() => setAddCarrierModal(false)}
+        />
       </MyModal>
     </>
   );
