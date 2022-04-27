@@ -455,7 +455,7 @@ const AppointmentDetail = () => {
                   />
 
                   <Input
-                    type="text"
+                    type="number"
                     label="*Tax ID:"
                     placeholder="Enter 16 Digit code"
                     className={taxIdHasError ? "invalid" : ""}

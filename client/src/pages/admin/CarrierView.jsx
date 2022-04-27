@@ -319,7 +319,7 @@ const AppointmentDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>Tax Id:</Form.Label>
                     <Form.Control
-                      type="text"
+                      type="number"
                       placeholder="Tax Id"
                       defaultValue={carrier ? carrier.tax_id_number : ""}
                       name="tax_id"
