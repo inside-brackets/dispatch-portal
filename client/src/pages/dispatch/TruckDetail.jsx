@@ -56,7 +56,7 @@ const TruckDetail = ({ match }) => {
   const [factAgentName, setFactAgentName] = useState("");
   const [factAgentEmail, setfactAgentEmail] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
-  const [t_status, setT_status] = useState(``)
+  const [t_status, setT_status] = useState(``);
   const [drivers, setDrivers] = useState([
     {
       name: "",
@@ -184,17 +184,16 @@ const TruckDetail = ({ match }) => {
         "trucks.$.drivers": drivers,
       };
 
- const res=   await axios
-        .put(
-          `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${data.mc_number}/${match.params.truck}`,
-          truckObj
-        )
-        console.log('truck aupdated',res)
-        setButtonLoader(false)
+      const res = await axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${data.mc_number}/${match.params.truck}`,
+        truckObj
+      );
+      console.log("truck aupdated", res);
+      setButtonLoader(false);
     }
   };
 
-  console.log('trucks',truck);
+  console.log("trucks", truck);
 
   const rejectHandler = async () => {
     await axios.put(
@@ -210,9 +209,8 @@ const TruckDetail = ({ match }) => {
     history.push("/mytrucks");
   };
 
-
   // Custom InPuts
-  
+
   let handleChange = (i, e) => {
     let newFormValues = [...drivers];
     newFormValues[i][e.target.name] = e.target.value;
@@ -233,7 +231,6 @@ const TruckDetail = ({ match }) => {
     newFormValues.splice(i, 1);
     setDrivers(newFormValues);
   };
-
 
   return (
     <>
@@ -697,7 +694,6 @@ const TruckDetail = ({ match }) => {
                         // defaultValue={data.tax_id_number}
                       />
                     </Form.Group>
-
                   </Row>
                   <Row>
                     <Col>
@@ -736,11 +732,13 @@ const TruckDetail = ({ match }) => {
                         ]}
                       />
                     </Col>
-                    <Col md={4}
-                       style={{
+                    <Col
+                      md={4}
+                      style={{
                         marginLeft: "-300px",
-                      }}>
-                         <MySelect
+                      }}
+                    >
+                      <MySelect
                         label="Truck Status:"
                         isMulti={false}
                         value={t_status}
@@ -757,77 +755,77 @@ const TruckDetail = ({ match }) => {
                   </Row>
                 </Row>
                 <Row className="mt-3">
-                <hr />
-                <h3>Drivers:</h3>
-                {drivers.map((element, index) => (
-                  <div className="form-inline" key={index}>
-                    <Row className="justify-content-end">
-                      <Col md={3}>
-                        {drivers.length === 2 && (
-                          <i
-                            className="bx bx-trash"
-                            onClick={() => removeFormFields(index)}
-                          ></i>
-                        )}
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Form.Group
-                        as={Col}
-                        md="4"
-                        controlId="validationCustom03"
-                      >
-                        <Form.Label>Driver Name</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder="Driver Name"
-                          required
-                          name="name"
-                          onChange={(e) => handleChange(index, e)}
-                          value={element.name}
-                        />
-                      </Form.Group>
-                      <Form.Group
-                        as={Col}
-                        md="4"
-                        controlId="validationCustom03"
-                      >
-                        <Form.Label>Driver Email</Form.Label>
-                        <Form.Control
-                          type="email"
-                          placeholder="Driver Name"
-                          required
-                          onChange={(e) => handleChange(index, e)}
-                          name="email_address"
-                          value={element.email_address}
-                        />
-                      </Form.Group>
-                      <Form.Group
-                        as={Col}
-                        md="4"
-                        controlId="validationCustom03"
-                      >
-                        <Form.Label>Driver Phone</Form.Label>
-                        <Form.Control
-                          type="number"
-                          placeholder="Driver Phone"
-                          required
-                          onChange={(e) => handleChange(index, e)}
-                          name="phone_number"
-                          value={element.phone_number}
-                        />
-                      </Form.Group>
-                    </Row>
-                  </div>
-                ))}
-                {drivers.length < 2 ? (
-                  <div className="button-section">
-                    <Button type="button" onClick={() => addFormFields()}>
-                      Add
-                    </Button>
-                  </div>
-                ) : null}
-              </Row>
+                  <hr />
+                  <h3>Drivers:</h3>
+                  {drivers.map((element, index) => (
+                    <div className="form-inline" key={index}>
+                      <Row className="justify-content-end">
+                        <Col md={3}>
+                          {drivers.length === 2 && (
+                            <i
+                              className="bx bx-trash"
+                              onClick={() => removeFormFields(index)}
+                            ></i>
+                          )}
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Form.Group
+                          as={Col}
+                          md="4"
+                          controlId="validationCustom03"
+                        >
+                          <Form.Label>Driver Name</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Driver Name"
+                            required
+                            name="name"
+                            onChange={(e) => handleChange(index, e)}
+                            value={element.name}
+                          />
+                        </Form.Group>
+                        <Form.Group
+                          as={Col}
+                          md="4"
+                          controlId="validationCustom03"
+                        >
+                          <Form.Label>Driver Email</Form.Label>
+                          <Form.Control
+                            type="email"
+                            placeholder="Driver Name"
+                            required
+                            onChange={(e) => handleChange(index, e)}
+                            name="email_address"
+                            value={element.email_address}
+                          />
+                        </Form.Group>
+                        <Form.Group
+                          as={Col}
+                          md="4"
+                          controlId="validationCustom03"
+                        >
+                          <Form.Label>Driver Phone</Form.Label>
+                          <Form.Control
+                            type="number"
+                            placeholder="Driver Phone"
+                            required
+                            onChange={(e) => handleChange(index, e)}
+                            name="phone_number"
+                            value={element.phone_number}
+                          />
+                        </Form.Group>
+                      </Row>
+                    </div>
+                  ))}
+                  {drivers.length < 2 ? (
+                    <div className="button-section mt-4">
+                      <Button type="button" onClick={() => addFormFields()}>
+                        Add
+                      </Button>
+                    </div>
+                  ) : null}
+                </Row>
                 <hr />
                 <h3>Carrier Documents:</h3>
                 <Row xs="auto" className="m-3">
