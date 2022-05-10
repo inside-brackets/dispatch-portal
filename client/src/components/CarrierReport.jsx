@@ -5,6 +5,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import CarrierGraphs from "./CarrierGraphs";
 
 const CarrierReport = ({
   load,
@@ -14,8 +15,9 @@ const CarrierReport = ({
   startDate,
   endDate,
   defaultValue,
+  deadHead,
 }) => {
-  console.log(carrier, truck);
+  console.log("deadHead", deadHead);
   const ref = useRef();
   const history = useHistory();
   const [workingDays, setWorkingDays] = useState(
@@ -33,6 +35,16 @@ const CarrierReport = ({
     (previousValue, currentValue) => previousValue + currentValue.pay,
     0
   );
+
+  const deadHeadMiles = deadHead.reduce((previousValue, currentValue) => {
+    if (currentValue.distance) {
+      console.log("cuurent", currentValue.distance.text.split(" ")[0]);
+
+      return previousValue + parseFloat(currentValue.distance.text.split(" ")[0]);
+    } else return previousValue + 0;
+  }, 0);
+  console.log("deadHeadMiles", deadHeadMiles);
+
   let dollarPerLoadedMiles;
   if (amounts === 0 || loadedMiles === 0) {
     dollarPerLoadedMiles = 0;
@@ -40,8 +52,13 @@ const CarrierReport = ({
     dollarPerLoadedMiles = amounts / loadedMiles;
   }
 
-  console.log("start and end date", startDate, endDate, carrier);
-
+const totalMiles = loadedMiles + deadHeadMiles
+let dollarPerTotalMiles;
+  if (amounts === 0 || loadedMiles === 0) {
+    dollarPerTotalMiles = 0;
+  } else {
+    dollarPerTotalMiles = amounts / totalMiles;
+  }
   const printDocument = async () => {
     if (!workingDays || !dispatcherComments) {
       return alert("Please add working days and dispatcher comments");
@@ -67,6 +84,8 @@ const CarrierReport = ({
           to: endDate,
           working_days: workingDays,
           dispatcher_comment: dispatcherComments,
+          loads:load,
+          deadHead:deadHead
         }
       );
     }
@@ -103,22 +122,23 @@ const CarrierReport = ({
             </Col>
             <Col md={6}></Col>
           </Row>
-          {/* <Row>
-            <h1>Your Journey With us</h1>
-        </Row> */}
+          <Row>{/* <Map /> */}</Row>
           <Row className="justify-content-around mt-5">
             <h1 className="text-center">Statistics</h1>
+            <Row className="justify-content-center">
+              <CarrierGraphs loadedMiles={loadedMiles} deadHeadMiles={deadHeadMiles} />
+            </Row>
             <Row className="justify-content-around mt-5">
               <Col md={6}>
                 <h5>Loaded Miles: {loadedMiles}</h5>
               </Col>
               <Col md={6}>
-                <h5>DeadHead Miles:</h5>
+                <h5>DeadHead Miles:{deadHeadMiles}</h5>
               </Col>
             </Row>
             <Row className="justify-content-around mt-2">
               <Col md={6}>
-                <h5>Total Miles:</h5>
+                <h5>Total Miles:{totalMiles}</h5>
               </Col>
               <Col md={6}></Col>
             </Row>
@@ -132,7 +152,7 @@ const CarrierReport = ({
                 </h5>
               </Col>
               <Col md={6}>
-                <h5>Dollar per Total Miles: XXX</h5>
+                <h5>Dollar per Total Miles: {dollarPerTotalMiles}</h5>
               </Col>
             </Row>
             <Row className="justify-content-around mt-2">
@@ -142,6 +162,7 @@ const CarrierReport = ({
                   <input
                     className="form-group border"
                     value={workingDays}
+                    disabled={defaultValue}
                     onChange={(e) => setWorkingDays(e.target.value)}
                     type="number"
                   />
@@ -149,18 +170,15 @@ const CarrierReport = ({
               </Col>
               <Col md={6}></Col>
             </Row>
-            <Row className="justify-content-around mt-2">
-              <Col md={6}>
-                <h5>
-                  Dispatcher Remarks:{" "}
-                  <textarea
-                    value={dispatcherComments}
-                    onChange={(e) => setDispatcherComments(e.target.value)}
-                    className="form-group border"
-                  />
-                </h5>
-              </Col>
-              <Col md={6}></Col>
+            <Row className="mt-2">
+              <h5>Dispatcher Remarks:</h5>
+              <textarea
+                style={{ width: "70" }}
+                value={dispatcherComments}
+                disabled={defaultValue}
+                onChange={(e) => setDispatcherComments(e.target.value)}
+                className="form-group border"
+              />
             </Row>
           </Row>
           <Row className="mt-5">

@@ -10,16 +10,19 @@ import ReactSelect from "react-select";
 import CarrierReport from "../../components/CarrierReport";
 import { searchLoads } from "../../utils/utils";
 import { useParams } from "react-router-dom";
+import { DistanceMatrixService } from "@react-google-maps/api";
+
 const Report = () => {
   const params = useParams();
   const user = useSelector((state) => state.user.user);
-  const [carrier, setCarrier] = useState([]);
+  const [carrier, setCarrier] = useState(null);
   const [selectedCarrier, setSelectedCarrier] = useState(null);
   const [truck, setTruck] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [load, setLoad] = useState();
-  const [report, setReport] = useState(null)
+  const [report, setReport] = useState(null);
+  const [deadHeadData, setDeadHead] = useState()
 
   const selectionDate = {
     startDate: startDate,
@@ -35,13 +38,38 @@ const Report = () => {
         "carrier.truck_number": truck_num,
       }
     );
-    console.log("hello abcd", startDate, endDate, data);
     const filteredLoads = searchLoads(
       start_date ? start_date : startDate,
       end_date ? end_date : endDate,
       data
     );
     setLoad(filteredLoads);
+
+    const deadHead = [];
+    let temp = {
+      start: null,
+      end: null,
+    };
+    filteredLoads.forEach((element, index) => {
+      if (index === 0) {
+        temp = { ...temp, start: element.drop.address };
+      } else if (index === filteredLoads.length - 1) {
+        temp = { ...temp, end: element.pick_up.address };
+      } else {
+        temp = { ...temp, end: element.pick_up.address };
+        deadHead.push(temp);
+        temp = { ...temp, start: element.drop.address };
+      }
+    });
+   axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/distance-matrix`, {
+        dh: deadHead,
+      })
+      .then((res) => setDeadHead(res.data.data))
+      .catch((err) => console.log("api error",err));
+
+
+    console.log("tep", temp);
   };
 
   useEffect(() => {
@@ -57,7 +85,7 @@ const Report = () => {
             label: data.carrier.mc_number,
             value: data.carrier.mc_number,
           });
-          setReport(data)
+          setReport(data);
           setTruck({ label: data.truck, value: data.truck });
           setStartDate(new Date(data.from));
           setEndDate(new Date(data.to));
@@ -99,7 +127,7 @@ const Report = () => {
                   value={selectedCarrier}
                   onChange={setSelectedCarrier}
                   options={
-                    !params.id &&
+                    !params.id && carrier &&
                     carrier.map((carrier) => ({
                       label: carrier.mc_number,
                       value: carrier.mc_number,
@@ -152,7 +180,7 @@ const Report = () => {
               </Col>
             </Row>
             <Row>
-              {load && (
+              {load && carrier && deadHeadData && (
                 <CarrierReport
                   dispatcher={user}
                   load={load}
@@ -162,6 +190,7 @@ const Report = () => {
                     (item) => item.mc_number === selectedCarrier.value
                   )}
                   truck={truck}
+                  deadHead={deadHeadData}
                   defaultValue={report}
                 />
               )}

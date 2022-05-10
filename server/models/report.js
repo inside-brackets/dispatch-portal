@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const loadSchema = require("./load")
 
 const reportSchema = new mongoose.Schema(
   {
@@ -13,6 +14,8 @@ const reportSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    loads:[],
+    deadHead:[]
   },
   {
     timestamps: true,
