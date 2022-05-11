@@ -42,8 +42,22 @@ const changeAppointment = async (req, res) => {
   }
 };
 
+const findDublicates =async (req,res)=>{
+  console.log("start")
+const carrier =await Carrier.aggregate([
+  {"$group" : { "_id": "$mc_number", "count": { "$sum": 1 } } },
+  {"$match": {"_id" :{ "$ne" : null } , "count" : {"$gt": 1} } }, 
+  {"$project": {"mc_number" : "$_id", "_id" : 0} }
+])
+res.send(
+  carrier
+)
+
+}
+
 module.exports = {
   rename,
   test,
   changeAppointment,
+  findDublicates
 };
