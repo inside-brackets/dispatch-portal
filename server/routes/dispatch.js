@@ -12,7 +12,8 @@ route.post("/addcarrierreport", reportController.addNewReport);
 route.post("/getcarrierreport", reportController.getTableCarriersReport);
 route.get("/get-carrier-report/:id",reportController.getSingleCarrier);
 route.delete("/delete-carrier-report/:id",reportController.deleteReport);
-route.post("/graph-data",reportController.lineGraphData)
+route.post("/line-graph",reportController.lineGraphData)
+route.post("/bar-graph",reportController.barGraphData)
 route.post("/distance-matrix",reportController.getDistanceMatrixData)
 
 module.exports = route;

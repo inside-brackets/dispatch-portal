@@ -149,17 +149,50 @@ console.log(result)
 
 const lineGraphData = (req, res) => {
   console.log("i m call");
-  const result = Load.aggregate([
-    {
-      $match: {
-        l_status: "cleared",
-        "carrier.mc_number": req.body.mc,
-      },
-    },
-  ]);
+  const result = Load.aggregate(
+    { $group : { 
+         _id : { year: { $year : "$accessDate" }, month: { $month : "$accessDate" },day: { $dayOfMonth : "$accessDate" }}, 
+         count : { $sum : 1 }}
+         }, 
+    { $group : { 
+         _id : { year: "$_id.year", month: "$_id.month" }, 
+         dailyusage: { $push: { day: "$_id.day", count: "$count" }}}
+         }, 
+    { $group : { 
+         _id : { year: "$_id.year" }, 
+         monthlyusage: { $push: { month: "$_id.month", dailyusage: "$dailyusage" }}}
+         }, 
+    function (err, res)
+         { if (err) ; // TODO handle error 
+           console.log(res); 
+         });
   console.log(result);
   res.send(result);
 };
+
+const barGraphData = (req, res) => {
+  console.log("i m call");
+  const result = Load.aggregate(
+    { $group : { 
+         _id : { year: { $year : "$createdAt" }, month: { $month : "$createdAt" },day: { $dayOfMonth : "$createdAt" }}, 
+         count : { $sum : 1 }}
+         }, 
+    { $group : { 
+         _id : { year: "$_id.year", month: "$_id.month" }, 
+         dailyusage: { $push: { day: "$_id.day", count: "$count" }}}
+         }, 
+    { $group : { 
+         _id : { year: "$_id.year" }, 
+         monthlyusage: { $push: { month: "$_id.month", dailyusage: "$dailyusage" }}}
+         }, 
+    function (err, res)
+         { if (err) ; // TODO handle error 
+           console.log(res); 
+         });
+  console.log(result);
+  res.send(result);
+};
+
 
 module.exports = {
   addNewReport,
@@ -167,5 +200,6 @@ module.exports = {
   getSingleCarrier,
   deleteReport,
   lineGraphData,
+  barGraphData,
   getDistanceMatrixData,
 };

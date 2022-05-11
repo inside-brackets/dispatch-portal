@@ -5,7 +5,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import CarrierGraphs from "./CarrierGraphs";
+import Graphs from "./CarrierGraphs";
+import "./carrier-report.css";
 
 const CarrierReport = ({
   load,
@@ -40,7 +41,9 @@ const CarrierReport = ({
     if (currentValue.distance) {
       console.log("cuurent", currentValue.distance.text.split(" ")[0]);
 
-      return previousValue + parseFloat(currentValue.distance.text.split(" ")[0]);
+      return (
+        previousValue + parseFloat(currentValue.distance.text.split(" ")[0])
+      );
     } else return previousValue + 0;
   }, 0);
   console.log("deadHeadMiles", deadHeadMiles);
@@ -52,8 +55,8 @@ const CarrierReport = ({
     dollarPerLoadedMiles = amounts / loadedMiles;
   }
 
-const totalMiles = loadedMiles + deadHeadMiles
-let dollarPerTotalMiles;
+  const totalMiles = loadedMiles + deadHeadMiles;
+  let dollarPerTotalMiles;
   if (amounts === 0 || loadedMiles === 0) {
     dollarPerTotalMiles = 0;
   } else {
@@ -84,12 +87,12 @@ let dollarPerTotalMiles;
           to: endDate,
           working_days: workingDays,
           dispatcher_comment: dispatcherComments,
-          loads:load,
-          deadHead:deadHead
+          loads: load,
+          deadHead: deadHead,
         }
       );
     }
-    history.push("/report");
+    // history.push("/report");
   };
   return (
     <>
@@ -98,7 +101,7 @@ let dollarPerTotalMiles;
         ref={ref}
         style={{
           backgroundColor: "#fffff",
-          width: "350mm",
+          width: "600mm",
           minHeight: "200mm",
           marginLeft: "auto",
           marginRight: "auto",
@@ -106,8 +109,8 @@ let dollarPerTotalMiles;
         className="justify-content-around"
       >
         <Col md={10}>
-          <h1 className="text-center">{carrier.company_name}</h1>
-          <h2 className="text-center mt-5">Carrier Report</h2>
+          <h1 className="text-center main-heading">{carrier.company_name}</h1>
+          <h2 className="text-center mt-5 second-heading">Carrier Report</h2>
           <Row className="justify-content-around mt-5">
             <Col md={6}>
               <h5>Carrier Name: {carrier.company_name}</h5>
@@ -126,38 +129,63 @@ let dollarPerTotalMiles;
           <Row className="justify-content-around mt-5">
             <h1 className="text-center">Statistics</h1>
             <Row className="justify-content-center">
-              <CarrierGraphs loadedMiles={loadedMiles} deadHeadMiles={deadHeadMiles} />
-            </Row>
-            <Row className="justify-content-around mt-5">
-              <Col md={6}>
-                <h5>Loaded Miles: {loadedMiles}</h5>
-              </Col>
-              <Col md={6}>
-                <h5>DeadHead Miles:{deadHeadMiles}</h5>
-              </Col>
+              <h3>Loaded Miles Vs Deadhead</h3>
+              <Graphs
+                type="donut"
+                loadedMiles={loadedMiles}
+                deadHeadMiles={deadHeadMiles}
+              />
             </Row>
             <Row className="justify-content-around mt-2">
               <Col md={6}>
-                <h5>Total Miles:{totalMiles}</h5>
+                <h5 className="loaded-miles">Loaded Miles: {loadedMiles}</h5>
+              </Col>
+              <Col md={6}>
+                <h5 className="deadhead-miles">
+                  DeadHead Miles:{deadHeadMiles}
+                </h5>
+              </Col>
+            </Row>
+            <Row className="justify-content-around mt-4">
+              <Col md={6}>
+                <h5 className="total-miles">Total Miles:{totalMiles}</h5>
               </Col>
               <Col md={6}></Col>
             </Row>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
             <Row className="justify-content-around mt-2">
               <Col md={6}>
-                <h5>
+                <h5 className="major-details">
                   Dollar per Loaded Miles:{" "}
                   {typeof dollarPerLoadedMiles === "NaN"
                     ? 0
-                    : dollarPerLoadedMiles}
+                    : dollarPerLoadedMiles.toFixed(2)}
                 </h5>
               </Col>
               <Col md={6}>
-                <h5>Dollar per Total Miles: {dollarPerTotalMiles}</h5>
+                <h5 className="major-details">
+                  Dollar per Total Miles: {dollarPerTotalMiles.toFixed(2)}
+                </h5>
               </Col>
             </Row>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
             <Row className="justify-content-around mt-2">
-              <Col md={6}>
-                <h5>
+              <>
+                <h5 className="major-details">
                   Working Days:{" "}
                   <input
                     className="form-group border"
@@ -167,25 +195,45 @@ let dollarPerTotalMiles;
                     type="number"
                   />
                 </h5>
-              </Col>
+              </>
               <Col md={6}></Col>
             </Row>
+            <br />
+            <br />
+            <br />
+            <br />
             <Row className="mt-2">
-              <h5>Dispatcher Remarks:</h5>
-              <textarea
-                style={{ width: "70" }}
-                value={dispatcherComments}
-                disabled={defaultValue}
-                onChange={(e) => setDispatcherComments(e.target.value)}
-                className="form-group border"
-              />
+              <Col md={4}>
+                <h5 className="major-details">Dispatcher Remarks:</h5>
+              </Col>
+              <Col md={12}>
+                <textarea
+                  value={dispatcherComments}
+                  disabled={defaultValue}
+                  onChange={(e) => setDispatcherComments(e.target.value)}
+                  className="form-group border text-area"
+                />
+              </Col>
             </Row>
           </Row>
-          <Row className="mt-5">
-            <h2 className="text-center">
+          <br />
+          <br />
+          <br />
+          <Row className="justify-content-center">
+          <h2 className="text-center">
               Have control of your business with our Statistical Analysis
             </h2>
-            <h3 className="text-center mt-3">Your Loads With us</h3>
+            <br />
+          <br />
+          <br />
+<h5 className="text-center">Miles per month vs gross per month</h5>
+            <Graphs type="line" />
+            <h5 className="text-center">Dollar per mile</h5>
+<Graphs type='bar' />
+          </Row>
+
+          <Row className="mt-5">
+          <h3 className="text-center mt-3">Your Loads With us</h3>       
             <Col>
               <table className="table invoice">
                 <thead
@@ -236,15 +284,33 @@ let dollarPerTotalMiles;
               </table>
             </Col>
           </Row>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <Row>
+            <h1 className="total-miles">Regards,</h1>
+            <h1 className="total-miles">Dispatcher {dispatcher.user_name}</h1>
+            <h1 className="total-miles">Company {dispatcher.company}</h1>
+          </Row>
         </Col>
       </Row>
-      <Button
-        variant={defaultValue ? "primary" : "success"}
-        size="lg"
-        onClick={printDocument}
-      >
-        {defaultValue ? <>Print</> : <>Print and Save</>}
-      </Button>
+      <Row className="justify-content-around">
+        <Col md={8}>
+          <Button
+            className="w-100"
+            variant={defaultValue ? "primary" : "success"}
+            size="lg"
+            onClick={printDocument}
+          >
+            {defaultValue ? <>Print</> : <>Print and Save</>}
+          </Button>
+        </Col>
+      </Row>
     </>
   );
 };
