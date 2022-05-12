@@ -8,6 +8,7 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
 import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 const carrierTableHead = [
   "#",
@@ -22,6 +23,7 @@ const carrierTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const AssignSales = () => {
+  const history = useHistory();
   // const [carriers, setCarriers] = useState([]);
   const { carriers } = useSelector((state) => state.sales);
   const dispatch = useDispatch();
@@ -96,15 +98,15 @@ const AssignSales = () => {
   }, [fetchDispatchers, fetchCarriers, dispatch, selectedCompany]);
 
   const renderBody = (item, index) => (
-    <tr key={index}>
-      <td>{index + 1}</td>
-      <td>{item.mc_number}</td>
-      <td>{item.company_name}</td>
-      <td>{item.truck_number}</td>
-      <td>{item.trailer_type}</td>
-      <td>{item.salesman ? item.salesman : "N/A"}</td>
+    <tr key={index} >
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{index + 1}</td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.mc_number}</td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.company_name}</td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.truck_number}</td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.trailer_type}</td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.salesman ? item.salesman : "N/A"}</td>
       {/* <td>{item.salesman}</td> */}
-      <td>
+      <td >
         <Button
           style={{ paddingLeft: "40px", paddingRight: "40px" }}
           onClick={() => {
