@@ -16,6 +16,8 @@ const CarrierReport = ({
   startDate,
   endDate,
   defaultValue,
+  lineGraphData,
+  barGraphData,
   deadHead,
 }) => {
   console.log("deadHead", deadHead);
@@ -39,14 +41,11 @@ const CarrierReport = ({
 
   const deadHeadMiles = deadHead.reduce((previousValue, currentValue) => {
     if (currentValue.distance) {
-      console.log("cuurent", currentValue.distance.text.split(" ")[0]);
-
       return (
         previousValue + parseFloat(currentValue.distance.text.split(" ")[0])
       );
     } else return previousValue + 0;
   }, 0);
-  console.log("deadHeadMiles", deadHeadMiles);
 
   let dollarPerLoadedMiles;
   if (amounts === 0 || loadedMiles === 0) {
@@ -69,12 +68,12 @@ const CarrierReport = ({
     const input = document.getElementById("div-to-print");
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      var pdf = new jsPDF({ orientation: "landscape" });
+      var pdf = new jsPDF({ orientation: "potrait" });
       var width = pdf.internal.pageSize.getWidth();
       var height = pdf.internal.pageSize.getHeight();
       pdf.addImage(imgData, "JPEG", 0, 0, width, height);
-      // pdf.output("dataurlnewwindow");
-      pdf.save("download.pdf");
+       pdf.output("dataurlnewwindow");
+            pdf.save("download.pdf");
     });
 
     if (!defaultValue) {
@@ -220,20 +219,20 @@ const CarrierReport = ({
           <br />
           <br />
           <Row className="justify-content-center">
-          <h2 className="text-center">
+            <h2 className="text-center">
               Have control of your business with our Statistical Analysis
             </h2>
             <br />
-          <br />
-          <br />
-<h5 className="text-center">Miles per month vs gross per month</h5>
-            <Graphs type="line" />
+            <br />
+            <br />
+            <h5 className="text-center">Miles per month vs gross per month</h5>
+            <Graphs type="line" data={lineGraphData} />
             <h5 className="text-center">Dollar per mile</h5>
-<Graphs type='bar' />
+            <Graphs type="bar" data={barGraphData} />
           </Row>
 
           <Row className="mt-5">
-          <h3 className="text-center mt-3">Your Loads With us</h3>       
+            <h3 className="text-center mt-3">Your Loads With us</h3>
             <Col>
               <table className="table invoice">
                 <thead

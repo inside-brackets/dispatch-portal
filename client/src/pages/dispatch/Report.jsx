@@ -10,7 +10,6 @@ import ReactSelect from "react-select";
 import CarrierReport from "../../components/CarrierReport";
 import { searchLoads } from "../../utils/utils";
 import { useParams } from "react-router-dom";
-import { DistanceMatrixService } from "@react-google-maps/api";
 
 const Report = () => {
   const params = useParams();
@@ -22,8 +21,9 @@ const Report = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [load, setLoad] = useState();
   const [report, setReport] = useState(null);
-  const [deadHeadData, setDeadHead] = useState()
-
+  const [deadHeadData, setDeadHead] = useState();
+  const [lineGraphData, setLineGraphData] = useState(null);
+  const [barGraphData, setBarGraphData] = useState(null);
   const selectionDate = {
     startDate: startDate,
     endDate: endDate,
@@ -50,25 +50,62 @@ const Report = () => {
       start: null,
       end: null,
     };
-    filteredLoads.forEach((element, index) => {
-      if (index === 0) {
-        temp = { ...temp, start: element.drop.address };
-      } else if (index === filteredLoads.length - 1) {
-        temp = { ...temp, end: element.pick_up.address };
-      } else {
-        temp = { ...temp, end: element.pick_up.address };
-        deadHead.push(temp);
-        temp = { ...temp, start: element.drop.address };
-      }
-    });
-   axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/distance-matrix`, {
-        dh: deadHead,
+    filteredLoads
+      .filter((item) => item.l_status === "delivered")
+      .forEach((element, index) => {
+        if (index === 0) {
+          temp = { ...temp, start: element.drop.address };
+        } else if (index === filteredLoads.length - 1) {
+          temp = { ...temp, end: element.pick_up.address };
+        } else {
+          temp = { ...temp, end: element.pick_up.address };
+          deadHead.push(temp);
+          temp = { ...temp, start: element.drop.address };
+        }
+      });
+    if (deadHead.length > 0) {
+      axios
+        .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/distance-matrix`, {
+          dh: deadHead,
+        })
+        .then((res) => setDeadHead(res.data.data))
+        .catch((err) => console.log("api error", err));
+    }
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`, {mc,truck})
+      .then((res) => {
+        const data = res.data.map((item) => {
+          const date = new Date();
+          date.setMonth(item.month - 1);
+          return {
+            ...item,
+            month: date.toLocaleString("en-US", {
+              month: "long",
+            }),
+          };
+        });
+        setLineGraphData(data);
+        console.log("line graph data", data);
       })
-      .then((res) => setDeadHead(res.data.data))
-      .catch((err) => console.log("api error",err));
+      .catch((err) => console.log("api error", err));
 
-
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {mc,truck})
+      .then((res) => {
+        const data = res.data.map((item) => {
+          const date = new Date();
+          date.setMonth(item.month - 1);
+          return {
+            ...item,
+            month: date.toLocaleString("en-US", {
+              month: "long",
+            }),
+          };
+        });
+        setBarGraphData(data);
+        console.log("bar graph data", data);
+      })
+      .catch((err) => console.log("api error", err));
     console.log("tep", temp);
   };
 
@@ -127,7 +164,8 @@ const Report = () => {
                   value={selectedCarrier}
                   onChange={setSelectedCarrier}
                   options={
-                    !params.id && carrier &&
+                    !params.id &&
+                    carrier &&
                     carrier.map((carrier) => ({
                       label: carrier.mc_number,
                       value: carrier.mc_number,
@@ -180,20 +218,26 @@ const Report = () => {
               </Col>
             </Row>
             <Row>
-              {load && carrier && deadHeadData && (
-                <CarrierReport
-                  dispatcher={user}
-                  load={load}
-                  startDate={startDate}
-                  endDate={endDate}
-                  carrier={carrier.find(
-                    (item) => item.mc_number === selectedCarrier.value
-                  )}
-                  truck={truck}
-                  deadHead={deadHeadData}
-                  defaultValue={report}
-                />
-              )}
+              {load &&
+                carrier &&
+                deadHeadData &&
+                lineGraphData &&
+                barGraphData && (
+                  <CarrierReport
+                    dispatcher={user}
+                    load={load}
+                    startDate={startDate}
+                    endDate={endDate}
+                    carrier={carrier.find(
+                      (item) => item.mc_number === selectedCarrier.value
+                    )}
+                    truck={truck}
+                    lineGraphData={lineGraphData}
+                    barGraphData={barGraphData}
+                    deadHead={deadHeadData}
+                    defaultValue={report}
+                  />
+                )}
             </Row>
           </Card>
         </Col>

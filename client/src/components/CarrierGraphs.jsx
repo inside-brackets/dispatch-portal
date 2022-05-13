@@ -13,7 +13,6 @@ import {
   Line,
   BarChart,
   Bar,
-  ResponsiveContainer,
 } from "recharts";
 
 const DonutGraphs = (props) => {
@@ -23,50 +22,10 @@ const DonutGraphs = (props) => {
     { name: "Loaded Miles", value: props.loadedMiles },
     { name: "Deadhead", value: props.deadHeadMiles },
   ];
-  const lineChartData = [
-    {
-      name: "January",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Febuary",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "March",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "April",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "May",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "June",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "July",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+  if(props.loadedMiles === 0 && props.deadHeadMiles === 0){
+    return <p>not enough data to show</p>
+  }
+
 
   function CustomLabel({ viewBox, value1, value2 }) {
     const { cx, cy } = viewBox;
@@ -116,74 +75,14 @@ const DonutGraphs = (props) => {
         <Tooltip />
         <Legend align="left" />
       </PieChart>
-      {/* <LineChart
-          width={500}
-          height={300}
-          data={lineChartData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-        </LineChart> */}
     </>
   );
 };
 
 const LineGraph = (props) => {
-  const lineChartData = [
-    {
-      name: "January",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Febuary",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "March",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "April",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "May",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "June",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "July",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+if(props.data.length < 3){
+  return <p>not enough data to show</p>
+}  
 
   return (
     <>
@@ -191,7 +90,7 @@ const LineGraph = (props) => {
       <LineChart
         width={500}
         height={300}
-        data={lineChartData}
+        data={props.data}
         margin={{
           top: 5,
           right: 30,
@@ -200,74 +99,31 @@ const LineGraph = (props) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="month" />
         <YAxis />
         <Tooltip />
         <Legend />
         <Line
           type="monotone"
-          dataKey="pv"
+          dataKey="total_pay"
           stroke="#8884d8"
           activeDot={{ r: 8 }}
         />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+        <Line type="monotone" dataKey="total_miles" stroke="#82ca9d" />
       </LineChart>
     </>
   );
 };
 
 const BarGraph = (props) => {
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
-
+  if(props.data.length < 3){
+    return <p>not enough data to show</p>
+  }
   return (
-
     <BarChart
     width={500}
     height={300}
-    data={data}
+    data={props.data}
     margin={{
       top: 5,
       right: 30,
@@ -276,12 +132,12 @@ const BarGraph = (props) => {
     }}
     barSize={20}
   >
-    <XAxis dataKey="name" scale="point" padding={{ left: 10, right: 10 }} />
+    <XAxis dataKey="month" scale="point" padding={{ left: 10, right: 10 }} />
     <YAxis />
     <Tooltip />
     <Legend />
     <CartesianGrid strokeDasharray="3 3" />
-    <Bar dataKey="pv" fill="#8884d8" background={{ fill: '#eee' }} />
+    <Bar dataKey="total" fill="#8884d8" background={{ fill: '#eee' }} />
   </BarChart>
   );
 };

@@ -1,6 +1,7 @@
 const Report = require("../models/report");
 const Load = require("../models/load");
 const axios = require("axios");
+// const { monthName } = require("../util/functions");
 
 const addNewReport = async (req, res) => {
   let createReport = await Report.create(req.body);
@@ -109,90 +110,213 @@ const getDistanceMatrixData = async (req, res) => {
     };
 
     const { data } = await axios.get(config.url);
-if(data.status === "OK"){
-  console.log(data.rows)
-    result.push({
-      destination: data.destination_addresses[0],
-      origin: data.origin_addresses[0],
-      duration: data.rows[0].elements[0].duration,
-      distance: data.rows[0].elements[0].distance,
-    });
+    if (data.status === "OK") {
+      console.log(data.rows);
+      result.push({
+        destination: data.destination_addresses[0],
+        origin: data.origin_addresses[0],
+        duration: data.rows[0].elements[0].duration,
+        distance: data.rows[0].elements[0].distance,
+      });
+    }
   }
-  }
-
-  // distance.key(process.env.DISTANCE_MATRIX_API);
-  // distance.mode('driving');
-  // const result = await Promise.all(req.body.map(async (element,index) => {
-  //   return distance.matrix(
-  //       [element.start],
-  //       [element.end],
-  //       function (err, distances) {
-  //         if (err) {
-  //           return console.log(err);
-  //         }
-  //         if (!distances) {
-  //           return console.log("no distances");
-  //         }
-  //         if (distances.status == "OK") {
-  //          console.log("1")
-  //          console.log(distances)
-  //         //  return req.body[index].distance
-  //         }
-  //       }
-  //     );
-  //   }))
-console.log(result)
+  console.log(result);
   res.json({
     data: result,
   });
 };
 
-const lineGraphData = (req, res) => {
+const lineGraphData = async (req, res) => {
   console.log("i m call");
-  const result = Load.aggregate(
-    { $group : { 
-         _id : { year: { $year : "$accessDate" }, month: { $month : "$accessDate" },day: { $dayOfMonth : "$accessDate" }}, 
-         count : { $sum : 1 }}
-         }, 
-    { $group : { 
-         _id : { year: "$_id.year", month: "$_id.month" }, 
-         dailyusage: { $push: { day: "$_id.day", count: "$count" }}}
-         }, 
-    { $group : { 
-         _id : { year: "$_id.year" }, 
-         monthlyusage: { $push: { month: "$_id.month", dailyusage: "$dailyusage" }}}
-         }, 
-    function (err, res)
-         { if (err) ; // TODO handle error 
-           console.log(res); 
-         });
-  console.log(result);
-  res.send(result);
+
+  const loads = await Load.aggregate([
+    { $addFields: { year: { $year: "$createdAt" } } },
+    {
+      $match: {
+        // year: new Date().getFullYear(),
+        "carrier.mc_number": req.body.mc,
+        "carrier.truck_number": req.body.truck,
+        l_status: "delivered",
+      },
+    },
+    {
+      $group: {
+        _id: { month: { $month: "$createdAt" }, year: "$year" },
+        count: { $count: {} },
+        total_pay: {
+          $sum: "$pay",
+        },
+        total_miles: {
+          $sum: "$miles",
+        },
+      },
+    },
+
+    {
+      $sort: { "_id.month": 1 },
+    },
+    {
+      $group: {
+        _id: { year: "$_id.year" },
+        monthly_usage: {
+          $push: {
+            month: "$_id.month",
+            total_pay: "$total_pay",
+            total_miles: "$total_miles",
+            count: "$count",
+          },
+        },
+      },
+    },
+    {
+      $sort: { "_id.year": 1 },
+    },
+    {
+      $project: {
+        _id: 0,
+        year: "$_id.year",
+        monthly_usage: "$monthly_usage",
+      },
+    },
+  ]);
+
+  const months = [];
+  let latest_month;
+  if (loads.length > 0) {
+    latest_month = loads[loads.length - 1].monthly_usage.at(-1).month;
+  }
+
+  let current_year = loads.length - 1;
+  if(loads.length > 0){
+  for (let i = 0; i <= 11; i++) {
+    if (latest_month === 0) {
+      latest_month = 12;
+      current_year = current_year - 1;
+    }
+    const value = loads[current_year].monthly_usage.find(
+      (item) => item.month === latest_month
+    );
+    if (value) {
+      months.push(value);
+    } else {
+      months.push({
+        month: latest_month,
+        total_pay: 0,
+        total_miles: 0,
+        count: 0,
+      });
+    }
+
+    latest_month = latest_month - 1;
+    console.log(latest_month);
+  }
+  for (i = months.length-1; i >= 0; i--) {
+    console.log(months[i])
+    if (months[i].count > 0) {
+      break;
+    } else {
+      months.splice(i, 1);
+    }
+  }
+}
+  res.send(months);
 };
 
-const barGraphData = (req, res) => {
+const barGraphData = async (req, res) => {
   console.log("i m call");
-  const result = Load.aggregate(
-    { $group : { 
-         _id : { year: { $year : "$createdAt" }, month: { $month : "$createdAt" },day: { $dayOfMonth : "$createdAt" }}, 
-         count : { $sum : 1 }}
-         }, 
-    { $group : { 
-         _id : { year: "$_id.year", month: "$_id.month" }, 
-         dailyusage: { $push: { day: "$_id.day", count: "$count" }}}
-         }, 
-    { $group : { 
-         _id : { year: "$_id.year" }, 
-         monthlyusage: { $push: { month: "$_id.month", dailyusage: "$dailyusage" }}}
-         }, 
-    function (err, res)
-         { if (err) ; // TODO handle error 
-           console.log(res); 
-         });
-  console.log(result);
-  res.send(result);
-};
 
+  const loads = await Load.aggregate([
+    { $addFields: { year: { $year: "$createdAt" } } },
+    {
+      $match: {
+        // year: new Date().getFullYear(),
+        "carrier.mc_number": req.body.mc,
+        "carrier.truck_number": req.body.truck,
+        l_status: "delivered",
+      },
+    },
+    {
+      $group: {
+        _id: { month: { $month: "$createdAt" }, year: "$year" },
+        count: { $count: {} },
+        total_pay: {
+          $sum: "$pay",
+        },
+        total_miles: {
+          $sum: "$miles",
+        },
+      },
+    },
+
+    {
+      $sort: { "_id.month": 1 },
+    },
+    {
+      $group: {
+        _id: { year: "$_id.year" },
+        monthly_usage: {
+          $push: {
+            month: "$_id.month",
+            total: { $divide: ["$total_pay", "$total_miles"] },
+            count: "$count",
+          },
+        },
+      },
+    },
+    {
+      $sort: { "_id.year": 1 },
+    },
+    {
+      $project: {
+        _id: 0,
+        year: "$_id.year",
+        monthly_usage: "$monthly_usage",
+      },
+    },
+  ]);
+
+  const months = [];
+  let latest_month;
+  if (loads.length > 0) {
+    latest_month = loads[loads.length - 1].monthly_usage.at(-1).month;
+  }
+  let current_year = loads.length - 1;
+  
+  if(loads.length > 0){
+
+  for (let i = 0; i <= 11; i++) {
+    if (latest_month === 0) {
+      latest_month = 12;
+      current_year = current_year - 1;
+    }
+    const value = loads[current_year].monthly_usage.find(
+      (item) => item.month === latest_month
+    );
+    if (value) {
+      months.push(value);
+    } else {
+      months.push({
+        month: latest_month,
+        total: 0,
+        count:0
+      });
+    }
+
+    latest_month = latest_month - 1;
+
+  }
+
+  for (i = months.length-1; i >= 0; i--) {
+    console.log(months[i])
+    if (months[i].count > 0) {
+      break;
+    } else {
+      months.splice(i, 1);
+    }
+  }
+  }
+  res.send(months);
+};
 
 module.exports = {
   addNewReport,
