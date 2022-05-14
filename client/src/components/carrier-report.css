@@ -7,28 +7,35 @@
     font-weight: bolder;
 }
 .loaded-miles{
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
     color:#00F9FF;
 }
 
 .deadhead-miles{
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
     color:#D32F2F;
 }
 
 .total-miles{
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
 }
 
 .major-details{
-    font-size: 30px;
+    font-size: 24px;
     font-weight: bold;
 }
 
 .text-area {
-margin-top: 20px;
+
 width: 100%;
+font-size: 24px;
 height: 150px;}
+
+.sub-heading {
+    font-weight: 900;
+    font-size:medium;
+    font-size: 20px;
+}

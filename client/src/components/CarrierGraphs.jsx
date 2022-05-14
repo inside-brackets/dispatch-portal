@@ -22,9 +22,13 @@ const DonutGraphs = (props) => {
     { name: "Loaded Miles", value: props.loadedMiles },
     { name: "Deadhead", value: props.deadHeadMiles },
   ];
-  if(props.loadedMiles === 0 && props.deadHeadMiles === 0){
-    return <p>not enough data to show</p>
-  }
+  // if(props.loadedMiles === 0 && props.deadHeadMiles === 0){
+  //   return <p>not enough data to show</p>
+  // }
+  const data2 = [
+    { name: "Loaded Miles", value: 50 },
+    { name: "Deadhead", value: 50 },
+  ];
 
 
   function CustomLabel({ viewBox, value1, value2 }) {
@@ -54,7 +58,7 @@ const DonutGraphs = (props) => {
       {" "}
       <PieChart width={300} height={400}>
         <Pie
-          data={data}
+        data={props.loadedMiles === 0 && props.deadHeadMiles === 0 ? data2 : data}
           cx={120}
           cy={200}
           innerRadius={60}
@@ -73,24 +77,71 @@ const DonutGraphs = (props) => {
           ></Label>
         </Pie>
         <Tooltip />
-        <Legend align="left" />
+        {props.loadedMiles !== 0 && props.deadHeadMiles !== 0  && <Legend />}     
+
       </PieChart>
+      {props.loadedMiles === 0 && props.deadHeadMiles === 0 && <p className="text-center">Not Enough data to show</p>}
+ 
     </>
   );
 };
 
 const LineGraph = (props) => {
-if(props.data.length < 3){
-  return <p>not enough data to show</p>
-}  
+// if(props.data.length < 3){
+//   return <p>not enough data to show</p>
+// }  
+const data2 = [
+  {
+    month: 'January',
+    total_miles: 0,
+    total_pay: 0,
+    total: 0,
+  },
+  {
+    month: 'Febuary',
+    total_miles: 0,
+    total_pay: 0,
+    total: 0,
+  },
+  {
+    month: 'March',
+    total_miles: 0,
+    total_pay: 0,
+    total: 0,
+  },
+  {
+    month: 'April',
+    total_miles: 0,
+    total_pay: 0,
+    total: 0,
+  },
+  {
+    month: 'May',
+    total_miles: 0,
+    total_pay: 0,
+    total: 0,
+  },
+  {
+    month: 'June',
+    total_miles: 0,
+    total_pay: 0,
+    total: 0,
+  },
+  {
+    month: 'July',
+    total_miles: 0,
+    total_pay: 0,
+    total: 0,
+  },
+];
 
   return (
     <>
       {" "}
       <LineChart
-        width={500}
+        width={1000}
         height={300}
-        data={props.data}
+        data={props.data.length < 3 ? data2 : props.data}
         margin={{
           top: 5,
           right: 30,
@@ -102,8 +153,7 @@ if(props.data.length < 3){
         <XAxis dataKey="month" />
         <YAxis />
         <Tooltip />
-        <Legend />
-        <Line
+        {props.data.length > 3  && <Legend />}        <Line
           type="monotone"
           dataKey="total_pay"
           stroke="#8884d8"
@@ -111,20 +161,66 @@ if(props.data.length < 3){
         />
         <Line type="monotone" dataKey="total_miles" stroke="#82ca9d" />
       </LineChart>
+      {props.data.length < 3 && <p className="text-center">Not Enough data to show</p>}
     </>
   );
 };
 
 const BarGraph = (props) => {
-  if(props.data.length < 3){
-    return <p>not enough data to show</p>
-  }
+  // if(props.data.length < 3){
+  //   return <p>not enough data to show</p>
+  // }
+
+  const data2 = [
+    {
+      month: 'January',
+      total_miles: 0,
+      total_pay: 0,
+      total: 0,
+    },
+    {
+      month: 'Febuary',
+      total_miles: 0,
+      total_pay: 0,
+      total: 0,
+    },
+    {
+      month: 'March',
+      total_miles: 0,
+      total_pay: 0,
+      total: 0,
+    },
+    {
+      month: 'April',
+      total_miles: 0,
+      total_pay: 0,
+      total: 0,
+    },
+    {
+      month: 'May',
+      total_miles: 0,
+      total_pay: 0,
+      total: 0,
+    },
+    {
+      month: 'June',
+      total_miles: 0,
+      total_pay: 0,
+      total: 0,
+    },
+    {
+      month: 'July',
+      total_miles: 0,
+      total_pay: 0,
+      total: 0,
+    },
+  ];
   return (
+   <>
     <BarChart
-    width={500}
+    width={1000}
     height={300}
-    data={props.data}
-    margin={{
+    data={props.data.length < 3 ? data2 : props.data}    margin={{
       top: 5,
       right: 30,
       left: 20,
@@ -135,11 +231,13 @@ const BarGraph = (props) => {
     <XAxis dataKey="month" scale="point" padding={{ left: 10, right: 10 }} />
     <YAxis />
     <Tooltip />
-    <Legend />
+    {props.data.length > 3  && <Legend />}
     <CartesianGrid strokeDasharray="3 3" />
     <Bar dataKey="total" fill="#8884d8" background={{ fill: '#eee' }} />
   </BarChart>
-  );
+  {props.data.length < 3 && <p className="text-center">Not Enough data to show</p>}
+    
+  </>);
 };
 
 const Graphs = (props) => {

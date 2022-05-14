@@ -7,6 +7,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Graphs from "./CarrierGraphs";
 import "./carrier-report.css";
+import { useReactToPrint } from "react-to-print";
 
 const CarrierReport = ({
   load,
@@ -46,7 +47,6 @@ const CarrierReport = ({
       );
     } else return previousValue + 0;
   }, 0);
-
   let dollarPerLoadedMiles;
   if (amounts === 0 || loadedMiles === 0) {
     dollarPerLoadedMiles = 0;
@@ -61,6 +61,19 @@ const CarrierReport = ({
   } else {
     dollarPerTotalMiles = amounts / totalMiles;
   }
+  const reactToPrintContent = React.useCallback(() => {
+    return ref.current;
+  }, [ref.current]);
+
+  const handlePrint = useReactToPrint({
+    content: reactToPrintContent,
+    documentTitle: "AwesomeFileName",
+    // onBeforeGetContent: handleOnBeforeGetContent,
+    // onBeforePrint: handleBeforePrint,
+    // onAfterPrint: handleAfterPrint,
+    removeAfterPrint: true,
+  });
+
   const printDocument = async () => {
     if (!workingDays || !dispatcherComments) {
       return alert("Please add working days and dispatcher comments");
@@ -72,8 +85,8 @@ const CarrierReport = ({
       var width = pdf.internal.pageSize.getWidth();
       var height = pdf.internal.pageSize.getHeight();
       pdf.addImage(imgData, "JPEG", 0, 0, width, height);
-       pdf.output("dataurlnewwindow");
-            pdf.save("download.pdf");
+      pdf.output("dataurlnewwindow");
+      pdf.save("download.pdf");
     });
 
     if (!defaultValue) {
@@ -95,208 +108,150 @@ const CarrierReport = ({
   };
   return (
     <>
-      <Row
-        id="div-to-print"
-        ref={ref}
-        style={{
-          backgroundColor: "#fffff",
-          width: "600mm",
-          minHeight: "200mm",
-          marginLeft: "auto",
-          marginRight: "auto",
-        }}
-        className="justify-content-around"
-      >
-        <Col md={10}>
-          <h1 className="text-center main-heading">{carrier.company_name}</h1>
-          <h2 className="text-center mt-5 second-heading">Carrier Report</h2>
-          <Row className="justify-content-around mt-5">
-            <Col md={6}>
-              <h5>Carrier Name: {carrier.company_name}</h5>
-            </Col>
-            <Col md={6}>
-              <h5>Agent Name: {dispatcher.user_name}</h5>
-            </Col>
-          </Row>
-          <Row className="justify-content-around mt-2">
-            <Col md={6}>
-              <h5>MC:{carrier.mc_number}</h5>
-            </Col>
-            <Col md={6}></Col>
-          </Row>
-          <Row>{/* <Map /> */}</Row>
-          <Row className="justify-content-around mt-5">
-            <h1 className="text-center">Statistics</h1>
-            <Row className="justify-content-center">
-              <h3>Loaded Miles Vs Deadhead</h3>
-              <Graphs
-                type="donut"
-                loadedMiles={loadedMiles}
-                deadHeadMiles={deadHeadMiles}
+      <Row id="div-to-print" ref={ref} className="justify-content-around m-3">
+        <h3 className="text-center main-heading">{carrier.company_name}</h3>
+        <h4 className="text-center mt-5 second-heading">Carrier Report</h4>
+        <table>
+          <tr>
+            <td className="sub-heading">
+              Carrier Name: {carrier.company_name}{" "}
+            </td>
+            <td className="sub-heading">Agent Name: {dispatcher.user_name} </td>
+          </tr>
+          <tr>
+            <td className="sub-heading">MC:{carrier.mc_number}</td>
+          </tr>
+        </table>
+        <h1 className="text-center">Statistics</h1>
+        <h3 className="text-center mt-2">Loaded Miles Vs Deadhead</h3>
+        <Graphs
+          type="donut"
+          loadedMiles={loadedMiles}
+          deadHeadMiles={deadHeadMiles}
+        />
+
+        <table>
+          <tr>
+            <td className="loaded-miles">Loaded Miles: {loadedMiles}</td>
+            <td className="deadhead-miles">DeadHead Miles:{deadHeadMiles}</td>
+          </tr>
+          <tr>
+            <td className="total-miles">Total Miles:{totalMiles}</td>
+          </tr>
+          <tr>
+            <td className="major-details">
+              Dollar per Loaded Miles:{" "}
+              {typeof dollarPerLoadedMiles === "NaN"
+                ? 0
+                : dollarPerLoadedMiles.toFixed(2)}
+            </td>
+            <td className="major-details">
+              Dollar per Total Miles: {dollarPerTotalMiles.toFixed(2)}
+            </td>
+          </tr>
+          <br />
+          <br />
+          <tr>
+            <td className="major-details">Working Days:</td>
+            <td className="major-details">
+              <input
+                className="form-group border"
+                value={workingDays}
+                disabled={defaultValue}
+                onChange={(e) => setWorkingDays(e.target.value)}
+                type="number"
               />
-            </Row>
-            <Row className="justify-content-around mt-2">
-              <Col md={6}>
-                <h5 className="loaded-miles">Loaded Miles: {loadedMiles}</h5>
-              </Col>
-              <Col md={6}>
-                <h5 className="deadhead-miles">
-                  DeadHead Miles:{deadHeadMiles}
-                </h5>
-              </Col>
-            </Row>
-            <Row className="justify-content-around mt-4">
-              <Col md={6}>
-                <h5 className="total-miles">Total Miles:{totalMiles}</h5>
-              </Col>
-              <Col md={6}></Col>
-            </Row>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
+            </td>
+          </tr>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <tr>
+            <td className="major-details">Dispatcher Remarks:</td>
+          </tr>
+          <tr>
+            <td>
+              <textarea
+                value={dispatcherComments}
+                disabled={defaultValue}
+                onChange={(e) => setDispatcherComments(e.target.value)}
+                className="form-group border text-area"
+              />
+            </td>
+          </tr>
+        </table>
 
-            <Row className="justify-content-around mt-2">
-              <Col md={6}>
-                <h5 className="major-details">
-                  Dollar per Loaded Miles:{" "}
-                  {typeof dollarPerLoadedMiles === "NaN"
-                    ? 0
-                    : dollarPerLoadedMiles.toFixed(2)}
-                </h5>
-              </Col>
-              <Col md={6}>
-                <h5 className="major-details">
-                  Dollar per Total Miles: {dollarPerTotalMiles.toFixed(2)}
-                </h5>
-              </Col>
-            </Row>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
+        <h2 className="text-center my-5">
+          Have control of your business with our Statistical Analysis
+        </h2>
+        <Row className="justify-content-center my-5">
+          <h5 className="text-center">Miles per month vs gross per month</h5>
+          <Graphs type="line" data={lineGraphData} />
+        </Row>
 
-            <Row className="justify-content-around mt-2">
-              <>
-                <h5 className="major-details">
-                  Working Days:{" "}
-                  <input
-                    className="form-group border"
-                    value={workingDays}
-                    disabled={defaultValue}
-                    onChange={(e) => setWorkingDays(e.target.value)}
-                    type="number"
-                  />
-                </h5>
-              </>
-              <Col md={6}></Col>
-            </Row>
-            <br />
-            <br />
-            <br />
-            <br />
-            <Row className="mt-2">
-              <Col md={4}>
-                <h5 className="major-details">Dispatcher Remarks:</h5>
-              </Col>
-              <Col md={12}>
-                <textarea
-                  value={dispatcherComments}
-                  disabled={defaultValue}
-                  onChange={(e) => setDispatcherComments(e.target.value)}
-                  className="form-group border text-area"
-                />
-              </Col>
-            </Row>
-          </Row>
-          <br />
-          <br />
-          <br />
-          <Row className="justify-content-center">
-            <h2 className="text-center">
-              Have control of your business with our Statistical Analysis
-            </h2>
-            <br />
-            <br />
-            <br />
-            <h5 className="text-center">Miles per month vs gross per month</h5>
-            <Graphs type="line" data={lineGraphData} />
-            <h5 className="text-center">Dollar per mile</h5>
-            <Graphs type="bar" data={barGraphData} />
-          </Row>
+        <Row className="justify-content-center my-5">
+          <h5 className="text-center">Dollar per mile</h5>
+          <Graphs type="bar" data={barGraphData} />
+        </Row>
 
-          <Row className="mt-5">
-            <h3 className="text-center mt-3">Your Loads With us</h3>
-            <Col>
-              <table className="table invoice">
-                <thead
-                  style={{
-                    backgroundColor: "#000",
-                    color: "#fff",
-                    textAlign: "left",
-                    paddingBottom: "12px",
-                    border: "1px solid #ddd",
-                  }}
-                >
-                  <tr>
-                    <th scope="col">Load #</th>
-                    <th scope="col">Load Details</th>
-                    <th scope="col">Duration</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {load.map((item) => (
-                    <tr>
-                      <td>{item.load_number ? item.load_number : "NA"}</td>
-                      <td>
-                        {item.pick_up && item.drop
-                          ? `${item.pick_up.address} to ${item.drop.address} `
-                          : "NA"}
-                      </td>
-                      <td>
-                        {item.pick_up && item.drop
-                          ? `${moment(item.pick_up.date).format(
-                              "ll"
-                            )} to ${moment(item.drop.date).format("ll")} `
-                          : "NA"}
-                      </td>
-                      <td>{item.pay ? item.pay : "NA"}</td>
-                      <td>{item.l_status ? item.l_status : "NA"}</td>
-                    </tr>
-                  ))}
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    {/* <td>Total</td> */}
-                    <td> {/* <p> {` $${invoice?.totalGross}`}</p> */}</td>
-                    <td></td>
-                  </tr>
-                </tbody>
-              </table>
-            </Col>
-          </Row>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-
-          <Row>
-            <h1 className="total-miles">Regards,</h1>
-            <h1 className="total-miles">Dispatcher {dispatcher.user_name}</h1>
-            <h1 className="total-miles">Company {dispatcher.company}</h1>
-          </Row>
-        </Col>
+        <h3 className="text-center mt-2">Your Loads With us</h3>
+        <table className="table invoice mx-5">
+          <thead
+            style={{
+              backgroundColor: "#000",
+              color: "#fff",
+              textAlign: "left",
+              paddingBottom: "12px",
+              border: "1px solid #ddd",
+            }}
+          >
+            <tr>
+              <th scope="col">Load #</th>
+              <th scope="col">Load Details</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {load.map((item) => (
+              <tr>
+                <td>{item.load_number ? item.load_number : "NA"}</td>
+                <td>
+                  {item.pick_up && item.drop
+                    ? `${item.pick_up.address} to ${item.drop.address} `
+                    : "NA"}
+                </td>
+                <td>
+                  {item.pick_up && item.drop
+                    ? `${moment(item.pick_up.date).format("ll")} to ${moment(
+                        item.drop.date
+                      ).format("ll")} `
+                    : "NA"}
+                </td>
+                <td>{item.pay ? item.pay : "NA"}</td>
+                <td>{item.l_status ? item.l_status : "NA"}</td>
+              </tr>
+            ))}
+            <tr>
+              <td></td>
+              <td></td>
+              {/* <td>Total</td> */}
+              <td> {/* <p> {` $${invoice?.totalGross}`}</p> */}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <h4 className="total-miles">Regards,</h4>
+        <h4 className="total-miles">Dispatcher {dispatcher.user_name}</h4>
+        <h4 className="total-miles">Company {dispatcher.company}</h4>
       </Row>
       <Row className="justify-content-around">
         <Col md={8}>
@@ -304,7 +259,7 @@ const CarrierReport = ({
             className="w-100"
             variant={defaultValue ? "primary" : "success"}
             size="lg"
-            onClick={printDocument}
+            onClick={handlePrint}
           >
             {defaultValue ? <>Print</> : <>Print and Save</>}
           </Button>

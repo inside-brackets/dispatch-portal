@@ -70,6 +70,13 @@ const Report = () => {
         })
         .then((res) => setDeadHead(res.data.data))
         .catch((err) => console.log("api error", err));
+    } else {
+      setDeadHead([{
+        distance:{
+          text: "0 mi",
+          value:0
+        }
+      }])
     }
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`, {mc,truck})
