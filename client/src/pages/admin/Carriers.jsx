@@ -86,7 +86,7 @@ const Carriers = () => {
 
                   trucks: [
                     { label: "Pending", value: "pending" },
-                    // { label: "new", value: "new" },
+                    { label: "New", value: "new" },
                     // { label: "active", value: "active" },
                     // { label: "inactive", value: "inactive" },
                   ],
