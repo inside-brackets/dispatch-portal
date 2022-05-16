@@ -103,7 +103,8 @@ const carrierSchema = new mongoose.Schema(
             "gooseneck",
             "stepdeck",
             "lowboy",
-            "power only",
+            "poweronly",
+            "boxtruck"
           ],
           default: "dryvan",
         },

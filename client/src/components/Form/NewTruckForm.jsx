@@ -309,6 +309,7 @@ const NewTruckForm = (props) => {
             { label: "Steodeck ", value: "steodeck" },
             { label: "Lowboy ", value: "lowboy" },
             { label: "Power Only ", value: "poweronly" },
+            { label: "Box Truck", value: "boxtruck" },
           ]}
         />
       </div>
