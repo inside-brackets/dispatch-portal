@@ -73,7 +73,7 @@ const getTableCarriersReport = async (req, res, next) => {
 const getSingleCarrier = (req, res) => {
   try {
     Report.findById(req.params.id)
-      .populate("carrier", { mc_number: 1 })
+      .populate("carrier loads")
       .then((report) => {
         res.send({
           message: "Report Fetch succesfully",
@@ -189,11 +189,9 @@ const lineGraphData = async (req, res) => {
   let current_year = loads.length - 1;
   if(loads.length > 0){
   for (let i = 0; i <= 11; i++) {
-    if (latest_month === 0) {
-      latest_month = 12;
-      current_year = current_year - 1;
-    }
-    const value = loads[current_year].monthly_usage.find(
+    console.log(loads,current_year)
+
+    const value = loads[current_year]?.monthly_usage.find(
       (item) => item.month === latest_month
     );
     if (value) {
@@ -208,7 +206,10 @@ const lineGraphData = async (req, res) => {
     }
 
     latest_month = latest_month - 1;
-    console.log(latest_month);
+    if (latest_month === 0) {
+      latest_month = 12;
+      current_year = current_year - 1;
+    }
   }
   for (i = months.length-1; i >= 0; i--) {
     console.log(months[i])
@@ -289,7 +290,7 @@ const barGraphData = async (req, res) => {
       latest_month = 12;
       current_year = current_year - 1;
     }
-    const value = loads[current_year].monthly_usage.find(
+    const value = loads[current_year]?.monthly_usage.find(
       (item) => item.month === latest_month
     );
     if (value) {
