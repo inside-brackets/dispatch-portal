@@ -1,13 +1,12 @@
 import React, { useRef, useState } from "react";
 import { Col, Row, Button } from "react-bootstrap";
 import moment from "moment";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Graphs from "./CarrierGraphs";
 import "./carrier-report.css";
 import { useReactToPrint } from "react-to-print";
+import { useSelector } from "react-redux";
 
 const CarrierReport = ({
   load,
@@ -21,9 +20,10 @@ const CarrierReport = ({
   barGraphData,
   deadHead,
 }) => {
-  console.log("deadHead", deadHead);
   const ref = useRef();
   const history = useHistory();
+
+  const {label} = useSelector((state) => state.user.company);
   const [workingDays, setWorkingDays] = useState(
     defaultValue ? defaultValue.working_days : null
   );
@@ -31,7 +31,9 @@ const CarrierReport = ({
     defaultValue ? defaultValue.dispatcher_comment : null
   );
 
-  const loadedMiles = load.reduce(
+  const loadedMiles = load.filter(
+    (l) => l.l_status === "delivered" 
+  ).reduce(
     (previousValue, currentValue) => previousValue + currentValue.miles,
     0
   );
@@ -43,7 +45,7 @@ const CarrierReport = ({
   const deadHeadMiles = deadHead.reduce((previousValue, currentValue) => {
     if (currentValue.distance) {
       return (
-        previousValue + parseFloat(currentValue.distance.text.split(" ")[0])
+        previousValue + parseFloat(currentValue.distance.text.split(" ")[0].replaceAll(',', ''))
       );
     } else return previousValue + 0;
   }, 0);
@@ -68,27 +70,13 @@ const CarrierReport = ({
   const handlePrint = useReactToPrint({
     content: reactToPrintContent,
     documentTitle: "AwesomeFileName",
-    // onBeforeGetContent: handleOnBeforeGetContent,
-    // onBeforePrint: handleBeforePrint,
-    // onAfterPrint: handleAfterPrint,
     removeAfterPrint: true,
   });
 
-  const printDocument = async () => {
+  const handleSubmit = async () => {
     if (!workingDays || !dispatcherComments) {
       return alert("Please add working days and dispatcher comments");
     }
-    const input = document.getElementById("div-to-print");
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      var pdf = new jsPDF({ orientation: "potrait" });
-      var width = pdf.internal.pageSize.getWidth();
-      var height = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, "JPEG", 0, 0, width, height);
-      pdf.output("dataurlnewwindow");
-      pdf.save("download.pdf");
-    });
-
     if (!defaultValue) {
       await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/dispatch/addcarrierreport`,
@@ -99,12 +87,12 @@ const CarrierReport = ({
           to: endDate,
           working_days: workingDays,
           dispatcher_comment: dispatcherComments,
-          loads: load,
+          loads: load.map((l)=> l._id),
           deadHead: deadHead,
         }
       );
     }
-    // history.push("/report");
+    history.push("/report");
   };
   return (
     <>
@@ -167,12 +155,13 @@ const CarrierReport = ({
           <br />
           <br />
           <br />
+          {/* <br />
+          <br /> */}
           <br />
           <br />
           <br />
           <br />
-          <br />
-          <br />
+          
           <tr>
             <td className="major-details">Dispatcher Remarks:</td>
           </tr>
@@ -191,17 +180,19 @@ const CarrierReport = ({
         <h2 className="text-center my-5">
           Have control of your business with our Statistical Analysis
         </h2>
-        <Row className="justify-content-center my-5">
+        <Row className="justify-content-center mt-5">
           <h5 className="text-center">Miles per month vs gross per month</h5>
-          <Graphs type="line" data={lineGraphData} />
+          <Graphs type="line" data={lineGraphData.reverse()} />
         </Row>
 
         <Row className="justify-content-center my-5">
           <h5 className="text-center">Dollar per mile</h5>
-          <Graphs type="bar" data={barGraphData} />
+          <Graphs type="bar" data={barGraphData.reverse()} />
         </Row>
 
-        <h3 className="text-center mt-2">Your Loads With us</h3>
+        <h3 style={{
+          marginTop:'100px'
+        }} className="text-center">Your Loads With us</h3>
         <table className="table invoice mx-5">
           <thead
             style={{
@@ -240,30 +231,36 @@ const CarrierReport = ({
                 <td>{item.l_status ? item.l_status : "NA"}</td>
               </tr>
             ))}
-            <tr>
-              <td></td>
-              <td></td>
-              {/* <td>Total</td> */}
-              <td> {/* <p> {` $${invoice?.totalGross}`}</p> */}</td>
-              <td></td>
-            </tr>
           </tbody>
         </table>
-        <h4 className="total-miles">Regards,</h4>
-        <h4 className="total-miles">Dispatcher {dispatcher.user_name}</h4>
-        <h4 className="total-miles">Company {dispatcher.company}</h4>
+        <h4 className="total-miles mt-5">Regards,</h4>
+        <h4 className="total-miles">{dispatcher.user_name}</h4>
+        <h4 className="total-miles">{label}</h4>
       </Row>
-      <Row className="justify-content-around">
-        <Col md={8}>
+      <Row className="justify-content-center">
+      {  <Col md={defaultValue ? 8 : 4}>
           <Button
             className="w-100"
-            variant={defaultValue ? "primary" : "success"}
+            variant={"success"}
             size="lg"
             onClick={handlePrint}
           >
-            {defaultValue ? <>Print</> : <>Print and Save</>}
+            Print
           </Button>
+        </Col>}
+        {!defaultValue && (   <Col md={4}>
+         
+            <Button
+              className="w-100"
+              variant="primary"
+              size="lg"
+              onClick={handleSubmit}
+            >
+              Save
+            </Button>
+         
         </Col>
+         )}
       </Row>
     </>
   );

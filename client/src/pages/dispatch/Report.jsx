@@ -24,6 +24,7 @@ const Report = () => {
   const [deadHeadData, setDeadHead] = useState();
   const [lineGraphData, setLineGraphData] = useState(null);
   const [barGraphData, setBarGraphData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const selectionDate = {
     startDate: startDate,
     endDate: endDate,
@@ -31,6 +32,7 @@ const Report = () => {
   };
 
   const handleSubmit = async (mc, truck_num, start_date, end_date) => {
+    setLoading(true);
     const { data } = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/getloads`,
       {
@@ -43,7 +45,11 @@ const Report = () => {
       end_date ? end_date : endDate,
       data
     );
-    setLoad(filteredLoads);
+    setLoad(
+      filteredLoads.filter(
+        (l) => l.l_status === "delivered" || l.l_status === "canceled"
+      )
+    );
 
     const deadHead = [];
     let temp = {
@@ -71,15 +77,20 @@ const Report = () => {
         .then((res) => setDeadHead(res.data.data))
         .catch((err) => console.log("api error", err));
     } else {
-      setDeadHead([{
-        distance:{
-          text: "0 mi",
-          value:0
-        }
-      }])
+      setDeadHead([
+        {
+          distance: {
+            text: "0 mi",
+            value: 0,
+          },
+        },
+      ]);
     }
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`, {mc,truck})
+      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`, {
+        mc,
+        truck,
+      })
       .then((res) => {
         const data = res.data.map((item) => {
           const date = new Date();
@@ -91,13 +102,16 @@ const Report = () => {
             }),
           };
         });
-        setLineGraphData(data);
+        setLineGraphData(data.reverse());
         console.log("line graph data", data);
       })
       .catch((err) => console.log("api error", err));
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {mc,truck})
+      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {
+        mc,
+        truck,
+      })
       .then((res) => {
         const data = res.data.map((item) => {
           const date = new Date();
@@ -109,11 +123,13 @@ const Report = () => {
             }),
           };
         });
-        setBarGraphData(data);
+        setBarGraphData(data.reverse());
         console.log("bar graph data", data);
       })
       .catch((err) => console.log("api error", err));
     console.log("tep", temp);
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -133,7 +149,51 @@ const Report = () => {
           setTruck({ label: data.truck, value: data.truck });
           setStartDate(new Date(data.from));
           setEndDate(new Date(data.to));
-          handleSubmit(data.carrier.mc_number, data.truck, data.from, data.to);
+          setLoad(data.loads);
+          setDeadHead(data.deadHead);
+          axios
+            .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`, {
+              mc: data.carrier.mc_number,
+              truck: data.truck,
+            })
+            .then((res) => {
+              const data = res.data.map((item) => {
+                const date = new Date();
+                date.setMonth(item.month - 1);
+                return {
+                  ...item,
+                  month: date.toLocaleString("en-US", {
+                    month: "long",
+                  }),
+                };
+              });
+              setLineGraphData(data.reverse());
+              console.log("line graph data", data);
+            })
+            .catch((err) => console.log("api error", err));
+
+          axios
+            .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {
+              mc: data.carrier.mc_number,
+              truck: data.truck,
+            })
+            .then((res) => {
+              const data = res.data.map((item) => {
+                const date = new Date();
+                date.setMonth(item.month - 1);
+                return {
+                  ...item,
+                  month: date.toLocaleString("en-US", {
+                    month: "long",
+                  }),
+                };
+              });
+              setBarGraphData(data.reverse());
+              console.log("bar graph data", data);
+            })
+            .catch((err) => console.log("api error", err));
+
+          // handleSubmit(data.carrier.mc_number, data.truck, data.from, data.to);
         })
         .catch((err) => {
           console.log(err);
@@ -214,7 +274,12 @@ const Report = () => {
               <Col>
                 <Button
                   disabled={
-                    !selectedCarrier || !truck || !startDate || !endDate
+                    !selectedCarrier ||
+                    !truck ||
+                    !startDate ||
+                    !endDate ||
+                    loading ||
+                    params.id
                   }
                   onClick={() =>
                     handleSubmit(selectedCarrier.value, truck.truck_number)

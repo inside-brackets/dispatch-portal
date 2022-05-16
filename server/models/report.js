@@ -14,7 +14,7 @@ const reportSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    loads:[],
+    loads:[{type: mongoose.Types.ObjectId, ref: 'Load'}],
     deadHead:[]
   },
   {

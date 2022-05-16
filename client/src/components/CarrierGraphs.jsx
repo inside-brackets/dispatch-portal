@@ -1,4 +1,5 @@
 import React from "react";
+import { Alert } from "react-bootstrap";
 import {
   Cell,
   Label,
@@ -80,16 +81,14 @@ const DonutGraphs = (props) => {
         {props.loadedMiles !== 0 && props.deadHeadMiles !== 0  && <Legend />}     
 
       </PieChart>
-      {props.loadedMiles === 0 && props.deadHeadMiles === 0 && <p className="text-center">Not Enough data to show</p>}
+      {props.loadedMiles === 0 && props.deadHeadMiles === 0 && <Alert variant="danger" className="text-center w-65">Not Enough data to show</Alert>}
  
     </>
   );
 };
 
 const LineGraph = (props) => {
-// if(props.data.length < 3){
-//   return <p>not enough data to show</p>
-// }  
+
 const data2 = [
   {
     month: 'January',
@@ -161,7 +160,7 @@ const data2 = [
         />
         <Line type="monotone" dataKey="total_miles" stroke="#82ca9d" />
       </LineChart>
-      {props.data.length < 3 && <p className="text-center">Not Enough data to show</p>}
+      {props.data.length < 3 && <Alert variant="danger" className="text-center w-65">Not Enough data to show</Alert>}
     </>
   );
 };
@@ -235,7 +234,7 @@ const BarGraph = (props) => {
     <CartesianGrid strokeDasharray="3 3" />
     <Bar dataKey="total" fill="#8884d8" background={{ fill: '#eee' }} />
   </BarChart>
-  {props.data.length < 3 && <p className="text-center">Not Enough data to show</p>}
+  {props.data.length < 3 && <Alert variant="danger" className="text-center w-65">Not Enough data to show</Alert>}
     
   </>);
 };
