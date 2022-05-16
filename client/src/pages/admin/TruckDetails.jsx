@@ -303,7 +303,8 @@ const TruckDetails = () => {
                       { label: "Gooseneck ", value: "gooseneck" },
                       { label: "Stepdeck ", value: "stepdeck" },
                       { label: "Lowboy ", value: "lowboy" },
-                      { label: "Power Only ", value: "power_only" },
+                      { label: "Power Only ", value: "poweronly" },
+                      { label: "Box Truck", value: "boxtruck" },
                     ]}
                   />
                 </Form.Group>
