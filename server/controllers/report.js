@@ -187,39 +187,39 @@ const lineGraphData = async (req, res) => {
   }
 
   let current_year = loads.length - 1;
-  if(loads.length > 0){
-  for (let i = 0; i <= 11; i++) {
-    console.log(loads,current_year)
+  if (loads.length > 0) {
+    for (let i = 0; i <= 11; i++) {
+      console.log(loads, current_year);
 
-    const value = loads[current_year]?.monthly_usage.find(
-      (item) => item.month === latest_month
-    );
-    if (value) {
-      months.push(value);
-    } else {
-      months.push({
-        month: latest_month,
-        total_pay: 0,
-        total_miles: 0,
-        count: 0,
-      });
+      const value = loads[current_year]?.monthly_usage.find(
+        (item) => item.month === latest_month
+      );
+      if (value) {
+        months.push(value);
+      } else {
+        months.push({
+          month: latest_month,
+          total_pay: 0,
+          total_miles: 0,
+          count: 0,
+        });
+      }
+
+      latest_month = latest_month - 1;
+      if (latest_month === 0) {
+        latest_month = 12;
+        current_year = current_year - 1;
+      }
     }
-
-    latest_month = latest_month - 1;
-    if (latest_month === 0) {
-      latest_month = 12;
-      current_year = current_year - 1;
+    for (i = months.length - 1; i >= 0; i--) {
+      console.log(months[i]);
+      if (months[i].count > 0) {
+        break;
+      } else {
+        months.splice(i, 1);
+      }
     }
   }
-  for (i = months.length-1; i >= 0; i--) {
-    console.log(months[i])
-    if (months[i].count > 0) {
-      break;
-    } else {
-      months.splice(i, 1);
-    }
-  }
-}
   res.send(months);
 };
 
@@ -282,39 +282,37 @@ const barGraphData = async (req, res) => {
     latest_month = loads[loads.length - 1].monthly_usage.at(-1).month;
   }
   let current_year = loads.length - 1;
-  
-  if(loads.length > 0){
 
-  for (let i = 0; i <= 11; i++) {
-    if (latest_month === 0) {
-      latest_month = 12;
-      current_year = current_year - 1;
+  if (loads.length > 0) {
+    for (let i = 0; i <= 11; i++) {
+      if (latest_month === 0) {
+        latest_month = 12;
+        current_year = current_year - 1;
+      }
+      const value = loads[current_year]?.monthly_usage.find(
+        (item) => item.month === latest_month
+      );
+      if (value) {
+        months.push(value);
+      } else {
+        months.push({
+          month: latest_month,
+          total: 0,
+          count: 0,
+        });
+      }
+
+      latest_month = latest_month - 1;
     }
-    const value = loads[current_year]?.monthly_usage.find(
-      (item) => item.month === latest_month
-    );
-    if (value) {
-      months.push(value);
-    } else {
-      months.push({
-        month: latest_month,
-        total: 0,
-        count:0
-      });
+
+    for (i = months.length - 1; i >= 0; i--) {
+      console.log(months[i]);
+      if (months[i].count > 0) {
+        break;
+      } else {
+        months.splice(i, 1);
+      }
     }
-
-    latest_month = latest_month - 1;
-
-  }
-
-  for (i = months.length-1; i >= 0; i--) {
-    console.log(months[i])
-    if (months[i].count > 0) {
-      break;
-    } else {
-      months.splice(i, 1);
-    }
-  }
   }
   res.send(months);
 };

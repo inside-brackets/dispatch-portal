@@ -103,12 +103,12 @@ const CarrierReport = ({
         <table>
           <tr>
             <td className="sub-heading">
-              Carrier Name: {carrier.company_name}{" "}
+              Carrier Name: {carrier?.company_name}{" "}
             </td>
             <td className="sub-heading">Agent Name: {dispatcher.user_name} </td>
           </tr>
           <tr>
-            <td className="sub-heading">MC:{carrier.mc_number}</td>
+            <td className="sub-heading">MC:{carrier?.mc_number}</td>
           </tr>
         </table>
         <h1 className="text-center">Statistics</h1>
