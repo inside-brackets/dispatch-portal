@@ -146,7 +146,7 @@ const CarrierReport = ({
               <input
                 className="form-group border"
                 value={workingDays}
-                disabled={defaultValue}
+                // disabled={defaultValue}
                 onChange={(e) => setWorkingDays(e.target.value)}
                 type="number"
               />
@@ -170,7 +170,7 @@ const CarrierReport = ({
             <td>
               <textarea
                 value={dispatcherComments}
-                disabled={defaultValue}
+                // disabled={defaultValue}
                 onChange={(e) => setDispatcherComments(e.target.value)}
                 className="form-group border text-area"
               />
