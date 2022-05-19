@@ -23,7 +23,7 @@ const CarrierReport = ({
   const ref = useRef();
   const history = useHistory();
 
-  const {label} = useSelector((state) => state.user.company);
+  const { label } = useSelector((state) => state.user.company);
   const [workingDays, setWorkingDays] = useState(
     defaultValue ? defaultValue.working_days : null
   );
@@ -31,12 +31,12 @@ const CarrierReport = ({
     defaultValue ? defaultValue.dispatcher_comment : null
   );
 
-  const loadedMiles = load.filter(
-    (l) => l.l_status === "delivered" 
-  ).reduce(
-    (previousValue, currentValue) => previousValue + currentValue.miles,
-    0
-  );
+  const loadedMiles = load
+    .filter((l) => l.l_status === "delivered")
+    .reduce(
+      (previousValue, currentValue) => previousValue + currentValue.miles,
+      0
+    );
   const amounts = load.reduce(
     (previousValue, currentValue) => previousValue + currentValue.pay,
     0
@@ -45,7 +45,8 @@ const CarrierReport = ({
   const deadHeadMiles = deadHead.reduce((previousValue, currentValue) => {
     if (currentValue.distance) {
       return (
-        previousValue + parseFloat(currentValue.distance.text.split(" ")[0].replaceAll(',', ''))
+        previousValue +
+        parseFloat(currentValue.distance.text.split(" ")[0].replaceAll(",", ""))
       );
     } else return previousValue + 0;
   }, 0);
@@ -87,7 +88,7 @@ const CarrierReport = ({
           to: endDate,
           working_days: workingDays,
           dispatcher_comment: dispatcherComments,
-          loads: load.map((l)=> l._id),
+          loads: load.map((l) => l._id),
           deadHead: deadHead,
         }
       );
@@ -97,7 +98,7 @@ const CarrierReport = ({
   return (
     <>
       <Row id="div-to-print" ref={ref} className="justify-content-around m-3">
-        <h3 className="text-center main-heading">{carrier.company_name}</h3>
+        <h3 className="text-center main-heading">{carrier?.company_name}</h3>
         <h4 className="text-center mt-5 second-heading">Carrier Report</h4>
         <table>
           <tr>
@@ -161,7 +162,7 @@ const CarrierReport = ({
           <br />
           <br />
           <br />
-          
+
           <tr>
             <td className="major-details">Dispatcher Remarks:</td>
           </tr>
@@ -190,9 +191,14 @@ const CarrierReport = ({
           <Graphs type="bar" data={barGraphData.reverse()} />
         </Row>
 
-        <h3 style={{
-          marginTop:'100px'
-        }} className="text-center">Your Loads With us</h3>
+        <h3
+          style={{
+            marginTop: "100px",
+          }}
+          className="text-center"
+        >
+          Your Loads With us
+        </h3>
         <table className="table invoice mx-5">
           <thead
             style={{
@@ -238,18 +244,20 @@ const CarrierReport = ({
         <h4 className="total-miles">{label}</h4>
       </Row>
       <Row className="justify-content-center">
-      {  <Col md={defaultValue ? 8 : 4}>
-          <Button
-            className="w-100"
-            variant={"success"}
-            size="lg"
-            onClick={handlePrint}
-          >
-            Print
-          </Button>
-        </Col>}
-        {!defaultValue && (   <Col md={4}>
-         
+        {
+          <Col md={defaultValue ? 8 : 4}>
+            <Button
+              className="w-100"
+              variant={"success"}
+              size="lg"
+              onClick={handlePrint}
+            >
+              Print
+            </Button>
+          </Col>
+        }
+        {!defaultValue && (
+          <Col md={4}>
             <Button
               className="w-100"
               variant="primary"
@@ -258,9 +266,8 @@ const CarrierReport = ({
             >
               Save
             </Button>
-         
-        </Col>
-         )}
+          </Col>
+        )}
       </Row>
     </>
   );

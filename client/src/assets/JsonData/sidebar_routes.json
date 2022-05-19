@@ -72,7 +72,7 @@
     {
       "display_name": "Report",
       "route": "/report",
-      "icon": "bx bxs-truck"
+      "icon": "bx bxs-report"
     }
   ]
 }
