@@ -18,6 +18,12 @@ const getTableInvoices = (req, res, next) => {
   if (req.body.filter.status.length > 0) {
     filter.invoiceStatus = { $in: req.body.filter.status.map((item) => item.value) };
   }
+  if(req.body.filter.sales.length > 0){
+    filter.sales = { $in: req.body.filter.sales.map((item) => item.value) };
+  }
+  if(req.body.filter.dispatcher.length > 0){
+    filter.dispatcher = { $in: req.body.filter.dispatcher.map((item) => item.value) };
+  }
   let search = req.query.search ? req.query.search : "";
   if (search !== "") {
     filter.mc_number = parseInt(search);
@@ -37,7 +43,6 @@ const getTableInvoices = (req, res, next) => {
           req.body.skip,
           req.body.limit + req.body.skip
         );
-        console.log("fresultfresult ", fResult);
         return res.send({ data: fResult, length: invoices.length });
       }
       res.send(invoices);
