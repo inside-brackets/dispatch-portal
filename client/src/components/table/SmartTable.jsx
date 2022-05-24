@@ -15,6 +15,8 @@ const Table = (props) => {
   const [totalLength, setTotalLength] = useState(0);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   let pages = 1;
   let range = [];
 
@@ -58,6 +60,8 @@ const Table = (props) => {
           .post(`${props.api.url}/?search=${search}`, {
             ...props.api.body,
             filter,
+            start: startDate,
+            end: endDate,
           })
           .then((res) => {
             const pageKey = `page${currPage}`;
@@ -75,9 +79,6 @@ const Table = (props) => {
       }
     }
   };
-
-  console.log("range", range);
-  console.log("curr ", currPage);
   return (
     <div>
       <Row className="align-items-center">
@@ -92,6 +93,24 @@ const Table = (props) => {
           />
         </Col>
         {Object.keys(props.filter).map((key, index) => {
+          if (key === "date_range") {
+            return (
+              <Row>
+                <Col md={3}>
+                  <label>From</label>
+                  <input onChange={(e)=> setStartDate(e.target.value)} type="date" className="form-control" />
+                </Col>
+                <Col md={3}>
+                  <label>To</label>
+                  <input disabled={!startDate} onChange={(e)=> {setEndDate(e.target.value)
+                  setBodyData([])
+                  setCurrPage(0)
+                  }} min={startDate} type="date" className="form-control" />
+                </Col>
+              </Row>
+            );
+          }
+
           return (
             <Col md={3} className="mb-2">
               <Form.Label className="text-capitalize">{key}</Form.Label>

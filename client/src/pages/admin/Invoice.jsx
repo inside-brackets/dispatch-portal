@@ -149,8 +149,10 @@ const Invoice = () => {
                   { label: "cleared ", value: "cleared" },
                   { label: "pending ", value: "pending" },
                 ],
+                
                 sales: sales,
                 dispatcher: dispatcher,
+                date_range:"date-range",
               }}
               renderBody={(item, index, currPage) =>
                 renderBody(item, index, currPage)

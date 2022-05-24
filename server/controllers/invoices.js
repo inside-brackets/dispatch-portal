@@ -18,6 +18,8 @@ const getTableInvoices = (req, res, next) => {
   if (req.body.filter.status.length > 0) {
     filter.invoiceStatus = { $in: req.body.filter.status.map((item) => item.value) };
   }
+
+  console.log(req.body)
   if(req.body.filter.sales.length > 0){
     filter.sales = { $in: req.body.filter.sales.map((item) => item.value) };
   }
@@ -28,6 +30,10 @@ const getTableInvoices = (req, res, next) => {
   if (search !== "") {
     filter.mc_number = parseInt(search);
   }
+  if(req.body.start && req.body.end){
+   filter.createdAt =  {$gte:new Date(req.body.start),$lte: new Date(req.body.end)} 
+  }
+  console.log(filter)
   Invoice.find(filter, null, {
     sort: {
       createdAt: -1, //Sort by Date Added DESC
