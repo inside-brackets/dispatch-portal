@@ -31,7 +31,7 @@ const Table = (props) => {
   useEffect(() => {
     getData();
     // eslint-disable-next-line
-  }, [search, filter, currPage]);
+  }, [search, filter, currPage,endDate]);
 
   const selectPage = (page) => {
     setCurrPage(page);
@@ -102,9 +102,12 @@ const Table = (props) => {
                 </Col>
                 <Col md={3}>
                   <label>To</label>
-                  <input disabled={!startDate} onChange={(e)=> {setEndDate(e.target.value)
+                  <input disabled={!startDate} 
+                  onChange={(e)=> {
+                  setEndDate(e.target.value)
                   setBodyData([])
                   setCurrPage(0)
+                  // getData();
                   }} min={startDate} type="date" className="form-control" />
                 </Col>
               </Row>
@@ -123,7 +126,7 @@ const Table = (props) => {
                   filterData(value, key);
                   setBodyData([]);
                   setCurrPage(0);
-                  getData();
+                  // getData();
                 }}
                 options={props.filter[key]}
               />

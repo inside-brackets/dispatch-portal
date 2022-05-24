@@ -20,8 +20,8 @@ const getTableInvoices = (req, res, next) => {
   }
 
   console.log(req.body)
-  if(req.body.filter.sales.length > 0){
-    filter.sales = { $in: req.body.filter.sales.map((item) => item.value) };
+  if(req.body.filter["sales person"].length > 0){
+    filter.sales = { $in: req.body.filter.filter["sales person"].map((item) => item.value) };
   }
   if(req.body.filter.dispatcher.length > 0){
     filter.dispatcher = { $in: req.body.filter.dispatcher.map((item) => item.value) };

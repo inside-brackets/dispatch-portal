@@ -150,7 +150,7 @@ const Invoice = () => {
                   { label: "pending ", value: "pending" },
                 ],
                 
-                sales: sales,
+                "sales person": sales,
                 dispatcher: dispatcher,
                 date_range:"date-range",
               }}
