@@ -51,22 +51,22 @@ const carrier =await Carrier.aggregate([
 ])
 
 console.log(carrier.length)
-const aa =  carrier.filter((carr)=> carr.c_status !=="unassigned" )
-const onlyIds = carrier.map((carry)=> carry.id)
-await Carrier.deleteMany(
-  {
-    _id: {
-      $in: onlyIds
-    }
-  },
-  function(err, result) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(result);
-    }
-  }
-);
+// const aa =  carrier.filter((carr)=> carr.c_status !=="unassigned" )
+// const onlyIds = carrier.map((carry)=> carry.id)
+// await Carrier.deleteMany(
+//   {
+//     _id: {
+//       $in: onlyIds
+//     }
+//   },
+//   function(err, result) {
+//     if (err) {
+//       res.send(err);
+//     } else {
+//       res.send(result);
+//     }
+//   }
+// );
 
 res.send(
   carrier

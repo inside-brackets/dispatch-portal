@@ -6,16 +6,17 @@ import Loader from "react-loader-spinner";
 import useHttp from "../../hooks/use-https";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import {change} from '../../store/appointment'
+import { change } from "../../store/appointment";
 
 import TextArea from "../../components/UI/TextArea";
+import { Row, Col } from "react-bootstrap";
 
 const Dialer = () => {
   const { user } = useSelector((state) => state.user);
   const appointmentRef = useRef();
   const commentRef = useRef();
   const commentrRef = useRef();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [rmodal, setrModal] = useState();
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
@@ -49,7 +50,7 @@ const Dialer = () => {
       },
       transformData
     );
-      dispatch(change(Math.random()))
+    dispatch(change(Math.random()));
     setLoading(false);
   };
 
@@ -210,6 +211,20 @@ const Dialer = () => {
           <h6> {carrier.email} </h6>
           <h5>Address: </h5>
           <h6>{carrier.address}</h6>
+          <h5>DBA Name: </h5>
+          <h6>{carrier.dba_name ? carrier.dba_name : "N/A"}</h6>
+          <h5>Power Units: </h5>
+          <h6>{carrier.power_units ? carrier.power_units : "N/A"}</h6>
+          {carrier.cargo_carried && (
+            <>
+              <h5>Cargo Carried: </h5>
+              <Row className="tags-wrapper">
+                {carrier.cargo_carried.map((cargo) => {
+                  return <Col className="tags">{cargo}</Col>;
+                })}
+              </Row>
+            </>
+          )}
         </DialerCard>
         <div
           className="row
