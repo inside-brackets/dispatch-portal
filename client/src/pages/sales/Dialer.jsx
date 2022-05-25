@@ -6,7 +6,7 @@ import Loader from "react-loader-spinner";
 import useHttp from "../../hooks/use-https";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import {change} from '../../store/appointment'
+import { change } from "../../store/appointment";
 
 import TextArea from "../../components/UI/TextArea";
 
@@ -15,18 +15,35 @@ const Dialer = () => {
   const appointmentRef = useRef();
   const commentRef = useRef();
   const commentrRef = useRef();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [rmodal, setrModal] = useState();
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
   const [refresh, setrefresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [defaultComment, setDefaultComment] = useState(null);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   const { sendRequest: postCarriers } = useHttp();
   const { sendRequest: postdidnotPickCarriers } = useHttp();
 
   const { sendRequest: postrejectCarriers } = useHttp();
+
+  const options = [
+    { label: "Lifestyle", value: "lifestyle" },
+    { label: "Area", value: "area" },
+    { label: "Random", value: "random" },
+    { label: "Comedy", value: "comedy" },
+    { label: "Entertainment", value: "entertainment" },
+  ];
+  const handleChange = (text, index) => {
+    setDefaultComment({
+      text,
+      index,
+    });
+  };
+
+  console.log("defaultComment",defaultComment)
 
   // make appointment
   const onConfirm = async () => {
@@ -49,7 +66,7 @@ const Dialer = () => {
       },
       transformData
     );
-      dispatch(change(Math.random()))
+    dispatch(change(Math.random()));
     setLoading(false);
   };
 
@@ -262,10 +279,20 @@ const Dialer = () => {
           onClose={onrClose}
         >
           <form>
+            {options.map((option, index) => {
+              return (
+                <input
+                  type="checkbox"
+                  checked={defaultComment?.index === index}
+                  onChange={(e)=>handleChange(option.value, index)}
+                />
+              );
+            })}
             <TextArea
               name="Comment:"
               placeholder="Comment here..."
               ref={commentrRef}
+              value={defaultComment?.text}
             />
 
             <div
