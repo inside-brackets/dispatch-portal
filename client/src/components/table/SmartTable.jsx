@@ -95,7 +95,7 @@ const Table = (props) => {
         {Object.keys(props.filter).map((key, index) => {
           if (key === "date_range") {
             return (
-              <Row>
+              <Row className="mb-3">
                 <Col md={3}>
                   <label>From</label>
                   <input onChange={(e)=> setStartDate(e.target.value)} type="date" className="form-control" />
