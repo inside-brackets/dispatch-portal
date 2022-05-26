@@ -30,11 +30,12 @@ const Dialer = () => {
   const { sendRequest: postrejectCarriers } = useHttp();
 
   const options = [
-    { label: "Lifestyle", value: "lifestyle" },
-    { label: "Area", value: "area" },
-    { label: "Random", value: "random" },
-    { label: "Comedy", value: "comedy" },
-    { label: "Entertainment", value: "entertainment" },
+    { label: "Not Interested", value: "Not Interested" },
+    { label: "Inhouse Dispatch", value: "Inhouse Dispatch" },
+    { label: "Not working right now", value: "Not working right now" },
+    { label: "Truck down", value: "Truck down" },
+    { label: "Do not call me", value: "Do not call me" },
+    { label: "Working in a Contract", value: "Working in a Contract" },
   ];
   const handleChange = (text, index) => {
     setDefaultComment({
@@ -281,11 +282,18 @@ const Dialer = () => {
           <form>
             {options.map((option, index) => {
               return (
+                <div className="my-3 align-items-center d-flex">
                 <input
-                  type="checkbox"
+                  type="radio"
+                  style={{
+                    height:"30px",
+                    width:"30px"
+                  }}
                   checked={defaultComment?.index === index}
                   onChange={(e)=>handleChange(option.value, index)}
                 />
+                <label className="mx-3">{option.label}</label>
+                </div>
               );
             })}
             <TextArea
@@ -293,6 +301,7 @@ const Dialer = () => {
               placeholder="Comment here..."
               ref={commentrRef}
               value={defaultComment?.text}
+              onChange={(e)=>setDefaultComment({...defaultComment,text:e.target.value})}
             />
 
             <div

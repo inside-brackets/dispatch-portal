@@ -11,6 +11,7 @@ const TextArea = forwardRef((props, ref) => {
         }}
         name={props.name}
         ref={ref}
+        onChange={props.onChange}
         value={props.value}
         placeholder={props.placeholder}
         defaultValue={props.defaultValue}
