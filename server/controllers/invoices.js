@@ -14,16 +14,17 @@ const addNewInvoice = async (req, res) => {
 };
 
 const getTableInvoices = (req, res, next) => {
+  // Refactor it later by removing unsual things from body and send only req.body  in filter
   var filter = {};
-  if (req.body.filter.status.length > 0) {
+  if (req.body.filter.status?.length > 0) {
     filter.invoiceStatus = { $in: req.body.filter.status.map((item) => item.value) };
   }
 
   console.log(req.body)
-  if(req.body.filter["sales person"].length > 0){
+  if(req.body.filter["sales person"]?.length > 0){
     filter.sales = { $in: req.body.filter.filter["sales person"].map((item) => item.value) };
   }
-  if(req.body.filter.dispatcher.length > 0){
+  if(req.body.filter.dispatcher?.length > 0){
     filter.dispatcher = { $in: req.body.filter.dispatcher.map((item) => item.value) };
   }
   let search = req.query.search ? req.query.search : "";
@@ -33,7 +34,9 @@ const getTableInvoices = (req, res, next) => {
   if(req.body.start && req.body.end){
    filter.createdAt =  {$gte:new Date(req.body.start),$lte: new Date(req.body.end)} 
   }
-  console.log(filter)
+  if(req.body.dispatcher){
+    filter.dispatcher = req.body.dispatcher
+  }
   Invoice.find(filter, null, {
     sort: {
       createdAt: -1, //Sort by Date Added DESC

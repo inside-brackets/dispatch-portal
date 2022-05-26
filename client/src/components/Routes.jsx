@@ -33,6 +33,7 @@ const Profile = lazy(() => import("../pages/Profile"));
 // dispatchers
 const TruckDetail = lazy(() => import("../pages/dispatch/TruckDetail"));
 const MyTrucks = lazy(() => import("../pages/dispatch/MyTrucks"));
+const DispatchInvoices = lazy(()=> import('../pages/dispatch/Invoices'))
 
 const Routes = () => {
   const { department } = useSelector((state) => state.user.user);
@@ -155,6 +156,8 @@ const Routes = () => {
         <Route path="/mytrucks" exact component={MyTrucks} />
         <Route path="/trucks/:mc/:truck?" component={TruckDetail} />
         <Route path="/profile" component={Profile} />
+        <Route path="/invoices" component={DispatchInvoices} />
+        
 
         <Route path="*">
           <h1>Not found</h1>
