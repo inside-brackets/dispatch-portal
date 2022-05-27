@@ -67,7 +67,7 @@ const Invoice = () => {
         >
           <EditButton type="open" onClick={() => viewInvoiceModal(item)} />
           <i
-            class="bx bx-printer action-button"
+            className="bx bx-printer action-button"
             onClick={() => viewPdfModal(item)}
           ></i>
         </div>

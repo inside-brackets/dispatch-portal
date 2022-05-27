@@ -53,8 +53,6 @@ const Sidebar = (props) => {
           </NavLink>
         ))}
       </div>
-
-      {/* <div className="copyright">@made by us</div> */}
     </div>
   );
 };

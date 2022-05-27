@@ -2,7 +2,6 @@ import React from "react";
 // import { Link } from "react-router-dom";
 import usMap from "../../assets/images/us-map.jpg";
 import UsClock from "../../components/usClock/UsClock";
-import Timer from "../../components/Timer";
 // import { socket } from "../../index";
 
 const Dashboard = () => {
