@@ -9,8 +9,8 @@ import { useSelector } from "react-redux";
 
 const Users = () => {
   const [rerenderTable, setRerenderTable] = useState(null);
-  const { user } = useSelector((state) => state.user);
   const history = useHistory();
+  const { user } = useSelector((state) => state.user);
 
   const customerTableHead = ["#", "MC", "Truck", "From", "To", "Actions"];
   const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -33,7 +33,7 @@ const Users = () => {
         <div className="edit__class">
           <EditButton
             type="open"
-            onClick={() => history.push(`/generate-report/${item._id}`)}
+            onClick={() => history.push(`/report/${item._id}`)}
           />
           <EditButton type="delete" onClick={() => handleDelete(item._id)} />
         </div>
@@ -44,7 +44,7 @@ const Users = () => {
   return (
     <>
       <Row className="m-3">
-        <Col md={3}></Col>
+        {/* <Col md={3}></Col>
         <Col md={5}></Col>
         <Col md={4}>
           <Button
@@ -53,7 +53,7 @@ const Users = () => {
           >
             Generate
           </Button>
-        </Col>
+        </Col> */}
       </Row>
       <Row>
         <Col>
@@ -66,9 +66,12 @@ const Users = () => {
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
                   url: `${process.env.REACT_APP_BACKEND_URL}/dispatch/getcarrierreport`,
-                  body: { dispatcher: user._id,company:user.company },
+                  body: {company:user.company},
                 }}
-                filter={{}}
+                filter={
+                  {
+                  }
+                }
                 renderBody={(item, index, currPage) =>
                   renderBody(item, index, currPage)
                 }

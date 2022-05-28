@@ -57,6 +57,12 @@
       "route": "/loads",
       "icon": "bx bx-package"
     }
+    ,
+    {
+      "display_name": "Report",
+      "route": "/report",
+      "icon": "bx bxs-report"
+    }
   ],
   "dispatch": [
     {

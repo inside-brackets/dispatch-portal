@@ -134,12 +134,14 @@ const Report = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      let body = { c_status: "registered" };
+      if (user.department === "dispatch") {
+        body = { ...body, "trucks.dispatcher": user._id };
+      }
+
       const carriers = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
-        {
-          "trucks.dispatcher": user._id,
-          c_status: "registered",
-        }
+        body
       );
       setCarrier(carriers.data);
 
@@ -212,7 +214,7 @@ const Report = () => {
       }
     };
     fetchData();
-  }, [params.id, user._id]);
+  }, [params.id, user._id,user.department]);
 
   const handleSelection = (ranges) => {
     setStartDate(ranges.Selection.startDate);

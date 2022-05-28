@@ -44,7 +44,13 @@ const getTableCarriersReport = async (req, res, next) => {
   // }
 
   try {
-    let result = await Report.find().populate("carrier", { mc_number: 1 });
+    let filter = {};
+    if (req.body.dispatcher) {
+      filter.dispatcher = req.body.dispatcher;
+    }
+    console.log(req.body);
+    let result = await Report.find(filter).populate("carrier dispatcher");
+ const filterByCompany = result.filter((report)=> report.dispatcher.company === req.body.company)
     // if (req.body.company) {
     //   result = result.filter(
     //     (carry) => carry.salesman?.company == req.body.company
@@ -62,7 +68,7 @@ const getTableCarriersReport = async (req, res, next) => {
     //     );
     //   });
     // }
-    const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
+    const fResult = filterByCompany.slice(req.body.skip, req.body.limit + req.body.skip);
     res.send({ data: fResult, length: result.length });
   } catch (error) {
     res.status(500).send(error);
@@ -73,7 +79,7 @@ const getTableCarriersReport = async (req, res, next) => {
 const getSingleCarrier = (req, res) => {
   try {
     Report.findById(req.params.id)
-      .populate("carrier loads")
+      .populate("carrier loads dispatcher")
       .then((report) => {
         res.send({
           message: "Report Fetch succesfully",
