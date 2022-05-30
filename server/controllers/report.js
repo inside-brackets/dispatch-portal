@@ -51,11 +51,13 @@ const getTableCarriersReport = async (req, res, next) => {
     console.log(req.body);
     let result = await Report.find(filter).populate("carrier dispatcher");
     // console.log(result)
-    if(req.body.company){
-      result = result.filter((report)=> report.dispatcher.company === req.body.company)
+    if (req.body.company) {
+      result = result.filter(
+        (report) => report.dispatcher.company === req.body.company
+      );
     }
-//  console.log(filterByCompany) 
- // if (req.body.company) {
+    //  console.log(filterByCompany)
+    // if (req.body.company) {
     //   result = result.filter(
     //     (carry) => carry.salesman?.company == req.body.company
     //   );
@@ -120,6 +122,7 @@ const getDistanceMatrixData = async (req, res) => {
     };
 
     const { data } = await axios.get(config.url);
+    console.log(data);
     if (data.status === "OK") {
       console.log(data.rows);
       result.push({
