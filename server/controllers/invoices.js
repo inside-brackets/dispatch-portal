@@ -31,7 +31,7 @@ const getTableInvoices = (req, res, next) => {
     filter.mc_number = parseInt(search);
   }
   if(req.body.start && req.body.end){
-   filter.createdAt =  {$gte:new Date(req.body.start),$lte: new Date(req.body.end)} 
+   filter.startingDate =  {$gte:new Date(req.body.start),$lte: new Date(req.body.end)} 
   }
   console.log(filter)
   Invoice.find(filter, null, {
