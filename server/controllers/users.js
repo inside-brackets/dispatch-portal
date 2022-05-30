@@ -96,7 +96,18 @@ const getTableUsers = (req, res, next) => {
 };
 
 const getUsers = (req, res, next) => {
-  User.find(req.body, null, {
+
+  let filter ={};
+  filter.u_status = {
+    $nin: ["fired"],
+  };
+  filter = {company:req.body.company}
+  if(req.body.department){
+    filter.department = {
+      $in: req.body.department
+    };
+  }
+  User.find(filter, null, {
     sort: {
       joining_date: -1, //Sort by Date Added DESC
     },

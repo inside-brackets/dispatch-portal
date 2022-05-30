@@ -13,7 +13,7 @@ const addNewLoad = async (req, res) => {
 };
 
 const getTableLoads = (req, res, next) => {
-  var { company, limit, skip, filter, ...body } = req.body;
+  var { company, limit, skip, filter,start,end, ...body } = req.body;
   if (filter.status.length > 0) {
     body.l_status = { $in: filter.status.map((item) => item.value) };
   }

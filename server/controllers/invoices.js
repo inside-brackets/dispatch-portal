@@ -1,6 +1,6 @@
 const Invoice = require("../models/invoice");
 const Carrier = require("../models/carrier");
-const User = require("../models/user")
+const User = require("../models/user");
 
 const addNewInvoice = async (req, res) => {
   console.log(req.body);
@@ -16,12 +16,33 @@ const addNewInvoice = async (req, res) => {
 const getTableInvoices = (req, res, next) => {
   var filter = {};
   if (req.body.filter.status.length > 0) {
-    filter.invoiceStatus = { $in: req.body.filter.status.map((item) => item.value) };
+    filter.invoiceStatus = {
+      $in: req.body.filter.status.map((item) => item.value),
+    };
+  }
+
+  console.log(req.body);
+  if (req.body.filter["sales person"].length > 0) {
+    filter.sales = {
+      $in: req.body.filter.filter["sales person"].map((item) => item.value),
+    };
+  }
+  if (req.body.filter.dispatcher.length > 0) {
+    filter.dispatcher = {
+      $in: req.body.filter.dispatcher.map((item) => item.value),
+    };
   }
   let search = req.query.search ? req.query.search : "";
   if (search !== "") {
     filter.mc_number = parseInt(search);
   }
+  if (req.body.start && req.body.end) {
+    var dateOffset = 24 * 60 * 60 * 1000;
+    var myDate = new Date(req.body.start);
+    myDate.setTime(myDate.getTime() - dateOffset);
+    filter.startingDate = { $gte: myDate, $lte: new Date(req.body.end) };
+  }
+  console.log(filter);
   Invoice.find(filter, null, {
     sort: {
       createdAt: -1, //Sort by Date Added DESC
@@ -37,7 +58,6 @@ const getTableInvoices = (req, res, next) => {
           req.body.skip,
           req.body.limit + req.body.skip
         );
-        console.log("fresultfresult ", fResult);
         return res.send({ data: fResult, length: invoices.length });
       }
       res.send(invoices);
@@ -156,41 +176,47 @@ const topSales = async (req, res, next) => {
       {
         $match: {
           department: "sales",
-          company:req.body.company,
-          u_status:"active"
+          company: req.body.company,
+          u_status: "active",
         },
       },
       {
         $lookup: {
-                from: "invoices",
-                let: {
-                  sales_id: "$_id"
+          from: "invoices",
+          let: {
+            sales_id: "$_id",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$sales", "$$sales_id"] },
+                    { $eq: ["$invoiceStatus", "cleared"] },
+                    {
+                      $eq: [{ $month: "$endingDate" }, { $month: new Date() }],
+                    },
+                  ],
                 },
-                pipeline: [
-                  { $match: {
-                      $expr: { $and: [
-                          { $eq: [ "$sales", "$$sales_id" ] },
-                          { $eq: [ "$invoiceStatus", "cleared" ] },
-                          { $eq: [ {$month: "$endingDate"},{$month: new Date()} ] }
-                      ] }
-                  } }
-                ],
-                as: "invoices"
-            }
-    },
-    { $project: {
-      user_name:1,
-      total: { $sum: "$invoices.dispatcherFee" }
-    }}
-    ,{ $sort : { total : -1} }
+              },
+            },
+          ],
+          as: "invoices",
+        },
+      },
+      {
+        $project: {
+          user_name: 1,
+          total: { $sum: "$invoices.dispatcherFee" },
+        },
+      },
+      { $sort: { total: -1 } },
     ]);
-    const result= user.filter((item)=> item.total > 0)
-  return res.send(result)
-      
+    const result = user.filter((item) => item.total > 0);
+    return res.send(result);
   } catch (error) {
-    res.send(error.message)
+    res.send(error.message);
   }
-
 };
 
 const topDispatcher = async (req, res, next) => {
@@ -199,47 +225,50 @@ const topDispatcher = async (req, res, next) => {
       {
         $match: {
           department: "dispatch",
-          company:req.body.company,
-          u_status:"active"
+          company: req.body.company,
+          u_status: "active",
         },
       },
       {
         $lookup: {
-                from: "invoices",
-                let: {
-                  dispatch_id: "$_id"
+          from: "invoices",
+          let: {
+            dispatch_id: "$_id",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$dispatcher", "$$dispatch_id"] },
+                    { $eq: ["$invoiceStatus", "cleared"] },
+                    {
+                      $eq: [{ $month: "$endingDate" }, { $month: new Date() }],
+                    },
+                  ],
                 },
-                pipeline: [
-                  { $match: {
-                      $expr: { $and: [
-                          { $eq: [ "$dispatcher", "$$dispatch_id" ] },
-                          { $eq: [ "$invoiceStatus", "cleared" ] },
-                          { $eq: [ {$month: "$endingDate"},{$month: new Date()} ] }
-                      ] }
-                  } }
-                ],
-                as: "invoices"
-            }
-    },
-    { $project: {
-      user_name:1,
-      total: { $sum: "$invoices.dispatcherFee" }
-    }}
-    ,{ $sort : { total : -1} }
+              },
+            },
+          ],
+          as: "invoices",
+        },
+      },
+      {
+        $project: {
+          user_name: 1,
+          total: { $sum: "$invoices.dispatcherFee" },
+        },
+      },
+      { $sort: { total: -1 } },
     ]);
-    console.log('beofre',user)
-   const result= user.filter((item)=> item.total > 0)
-    console.log('after',result)
-  return res.send(result)
-      
+    console.log("beofre", user);
+    const result = user.filter((item) => item.total > 0);
+    console.log("after", result);
+    return res.send(result);
   } catch (error) {
-    res.send(error.message)
+    res.send(error.message);
   }
-
 };
-
-
-
 
 module.exports = {
   addNewInvoice,
