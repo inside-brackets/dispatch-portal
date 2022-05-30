@@ -19,6 +19,7 @@ const TruckDetails = lazy(() => import("../pages/admin/TruckDetails"));
 const Users = lazy(() => import("../pages/admin/Users"));
 const PdfTest = lazy(() => import("../components/PdfTest"));
 const UserDetail = lazy(() => import("../pages/admin/UserDetail"));
+const AdminReport = lazy(() => import("../pages/admin/Report"))
 
 // sales routes
 const Dashboard = lazy(() => import("../pages/sales/Dashboard"));
@@ -130,7 +131,8 @@ const Routes = () => {
         <Route path="/invoices" component={Invoice} />
         <Route path="/users" exact component={Users} />
         <Route path="/user/:id" exact component={UserDetail} />
-        
+        <Route path="/report" exact component={AdminReport} />
+        <Route path="/report/:id" component={Report} />        
         <Route path="*">
           <h1>Not found</h1>
         </Route>

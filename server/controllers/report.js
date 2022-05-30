@@ -44,7 +44,19 @@ const getTableCarriersReport = async (req, res, next) => {
   // }
 
   try {
-    let result = await Report.find().populate("carrier", { mc_number: 1 });
+    let filter = {};
+    if (req.body.dispatcher) {
+      filter.dispatcher = req.body.dispatcher;
+    }
+    console.log(req.body);
+    let result = await Report.find(filter).populate("carrier dispatcher");
+    // console.log(result)
+    if (req.body.company) {
+      result = result.filter(
+        (report) => report.dispatcher.company === req.body.company
+      );
+    }
+    //  console.log(filterByCompany)
     // if (req.body.company) {
     //   result = result.filter(
     //     (carry) => carry.salesman?.company == req.body.company
@@ -73,7 +85,7 @@ const getTableCarriersReport = async (req, res, next) => {
 const getSingleCarrier = (req, res) => {
   try {
     Report.findById(req.params.id)
-      .populate("carrier loads")
+      .populate("carrier loads dispatcher")
       .then((report) => {
         res.send({
           message: "Report Fetch succesfully",
@@ -110,6 +122,7 @@ const getDistanceMatrixData = async (req, res) => {
     };
 
     const { data } = await axios.get(config.url);
+    console.log(data);
     if (data.status === "OK") {
       console.log(data.rows);
       result.push({

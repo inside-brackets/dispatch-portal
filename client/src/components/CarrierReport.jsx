@@ -22,7 +22,6 @@ const CarrierReport = ({
 }) => {
   const ref = useRef();
   const history = useHistory();
-
   const { label } = useSelector((state) => state.user.company);
   const [workingDays, setWorkingDays] = useState(
     defaultValue ? defaultValue.working_days : null
@@ -90,6 +89,7 @@ const CarrierReport = ({
           dispatcher_comment: dispatcherComments,
           loads: load.map((l) => l._id),
           deadHead: deadHead,
+          dispatcher: dispatcher._id,
         }
       );
     }
@@ -146,7 +146,7 @@ const CarrierReport = ({
               <input
                 className="form-group border"
                 value={workingDays}
-                disabled={defaultValue}
+                // disabled={defaultValue}
                 onChange={(e) => setWorkingDays(e.target.value)}
                 type="number"
               />
@@ -170,7 +170,7 @@ const CarrierReport = ({
             <td>
               <textarea
                 value={dispatcherComments}
-                disabled={defaultValue}
+                // disabled={defaultValue}
                 onChange={(e) => setDispatcherComments(e.target.value)}
                 className="form-group border text-area"
               />
@@ -240,7 +240,7 @@ const CarrierReport = ({
           </tbody>
         </table>
         <h4 className="total-miles mt-5">Regards,</h4>
-        <h4 className="total-miles">{dispatcher.user_name}</h4>
+        <h4 className="total-miles">{dispatcher.department === "dispatch" && !defaultValue  ? dispatcher.user_name : defaultValue.dispatcher.user_name}</h4>
         <h4 className="total-miles">{label}</h4>
       </Row>
       <Row className="justify-content-center">

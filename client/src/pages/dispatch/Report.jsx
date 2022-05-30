@@ -133,85 +133,88 @@ const Report = () => {
   };
 
   useEffect(() => {
-    if (params.id) {
-      axios
-        .get(
-          `${process.env.REACT_APP_BACKEND_URL}/dispatch/get-carrier-report/${params.id}`
-        )
-        .then((res) => {
-          const { data } = res.data;
-          console.log("report", data);
-          setSelectedCarrier({
-            label: data.carrier.mc_number,
-            value: data.carrier.mc_number,
+    const fetchData = async () => {
+      let body = { c_status: "registered" };
+      if (user.department === "dispatch") {
+        body = { ...body, "trucks.dispatcher": user._id };
+      }
+
+      const carriers = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
+        body
+      );
+      setCarrier(carriers.data);
+
+      if (params.id) {
+        axios
+          .get(
+            `${process.env.REACT_APP_BACKEND_URL}/dispatch/get-carrier-report/${params.id}`
+          )
+          .then((res) => {
+            const { data } = res.data;
+            console.log("report", data);
+            setSelectedCarrier({
+              label: data.carrier.mc_number,
+              value: data.carrier.mc_number,
+            });
+            setReport(data);
+            setTruck({ label: data.truck, value: data.truck });
+            setStartDate(new Date(data.from));
+            setEndDate(new Date(data.to));
+            setLoad(data.loads);
+            setDeadHead(data.deadHead);
+            axios
+              .post(
+                `${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`,
+                {
+                  mc: data.carrier.mc_number,
+                  truck: data.truck,
+                }
+              )
+              .then((res) => {
+                const data = res.data.map((item) => {
+                  const date = new Date();
+                  date.setMonth(item.month - 1);
+                  return {
+                    ...item,
+                    month: date.toLocaleString("en-US", {
+                      month: "long",
+                    }),
+                  };
+                });
+                setLineGraphData(data.reverse());
+                console.log("line graph data", data);
+              })
+              .catch((err) => console.log("api error", err));
+
+            axios
+              .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {
+                mc: data.carrier.mc_number,
+                truck: data.truck,
+              })
+              .then((res) => {
+                const data = res.data.map((item) => {
+                  const date = new Date();
+                  date.setMonth(item.month - 1);
+                  return {
+                    ...item,
+                    month: date.toLocaleString("en-US", {
+                      month: "long",
+                    }),
+                  };
+                });
+                setBarGraphData(data.reverse());
+                console.log("bar graph data", data);
+              })
+              .catch((err) => console.log("api error", err));
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          setReport(data);
-          setTruck({ label: data.truck, value: data.truck });
-          setStartDate(new Date(data.from));
-          setEndDate(new Date(data.to));
-          setLoad(data.loads);
-          setDeadHead(data.deadHead);
-          axios
-            .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`, {
-              mc: data.carrier.mc_number,
-              truck: data.truck,
-            })
-            .then((res) => {
-              const data = res.data.map((item) => {
-                const date = new Date();
-                date.setMonth(item.month - 1);
-                return {
-                  ...item,
-                  month: date.toLocaleString("en-US", {
-                    month: "long",
-                  }),
-                };
-              });
-              setLineGraphData(data.reverse());
-              console.log("line graph data", data);
-            })
-            .catch((err) => console.log("api error", err));
-
-          axios
-            .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {
-              mc: data.carrier.mc_number,
-              truck: data.truck,
-            })
-            .then((res) => {
-              const data = res.data.map((item) => {
-                const date = new Date();
-                date.setMonth(item.month - 1);
-                return {
-                  ...item,
-                  month: date.toLocaleString("en-US", {
-                    month: "long",
-                  }),
-                };
-              });
-              setBarGraphData(data.reverse());
-              console.log("bar graph data", data);
-            })
-            .catch((err) => console.log("api error", err));
-
-          // handleSubmit(data.carrier.mc_number, data.truck, data.from, data.to);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getcarriers`, {
-        "trucks.dispatcher": user._id,
-        c_status: "registered",
-      })
-      .then((res) => {
-        console.log("dispatch carrier", res);
-        setCarrier(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [params.id, user._id]);
+      }
+    };
+    fetchData();
+  }, [params.id, user._id,user.department]);
 
   const handleSelection = (ranges) => {
     setStartDate(ranges.Selection.startDate);
