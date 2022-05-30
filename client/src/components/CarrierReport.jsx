@@ -22,7 +22,7 @@ const CarrierReport = ({
 }) => {
   const ref = useRef();
   const history = useHistory();
-  console.log("hello this is testing",truck,dispatcher)
+  console.log("hello this is testing", truck, dispatcher);
 
   const { label } = useSelector((state) => state.user.company);
   const [workingDays, setWorkingDays] = useState(
@@ -91,7 +91,7 @@ const CarrierReport = ({
           dispatcher_comment: dispatcherComments,
           loads: load.map((l) => l._id),
           deadHead: deadHead,
-          dispatcher:dispatcher._id
+          dispatcher: dispatcher._id,
         }
       );
     }
@@ -242,7 +242,11 @@ const CarrierReport = ({
           </tbody>
         </table>
         <h4 className="total-miles mt-5">Regards,</h4>
-        <h4 className="total-miles">{dispatcher.department === "dispatcher"  ? dispatcher.user_name : defaultValue.dispatcher.user_name}</h4>
+        <h4 className="total-miles">
+          {dispatcher?.department === "dispatcher"
+            ? dispatcher?.user_name
+            : defaultValue?.dispatcher.user_name}
+        </h4>
         <h4 className="total-miles">{label}</h4>
       </Row>
       <Row className="justify-content-center">
