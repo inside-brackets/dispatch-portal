@@ -22,8 +22,6 @@ const CarrierReport = ({
 }) => {
   const ref = useRef();
   const history = useHistory();
-  console.log("hello this is testing",truck,dispatcher,defaultValue)
-
   const { label } = useSelector((state) => state.user.company);
   const [workingDays, setWorkingDays] = useState(
     defaultValue ? defaultValue.working_days : null
@@ -91,7 +89,7 @@ const CarrierReport = ({
           dispatcher_comment: dispatcherComments,
           loads: load.map((l) => l._id),
           deadHead: deadHead,
-          dispatcher:dispatcher._id
+          dispatcher: dispatcher._id,
         }
       );
     }
