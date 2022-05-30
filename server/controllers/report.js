@@ -50,8 +50,12 @@ const getTableCarriersReport = async (req, res, next) => {
     }
     console.log(req.body);
     let result = await Report.find(filter).populate("carrier dispatcher");
- const filterByCompany = result.filter((report)=> report.dispatcher.company === req.body.company)
-    // if (req.body.company) {
+    // console.log(result)
+    if(req.body.company){
+      result = result.filter((report)=> report.dispatcher.company === req.body.company)
+    }
+//  console.log(filterByCompany) 
+ // if (req.body.company) {
     //   result = result.filter(
     //     (carry) => carry.salesman?.company == req.body.company
     //   );
@@ -68,7 +72,7 @@ const getTableCarriersReport = async (req, res, next) => {
     //     );
     //   });
     // }
-    const fResult = filterByCompany.slice(req.body.skip, req.body.limit + req.body.skip);
+    const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
     res.send({ data: fResult, length: result.length });
   } catch (error) {
     res.status(500).send(error);

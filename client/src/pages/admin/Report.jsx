@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 const Users = () => {
   const [rerenderTable, setRerenderTable] = useState(null);
   const history = useHistory();
-  const { user } = useSelector((state) => state.user);
+  const { user,company } = useSelector((state) => state.user);
 
   const customerTableHead = ["#", "MC", "Truck", "From", "To", "Actions"];
   const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -66,7 +66,7 @@ const Users = () => {
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
                   url: `${process.env.REACT_APP_BACKEND_URL}/dispatch/getcarrierreport`,
-                  body: {company:user.company},
+                  body: {company:company.value},
                 }}
                 filter={
                   {

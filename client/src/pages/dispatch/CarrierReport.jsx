@@ -66,7 +66,7 @@ const Users = () => {
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
                   url: `${process.env.REACT_APP_BACKEND_URL}/dispatch/getcarrierreport`,
-                  body: { dispatcher: user._id,company:user.company },
+                  body: { dispatcher: user._id },
                 }}
                 filter={{}}
                 renderBody={(item, index, currPage) =>

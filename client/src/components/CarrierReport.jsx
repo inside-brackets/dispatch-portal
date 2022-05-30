@@ -22,7 +22,7 @@ const CarrierReport = ({
 }) => {
   const ref = useRef();
   const history = useHistory();
-  console.log("hello this is testing",truck,dispatcher)
+  console.log("hello this is testing",truck,dispatcher,defaultValue)
 
   const { label } = useSelector((state) => state.user.company);
   const [workingDays, setWorkingDays] = useState(
@@ -242,7 +242,7 @@ const CarrierReport = ({
           </tbody>
         </table>
         <h4 className="total-miles mt-5">Regards,</h4>
-        <h4 className="total-miles">{dispatcher.department === "dispatcher"  ? dispatcher.user_name : defaultValue.dispatcher.user_name}</h4>
+        <h4 className="total-miles">{dispatcher.department === "dispatch" && !defaultValue  ? dispatcher.user_name : defaultValue.dispatcher.user_name}</h4>
         <h4 className="total-miles">{label}</h4>
       </Row>
       <Row className="justify-content-center">
