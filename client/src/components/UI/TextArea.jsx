@@ -8,6 +8,7 @@ const TextArea = forwardRef((props, ref) => {
           height: "100px",
           width: "100%",
           padding: "15px",
+          ...props.style,
         }}
         name={props.name}
         ref={ref}

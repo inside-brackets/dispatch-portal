@@ -36,6 +36,7 @@ const Dialer = () => {
     { label: "Truck down", value: "Truck down" },
     { label: "Do not call me", value: "Do not call me" },
     { label: "Working in a Contract", value: "Working in a Contract" },
+    { label: "Other", value: "" },
   ];
   const handleChange = (text, index) => {
     setDefaultComment({
@@ -117,7 +118,7 @@ const Dialer = () => {
         method: "PUT",
         body: {
           c_status: "rejected",
-          comment: commentrRef.current.value,
+          comment: defaultComment.text,
         },
       },
       transformData
@@ -257,6 +258,7 @@ const Dialer = () => {
               ref={appointmentRef}
             />
             <TextArea
+              
               name="Comment:"
               placeholder="Comment here..."
               ref={commentRef}
@@ -298,6 +300,9 @@ const Dialer = () => {
             })}
             <TextArea
               name="Comment:"
+              style={{
+                display: defaultComment?.text === "" ? "" : "none"
+              }}
               placeholder="Comment here..."
               ref={commentrRef}
               value={defaultComment?.text}
