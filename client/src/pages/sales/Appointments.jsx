@@ -147,7 +147,7 @@ const Appointments = () => {
     <div className="row">
       <div className="row align-items-center mb-3">
         <div className="col-md-3">
-          <label>Search</label>
+          <label className="mb-2">Search:</label>
           <input
             type="text"
             className="form-control"
