@@ -318,6 +318,8 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
             <Form.Label>Drop date:</Form.Label>
             <Form.Control
               type="datetime-local"
+              min={pickupDate}
+              disabled={!pickupDate}
               placeholder="Enter here"
               value={moment(dropDate).format("YYYY-MM-DDTHH:mm")}
               onChange={(e) => setDropDate(e.target.value)}
