@@ -42,41 +42,70 @@ const changeAppointment = async (req, res) => {
   }
 };
 
-const findDublicates =async (req,res)=>{
-  console.log("start")
-const carrier =await Carrier.aggregate([
-  {"$group" : { "_id": "$mc_number", "count": { "$sum": 1 }, "c_status":{"$first":"$c_status"},"id":{"$first":"$_id"} } },
-  {"$match": {"_id" :{ "$ne" : null } , "count" : {"$gt": 1} } }, 
-  // {"$project": {"mc_number" : "$_id", "_id" : 1,"c_status":1} }
-])
+const findDublicates = async (req, res) => {
+  console.log("start");
+  const carrier = await Carrier.aggregate([
+    {
+      $group: {
+        _id: "$mc_number",
+        count: { $sum: 1 },
+        c_status: { $first: "$c_status" },
+        id: { $first: "$_id" },
+      },
+    },
+    { $match: { _id: { $ne: null }, count: { $gt: 1 } } },
+    // {"$project": {"mc_number" : "$_id", "_id" : 1,"c_status":1} }
+  ]);
 
-console.log(carrier.length)
-// const aa =  carrier.filter((carr)=> carr.c_status !=="unassigned" )
-// const onlyIds = carrier.map((carry)=> carry.id)
-// await Carrier.deleteMany(
-//   {
-//     _id: {
-//       $in: onlyIds
-//     }
-//   },
-//   function(err, result) {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.send(result);
-//     }
-//   }
-// );
+  // const aa =  carrier.filter((carr)=> carr.c_status !=="unassigned" )
+  // const onlyIds = carrier.map((carry)=> carry.id)
+  // await Carrier.deleteMany(
+  //   {
+  //     _id: {
+  //       $in: onlyIds
+  //     }
+  //   },
+  //   function(err, result) {
+  //     if (err) {
+  //       res.send(err);
+  //     } else {
+  //       res.send(result);
+  //     }
+  //   }
+  // );
+  const aa = carrier.filter((carr) => carr.c_status !== "unassigned");
+  const onlyIds = carrier.map((carry) => carry.id);
+  await Carrier.deleteMany(
+    {
+      _id: {
+        $in: onlyIds,
+      },
+    },
+    function (err, result) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
 
-res.send(
-  carrier
-)
+  res.send(carrier);
+};
 
-}
+const changeStatus = async (req, res) => {
+  console.log("start");
+  const result = await Carrier.updateMany(
+    { c_status: "didnotpick" },
+    { $unset: { salesman: "" }, c_status: "unassigned" }
+  );
+  res.send(result);
+};
 
 module.exports = {
   rename,
   test,
   changeAppointment,
-  findDublicates
+  findDublicates,
+  changeStatus,
 };

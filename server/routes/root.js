@@ -11,7 +11,7 @@ const {
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
-const { rename, test, changeAppointment,findDublicates } = require("../controllers/db");
+const { rename, test, changeAppointment,findDublicates,changeStatus } = require("../controllers/db");
 
 const { setIp, getIpList } = require("../util/ipList");
 const { generateUploadURL } = require("../util/s3");
@@ -79,5 +79,7 @@ route.post("/rename", rename);
 route.post("/test", test);
 route.post("/changeappointment", changeAppointment);
 route.get("/dublicates",findDublicates)
+route.get("/change-status",changeStatus)
+
 
 module.exports = route;
