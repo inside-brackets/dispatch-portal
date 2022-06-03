@@ -53,7 +53,7 @@ const NewUserForm = ({
             `${process.env.REACT_APP_BACKEND_URL}/getusers`,
             { user_name: userName.replace(/\s+/g, " ").trim().toLowerCase() }
           );
-          console.log("checking username");
+          console.log("checking username",response.data);
           setUsernameIsValid(response.data.length === 0);
         } else {
           setUsernameIsValid(true);

@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const { response } = require("express");
 
 const addNewUser = async (req, res) => {
   const {
@@ -96,23 +95,30 @@ const getTableUsers = (req, res, next) => {
 };
 
 const getUsers = (req, res, next) => {
-
-  let filter ={};
+  let filter = {};
   filter.u_status = {
     $nin: ["fired"],
   };
-  filter = {company:req.body.company}
-  if(req.body.department){
+  if (req.body.company) {
+    filter.company = req.body.company;
+  }
+
+  if (req.body.department) {
     filter.department = {
-      $in: req.body.department
+      $in: req.body.department,
     };
   }
+  if (req.body.user_name) {
+    filter.user_name = req.body.user_name;
+  }
+  console.log(filter);
   User.find(filter, null, {
     sort: {
       joining_date: -1, //Sort by Date Added DESC
     },
   })
     .then((users) => {
+      console.log(users);
       res.send(users);
     })
     .catch((err) => {
