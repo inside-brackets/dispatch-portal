@@ -132,7 +132,12 @@ const fetchLead = async (req, res, next) => {
 const getCarrier = (req, res, next) => {
   console.log("get carrier", req.body);
   Carrier.findOne(req.body)
-    .populate("salesman trucks.dispatcher", { user_name: 1, company: 1,first_name:1,last_name:1 })
+    .populate("salesman trucks.dispatcher", {
+      user_name: 1,
+      company: 1,
+      first_name: 1,
+      last_name: 1,
+    })
     .then((carriers) => {
       res.status(200).send(carriers);
     })
@@ -427,6 +432,29 @@ const rejectAndRegistered = async (req, res, next) => {
   }
 };
 
+const fetchDialerCounter = async (req,res) => {
+  try {
+const result =   await Hcarrier.find({
+  createdAt: { $gt: new Date(Date.now() - 10 * 60 * 60 * 1000) },
+      change:{$in:["didnotpick","rejected","appointment"]},
+      user: req.params.id
+    })
+    return res.status(200).send({
+      success:true,
+      result:result,
+      message:"Fetch Counter Successfully",
+      
+    })
+  } catch (error) {
+    return res.send({
+      success:false,
+      // result:result,
+      message:error.message,
+      
+    })
+  }
+};
+
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -442,4 +470,5 @@ module.exports = {
   nearestAppointment,
   changeTypeController,
   rejectAndRegistered,
+  fetchDialerCounter,
 };

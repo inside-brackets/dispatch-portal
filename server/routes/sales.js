@@ -8,4 +8,5 @@ route.get("/ok", (req, res, next) => {
 });
 route.get('/get-closet/:id',carriersController.nearestAppointment)
 route.get("/change-type",carriersController.changeTypeController)
+route.get("/fetch-counter/:id", carriersController.fetchDialerCounter)
 module.exports = route;

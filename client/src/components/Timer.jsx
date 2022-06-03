@@ -23,6 +23,7 @@ const Timer = () => {
         }, res.data[0].difference);
       })
       .catch((err) => console.log(err));
+     
       console.log("im run")
   }, [value]);
 

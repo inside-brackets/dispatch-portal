@@ -16,18 +16,14 @@ const cookies = new Cookies();
 
 const Topnav = () => {
   const { user, company } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
   const logout = () => {
-    dispatch(
-      userActions.logout({
-        cb: () => {
-          localStorage.removeItem("user");
-          localStorage.removeItem("selectedCompany");
-          cookies.remove("user");
-        },
-      })
-    );
+    localStorage.removeItem("user");
+    localStorage.removeItem("selectedCompany");
+    localStorage.removeItem("counters");
+    cookies.remove("user");
   };
+
+  // };
   const curr_user = {
     display_name: user.user_name,
     image: user_image,
