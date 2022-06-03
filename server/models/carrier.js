@@ -32,7 +32,7 @@ const carrierSchema = new mongoose.Schema(
         "rejected",
         "registered",
         "deactivated",
-        "inprogress"
+        "inprogress",
       ],
     },
     dispatcher_fee: {
@@ -104,7 +104,7 @@ const carrierSchema = new mongoose.Schema(
             "stepdeck",
             "lowboy",
             "poweronly",
-            "boxtruck"
+            "boxtruck",
           ],
           default: "dryvan",
         },

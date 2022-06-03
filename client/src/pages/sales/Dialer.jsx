@@ -6,8 +6,8 @@ import Loader from "react-loader-spinner";
 import useHttp from "../../hooks/use-https";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import {change} from '../../store/appointment'
-
+import { change } from "../../store/appointment";
+import axios from "axios";
 import TextArea from "../../components/UI/TextArea";
 
 const Dialer = () => {
@@ -15,7 +15,7 @@ const Dialer = () => {
   const appointmentRef = useRef();
   const commentRef = useRef();
   const commentrRef = useRef();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [rmodal, setrModal] = useState();
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
@@ -49,7 +49,7 @@ const Dialer = () => {
       },
       transformData
     );
-      dispatch(change(Math.random()))
+    dispatch(change(Math.random()));
     setLoading(false);
   };
 
@@ -134,25 +134,51 @@ const Dialer = () => {
       const now = new Date();
       const reset = new Date(counterObj.reset);
       timeOut = Math.max(reset - now, 1000);
-      setCounter(counterObj.counter);
-    }
+      const timer = setTimeout(() => {
+        let temp = new Date();
+        let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(
+          17,
+          0,
+          0
+        );
+        setCounter(counterObj.counter);
+        // set Date today 5 pm and set count field to 0
+        localStorage.setItem(
+          "counters",
+          JSON.stringify({
+            counter: 0,
+            reset,
+          })
+        );
+        setCounter(0);
+      }, timeOut);
+      return () => clearTimeout(timer);
+    } else {
+      axios
+        .get(
+          `${process.env.REACT_APP_BACKEND_URL}/sales/fetch-counter/${user._id}`
+        )
+        .then((res) => {
+          let temp = new Date();
+          let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(
+            17,
+            0,
+            0
+          );
 
-    const timer = setTimeout(() => {
-      let temp = new Date();
-      let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(17, 0, 0);
-
-      // set Date today 5 pm and set count field to 0
-      localStorage.setItem(
-        "counters",
-        JSON.stringify({
-          counter: 0,
-          reset,
+          // set Date today 5 pm and set count field to 0
+          localStorage.setItem(
+            "counters",
+            JSON.stringify({
+              counter: res.data.result.length,
+              reset,
+            })
+          );
+          setCounter(res.data.result.length);
         })
-      );
-      setCounter(0);
-    }, timeOut);
-    return () => clearTimeout(timer);
-  }, []);
+        .catch((err) => console.log(err));
+    }
+  }, [user._id]);
 
   const incrementCounter = () => {
     let counterObj = JSON.parse(localStorage.getItem("counters"));
@@ -218,7 +244,8 @@ const Dialer = () => {
           <div className="col-6">
             <div className="card" style={{ width: "160px" }}>
               <h2 className="justify-content-center align-items-center">
-                <i className="bx bxs-phone-outgoing"> :</i> <span>{counter}</span>{" "}
+                <i className="bx bxs-phone-outgoing"> :</i>{" "}
+                <span>{counter}</span>{" "}
               </h2>
             </div>
           </div>
