@@ -13,7 +13,7 @@ const addNewInvoice = async (req, res) => {
   }
 };
 
-const getTableInvoices = (req, res, next) => {
+const getTableInvoices = async (req, res, next) => {
   var filter = {};
   if (req.body.filter.status.length > 0) {
     filter.invoiceStatus = {
@@ -43,28 +43,80 @@ const getTableInvoices = (req, res, next) => {
     filter.startingDate = { $gte: myDate, $lte: new Date(req.body.end) };
   }
   console.log(filter);
-  Invoice.find(filter, null, {
-    sort: {
-      createdAt: -1, //Sort by Date Added DESC
+  let inv = await Invoice.aggregate([
+    { $match: filter },
+    {
+      $lookup: {
+        from: "carriers",
+        localField: "mc_number",
+        foreignField: "mc_number",
+        as: "carrier",
+      },
     },
-  })
-    .populate("dispatcher loads")
-    .then((invoices) => {
-      if (req.body.company) {
-        invoices = invoices.filter(
-          (invoice) => invoice.dispatcher.company == req.body.company
-        );
-        const fResult = invoices.slice(
-          req.body.skip,
-          req.body.limit + req.body.skip
-        );
-        return res.send({ data: fResult, length: invoices.length });
-      }
-      res.send(invoices);
-    })
-    .catch((err) => {
-      res.send(err);
-    });
+    {
+      $lookup: {
+        from: "loads",
+        localField: "loads",
+        foreignField: "_id",
+        as: "loads",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "dispatcher",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $match: {
+              $expr: 
+                  {
+                    $eq: ["$company", req.body.company ],
+                  },
+             
+            },
+          },
+        ],
+        as: "dispatcher",
+      },
+    },
+    { $unwind: "$carrier" },
+    { $unwind: "$dispatcher" },
+  ]);
+
+  // if (req.body.company) {
+    // inv = inv.filter(
+    //   (invoice) => invoice.dispatcher.company == req.body.company
+    // );
+    const fResult = inv.slice(
+      req.body.skip,
+      req.body.limit + req.body.skip
+    );
+    return res.send({ data: fResult, length: inv.length });
+  // }
+
+  // Invoice.find(filter, null, {
+  //   sort: {
+  //     createdAt: -1, //Sort by Date Added DESC
+  //   },
+  // })
+  //   .populate("dispatcher loads")
+  //   .then((invoices) => {
+  //     if (req.body.company) {
+  //       invoices = invoices.filter(
+  //         (invoice) => invoice.dispatcher.company == req.body.company
+  //       );
+  //       const fResult = invoices.slice(
+  //         req.body.skip,
+  //         req.body.limit + req.body.skip
+  //       );
+  //       return res.send({ data: fResult, length: invoices.length });
+  //     }
+  //     res.send(invoices);
+  //   })
+  //   .catch((err) => {
+  //     res.send(err);
+  //   });
 };
 
 const getInvoices = (req, res, next) => {

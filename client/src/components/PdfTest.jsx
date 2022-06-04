@@ -8,7 +8,7 @@ import "./pdf.css";
 
 const PdfTest = ({ load, invoice }) => {
   const ref = useRef();
-
+console.log("pdf invoice", invoice)
   const printDocument = () => {
     const input = document.getElementById("div-to-print");
     console.log(input);
@@ -58,6 +58,11 @@ const PdfTest = ({ load, invoice }) => {
             <h5 className="name me-5">{invoice?.carrierCompany}</h5>
             <h5 className="header">Agent Name </h5>
             <h5 className="name">{invoice?.dispatcher.user_name}</h5>
+          </p>    <p className="d-flex">
+            <h5 className="header">Owner Name</h5>
+            <h5 className="name me-5">{invoice?.carrier?.owner_name}</h5>
+            <h5 className="header">Email </h5>
+            <h5 className="name">{invoice?.carrier?.email}</h5>
           </p>
           <table className="table invoice">
             <thead
