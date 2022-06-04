@@ -301,7 +301,7 @@ const Dialer = () => {
             <TextArea
               name="Comment:"
               style={{
-                display: defaultComment?.text === "" ? "" : "none"
+                display: defaultComment?.index === options.length - 1 ? "" : "none"
               }}
               placeholder="Comment here..."
               ref={commentrRef}
