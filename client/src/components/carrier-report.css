@@ -1,6 +1,7 @@
 .main-heading {
     font-size: 48px;
     font-weight: bolder;
+    margin-top: 15px;
 }
 .second-heading{
     font-size: 36px;
@@ -9,7 +10,7 @@
 .loaded-miles{
     font-size: 24px;
     font-weight: bold;
-    color:#00F9FF;
+    color:#00FF00;
 }
 
 .deadhead-miles{
@@ -29,11 +30,16 @@
 }
 
 .text-area {
-
 width: 180%;
 font-size: 24px;
 padding: 15px;
 height: 150px;}
+
+.text-area2 {
+    width: 100%;
+    font-size: 24px;
+    padding: 15px;
+    height: 150px;}
 
 .sub-heading {
     font-weight: 900;

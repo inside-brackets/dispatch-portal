@@ -29,6 +29,11 @@ const CarrierReport = ({
   const [dispatcherComments, setDispatcherComments] = useState(
     defaultValue ? defaultValue.dispatcher_comment : null
   );
+  const [managerComments, setManagerComments] = useState(
+    defaultValue
+      ? defaultValue.manager_comment && defaultValue.manager_comment
+      : null
+  );
 
   const loadedMiles = load
     .filter((l) => l.l_status === "delivered")
@@ -57,6 +62,7 @@ const CarrierReport = ({
   }
 
   const totalMiles = loadedMiles + deadHeadMiles;
+  const totalGross = 12323;
   let dollarPerTotalMiles;
   if (amounts === 0 || loadedMiles === 0) {
     dollarPerTotalMiles = 0;
@@ -74,7 +80,7 @@ const CarrierReport = ({
   });
 
   const handleSubmit = async () => {
-    if (!workingDays || !dispatcherComments) {
+    if (!workingDays || !dispatcherComments || !managerComments) {
       return alert("Please add working days and dispatcher comments");
     }
     if (!defaultValue) {
@@ -97,49 +103,40 @@ const CarrierReport = ({
   };
   return (
     <>
-      <Row id="div-to-print" ref={ref} className="justify-content-around m-3">
+      <Row
+        id="div-to-print"
+        ref={ref}
+        className="justify-content-around m-3"
+      >
         <h3 className="text-center main-heading">{carrier?.company_name}</h3>
-        <h4 className="text-center mt-5 second-heading">Carrier Report</h4>
+        <h5 className="text-center mt-3">({carrier?.mc_number})</h5>
+        <h4 className="text-center mt-3 second-heading">Carrier Report</h4>
+        <h5 className="text-center mt-3">
+          (
+          {`${moment(startDate).format("MMMM D, YYYY")} - ${moment(
+            endDate
+          ).format("MMMM D, YYYY")}`}
+          )
+        </h5>
+        <br/>
+        <h1 className="text-center my-4">Statistics</h1>
         <table>
           <tr>
-            <td className="sub-heading">
-              Carrier Name: {carrier?.company_name}{" "}
-            </td>
-            <td className="sub-heading">Agent Name: {dispatcher.user_name} </td>
+            <td className="major-details">Total Miles: </td>
+            <td className="major-details">{totalMiles} </td>
+            <td className="major-details">Total Gross </td>
+            <td className="major-details"> {totalGross} </td>
           </tr>
           <tr>
-            <td className="sub-heading">MC:{carrier?.mc_number}</td>
-          </tr>
-        </table>
-        <h1 className="text-center">Statistics</h1>
-        <h3 className="text-center mt-2">Loaded Miles Vs Deadhead</h3>
-        <Graphs
-          type="donut"
-          loadedMiles={loadedMiles}
-          deadHeadMiles={deadHeadMiles}
-        />
-
-        <table>
-          <tr>
-            <td className="loaded-miles">Loaded Miles: {loadedMiles}</td>
-            <td className="deadhead-miles">DeadHead Miles:{deadHeadMiles}</td>
-          </tr>
-          <tr>
-            <td className="total-miles">Total Miles:{totalMiles}</td>
-          </tr>
-          <tr>
+            <td className="major-details">Dollar per Loaded Miles: </td>
             <td className="major-details">
-              Dollar per Loaded Miles:{" "}
               {typeof dollarPerLoadedMiles === "NaN"
                 ? 0
                 : dollarPerLoadedMiles.toFixed(2)}
             </td>
-            <td className="major-details">
-              Dollar per Total Miles: {dollarPerTotalMiles.toFixed(2)}
-            </td>
+            <td className="major-details">Dollar per Total Miles:</td>
+            <td className="major-details">{dollarPerTotalMiles.toFixed(2)}</td>
           </tr>
-          <br />
-          <br />
           <tr>
             <td className="major-details">Working Days:</td>
             <td className="major-details">
@@ -152,17 +149,33 @@ const CarrierReport = ({
               />
             </td>
           </tr>
-          <br />
-          <br />
-          <br />
-          <br />
-          {/* <br />
-          <br /> */}
-          <br />
-          <br />
-          <br />
-          <br />
+        </table>
+        <Row className='my-5'>
+            <h1 className="text-center mt-2">Loaded Miles Vs Deadhead</h1>
+          <Col>
 
+            <Graphs
+              type="donut"
+              loadedMiles={loadedMiles}
+              deadHeadMiles={deadHeadMiles}
+            />
+          </Col>
+          <Col style={{
+            marginTop:"150px"
+          }}>
+            <Row>
+              <Col className="loaded-miles my-3">
+                Loaded Miles: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {loadedMiles}
+              </Col>
+            </Row>
+            <Row>
+              <Col className="deadhead-miles">
+                DeadHead Miles: &nbsp;&nbsp;&nbsp;&nbsp;{deadHeadMiles}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <table>
           <tr>
             <td className="major-details">Dispatcher Remarks:</td>
           </tr>
@@ -172,13 +185,15 @@ const CarrierReport = ({
                 value={dispatcherComments}
                 // disabled={defaultValue}
                 onChange={(e) => setDispatcherComments(e.target.value)}
-                className="form-group border text-area"
+                className="form-group border text-area2"
               />
             </td>
           </tr>
         </table>
 
-        <h2 className="text-center my-5">
+        <h2 style={{
+          marginTop:'180px'
+        }} className="text-center">
           Have control of your business with our Statistical Analysis
         </h2>
         <Row className="justify-content-center mt-5">
@@ -193,7 +208,7 @@ const CarrierReport = ({
 
         <h3
           style={{
-            marginTop: "100px",
+            marginTop: "150px",
           }}
           className="text-center"
         >
@@ -239,8 +254,27 @@ const CarrierReport = ({
             ))}
           </tbody>
         </table>
+        <table>
+          <tr>
+            <td className="major-details">Manager Remarks:</td>
+          </tr>
+          <tr>
+            <td>
+              <textarea
+                value={managerComments}
+                // disabled={defaultValue}
+                onChange={(e) => setManagerComments(e.target.value)}
+                className="form-group border text-area2"
+              />
+            </td>
+          </tr>
+        </table>
         <h4 className="total-miles mt-5">Regards,</h4>
-        <h4 className="total-miles">{dispatcher.department === "dispatch" && !defaultValue  ? dispatcher.user_name : defaultValue.dispatcher.user_name}</h4>
+        <h4 className="total-miles">
+          {dispatcher.department === "dispatch" && !defaultValue
+            ? dispatcher.user_name
+            : defaultValue.dispatcher.user_name}
+        </h4>
         <h4 className="total-miles">{label}</h4>
       </Row>
       <Row className="justify-content-center">

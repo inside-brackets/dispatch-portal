@@ -57,7 +57,9 @@ const DonutGraphs = (props) => {
   return (
     <>
       {" "}
-      <PieChart width={300} height={400}>
+      <PieChart style={{
+        left:'170px'
+      }} width={300} height={400}>
         <Pie
         data={props.loadedMiles === 0 && props.deadHeadMiles === 0 ? data2 : data}
           cx={120}
@@ -73,7 +75,7 @@ const DonutGraphs = (props) => {
           ))}
           <Label
             width={30}
-            position="center"
+            position=""
             content={<CustomLabel value1={data} value2="Total" />}
           ></Label>
         </Pie>
