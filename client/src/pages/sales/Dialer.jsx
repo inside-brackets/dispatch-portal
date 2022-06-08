@@ -24,11 +24,30 @@ const Dialer = () => {
   const [refresh, setrefresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [defaultComment, setDefaultComment] = useState(null);
   const { isLoading, error: httpError, sendRequest: fetchCarriers } = useHttp();
   const { sendRequest: postCarriers } = useHttp();
   const { sendRequest: postdidnotPickCarriers } = useHttp();
 
   const { sendRequest: postrejectCarriers } = useHttp();
+
+  const options = [
+    { label: "Not Interested", value: "Not Interested" },
+    { label: "Inhouse Dispatch", value: "Inhouse Dispatch" },
+    { label: "Not working right now", value: "Not working right now" },
+    { label: "Truck down", value: "Truck down" },
+    { label: "Do not call me", value: "Do not call me" },
+    { label: "Working in a Contract", value: "Working in a Contract" },
+    { label: "Other", value: "" },
+  ];
+  const handleChange = (text, index) => {
+    setDefaultComment({
+      text,
+      index,
+    });
+  };
+
+  console.log("defaultComment", defaultComment);
 
   // make appointment
   const onConfirm = async () => {
@@ -101,7 +120,7 @@ const Dialer = () => {
         method: "PUT",
         body: {
           c_status: "rejected",
-          comment: commentrRef.current.value,
+          comment: defaultComment.text,
         },
       },
       transformData
@@ -305,10 +324,39 @@ const Dialer = () => {
           onClose={onrClose}
         >
           <form>
+            {options.map((option, index) => {
+              return (
+                <div className="my-3 align-items-center d-flex">
+                  <input
+                    type="radio"
+                    style={{
+                      height: "25px",
+                      width: "25px",
+                    }}
+                    checked={defaultComment?.index === index}
+                    onChange={(e) => handleChange(option.value, index)}
+                  />
+                  <label
+                    onClick={(e) => handleChange(option.value, index)}
+                    className="mx-3"
+                  >
+                    {option.label}
+                  </label>
+                </div>
+              );
+            })}
             <TextArea
               name="Comment:"
+              style={{
+                display:
+                  defaultComment?.index === options.length - 1 ? "" : "none",
+              }}
               placeholder="Comment here..."
               ref={commentrRef}
+              value={defaultComment?.text}
+              onChange={(e) =>
+                setDefaultComment({ ...defaultComment, text: e.target.value })
+              }
             />
 
             <div
