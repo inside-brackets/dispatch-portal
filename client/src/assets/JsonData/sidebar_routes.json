@@ -79,6 +79,9 @@
       "display_name": "Report",
       "route": "/report",
       "icon": "bx bxs-report"
+      "display_name": "Invoices",
+      "route": "/invoices",
+      "icon": "bx bx-paper-plane"
     }
   ]
 }

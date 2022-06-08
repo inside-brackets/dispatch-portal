@@ -31,7 +31,7 @@ const Table = (props) => {
   useEffect(() => {
     getData();
     // eslint-disable-next-line
-  }, [search, filter, currPage,endDate]);
+  }, [search, filter, currPage, endDate]);
 
   const selectPage = (page) => {
     setCurrPage(page);
@@ -95,22 +95,31 @@ const Table = (props) => {
         {Object.keys(props.filter).map((key, index) => {
           if (key === "date_range") {
             return (
-              <Row className="mb-3">
+              <>
                 <Col md={3}>
                   <label>From</label>
-                  <input onChange={(e)=> setStartDate(e.target.value)} type="date" className="form-control" />
+                  <input
+                    onChange={(e) => setStartDate(e.target.value)}
+                    type="date"
+                    className="form-control"
+                  />
                 </Col>
                 <Col md={3}>
                   <label>To</label>
-                  <input disabled={!startDate} 
-                  onChange={(e)=> {
-                  setEndDate(e.target.value)
-                  setBodyData([])
-                  setCurrPage(0)
-                  // getData();
-                  }} min={startDate} type="date" className="form-control" />
+                  <input
+                    disabled={!startDate}
+                    onChange={(e) => {
+                      setEndDate(e.target.value);
+                      setBodyData([]);
+                      setCurrPage(0);
+                      // getData();
+                    }}
+                    min={startDate}
+                    type="date"
+                    className="form-control"
+                  />
                 </Col>
-              </Row>
+              </>
             );
           }
 
@@ -134,6 +143,7 @@ const Table = (props) => {
           );
         })}
       </Row>
+
       <div
         className={`table-wrapper ${
           props.overflowHidden ? "overflow__hidden" : ""

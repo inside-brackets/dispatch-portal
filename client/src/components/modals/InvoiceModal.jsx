@@ -37,7 +37,7 @@ const InvoiceModal = ({
   );
   const commentRef = useRef();
 
-  const { _id: currUserId, user_name: currUserName } = useSelector(
+  const { _id: currUserId, user_name: currUserName,department } = useSelector(
     (state) => state.user.user
   );
   const renderBody = (item, index) => (
@@ -281,6 +281,7 @@ const InvoiceModal = ({
                   type="text"
                   defaultValue={invoice && invoice.dispatcherFee}
                   onChange={(e) => setDispatchFee(e.target.value)}
+                  readOnly={department !== "admin"}
                   value={dispatchFee}
                 />
               </Col>
@@ -294,10 +295,10 @@ const InvoiceModal = ({
           invoice && (
             <Row className="justify-content-end align-items-center">
               <Col md={2} className="text-end">
-                <Button className="w-100" variant="success" onClick={changeStatusHandler}>Clear</Button>
+                <Button disabled={department !== "admin"} className="w-100" variant="success" onClick={changeStatusHandler}>Clear</Button>
               </Col>
               <Col md={2} className="text-end">
-                <Button className="w-100" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
+                <Button disabled={department !== "admin"} className="w-100" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
               </Col>
             </Row>
           )

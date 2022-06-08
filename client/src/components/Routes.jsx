@@ -19,7 +19,7 @@ const TruckDetails = lazy(() => import("../pages/admin/TruckDetails"));
 const Users = lazy(() => import("../pages/admin/Users"));
 const PdfTest = lazy(() => import("../components/PdfTest"));
 const UserDetail = lazy(() => import("../pages/admin/UserDetail"));
-const AdminReport = lazy(() => import("../pages/admin/Report"))
+const AdminReport = lazy(() => import("../pages/admin/Report"));
 
 // sales routes
 const Dashboard = lazy(() => import("../pages/sales/Dashboard"));
@@ -34,8 +34,9 @@ const Profile = lazy(() => import("../pages/Profile"));
 // dispatchers
 const TruckDetail = lazy(() => import("../pages/dispatch/TruckDetail"));
 const MyTrucks = lazy(() => import("../pages/dispatch/MyTrucks"));
-const CarrierReport = lazy(()=> import("../pages/dispatch/CarrierReport"))
-const Report = lazy(()=> import("../pages/dispatch/Report"))
+const CarrierReport = lazy(() => import("../pages/dispatch/CarrierReport"));
+const Report = lazy(() => import("../pages/dispatch/Report"));
+const DispatchInvoices = lazy(() => import("../pages/dispatch/Invoices"));
 
 const Routes = () => {
   const { department } = useSelector((state) => state.user.user);
@@ -132,7 +133,7 @@ const Routes = () => {
         <Route path="/users" exact component={Users} />
         <Route path="/user/:id" exact component={UserDetail} />
         <Route path="/report" exact component={AdminReport} />
-        <Route path="/report/:id" component={Report} />        
+        <Route path="/report/:id" component={Report} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>
@@ -161,6 +162,7 @@ const Routes = () => {
         <Route path="/profile" component={Profile} />
         <Route path="/report" component={CarrierReport} />
         <Route path="/generate-report/:id?" component={Report} />
+        <Route path="/invoices" component={DispatchInvoices} />
 
         <Route path="*">
           <h1>Not found</h1>
