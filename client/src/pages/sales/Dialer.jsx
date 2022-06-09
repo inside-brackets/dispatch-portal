@@ -288,8 +288,8 @@ const Dialer = () => {
                 <input
                   type="radio"
                   style={{
-                    height:"30px",
-                    width:"30px"
+                    height:"25px",
+                    width:"25px"
                   }}
                   checked={defaultComment?.index === index}
                   onChange={(e)=>handleChange(option.value, index)}
