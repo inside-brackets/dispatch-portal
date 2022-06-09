@@ -51,6 +51,11 @@ const PdfTest = ({ load, invoice }) => {
           >
             Customer Report
           </h1>
+          <h5 className="div text-center">
+              <span className="header">MC Number</span>
+              <span className="name me-5">{invoice?.carrier?.mc_number}</span>
+            </h5>
+          
           <p className="d-flex">
             <h5 className="div">
               <span className="header">Carrier Name</span>
