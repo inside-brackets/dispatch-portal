@@ -13,110 +13,158 @@ const addNewInvoice = async (req, res) => {
   }
 };
 
-const getTableInvoices = async (req, res, next) => {
+// const getTableInvoices = async (req, res, next) => {
+//   var filter = {};
+//   if (req.body.filter.status.length > 0) {
+//     filter.invoiceStatus = {
+//       $in: req.body.filter.status.map((item) => item.value),
+//     };
+//   }
+
+//   console.log(req.body);
+//   if (req.body.filter["sales person"].length > 0) {
+//     filter.sales = {
+//       $in: req.body.filter.filter["sales person"].map((item) => item.value),
+//     };
+//   }
+//   if (req.body.filter.dispatcher.length > 0) {
+//     filter.dispatcher = {
+//       $in: req.body.filter.dispatcher.map((item) => item.value),
+//     };
+//   }
+//   let search = req.query.search ? req.query.search : "";
+//   if (search !== "") {
+//     filter.mc_number = parseInt(search);
+//   }
+//   if (req.body.start && req.body.end) {
+//     var dateOffset = 24 * 60 * 60 * 1000;
+//     var myDate = new Date(req.body.start);
+//     myDate.setTime(myDate.getTime() - dateOffset);
+//     filter.startingDate = { $gte: myDate, $lte: new Date(req.body.end) };
+//   }
+//   console.log(filter);
+//   let inv = await Invoice.aggregate([
+//     { $match: filter },
+//     {
+//       $lookup: {
+//         from: "carriers",
+//         localField: "mc_number",
+//         foreignField: "mc_number",
+//         as: "carrier",
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "loads",
+//         localField: "loads",
+//         foreignField: "_id",
+//         as: "loads",
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "users",
+//         localField: "dispatcher",
+//         foreignField: "_id",
+//         pipeline: [
+//           {
+//             $match: {
+//               $expr: 
+//                   {
+//                     $eq: ["$company", req.body.company ],
+//                   },
+             
+//             },
+//           },
+//         ],
+//         as: "dispatcher",
+//       },
+//     },
+//     { $unwind: "$carrier" },
+//     { $unwind: "$dispatcher" },
+//   ]);
+
+//   // if (req.body.company) {
+//     // inv = inv.filter(
+//     //   (invoice) => invoice.dispatcher.company == req.body.company
+//     // );
+//     const fResult = inv.slice(
+//       req.body.skip,
+//       req.body.limit + req.body.skip
+//     );
+//     return res.send({ data: fResult, length: inv.length });
+//   // }
+
+//   // Invoice.find(filter, null, {
+//   //   sort: {
+//   //     createdAt: -1, //Sort by Date Added DESC
+//   //   },
+//   // })
+//   //   .populate("dispatcher loads")
+//   //   .then((invoices) => {
+//   //     if (req.body.company) {
+//   //       invoices = invoices.filter(
+//   //         (invoice) => invoice.dispatcher.company == req.body.company
+//   //       );
+//   //       const fResult = invoices.slice(
+//   //         req.body.skip,
+//   //         req.body.limit + req.body.skip
+//   //       );
+//   //       return res.send({ data: fResult, length: invoices.length });
+//   //     }
+//   //     res.send(invoices);
+//   //   })
+//   //   .catch((err) => {
+//   //     res.send(err);
+//   //   });
+// };
+
+const getTableInvoices = (req, res, next) => {
+  // Refactor it later by removing unsual things from body and send only req.body  in filter
   var filter = {};
-  if (req.body.filter.status.length > 0) {
-    filter.invoiceStatus = {
-      $in: req.body.filter.status.map((item) => item.value),
-    };
+  if (req.body.filter.status?.length > 0) {
+    filter.invoiceStatus = { $in: req.body.filter.status.map((item) => item.value) };
   }
 
-  console.log(req.body);
-  if (req.body.filter["sales person"].length > 0) {
-    filter.sales = {
-      $in: req.body.filter.filter["sales person"].map((item) => item.value),
-    };
+  console.log(req.body)
+  if(req.body.filter["sales person"]?.length > 0){
+    filter.sales = { $in: req.body.filter.filter["sales person"].map((item) => item.value) };
   }
-  if (req.body.filter.dispatcher.length > 0) {
-    filter.dispatcher = {
-      $in: req.body.filter.dispatcher.map((item) => item.value),
-    };
+  if(req.body.filter.dispatcher?.length > 0){
+    filter.dispatcher = { $in: req.body.filter.dispatcher.map((item) => item.value) };
   }
   let search = req.query.search ? req.query.search : "";
   if (search !== "") {
     filter.mc_number = parseInt(search);
   }
-  if (req.body.start && req.body.end) {
-    var dateOffset = 24 * 60 * 60 * 1000;
-    var myDate = new Date(req.body.start);
-    myDate.setTime(myDate.getTime() - dateOffset);
-    filter.startingDate = { $gte: myDate, $lte: new Date(req.body.end) };
+  if(req.body.start && req.body.end){
+   filter.createdAt =  {$gte:new Date(req.body.start),$lte: new Date(req.body.end)} 
   }
-  console.log(filter);
-  let inv = await Invoice.aggregate([
-    { $match: filter },
-    {
-      $lookup: {
-        from: "carriers",
-        localField: "mc_number",
-        foreignField: "mc_number",
-        as: "carrier",
-      },
+  if(req.body.dispatcher){
+    filter.dispatcher = req.body.dispatcher
+  }
+  Invoice.find(filter, null, {
+    sort: {
+      createdAt: -1, //Sort by Date Added DESC
     },
-    {
-      $lookup: {
-        from: "loads",
-        localField: "loads",
-        foreignField: "_id",
-        as: "loads",
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "dispatcher",
-        foreignField: "_id",
-        pipeline: [
-          {
-            $match: {
-              $expr: 
-                  {
-                    $eq: ["$company", req.body.company ],
-                  },
-             
-            },
-          },
-        ],
-        as: "dispatcher",
-      },
-    },
-    { $unwind: "$carrier" },
-    { $unwind: "$dispatcher" },
-  ]);
-
-  // if (req.body.company) {
-    // inv = inv.filter(
-    //   (invoice) => invoice.dispatcher.company == req.body.company
-    // );
-    const fResult = inv.slice(
-      req.body.skip,
-      req.body.limit + req.body.skip
-    );
-    return res.send({ data: fResult, length: inv.length });
-  // }
-
-  // Invoice.find(filter, null, {
-  //   sort: {
-  //     createdAt: -1, //Sort by Date Added DESC
-  //   },
-  // })
-  //   .populate("dispatcher loads")
-  //   .then((invoices) => {
-  //     if (req.body.company) {
-  //       invoices = invoices.filter(
-  //         (invoice) => invoice.dispatcher.company == req.body.company
-  //       );
-  //       const fResult = invoices.slice(
-  //         req.body.skip,
-  //         req.body.limit + req.body.skip
-  //       );
-  //       return res.send({ data: fResult, length: invoices.length });
-  //     }
-  //     res.send(invoices);
-  //   })
-  //   .catch((err) => {
-  //     res.send(err);
-  //   });
+  })
+    .populate("dispatcher loads carrier")
+    .then((invoices) => {
+      if (req.body.company) {
+        invoices = invoices.filter(
+          (invoice) => invoice.dispatcher.company == req.body.company
+        );
+        const fResult = invoices.slice(
+          req.body.skip,
+          req.body.limit + req.body.skip
+        );
+        return res.send({ data: fResult, length: invoices.length });
+      }
+      res.send(invoices);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
 };
 
 const getInvoices = (req, res, next) => {
