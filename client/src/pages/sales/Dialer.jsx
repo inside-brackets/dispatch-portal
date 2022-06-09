@@ -294,7 +294,7 @@ const Dialer = () => {
                   checked={defaultComment?.index === index}
                   onChange={(e)=>handleChange(option.value, index)}
                 />
-                <label className="mx-3">{option.label}</label>
+                <label onClick={(e)=>handleChange(option.value, index)} className="mx-3">{option.label}</label>
                 </div>
               );
             })}
