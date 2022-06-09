@@ -8,7 +8,6 @@ import "./pdf.css";
 
 const PdfTest = ({ load, invoice }) => {
   const ref = useRef();
-  console.log("pdf invoice", invoice);
   const printDocument = () => {
     const input = document.getElementById("div-to-print");
     console.log(input);
@@ -64,7 +63,7 @@ const PdfTest = ({ load, invoice }) => {
               <span className="name me-5">{invoice?.dispatcher.user_name}</span>
             </h5>
           </p>{" "}
-          <p className="d-flex">
+          <p className="d-flex justify-content-between">
             <h5 className="div">
               <span className="header">Owner Name </span>
               <span className="name me-5">{invoice?.carrier?.owner_name}</span>
