@@ -32,7 +32,7 @@ const renderBody = (item, index,currPage) => (
     <td>{item.weight ? item.weight : "NA"}</td>
     <td>{item.miles ? item.miles : "NA"}</td>
     <td>{item.pay ? item.pay : "NA"}</td>
-    <td>{item.dispatcher.user_name ? item.dispatcher.user_name : "NA"}</td>
+    <td>{item.dispatcher.user_name ? `${item.dispatcher.user_name} ${item.dispatcher.first_name ? <><br/>`( ${item.dispatcher.first_name} ${item.dispatcher.last_name} )`</> : ""} ` : "NA"}</td>
     <td>{item.broker ? item.broker : "NA"}</td>
     <td>
       {item.pick_up ? item.pick_up.address : "NA"} <br />{" "}

@@ -19,7 +19,7 @@ const salesSlice = createSlice({
               trailer_type: data[i].trucks[j].trailer_type,
               truck_number: data[i].trucks[j].truck_number,
               company_name: data[i].company_name,
-              salesman: data[i].salesman ? data[i].salesman.user_name : "N/A",
+              salesman: data[i].salesman ? `${data[i].salesman.user_name} ${data[i].salesman.first_name ? `( ${data[i].salesman.first_name} ${data[i].salesman.last_name} )` : ""} `  : "N/A",
             });
           }
         }

@@ -45,7 +45,7 @@ const Carriers = () => {
         <td>{item.company_name}</td>
         <td style={{ width: "200px" }}>{item.phone_number}</td>
         <td>{item.email}</td>
-        <td>{item.salesman ? item.salesman.user_name : "N/A"}</td>
+        <td>{item.salesman ? `${item.salesman.user_name} ${item.salesman.first_name ? `( ${item.salesman.first_name} ${item.salesman.last_name} )` : ""} ` : "N/A"}</td>
         <td style={{ color: color }}>{item.trucks.length}</td>
         <td>
           {<Badge type={status_map[item.c_status]} content={item.c_status} />}
