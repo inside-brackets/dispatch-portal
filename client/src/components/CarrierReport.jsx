@@ -93,7 +93,7 @@ const CarrierReport = ({
         }
       );
     }
-    history.push("/report");
+    history.push("/reports");
   };
   return (
     <>

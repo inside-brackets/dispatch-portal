@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Loader from "react-loader-spinner";
 import Select from "react-select";
 import "./table.css";
-import { Row, Col, Form } from "react-bootstrap";
+import { Row, Col, Form, Alert } from "react-bootstrap";
 
 const Table = (props) => {
   const [bodyData, setBodyData] = useState({});
@@ -179,6 +179,15 @@ const Table = (props) => {
                 </tbody>
               ) : null}
             </table>
+            {bodyData["page0"]?.length === 0 && (
+                <Row className="justify-content-center">
+                  <Col md={6}>
+                    <Alert variant="danger" className="text-center text-capitalize m-3">
+                    No {window.location.pathname.replace('/',"")} to show
+                    </Alert>
+                  </Col>
+                </Row>
+              )}
             {pages > 1 ? (
               <>
                 <div className="table__pagination">

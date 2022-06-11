@@ -59,7 +59,7 @@
     },
     {
       "display_name": "Report",
-      "route": "/report",
+      "route": "/reports",
       "icon": "bx bxs-report"
     }
   ],
@@ -76,7 +76,7 @@
     },
     {
       "display_name": "Report",
-      "route": "/report",
+      "route": "/reports",
       "icon": "bx bxs-report",
       "display_name": "Invoices",
       "route": "/invoices",
