@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import TruckCard from "../../components/cards/TruckCard";
+import { Row } from "react-bootstrap";
 
 const MyTrucks = () => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const [carriersList, setCarriersList] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [httpError, setHttpError] = useState(false);
+  const history = useHistory()
 
   useEffect(() => {
     setIsLoading(true);
@@ -135,13 +137,18 @@ const MyTrucks = () => {
           />
         </div>
       </div>
+      <Row>
+
+
       {searchedCarrier.filter(truck=> truck.truck_status !== "inactive").map((item, index) => (
-        <div className="col-4" key={index}>
-          <Link to={`/trucks/${item.mc_number}/${item.truck_number}`}>
+        <div className="col-3 d-flex align-items-stretch" style={{
+          cursor:'pointer'
+        }} onClick={()=> history.push(`/trucks/${item.mc_number}/${item.truck_number}`)} key={index}>
+    
             {<TruckCard item={item} />}
-          </Link>
         </div>
       ))}
+      </Row>
     </div>
   );
 };
