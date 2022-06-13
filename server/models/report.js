@@ -10,6 +10,9 @@ const reportSchema = new mongoose.Schema(
     dispatcher_comment: {
       type: String,
     },
+    manager_comment: {
+      type: String,
+    },
     dispatcher:{
       type: mongoose.Types.ObjectId, ref: "User" ,
       required:true
@@ -18,6 +21,7 @@ const reportSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+
     loads:[{type: mongoose.Types.ObjectId, ref: 'Load'}],
     deadHead:[]
   },
