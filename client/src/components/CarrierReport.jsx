@@ -23,9 +23,11 @@ const CarrierReport = ({
   const ref = useRef();
   const history = useHistory();
   const { label } = useSelector((state) => state.user.company);
+  const { department } = useSelector((state) => state.user.user);
   const [workingDays, setWorkingDays] = useState(
     defaultValue ? defaultValue.working_days : null
   );
+  console.log("hello", department);
   const [dispatcherComments, setDispatcherComments] = useState(
     defaultValue ? defaultValue.dispatcher_comment : null
   );
@@ -167,7 +169,8 @@ const CarrierReport = ({
           >
             <Row>
               <Col className="loaded-miles my-3">
-                Loaded Miles: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{" "}
+                Loaded Miles:
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {loadedMiles}
               </Col>
             </Row>
@@ -178,7 +181,7 @@ const CarrierReport = ({
                   <Col md={5}>
                     <input
                       type="number"
-                      className="form-control"
+                      className="form-group border"
                       value={deadHeadValue}
                       onChange={(e) => setDeadHeadValue(e.target.value)}
                     />
@@ -278,6 +281,7 @@ const CarrierReport = ({
                 // disabled={defaultValue}
                 onChange={(e) => setManagerComments(e.target.value)}
                 className="form-group border text-area2"
+                disabled={department === "dispatch"}
               />
             </td>
           </tr>
