@@ -120,7 +120,7 @@ const Dialer = () => {
         method: "PUT",
         body: {
           c_status: "rejected",
-          comment: defaultComment.text,
+          comment: defaultComment?.text ?? "",
         },
       },
       transformData
