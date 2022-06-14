@@ -151,7 +151,7 @@ const carrierSchema = new mongoose.Schema({
   },
   updatedAt: {
     type: Date,
-    default:new Date()
+    // default:new Date()
   },
   mc_file: String,
   noa_file: String,
@@ -162,13 +162,9 @@ const carrierSchema = new mongoose.Schema({
 });
 var updateDate = function (next) {
   this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
- 
   next();
 };
 
-carrierSchema.pre("save", updateDate);
-carrierSchema.pre("update", updateDate);
 carrierSchema.pre("findOneAndUpdate", updateDate);
-carrierSchema.pre("findByIdAndUpdate", updateDate);
 
 module.exports = mongoose.model("Carrier", carrierSchema);
