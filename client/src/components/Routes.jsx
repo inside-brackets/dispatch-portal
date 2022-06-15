@@ -132,8 +132,8 @@ const Routes = () => {
         <Route path="/invoices" component={Invoice} />
         <Route path="/users" exact component={Users} />
         <Route path="/user/:id" exact component={UserDetail} />
-        <Route path="/report" exact component={AdminReport} />
-        <Route path="/report/:id" component={Report} />
+        <Route path="/reports" exact component={AdminReport} />
+        <Route path="/reports/:id" component={Report} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>
@@ -160,7 +160,7 @@ const Routes = () => {
         <Route path="/mytrucks" exact component={MyTrucks} />
         <Route path="/trucks/:mc/:truck?" component={TruckDetail} />
         <Route path="/profile" component={Profile} />
-        <Route path="/report" component={CarrierReport} />
+        <Route path="/reports" component={CarrierReport} />
         <Route path="/generate-report/:id?" component={Report} />
         <Route path="/invoices" component={DispatchInvoices} />
 

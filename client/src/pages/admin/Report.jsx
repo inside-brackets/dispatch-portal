@@ -33,7 +33,7 @@ const Users = () => {
         <div className="edit__class">
           <EditButton
             type="open"
-            onClick={() => history.push(`/report/${item._id}`)}
+            onClick={() => history.push(`/reports/${item._id}`)}
           />
           <EditButton type="delete" onClick={() => handleDelete(item._id)} />
         </div>
