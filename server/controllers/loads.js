@@ -24,7 +24,7 @@ const getTableLoads = (req, res, next) => {
       "drop.date": -1, //Sort by Date Added DESC
     },
   })
-    .populate("dispatcher", { user_name: 1, company: 1 })
+    .populate("dispatcher", { user_name: 1, company: 1, first_name:1,last_name:1 })
     .then((loads) => {
       if (search !== "") {
         search = search.trim().toLowerCase();

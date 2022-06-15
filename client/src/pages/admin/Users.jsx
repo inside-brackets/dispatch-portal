@@ -64,7 +64,7 @@ const Users = () => {
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
-      <td>{item.user_name}</td>
+      <td>{`${item.user_name} ${item.first_name ? `( ${item.first_name} ${item.last_name} )` : ""} `}</td>
       <td>{item.phone_number ? item.phone_number : "N/A"}</td>
       <td>{item.email_address ? item.email_address : "N/A"}</td>
       <td>{item.designation}</td>
