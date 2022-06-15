@@ -159,19 +159,22 @@ const carrierSchema = new mongoose.Schema(
     insurance_file: String,
     w9_file: String,
   },
-  {
-    timestamps: true,
-  }
-);
+  updatedAt: {
+    type: Date,
+    // default:new Date()
+  },
+  mc_file: String,
+  noa_file: String,
+  insurance_file: String,
+  w9_file: String,
+},{
+  timestamps:true
+});
 var updateDate = function (next) {
   this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
-
   next();
 };
 
-carrierSchema.pre("save", updateDate);
-carrierSchema.pre("update", updateDate);
 carrierSchema.pre("findOneAndUpdate", updateDate);
-carrierSchema.pre("findByIdAndUpdate", updateDate);
 
 module.exports = mongoose.model("Carrier", carrierSchema);
