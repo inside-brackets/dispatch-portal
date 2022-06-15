@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
+import moment from 'moment';
 
 const carrierTableHead = [
   "#",
@@ -17,6 +18,7 @@ const carrierTableHead = [
   "Truck Number",
   "Trailer Type",
   "Sales Person",
+  "Closed",
   "",
 ];
 
@@ -24,7 +26,7 @@ const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const AssignSales = () => {
   const history = useHistory();
-  // const [carriers, setCarriers] = useState([]);
+
   const { carriers } = useSelector((state) => state.sales);
   const dispatch = useDispatch();
   const [dispatchers, setDispatchers] = useState([]);
@@ -104,8 +106,10 @@ const AssignSales = () => {
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.company_name}</td>
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.truck_number}</td>
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.trailer_type}</td>
+      
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.salesman ? item.salesman : "N/A"}</td>
       {/* <td>{item.salesman}</td> */}
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.updatedAt !== "N/A" ? moment(new Date(item.updatedAt)).fromNow() : "N/A"}</td>
       <td >
         <Button
           style={{ paddingLeft: "40px", paddingRight: "40px" }}
