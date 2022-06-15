@@ -120,7 +120,7 @@ const Dialer = () => {
         method: "PUT",
         body: {
           c_status: "rejected",
-          comment: defaultComment.text,
+          comment: defaultComment?.text ?? "",
         },
       },
       transformData
@@ -250,17 +250,55 @@ const Dialer = () => {
             },
           ]}
         >
-          <h5>Mc:</h5> <h6>{carrier.mc_number}</h6>
-          <h5>Phone:</h5>
-          <h6> {carrier.phone_number} </h6>
-          <h5>Email:</h5>
-          <h6> {carrier.email} </h6>
-          <h5>Address: </h5>
-          <h6>{carrier.address}</h6>
-          <h5>DBA Name: </h5>
-          <h6>{carrier.dba_name ? carrier.dba_name : "N/A"}</h6>
-          <h5>Power Units: </h5>
-          <h6>{carrier.power_units ? carrier.power_units : "N/A"}</h6>
+          <Row className="justify-content-between">
+            <Col md={5}>
+              <h5>Mc:</h5>
+            </Col>
+            <Col>
+              <h6>{carrier.mc_number}</h6>
+            </Col>
+          </Row >
+          <Row className="justify-content-between">
+            <Col md={5}>
+              <h5>Phone:</h5>
+            </Col>
+            <Col>
+              <h6> {carrier.phone_number} </h6>
+            </Col>
+          </Row>
+          <Row className="justify-content-between">
+            <Col md={5}>
+              <h5>Email:</h5>
+            </Col>
+            <Col className='text-break' md={7}>
+              <h6> {carrier.email} </h6>
+            </Col>
+          </Row>
+          <Row className="justify-content-between">
+            <Col md={5}>
+              <h5>Address: </h5>
+            </Col>
+            <Col>
+              <h6>{carrier.address}</h6>
+            </Col>
+          </Row>
+          <Row className="justify-content-between">
+            <Col md={5}>
+              <h5>DBA Name: </h5>
+            </Col>
+            <Col>
+              <h6>{carrier.dba_name ? carrier.dba_name : "N/A"}</h6>
+            </Col>
+          </Row>
+          <Row className="justify-content-between">
+            <Col md={5}>
+              <h5>Power Units: </h5>
+            </Col>
+            <Col>
+              <h6>{carrier.power_units ? carrier.power_units : "N/A"}</h6>
+            </Col>
+          </Row>
+
           {carrier.cargo_carried && (
             <>
               <h5>Cargo Carried: </h5>

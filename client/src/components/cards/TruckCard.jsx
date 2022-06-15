@@ -77,21 +77,21 @@ const body = (carrier) => (
 
 const TruckCard = ({ item }) => {
   return (
-    <Card
-      style={{
-        width: "auto",
-        height: "auto",
-      }}
-    >
-      <Card.Body>
-        <Card.Title style={{ height: "35px" }}>{item.company_name}</Card.Title>
+    <Card>
+      <Card.Body style={{
+            display: "flex",
+            height: "100%",
+            flexDirection: "column",
+            justifyContent: "space-between",
+      }}>
+        <Card.Title>{item.company_name}</Card.Title>
 
         <hr />
         <Card.Text className="">{body(item)}</Card.Text>
         <Card.Footer
           style={{
             width: "auto",
-            height: "90px",
+            height:"auto",
           }}
         >
           {item.out_of ? (
