@@ -218,6 +218,11 @@ const getCarriers = async (req, res, next) => {
         ? { ...req.body, ...defaultFilter }
         : defaultFilter;
   }
+  if(req.body["trucks.t_status"]){
+    req.body = {...req.body,"trucks.t_status":{
+      $in: req.body["trucks.t_status"].map((item) => item.value),
+    }}
+  }
   if (req.body.salesman && req.body.c_status) {
     filter = req.body;
   }
@@ -225,7 +230,12 @@ const getCarriers = async (req, res, next) => {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
-
+  if (req.body.trucks_status?.length > 0) {
+    filter["trucks.t_status"] = {
+      $in: req.body.filter.trucks_status.map((item) => item.value),
+    };
+  }
+console.log("truck filter",filter)
   try {
     const result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
