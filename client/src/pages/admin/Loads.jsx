@@ -25,14 +25,20 @@ const loadTableHead = [
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-const renderBody = (item, index,currPage) => (
+const renderBody = (item, index, currPage) => (
   <tr key={index}>
-    <td>{(index + 1) + (currPage*10)}</td>
+    <td>{index + 1 + currPage * 10}</td>
     <td>{item.load_number ? item.load_number : "NA"}</td>
     <td>{item.weight ? item.weight : "NA"}</td>
     <td>{item.miles ? item.miles : "NA"}</td>
     <td>{item.pay ? item.pay : "NA"}</td>
-    <td>{item.dispatcher.user_name ? `${item.dispatcher.user_name} ${item.dispatcher.first_name ? <><br/>`( ${item.dispatcher.first_name} ${item.dispatcher.last_name} )`</> : ""} ` : "NA"}</td>
+    <td>{`${item.dispatcher.user_name} ${
+      item.dispatcher.first_name
+        ? `( ${item.dispatcher.first_name} ${item.dispatcher.last_name} )`
+        : ""
+    } `}</td>
+
+    {/* <td>{item.dispatcher.user_name ? `${item.dispatcher.user_name} ${item.dispatcher.first_name ? <><br/>`( ${item.dispatcher.first_name} ${item.dispatcher.last_name} )`</> : ""} ` : "NA"}</td> */}
     <td>{item.broker ? item.broker : "NA"}</td>
     <td>
       {item.pick_up ? item.pick_up.address : "NA"} <br />{" "}
@@ -95,7 +101,9 @@ const Loads = () => {
                     { label: "Canceled ", value: "canceled" },
                   ],
                 }}
-                renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
+                renderBody={(item, index, currPage) =>
+                  renderBody(item, index, currPage)
+                }
               />
             </div>
           </div>
