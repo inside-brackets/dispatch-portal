@@ -11,10 +11,12 @@ import { themeActions } from "../../store/theme";
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
 
-  const [carriers, setCarriers] = useState({active:0,
-  pending:0,
-appointment:0,
-carrier:0});
+  const [carriers, setCarriers] = useState({
+    active: null,
+    pending: null,
+    appointment: null,
+    carrier: null,
+  });
   const [data, setData] = useState(null);
   const [topDispatcher, setTopDispatcher] = useState(null);
 
