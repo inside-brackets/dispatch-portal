@@ -131,7 +131,7 @@ const carrierSchema = new mongoose.Schema(
           },
         ],
         temperature_restriction: Number,
-        trip_durration: Number,
+        trip_duration: Number,
         off_days: [String],
         t_status: {
           type: String,
