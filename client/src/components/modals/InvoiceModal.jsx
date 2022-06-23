@@ -78,7 +78,7 @@ const InvoiceModal = ({
       totalLoadedMiles: totalLoadedMiles,
       totalGross: totalGross,
       invoiceStatus: "pending",
-
+      carrier:carrier._id,
       mc_number: carrier.mc_number,
 
       driver: {
@@ -149,7 +149,7 @@ const InvoiceModal = ({
                 type="text"
                 placeholder="Readonly input here..."
                 readOnly
-                value={invoice ? invoice.carrierCompany : carrier.company_name}
+                value={invoice ? invoice.carrier?.company_name : carrier.company_name}
               />
             </Col>
           </Row>

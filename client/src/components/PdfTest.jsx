@@ -8,7 +8,6 @@ import "./pdf.css";
 
 const PdfTest = ({ load, invoice }) => {
   const ref = useRef();
-
   const printDocument = () => {
     const input = document.getElementById("div-to-print");
     console.log(input);
@@ -31,10 +30,9 @@ const PdfTest = ({ load, invoice }) => {
     <div className="row">
       <div className="col">
         <div className="row px-5">
-      
-            <Button size="lg" onClick={printDocument}>
-              Print
-            </Button>
+          <Button size="lg" onClick={printDocument}>
+            Print
+          </Button>
         </div>
         <div
           id="div-to-print"
@@ -53,11 +51,32 @@ const PdfTest = ({ load, invoice }) => {
           >
             Customer Report
           </h1>
+          <h5 className="div text-center">
+              <span className="header">MC Number</span>
+              <span className="name me-5">{invoice?.carrier?.mc_number}</span>
+            </h5>
+          
           <p className="d-flex">
-            <h5 className="header">Carrier Name</h5>
-            <h5 className="name me-5">{invoice?.carrierCompany}</h5>
-            <h5 className="header">Agent Name </h5>
-            <h5 className="name">{invoice?.dispatcher.user_name}</h5>
+            <h5 className="div">
+              <span className="header">Carrier Name</span>
+              <span className="name me-5">
+                {invoice?.carrier?.company_name}
+              </span>
+            </h5>
+            <h5 className="div">
+              <span className="header">Agent Name </span>
+              <span className="name me-5">{invoice?.dispatcher.user_name}</span>
+            </h5>
+          </p>{" "}
+          <p className="d-flex justify-content-between">
+            <h5 className="div">
+              <span className="header">Owner Name </span>
+              <span className="name me-5">{invoice?.carrier?.owner_name}</span>
+            </h5>
+            <h5 className="div">
+              <span className="header">Email </span>
+              <span className="name me-5">{invoice?.carrier?.email}</span>
+            </h5>
           </p>
           <table className="table invoice">
             <thead
