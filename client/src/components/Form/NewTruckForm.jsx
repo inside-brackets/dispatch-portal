@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import Input from "../UI/MyInput";
+import React, { useState, useEffect } from "react";
 import MySelect from "../UI/MySelect";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -9,310 +8,251 @@ import FormLabel from "@material-ui/core/FormLabel";
 import "./newTruckForm.css";
 import useHttp from "../../hooks/use-https";
 import { useParams } from "react-router-dom";
-import useInput from "../../hooks/use-input";
-import { Button } from "react-bootstrap";
+import { Button, Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 
-const transformArrayToObjectArray = (array) => {
-  return array.map((item) => ({
-    label: `${item.charAt(0).toUpperCase() + item.slice(1)} `,
-    value: item.trim(),
-  }));
-};
-
-const isNotEmpty = (value) => value.trim() !== "";
-
-const NewTruckForm = (props) => {
+const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
+  const transformArrayToObjectArray = (array) => {
+    return array.map((item) => ({
+      label: `${item.charAt(0).toUpperCase() + item.slice(1)} `,
+      value: item.trim(),
+    }));
+  };
   const params = useParams();
-  const formRef = useRef();
-
-  const {
-    value: truckNumber,
-    isValid: truckNumberIsValid,
-    hasError: truckNumberHasError,
-    valueChangeHandler: truckNumberChangeHandler,
-    inputBlurHandler: truckNumberBlurHandler,
-  } = useInput(isNotEmpty);
-  const {
-    value: vinNumber,
-    isValid: vinNumberIsValid,
-    hasError: vinNumberHasError,
-    valueChangeHandler: vinNumberChangeHandler,
-    inputBlurHandler: vinNumberBlurHandler,
-  } = useInput(isNotEmpty);
-
-  const {
-    value: Driver1Name,
-    isValid: Driver1NameIsValid,
-    hasError: Driver1NameHasError,
-    valueChangeHandler: Driver1NameChangeHandler,
-    inputBlurHandler: Driver1NameBlurHandler,
-  } = useInput(isNotEmpty);
-
-  const {
-    value: Driver1Phone,
-    isValid: oPhoneIsValid,
-    hasError: Driver1PhoneHasError,
-    valueChangeHandler: Driver1PhoneChangeHandler,
-    inputBlurHandler: Driver1PhoneBlurHandler,
-  } = useInput(isNotEmpty);
-
-  const {
-    value: Driver2Name,
-    hasError: Driver2NameHasError,
-    valueChangeHandler: Driver2NameChangeHandler,
-    inputBlurHandler: Driver2NameBlurHandler,
-  } = useInput(isNotEmpty);
-
-  const {
-    value: Driver2Phone,
-    hasError: Driver2PhoneHasError,
-    valueChangeHandler: Driver2PhoneChangeHandler,
-    inputBlurHandler: Driver2PhoneBlurHandler,
-  } = useInput(isNotEmpty);
-
-  const carryLimitRef = useRef();
-  const temperatureRestrictionRef = useRef();
-  const tripDurrationRef = useRef();
-  const Driver1EmailRef = useRef();
-  const Driver2EmailRef = useRef();
   const [driverType, setDriverType] = useState("");
+  const [validated, setValidated] = useState("");
   const [selectedTravel, setSelectedTravel] = useState([]);
   const [selectedTrailer, setSelectedTrailer] = useState([]);
-  const [selectedOffDays, setSelectedOffDays] = useState([]);
+  const [selectedOffDays, setSelectedOffDays] = useState(
+    defaultValue ? transformArrayToObjectArray(defaultValue.off_days) : []
+  );
   const [buttonLoader, setButtonLoader] = useState(false);
-  const [truckNumberIsAvailable, setTruckNumberIsAvailable] = useState(null);
+  const [truckNumberIsAvailable, setTruckNumberIsAvailable] = useState(true);
   const { sendRequest: postTruck } = useHttp();
-
-  const { defaultValue, closeModal, setTrucks } = props;
   useEffect(() => {
     if (defaultValue) {
       setSelectedOffDays(transformArrayToObjectArray(defaultValue.off_days));
       setSelectedTrailer(
         transformArrayToObjectArray([defaultValue.trailer_type])[0]
       );
-      truckNumberChangeHandler({
-        target: { value: `${defaultValue.truck_number}` },
-      });
-      vinNumberChangeHandler({
-        target: { value: `${defaultValue.vin_number}` },
-      });
-      Driver1NameChangeHandler({
-        target: { value: `${defaultValue.drivers[0].name}` },
-      });
-      Driver1PhoneChangeHandler({
-        target: { value: `${defaultValue.drivers[0].phone_number}` },
-      });
+      defaultValue.drivers.length > 1 && setDriverType("teamDriver");
       setSelectedTravel(transformArrayToObjectArray(defaultValue.region));
     }
-  }, [
-    defaultValue,
-    truckNumberChangeHandler,
-    vinNumberChangeHandler,
-    Driver1NameChangeHandler,
-    Driver1PhoneChangeHandler,
-  ]);
+  }, [defaultValue]);
 
-  useEffect(() => {
+  const handleDriverChange = (event) => {
+    setDriverType(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === true) {
+      setButtonLoader(true);
+      const newTruck = saveTruck(event.target);
+      const transformData = (data) => {
+        setTrucks(data.trucks);
+        closeModal();
+      };
+      postTruck(
+        {
+          url: `${process.env.REACT_APP_BACKEND_URL}/addnewtruck/${params.mc}`,
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: newTruck,
+        },
+        transformData
+      );
+    }
+    setValidated(true);
+    setButtonLoader(false);
+  };
+
+  const saveTruck = (target) => {
+    var drivers = [];
+    if (driverType === "teamDriver") {
+      drivers = [
+        {
+          name: target.driver1_name.value,
+          email_address: target.driver1_email.value,
+          phone_number: target.driver1_phone.value,
+        },
+        {
+          name: target.driver2_name.value,
+          email_address: target.driver2_email.value,
+          phone_number: target.driver2_phone.value,
+        },
+      ];
+    } else {
+      drivers = [
+        {
+          name: target.driver1_name.value,
+          email_address: target.driver1_email.value,
+          phone_number: target.driver1_phone.value,
+        },
+      ];
+    }
+
+    const saveObj = {
+      truck_number: target.truck_number.value,
+      vin_number: target.vin_number.value,
+      trailer_type: selectedTrailer.value,
+      carry_limit: parseInt(target.carry_limit.value),
+      drivers: drivers,
+      region: selectedTravel.map((item) => item.value),
+      temperature_restriction: parseInt(target.temp_restriction.value),
+      trip_duration: parseInt(target.trip_duration.value),
+      off_days: selectedOffDays.map((item) => item.value),
+    };
+    return saveObj;
+  };
+
+  const truckNumberChangeHandler = (e) => {
     setTruckNumberIsAvailable(true);
 
     const indentifier = setTimeout(async () => {
-      if (truckNumber) {
+      if (e.target.value) {
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-          { mc_number: params.mc, "trucks.truck_number": truckNumber }
+          { mc_number: params.mc, "trucks.truck_number": e.target.value }
         );
-        console.log("checking truck Number");
-        console.log(response.data);
-        console.log("truckNumber", truckNumber);
         setTruckNumberIsAvailable(response.data.length === 0);
       }
     }, 250);
     return () => {
       clearTimeout(indentifier);
     };
-  }, [truckNumber, params.mc]);
-
-  const handleDriverChange = (event) => {
-    setDriverType(event.target.value);
   };
-  let formIsValid = false;
-  if (
-    truckNumberIsValid &&
-    vinNumberIsValid &&
-    oPhoneIsValid &&
-    Driver1NameIsValid &&
-    (truckNumberIsAvailable || defaultValue)
-  ) {
-    formIsValid = true;
-  }
-  const onSubmit = (e) => {
-    if (!formIsValid) {
-      return;
-    }
-    setButtonLoader(true);
-    const newTruck = saveTruck();
-    const transformData = (data) => {
-      console.log("fetch", data);
-      setTrucks(data.trucks);
-      closeModal();
-    };
-    postTruck(
-      {
-        url: `${process.env.REACT_APP_BACKEND_URL}/addnewtruck/${params.mc}`,
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: newTruck,
-      },
-      transformData
-    );
-  };
-
-  const saveTruck = () => {
-    var drivers = [];
-    if (driverType === "teamDriver") {
-      drivers = [
-        {
-          name: Driver1Name,
-          email_address: Driver1EmailRef.current.value,
-          phone_number: Driver1Phone,
-        },
-        {
-          name: Driver2Name,
-          email_address: Driver2EmailRef.current.value,
-          phone_number: Driver2Phone,
-        },
-      ];
-    } else {
-      drivers = [
-        {
-          name: Driver1Name,
-          email_address: Driver1EmailRef.current.value,
-          phone_number: Driver1Phone,
-        },
-      ];
-    }
-
-    const saveObj = {
-      truck_number: parseInt(truckNumber),
-      vin_number: vinNumber,
-      trailer_type: selectedTrailer.value,
-      carry_limit: parseInt(carryLimitRef.current.value),
-      drivers: drivers,
-      region: selectedTravel.map((item) => item.value),
-      temperature_restriction: parseInt(
-        temperatureRestrictionRef.current.value
-      ),
-      trip_durration: parseInt(tripDurrationRef.current.value),
-      off_days: selectedOffDays.map((item) => item.value),
-    };
-    return saveObj;
-  };
-
   return (
-    <form ref={formRef}>
-      <Input
-        type="number"
-        name="truck_number"
-        label="*Truck Number:"
-        placeholder="Enter 3 digit code.."
-        className={truckNumberHasError ? "invalid" : ""}
-        onChange={truckNumberChangeHandler}
-        onBlur={truckNumberBlurHandler}
-        disabled={defaultValue}
-        defaultValue={defaultValue ? defaultValue.truck_number : ""}
-      />
-      {truckNumberHasError && (
-        <p className="error-text">Truck number is required.</p>
-      )}
-      {truckNumberIsAvailable === false && !defaultValue && (
-        <p className="error-text">Truck exists.</p>
-      )}
-      <Input
-        type="text"
-        label="*Vin Number:"
-        placeholder="Enter 17 digit code.."
-        className={vinNumberHasError ? "invalid" : ""}
-        value={vinNumber}
-        onChange={vinNumberChangeHandler}
-        onBlur={vinNumberBlurHandler}
-        defaultValue={defaultValue ? defaultValue.vin_number : ""}
-      />
-      {vinNumberHasError && (
-        <p className="error-text">Vin number is required.</p>
-      )}
-      <Input
-        type="number"
-        label="Carry limit(lbs):"
-        placeholder="Enter Maximum carry limit.."
-        ref={carryLimitRef}
-        defaultValue={defaultValue ? defaultValue.carry_limit : ""}
-      />
-      <Input
-        type="number"
-        label="Tempurature Restrictions(F):"
-        placeholder="Enter minimum temp limit.."
-        ref={temperatureRestrictionRef}
-        defaultValue={defaultValue ? defaultValue.temperature_restriction : ""}
-      />
-      <Input
-        type="number"
-        label="Trip Duarration(days):"
-        placeholder="no. of days.."
-        ref={tripDurrationRef}
-        defaultValue={defaultValue ? defaultValue.trip_durration : ""}
-      />
-      <MySelect
-        isMulti={true}
-        value={selectedTravel}
-        onChange={setSelectedTravel}
-        label="Travel region:"
-        defaultValue={defaultValue ? defaultValue.trip_durration : ""}
-        options={[
-          { label: "Eastern ", value: "eastern" },
-          { label: "Mountain ", value: "mountain" },
-          { label: "Central ", value: "central" },
-          { label: "Pacific ", value: "pacific" },
-          { label: "Allover ", value: "allover" },
-        ]}
-      />
-      <MySelect
-        isMulti={true}
-        value={selectedOffDays}
-        onChange={setSelectedOffDays}
-        label="Off Days:"
-        options={[
-          { label: "Monday ", value: "monday" },
-          { label: "Tuesday ", value: "tuesday" },
-          { label: "Wednesday ", value: "wednesday" },
-          { label: "Thursday ", value: "thursday" },
-          { label: "Friday ", value: "friday" },
-          { label: "Saturday ", value: "saturday" },
-          { label: "Sunday ", value: "sunday" },
-        ]}
-      />
-      <div
-        style={{
-          marginLeft: "20px",
-        }}
-      >
-        <MySelect
-          isMulti={false}
-          value={selectedTrailer}
-          onChange={setSelectedTrailer}
-          label="Trailer Type:"
-          options={[
-            { label: "Dryvan ", value: "dryvan" },
-            { label: "Flatbed ", value: "flatbed" },
-            { label: "Reefer ", value: "reefer" },
-            { label: "Gooseneck ", value: "gooseneck" },
-            { label: "Steodeck ", value: "steodeck" },
-            { label: "Lowboy ", value: "lowboy" },
-            { label: "Power Only ", value: "poweronly" },
-            { label: "Box Truck", value: "boxtruck" },
-          ]}
-        />
-      </div>
+    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <Row className="mt-2">
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>*Truck Number:</Form.Label>
+          <Form.Control
+            required
+            type="number"
+            placeholder="Enter 3 digit code.."
+            className={`${
+              truckNumberIsAvailable === false && !defaultValue
+                ? "invalid is-invalid"
+                : ""
+            } no__feedback shadow-none`}
+            name="truck_number"
+            disabled={defaultValue}
+            onChange={truckNumberChangeHandler}
+            defaultValue={defaultValue ? defaultValue.truck_number : ""}
+          />
+          {truckNumberIsAvailable && !defaultValue && (
+            <Form.Text style={{ color: "green" }}>
+              Truck number is available!
+            </Form.Text>
+          )}
+          {truckNumberIsAvailable === false && !defaultValue && (
+            <Form.Text style={{ color: "red" }}>
+              Whoops! truck number already exists.
+            </Form.Text>
+          )}
+        </Form.Group>
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>*Vin Number:</Form.Label>
+          <Form.Control
+            required
+            type="number"
+            placeholder="Enter 17 digit code.."
+            name="vin_number"
+            defaultValue={defaultValue ? defaultValue.vin_number : ""}
+          />
+        </Form.Group>
+      </Row>
+      <Row className='mt-2'>
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>Carry limit(lbs):</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Enter Maximum carry limit.."
+            defaultValue={defaultValue ? defaultValue.carry_limit : ""}
+            name="carry_limit"
+          />
+        </Form.Group>
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>Tempurature Restrictions(F):</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Enter minimum temp limit.."
+            defaultValue={
+              defaultValue ? defaultValue.temperature_restriction : ""
+            }
+            name="temp_restriction"
+          />
+        </Form.Group>
+      </Row>
+      <Row className="mt-2">
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>Trip Duarration(days):</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="no. of days.."
+            defaultValue={defaultValue ? defaultValue.trip_duration : ""}
+            name="trip_duration"
+          />
+        </Form.Group>
+        <Col>
+          <MySelect
+            isMulti={true}
+            value={selectedTravel}
+            onChange={setSelectedTravel}
+            label="Travel region:"
+            defaultValue={defaultValue ? defaultValue.trip_durration : ""}
+            options={[
+              { label: "Eastern ", value: "eastern" },
+              { label: "Mountain ", value: "mountain" },
+              { label: "Central ", value: "central" },
+              { label: "Pacific ", value: "pacific" },
+              { label: "Allover ", value: "allover" },
+            ]}
+          />
+        </Col>
+      </Row>
+      <Row className="align-items-center mt-2 py-2">
+        <Col>
+          <MySelect
+            isMulti={true}
+            value={selectedOffDays}
+            onChange={setSelectedOffDays}
+            label="Off Days:"
+            options={[
+              { label: "Monday ", value: "monday" },
+              { label: "Tuesday ", value: "tuesday" },
+              { label: "Wednesday ", value: "wednesday" },
+              { label: "Thursday ", value: "thursday" },
+              { label: "Friday ", value: "friday" },
+              { label: "Saturday ", value: "saturday" },
+              { label: "Sunday ", value: "sunday" },
+            ]}
+          />
+        </Col>
+        <Col>
+          <MySelect
+            isMulti={false}
+            value={selectedTrailer}
+            onChange={setSelectedTrailer}
+            label="Trailer Type:"
+            options={[
+              { label: "Dryvan ", value: "dryvan" },
+              { label: "Flatbed ", value: "flatbed" },
+              { label: "Reefer ", value: "reefer" },
+              { label: "Gooseneck ", value: "gooseneck" },
+              { label: "Steodeck ", value: "steodeck" },
+              { label: "Lowboy ", value: "lowboy" },
+              { label: "Power Only ", value: "poweronly" },
+              { label: "Box Truck", value: "boxtruck" },
+            ]}
+          />
+        </Col>
+      </Row>
+
       <FormControl component="fieldset">
         <FormLabel style={{ color: "var(--text-color)" }} component="legend">
           *Driver set:
@@ -341,86 +281,95 @@ const NewTruckForm = (props) => {
           />
         </RadioGroup>
       </FormControl>
-      <Input
-        type="text"
-        label="Driver 1:"
-        placeholder="Diver Name"
-        onChange={Driver1NameChangeHandler}
-        onBlur={Driver1NameBlurHandler}
-        className={Driver1NameHasError ? "invalid" : ""}
-        defaultValue={defaultValue ? defaultValue.drivers[0].name : ""}
-      />
-      {Driver1NameHasError && (
-        <p className="error-text">Driver name is required.</p>
-      )}
-      <Input
-        type="text"
-        placeholder="Drviver Email"
-        ref={Driver1EmailRef}
-        defaultValue={defaultValue ? defaultValue.drivers[0].email_address : ""}
-      />
-      <Input
-        type="text"
-        placeholder="Drviver Phone Number"
-        className={Driver1PhoneHasError ? "invalid" : ""}
-        onChange={Driver1PhoneChangeHandler}
-        onBlur={Driver1PhoneBlurHandler}
-        defaultValue={defaultValue ? defaultValue.drivers[0].phone_number : ""}
-      />
-      {Driver1PhoneHasError && (
-        <p className="error-text">Drviver Phone Number is required.</p>
-      )}
-      {driverType === "teamDriver" && (
-        <div>
-          {" "}
-          <Input
+      <Row className="align-items-center mt-2 py-2">
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>Driver 1:</Form.Label>
+          <Form.Control
+            required
             type="text"
-            label="Driver 2:"
             placeholder="Diver Name"
-            className={Driver2NameHasError ? "invalid" : ""}
-            onChange={Driver2NameChangeHandler}
-            onBlur={Driver2NameBlurHandler}
-            defaultValue={defaultValue ? defaultValue.drivers[1].name : ""}
+            defaultValue={defaultValue ? defaultValue.drivers[0]?.name : ""}
+            name="driver1_name"
           />
-          {Driver2NameHasError && (
-            <p className="error-text">Driver name is required.</p>
-          )}
-          <Input
+        </Form.Group>
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>Drviver Email</Form.Label>
+          <Form.Control
             type="text"
             placeholder="Drviver Email"
-            ref={Driver2EmailRef}
-            defaultValue={defaultValue ? defaultValue.drivers[1].name : ""}
+            name="driver1_email"
+            defaultValue={
+              defaultValue ? defaultValue.drivers[0]?.email_address : ""
+            }
           />
-          <Input
-            type="text"
+        </Form.Group>
+      </Row>
+      <Row>
+        <Form.Group as={Col} controlId="validationCustom01">
+          <Form.Label>Drviver Phone Number</Form.Label>
+          <Form.Control
+            required
+            type="number"
             placeholder="Drviver Phone Number"
-            className={Driver2PhoneHasError ? "invalid" : ""}
-            onChange={Driver2PhoneChangeHandler}
-            onBlur={Driver2PhoneBlurHandler}
-            defaultValue={defaultValue ? defaultValue.drivers[1].name : ""}
+            name="driver1_phone"
+            defaultValue={
+              defaultValue ? defaultValue.drivers[0]?.phone_number : ""
+            }
           />
-          {Driver2PhoneHasError && (
-            <p className="error-text">Drviver Phone Number is required.</p>
-          )}
-        </div>
+        </Form.Group>
+      </Row>
+      {driverType === "teamDriver" && (
+        <>
+          <Row className="align-items-center">
+            <Form.Group as={Col} controlId="validationCustom01">
+              <Form.Label>Driver 2:</Form.Label>
+              <Form.Control
+                required={driverType === "teamDriver"}
+                type="text"
+                placeholder="Diver Name"
+                defaultValue={defaultValue ? defaultValue.drivers[1]?.name : ""}
+                name="driver2_name"
+              />
+            </Form.Group>
+            <Form.Group as={Col} controlId="validationCustom01">
+              <Form.Label>Drviver Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Drviver Email"
+                name="driver2_email"
+                defaultValue={
+                  defaultValue ? defaultValue.drivers[1]?.email_address : ""
+                }
+              />
+            </Form.Group>
+          </Row>
+          <Row>
+            <Form.Group as={Col} controlId="validationCustom01">
+              <Form.Label>Drviver Phone Number</Form.Label>
+              <Form.Control
+                required={driverType === "teamDriver"}
+                type="number"
+                placeholder="Drviver Phone Number"
+                name="driver2_phone"
+                defaultValue={
+                  defaultValue ? defaultValue.drivers[1]?.phone_number : ""
+                }
+              />
+            </Form.Group>
+          </Row>
+        </>
       )}
 
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
+      <div className="d-flex justify-content-end mt-5">
         <Button
           variant="primary"
-          onClick={onSubmit}
-          disabled={!formIsValid || buttonLoader}
+          type="submit"
+          disabled={buttonLoader || !truckNumberIsAvailable}
         >
           Submit
         </Button>
       </div>
-    </form>
+    </Form>
   );
 };
 
