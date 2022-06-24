@@ -3,7 +3,7 @@ import Table from "../../components/table/Table";
 import useHttp from "../../hooks/use-https";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Spinner,Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
@@ -154,8 +154,9 @@ const AssignSales = () => {
   return (
     <div>
       <h2> Carriers: </h2>
-      <dev className="assign__sale__down">
-        <dev className="assign__text"> ADD DISPATCHER:</dev>
+      <Row className='justify-content-end my-2'>
+        <Col md={4}>
+        <div className="assign__text"> ADD DISPATCHER:</div>
         <MySelect
           isMulti={false}
           value={selectedDispatcher}
@@ -167,7 +168,8 @@ const AssignSales = () => {
             };
           })}
         />
-      </dev>
+        </Col>
+      </Row>
       <div className="row">
         <div className="col-12">
           <div className="card">

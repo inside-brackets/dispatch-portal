@@ -103,7 +103,8 @@ const DashboardAdmin = () => {
 
   return (
     <div>
-      <Row>
+      <Row className='my-4'>
+        <Col md={4}>
         <MySelect
           isMulti={false}
           value={selectedCompany}
@@ -125,6 +126,7 @@ const DashboardAdmin = () => {
             },
           ]}
         />
+        </Col>
       </Row>
       <Row>
         <Col>
