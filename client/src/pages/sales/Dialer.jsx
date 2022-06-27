@@ -155,6 +155,7 @@ const Dialer = () => {
       const now = new Date();
       const reset = new Date(counterObj.reset);
       timeOut = Math.max(reset - now, 1000);
+      setCounter(counterObj.counter);
       const timer = setTimeout(() => {
         let temp = new Date();
         let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(
