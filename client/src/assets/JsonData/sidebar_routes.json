@@ -75,12 +75,14 @@
       "icon": "bx bxs-truck"
     },
     {
-      "display_name": "Report",
-      "route": "/reports",
-      "icon": "bx bxs-report",
       "display_name": "Invoices",
       "route": "/invoices",
       "icon": "bx bx-paper-plane"
+    },
+    {
+      "display_name": "Report",
+      "route": "/reports",
+      "icon": "bx bxs-report"
     }
   ]
 }
