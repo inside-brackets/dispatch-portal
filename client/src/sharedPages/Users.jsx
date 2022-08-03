@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import Table from "../../components/table/SmartTable";
-import EditButton from "../../components/UI/EditButton";
-import MyModal from "../../components/modals/MyModal";
-import NewUserForm from "../../components/Form/NewUserForm";
+import Table from "../components/table/SmartTable";
+import EditButton from "../components/UI/EditButton";
+import MyModal from "../components/modals/MyModal";
+import NewUserForm from "../components/Form/NewUserForm";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import status_map from "../../assets/JsonData/status_map.json";
-import Badge from "../../components/badge/Badge";
+import status_map from "../assets/JsonData/status_map.json";
+import Badge from "../components/badge/Badge";
 
 const Users = () => {
   const [users, setUsers] = useState("");
@@ -80,7 +80,7 @@ const Users = () => {
 
           <EditButton
             type="open"
-            onClick={() => history.push(`/user/${item._id}`)}
+            onClick={() => history.push(`/users/${item._id}`)}
           />
         </div>
       </td>

@@ -43,7 +43,7 @@ const NewUserForm = ({
         }
       : null
   );
-  const { company: selectedCompany } = useSelector((state) => state.user);
+  const { company: selectedCompany, user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (userName) {
@@ -53,7 +53,7 @@ const NewUserForm = ({
             `${process.env.REACT_APP_BACKEND_URL}/getusers`,
             { user_name: userName.replace(/\s+/g, " ").trim().toLowerCase() }
           );
-          console.log("checking username",response.data);
+          console.log("checking username", response.data);
           setUsernameIsValid(response.data.length === 0);
         } else {
           setUsernameIsValid(true);
@@ -210,8 +210,8 @@ const NewUserForm = ({
               <option value="sales">Sales</option>
               <option value="dispatch">Dispatch</option>
               {/* <option value="accounts">Accounts</option> */}
-              {/* <option value="HR">HR</option> */}
-              <option value="admin">Admin</option>
+              <option value="HR">HR</option>
+              {user.department !== "HR" && <option value="admin">Admin</option>}
             </Form.Control>
 
             <Form.Control.Feedback type="invalid">
@@ -239,6 +239,7 @@ const NewUserForm = ({
               type="number"
               placeholder="Salary"
               value={salary}
+              disabled={user._id === defaultValue?._id}
               onChange={(e) => setSalary(e.target.value)}
               required
             />
