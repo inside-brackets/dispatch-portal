@@ -16,7 +16,7 @@ const Carriers = lazy(() => import("../pages/admin/Carriers"));
 const SearchCarrier = lazy(() => import("../pages/admin/SearchCarrier"));
 const Loads = lazy(() => import("../pages/admin/Loads"));
 const TruckDetails = lazy(() => import("../pages/admin/TruckDetails"));
-const Users = lazy(() => import("../pages/admin/Users"));
+const Users = lazy(() => import("../sharedPages/Users"));
 const PdfTest = lazy(() => import("../components/PdfTest"));
 const UserDetail = lazy(() => import("../pages/admin/UserDetail"));
 const AdminReport = lazy(() => import("../pages/admin/Report"));
@@ -38,6 +38,8 @@ const CarrierReport = lazy(() => import("../pages/dispatch/CarrierReport"));
 const Report = lazy(() => import("../pages/dispatch/Report"));
 const DispatchInvoices = lazy(() => import("../pages/dispatch/Invoices"));
 
+// HR
+const HRDashboard = lazy(() => import("../pages/HR/Dashboard"));
 const Routes = () => {
   const { department } = useSelector((state) => state.user.user);
   const [refresh, setRefresh] = useState(true);
@@ -131,7 +133,7 @@ const Routes = () => {
         <Route path="/pdf" component={PdfTest} />
         <Route path="/invoices" component={Invoice} />
         <Route path="/users" exact component={Users} />
-        <Route path="/user/:id" exact component={UserDetail} />
+        <Route path="/users/:id" exact component={UserDetail} />
         <Route path="/reports" exact component={AdminReport} />
         <Route path="/reports/:id" component={Report} />
         <Route path="*">
@@ -164,6 +166,31 @@ const Routes = () => {
         <Route path="/generate-report/:id?" component={Report} />
         <Route path="/invoices" component={DispatchInvoices} />
 
+        <Route path="*">
+          <h1>Not found</h1>
+        </Route>
+      </Switch>
+    </Suspense>
+  ) : department === "HR" ? (
+    <Suspense
+      fallback={
+        <div className="spreadsheet__loader">
+          <Loader
+            type="MutatingDots"
+            color="#349eff"
+            height={100}
+            width={100}
+          />
+        </div>
+      }
+    >
+      <Switch>
+        <Route path="/" exact>
+          <Redirect to="/dashboard" />
+        </Route>
+        <Route path="/dashboard" exact component={HRDashboard} />
+        <Route path="/users" exact component={Users} />
+        <Route path="/users/:id" exact component={UserDetail} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>
