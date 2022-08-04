@@ -69,8 +69,8 @@ route.get("/myip", (req, res) => {
 route.post("/login", auth, userController.login);
 
 //s3-bucket
-route.get("/s3url/:folder/:fileName", async (req, res) => {
-  const url = await generateUploadURL(req.params.folder, req.params.fileName);
+route.get("/s3url/:folder/:fileName/:unique?", async (req, res) => {
+  const url = await generateUploadURL(req.params.folder, req.params.fileName,req.params.unique);
   res.send(url);
 });
 

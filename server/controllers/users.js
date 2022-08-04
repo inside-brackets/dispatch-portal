@@ -176,6 +176,7 @@ const login = (req, res) => {
             designation: user.designation,
             company: user.company,
             password: user.password,
+            profile_image:user.profile_image ?? null
           },
           process.env.JWT
         );
