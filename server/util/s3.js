@@ -18,11 +18,14 @@ const s3 = new aws.S3({
   signatureVersion: "v4",
 });
 
-const generateUploadURL = async (folder, fileName) => {
+const generateUploadURL = async (folder, fileName,unique=true) => {
   // export async function generateUploadURL() {
+try {
   const rawBytes = await randomBytes(16);
-  const name = `${rawBytes.toString("hex")}-${fileName}`;
-
+  let name = fileName;
+  if(unique !== 'false'){
+   name = `${rawBytes.toString("hex")}-${name}`;
+  } 
   const params = {
     Bucket: `${bucketName}/${folder}`,
     Key: name,
@@ -30,6 +33,10 @@ const generateUploadURL = async (folder, fileName) => {
   };
   const uploadURL = await s3.getSignedUrlPromise("putObject", params);
   return uploadURL;
+  
+} catch (error) {
+return error  
+}
 };
 
 module.exports = {

@@ -6,6 +6,9 @@ const userSchema = new mongoose.Schema(
       require: true,
       unique:true
     },
+    profile_image:{
+      type:String,
+    },
     first_name: {
       type: String,
     },
@@ -57,6 +60,24 @@ const userSchema = new mongoose.Schema(
       enum: ["elite", "alpha", "falcon"],
       required: true,
     },
+    files: [
+      {
+        name: {
+          type: String,
+          require: true,
+        },
+        file_type: {
+          type: String,
+          enum: ["CNIC", "Educational document", "Experience document", "Other", "CV","Contract"],
+          required: true,
+        },
+        file:[
+          {
+            type: String,
+          },
+        ]
+      },
+    ],
   },
   {
     timestamps: true,
