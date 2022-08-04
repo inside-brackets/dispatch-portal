@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema(
     user_name: {
       type: String,
       require: true,
-      unique:true
+      unique: true,
     },
     first_name: {
       type: String,
@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     },
     u_status: {
       type: String,
-      enum: ["active", "fired", "inactive"],
+      enum: ["probation", "active", "fired", "inactive"],
       default: "active",
     },
     password: String,

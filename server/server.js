@@ -14,6 +14,7 @@ const rootRoutes = require("./routes/root");
 const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
 const notificationsRoutes = require("./routes/notification");
+const interviewRoutes = require("./routes/interview");
 
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
@@ -83,11 +84,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("truck-inactive", (msg) => {
-    console.log(msg)
+    console.log(msg);
     io.sockets.emit("backend-truck-inactive", msg);
   });
-
-
 });
 
 // check every request for user token and validate token from database
@@ -118,8 +117,9 @@ io.on("connection", (socket) => {
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
-app.use("/", rootRoutes);
 app.use("/notification", notificationsRoutes);
+app.use("/interviews", interviewRoutes);
+app.use("/", rootRoutes);
 
 app.get("/hello", (req, res) => {
   res.status(200).send({ msg: "hello" });
