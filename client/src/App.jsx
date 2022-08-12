@@ -136,8 +136,6 @@ const App = () => {
       if (user.department === "admin") {
         var selectedCompany = localStorage.getItem("selectedCompany");
         if (selectedCompany) {
-          console.log("login admin with local");
-
           dispatch(
             userActions.login({ user, company: JSON.parse(selectedCompany) })
           );

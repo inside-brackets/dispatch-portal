@@ -18,14 +18,20 @@ const s3 = new aws.S3({
   signatureVersion: "v4",
 });
 
-const generateUploadURL = async (folder, fileName,unique=true) => {
+const generateUploadURL = async (folder, fileName,del) => {
   // export async function generateUploadURL() {
 try {
+  if(del){
+    let params1 = {  Bucket: `${bucketName}`, Key: `${folder}/${del}` }; 
+   console.log(del)
+    await s3.deleteObject(params1, function(err, data) {
+      if (err) console.log(err, err.stack);  // error
+      else     console.log();                 // deleted
+    });
+  }
   const rawBytes = await randomBytes(16);
-  let name = fileName;
-  if(unique !== 'false'){
-   name = `${rawBytes.toString("hex")}-${name}`;
-  } 
+  let name = `${rawBytes.toString("hex")}-${fileName}`;
+
   const params = {
     Bucket: `${bucketName}/${folder}`,
     Key: name,

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const transformToSelectValue = (value) => {
   if (value.constructor === Array) {
     return value.map((item) => ({
@@ -12,8 +14,7 @@ export const transformToSelectValue = (value) => {
   }
 };
 
-
-export const searchLoads = (startDate,endDate,loads) => {
+export const searchLoads = (startDate, endDate, loads) => {
   const to = new Date(endDate);
   to.setDate(to.getDate() + 1);
   const filteredLoad = loads.filter((item) => {
@@ -23,5 +24,13 @@ export const searchLoads = (startDate,endDate,loads) => {
     );
   });
 
-  return filteredLoad
-}
+  return filteredLoad;
+};
+
+export const getRefreshToken = async (id) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_BACKEND_URL}/refreshToken/${id}`
+  );
+  console.log("getRefreshToken ", res);
+  localStorage.setItem("user", res.data);
+};

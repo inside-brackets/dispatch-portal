@@ -4,10 +4,10 @@ const userSchema = new mongoose.Schema(
     user_name: {
       type: String,
       require: true,
-      unique:true
+      unique: true,
     },
-    profile_image:{
-      type:String,
+    profile_image: {
+      type: String,
     },
     first_name: {
       type: String,
@@ -68,14 +68,20 @@ const userSchema = new mongoose.Schema(
         },
         file_type: {
           type: String,
-          enum: ["CNIC", "Educational document", "Experience document", "Other", "CV","Contract"],
+          enum: [
+            "cnic",
+            "educational_document",
+            "experience_document",
+            "other",
+            "cv",
+            "contract",
+          ],
           required: true,
         },
-        file:[
-          {
-            type: String,
-          },
-        ]
+        file: {
+          type: String,
+          required: true,
+        },
       },
     ],
   },
