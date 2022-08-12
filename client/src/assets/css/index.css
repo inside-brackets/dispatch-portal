@@ -365,18 +365,35 @@ th {
   margin-left: 2px !important;
 }
 .profile-image-panel{
-  background-color: #686B73;
+  background-color: #bfc2cc;
+  min-height: 100vh;
 }
 
-.social{
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  background-position: 50% 50%;
-  background-size: cover;
+
+.container {
+  /* Feel free to adjust the values here so you can see it being responsive */
+  width: 200px;
+}
+
+.circle {
+  position: relative;
+margin-top: 25px;
+  width: 100%;
+  height: 0;
+  padding: 100% 0 0;
   border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid gray;
 }
 
+.circle img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .upload-image {
   border: dotted 5px grey;
   height: 20%;

@@ -12,9 +12,9 @@ import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
 import Documents from "./Documents";
 import UploadProfilePicture from "../components/modals/profilePageModals/UploadProfilePicture";
+import UploadImage from "../assets/images/Capture.PNG";
 
-const BasicInformation = ({user}) => {
-
+const BasicInformation = ({ user }) => {
   const [dbUser, setDbUser] = useState();
   const [validated, setValidated] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -97,10 +97,10 @@ const BasicInformation = ({user}) => {
     setShowModal(false);
   };
   return (
-    <Card>
+    <Card style={{ border: "none", minHeight: "100vh" }}>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="m-3">
-          <h3>Personal Info</h3>
+          <h4 className="mb-5">Personal Info</h4>
           <Form.Group as={Col} md="6">
             <Form.Label>First Name</Form.Label>
             <Form.Control
@@ -138,7 +138,7 @@ const BasicInformation = ({user}) => {
         <hr />
 
         <Row className="m-3">
-          <h3>Contact Info</h3>
+          <h4 className="my-3">Contact Info</h4>
           <Form.Group as={Col} md="6">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -249,26 +249,55 @@ const BasicInformation = ({user}) => {
 };
 
 function Profile() {
-  const [showModal, setShowModal] = useState(
-    false
-  )
+  const [showModal, setShowModal] = useState(false);
+  const [preview, setPreview] = useState(null);
   const { user } = useSelector((state) => state.user);
   return (
     <Row>
       <Col md={3} className="profile-image-panel">
         <Row>
-          <div class="social" id="social1" onClick={()=> setShowModal(true)}>
-            <img
-              src={user.profile_image}
-              alt="facebood"
-              title="facebook"
-            />
+          <div className="container" onClick={() => setShowModal(true)}>
+            <div className="circle">
+              <img
+                src={
+                  preview
+                    ? preview
+                    : user.profile_image
+                    ? user.profile_image
+                    : UploadImage
+                }
+                alt="profile-image"
+              />
+            </div>
           </div>
         </Row>
+        <Row className="my-5 justify-content-center text-capitalize">
+          <Col md={4}>
+            <h3>{user.user_name}</h3>
+          </Col>
+        </Row>
+        <hr />
+        <Row className="my-5">
+          <Col>
+            <b>Designation</b>
+          </Col>
+          <Col className="text-end">{user.designation}</Col>
+        </Row>
+        <Row>
+          <Col >
+            <b>Joining Date</b>
+          </Col>
+          <Col  className="text-end">{moment(user.joining_date).format("DD MMM YYYY")}</Col>
+        </Row>
       </Col>
-      <Col md={9}>
+      <Col
+        style={{
+          padding: "0px",
+        }}
+        md={9}
+      >
         <Tabs
-          defaultActiveKey="profile"
+          defaultActiveKey="home"
           id="justify-tab-example"
           // className="mb-3"
           justify
@@ -282,14 +311,20 @@ function Profile() {
         </Tabs>
       </Col>
       <MyModal
-          size="lg"
-          show={showModal}
-          heading="Upload Picture"
-          onClose={()=> setShowModal(false)}
-          style={{ width: "auto" }}
-        >
-<UploadProfilePicture user={user} />
-        </MyModal>
+        size="lg"
+        show={showModal}
+        heading="Upload Picture"
+        onClose={() => setShowModal(false)}
+        style={{ width: "auto" }}
+      >
+        <UploadProfilePicture
+          user={user}
+          setModal={(data) => {
+            setPreview(data);
+            setShowModal(false);
+          }}
+        />
+      </MyModal>
     </Row>
   );
 }

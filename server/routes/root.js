@@ -41,6 +41,7 @@ route.post("/getusers", userController.getUsers);
 route.post("/get-table-users", userController.getTableUsers);
 // route.post("/updateuser", userController.updateUser);
 route.post("/updateuser/:id", userController.updateUser);
+route.get("/refreshtoken/:id",userController.refreshToken)
 
 // invoices
 route.post("/getinvoices", getInvoices);
@@ -69,8 +70,8 @@ route.get("/myip", (req, res) => {
 route.post("/login", auth, userController.login);
 
 //s3-bucket
-route.get("/s3url/:folder/:fileName/:unique?", async (req, res) => {
-  const url = await generateUploadURL(req.params.folder, req.params.fileName,req.params.unique);
+route.get("/s3url/:folder/:fileName/:del?", async (req, res) => {
+  const url = await generateUploadURL(req.params.folder, req.params.fileName,req.params.del);
   res.send(url);
 });
 
