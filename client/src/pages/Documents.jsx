@@ -1,13 +1,31 @@
 import React, { useState } from "react";
 import { Row, Col, Button, Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import axios from "axios";
 
 import AddDocuments from "../components/modals/AddDocuments";
+import DeleteConfirmation from "../components/modals/DeleteConfirmation";
 import MyModal from "../components/modals/MyModal";
 
-const Documents = () => {
-  const { user } = useSelector((state) => state.user);
+const Documents = ({ user, profile,callBack }) => {
   const [showModal, setShowModal] = useState(false);
+  const [deleteModal, setDeleteModa] = useState(false);
+  const submitDelete = async () => {
+    await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
+      {
+        files: user.files.filter((item) => item._id !== deleteModal._id),
+      }
+    );
+    await axios(
+      `${process.env.REACT_APP_BACKEND_URL}/s3url-delete/user_documents/${deleteModal.file?.substring(
+        deleteModal.file?.lastIndexOf("/") + 1
+      )}`
+    )
+    setDeleteModa(false)
+    callBack()
+
+  };
+
   return (
     <Card style={{ border: "none", minHeight: "100vh" }}>
       <Col className="mx-3">
@@ -21,12 +39,12 @@ const Documents = () => {
                 color: "blue",
                 textDecoration: "underline",
                 cursor: "pointer",
-                textDecorationLine:'underline'
+                textDecorationLine: "underline",
               }}
               onClick={() => setShowModal(true)}
             >
               {" "}
-            + Add Document
+              + Add Document
             </p>
           </Col>
           <hr />
@@ -41,7 +59,12 @@ const Documents = () => {
                 </Col>
                 <Col md={2}>
                   {" "}
-                  <a href={file.file}><i className="bx bx-file action-button"></i></a>{" "}
+                  <a href={file.file}>
+                    <i className="bx bx-file action-button"></i>
+                  </a>
+                  <a onClick={() => setDeleteModa(file)}>
+                    <i className="bx bx-trash-alt action-button"></i>
+                  </a>{" "}
                 </Col>
               </Row>
               <hr />
@@ -56,8 +79,19 @@ const Documents = () => {
         onClose={() => setShowModal(false)}
         style={{ width: "auto" }}
       >
-        <AddDocuments showModal={()=>setShowModal(false)} />
+        <AddDocuments
+          profile={profile}
+          user={user}
+          callBack={()=> callBack()}
+          showModal={() => setShowModal(false)}
+        />
       </MyModal>
+      <DeleteConfirmation
+        showModal={deleteModal}
+        confirmModal={submitDelete}
+        hideModal={() => setDeleteModa(false)}
+        message={"Are you Sure to want to delete File?"}
+      />
     </Card>
   );
 };

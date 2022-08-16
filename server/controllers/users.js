@@ -130,7 +130,7 @@ const updateUser = async (req, res) => {
   console.log("updateUser", req.body);
   try {
     let updatedUser; 
-    if(req.body.files){
+    if(req.body.updateFiles){
       updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
