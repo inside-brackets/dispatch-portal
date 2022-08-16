@@ -25,6 +25,7 @@ const interviewSchema = new mongoose.Schema(
       default: "scheduled",
     },
     remarks: String,
+    time: Date,
     interviewer: {
       type: mongoose.Types.ObjectId,
       ref: "User",
