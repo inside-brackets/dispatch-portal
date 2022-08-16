@@ -2,17 +2,16 @@ import React, { useState } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../store/user";
 import { getRefreshToken } from "../../utils/utils";
 
-const AddDocuments = ({ showModal }) => {
+const AddDocuments = ({ showModal,user,profile,callBack }) => {
   const [type, setType] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [name, setName] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { user } = useSelector((state) => state.user);
+  // const { user } = useSelector((state) => state.user);s
   const dispatch = useDispatch();
 
   const onSelectFile = (e) => {
@@ -44,24 +43,30 @@ const AddDocuments = ({ showModal }) => {
           file_type: type.value,
           file: url.split("?")[0],
         },
+        updateFiles:true
       }
     );
-    dispatch(
-      userActions.login({
-        user: res.data,
-        company:
-          res.data.company === "alpha"
-            ? {
-                label: "Alpha Dispatch Service",
-                value: "alpha",
-              }
-            : {
-                label: "Elite Dispatch Service",
-                value: "elite",
-              },
-      })
-    );
-    getRefreshToken(res.data._id);
+    if(profile){
+      dispatch(
+        userActions.login({
+          user: res.data,
+          company:
+            res.data.company === "alpha"
+              ? {
+                  label: "Alpha Dispatch Service",
+                  value: "alpha",
+                }
+              : {
+                  label: "Elite Dispatch Service",
+                  value: "elite",
+                },
+        })
+      );
+      getRefreshToken(res.data._id);
+  
+    } else {
+callBack()
+    }
     showModal();
   };
   return (

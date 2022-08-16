@@ -14,7 +14,7 @@ const userController = require("../controllers/users");
 const { rename, test, changeAppointment,findDublicates,changeStatus, addCarrierIdInInvoices } = require("../controllers/db");
 
 const { setIp, getIpList } = require("../util/ipList");
-const { generateUploadURL } = require("../util/s3");
+const { generateUploadURL,deleteUploadedURL } = require("../util/s3");
 const auth = require("../middlewares/auth");
 
 // const upload = require("../middlewares/upload");
@@ -73,6 +73,10 @@ route.post("/login", auth, userController.login);
 route.get("/s3url/:folder/:fileName/:del?", async (req, res) => {
   const url = await generateUploadURL(req.params.folder, req.params.fileName,req.params.del);
   res.send(url);
+});
+route.get("/s3url-delete/:folder/:fileName", async (req, res) => {
+  const response = await deleteUploadedURL(req.params.folder, req.params.fileName);
+  res.send(response);
 });
 
 // edit database

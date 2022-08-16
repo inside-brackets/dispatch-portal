@@ -306,7 +306,7 @@ function Profile() {
             <BasicInformation user={user} />
           </Tab>
           <Tab eventKey="profile" title="Documents">
-            <Documents />
+            <Documents profile user={user} />
           </Tab>
         </Tabs>
       </Col>
