@@ -26,7 +26,7 @@ const Topnav = () => {
   // };
   const curr_user = {
     display_name: user.user_name,
-    image: user_image,
+    image: user.profile_image ?? user_image,
   };
 
   // const renderNotificationItem = (item, index) => (

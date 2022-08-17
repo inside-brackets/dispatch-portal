@@ -129,13 +129,27 @@ const getUsers = (req, res, next) => {
 const updateUser = async (req, res) => {
   console.log("updateUser", req.body);
   try {
-    const updatedUser = await User.findByIdAndUpdate(
+    let updatedUser; 
+    if(req.body.updateFiles){
+      updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          "$push": { "files": req.body.files } }
+        ,
+        { new: true }
+      );
+
+    } else {
+
+    
+     updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         $set: req.body,
       },
       { new: true }
     );
+    }
     res.status(200);
     res.send(updatedUser);
   } catch (error) {
@@ -176,6 +190,9 @@ const login = (req, res) => {
             designation: user.designation,
             company: user.company,
             password: user.password,
+            profile_image: user.profile_image,
+            files:user.files
+          
           },
           process.env.JWT
         );
@@ -184,6 +201,38 @@ const login = (req, res) => {
         res.status(200).send("Unable to Login");
       }
     });
+  } catch (err) {
+    res.status(500).send({ msg: err.message });
+  }
+};
+const refreshToken = async (req, res) => {
+  try {
+    const filter = {};
+    filter.u_status = filter.u_status = {
+      $nin: ["fired", "inactive"],
+    };
+
+    const user = await User.findById(req.params.id);
+    if (user) {
+      let userToken = jwt.sign(
+        {
+          _id: user._id,
+          user_name: user.user_name,
+          department: user.department,
+          salary: user.salary,
+          joining_date: user.joining_date,
+          designation: user.designation,
+          company: user.company,
+          password: user.password,
+          profile_image: user.profile_image,
+          files:user.files
+        },
+        process.env.JWT
+      );
+      res.status(200).send(userToken);
+    } else {
+      res.status(200).send("Unable to Login");
+    }
   } catch (err) {
     res.status(500).send({ msg: err.message });
   }
@@ -197,4 +246,5 @@ module.exports = {
   updateUser,
   deleteUser,
   login,
+  refreshToken,
 };

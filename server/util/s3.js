@@ -18,20 +18,49 @@ const s3 = new aws.S3({
   signatureVersion: "v4",
 });
 
-const generateUploadURL = async (folder, fileName) => {
+const generateUploadURL = async (folder, fileName, del) => {
   // export async function generateUploadURL() {
-  const rawBytes = await randomBytes(16);
-  const name = `${rawBytes.toString("hex")}-${fileName}`;
+  try {
+    if (del) {
+      let params1 = { Bucket: `${bucketName}`, Key: `${folder}/${del}` };
+      console.log(del);
+      await s3.deleteObject(params1, function (err, data) {
+        if (err) console.log(err, err.stack); // error
+        else console.log(); // deleted
+      });
+    }
+    const rawBytes = await randomBytes(16);
+    let name = `${rawBytes.toString("hex")}-${fileName}`;
 
-  const params = {
-    Bucket: `${bucketName}/${folder}`,
-    Key: name,
-    Expires: 60,
-  };
-  const uploadURL = await s3.getSignedUrlPromise("putObject", params);
-  return uploadURL;
+    const params = {
+      Bucket: `${bucketName}/${folder}`,
+      Key: name,
+      Expires: 60,
+    };
+    const uploadURL = await s3.getSignedUrlPromise("putObject", params);
+    return uploadURL;
+  } catch (error) {
+    return error;
+  }
+};
+
+const deleteUploadedURL = async (folder, fileName) => {
+  // export async function generateUploadURL() {
+  try {
+    console.log("I m reubn")
+      let params1 = { Bucket: `${bucketName}`, Key: `${folder}/${fileName}` };
+
+       await s3.deleteObject(params1, function (err, data) {
+        if (err) return err; // error
+        else return data; // deleted
+      });
+
+  } catch (error) {
+    return error;
+  }
 };
 
 module.exports = {
   generateUploadURL,
+  deleteUploadedURL,
 };

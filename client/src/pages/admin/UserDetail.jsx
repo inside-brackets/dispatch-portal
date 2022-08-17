@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Form, Alert } from "react-bootstrap";
+import { Row, Col, Card, Form, Alert, Tab, Tabs } from "react-bootstrap";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import moment from "moment";
 import {
@@ -18,26 +18,21 @@ import {
   Label,
 } from "recharts";
 
-const UserDetail = () => {
-  const params = useParams();
-  const [user, setUser] = useState(null);
+import Documents from "../Documents";
+import Badge from "../../components/badge/Badge";
+import status_map from "../../assets/JsonData/status_map.json";
+
+const UserDetailPage = ({ user }) => {
   const [data, setData] = useState(null);
   const [message, setMessage] = useState(`Loading`);
 
   let totalLenght = 0;
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${params.id}`)
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((err) => console.log(err));
-
-    axios
       .post(
         `${process.env.REACT_APP_BACKEND_URL}/admin/registered-and-rejected`,
         {
-          user_id: params.id,
+          user_id: user._id,
           change: ["rejected", "registered", "appointment"],
         }
       )
@@ -68,7 +63,7 @@ const UserDetail = () => {
         }
       })
       .catch((err) => console.log(err));
-  }, [params.id]);
+  }, [user._id]);
 
   function CustomLabel({ viewBox, value1, value2 }) {
     const { cx, cy } = viewBox;
@@ -166,19 +161,22 @@ const UserDetail = () => {
     );
   };
 
-  return !user ? (
-    <div className="spreadsheet__loader">
-      <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
-    </div>
-  ) : (
+  return (
     <Row className="justify-content-center">
       <Col>
-        <Card>
+        <Card style={{ border: "none", minHeight: "100vh" }}>
           <Form>
             <Row className="m-3">
               <h1 className="text-center">User Detail</h1>
               <hr />
-              <Form.Group as={Col} md="6">
+              <Col md={2}>
+                <div className="container">
+                  <div className="circle">
+                    <img src={user.profile_image} alt="." />
+                  </div>
+                </div>
+              </Col>
+              <Form.Group as={Col} md="4" className="mt-4">
                 <Form.Label>User Name</Form.Label>
                 <Form.Control
                   type="text"
@@ -188,17 +186,9 @@ const UserDetail = () => {
                   name="user_name"
                   required
                 />
+                 <Badge className="rounded-0 mt-4" type={status_map[user.u_status]} content={user.u_status} />
               </Form.Group>
-              <Form.Group as={Col} md="6">
-                <Form.Label>User Status</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Last Name"
-                  name="user_status"
-                  value={user.u_status}
-                  required
-                />
-              </Form.Group>
+             
             </Row>
             <hr />
 
@@ -372,4 +362,45 @@ const UserDetail = () => {
   );
 };
 
+function UserDetail() {
+  const history = useHistory()
+  const params = useParams();
+const location = useLocation()
+  let query = new URLSearchParams(location.search);
+  let keyName = query.get('key') ? query.get('key') : "info";
+  const [key, setKey] = useState(keyName);
+
+  const [user, setUser] = useState(null);
+  const [reCall, setReCall] = useState(null)
+
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${params.id}`)
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, [reCall]);
+  return !user ? (
+    <div className="spreadsheet__loader">
+      <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
+    </div>
+  ) : (
+    <Tabs
+      id="controlled-tab-example"
+      activeKey={key}
+      onSelect={(k) => {setKey(k)
+        history.push(`/user/${params.id}?key=${k}`)}}
+      justify
+    >
+      <Tab eventKey="info" title="Basic Information">
+        <UserDetailPage user={user} />
+      </Tab>
+      <Tab eventKey="documents" title="Documents">
+        <Documents callBack={()=> setReCall(Math.random())} user={user} />
+      </Tab>
+    </Tabs>
+  );
+}
 export default UserDetail;
