@@ -391,7 +391,8 @@ const location = useLocation()
     <Tabs
       id="controlled-tab-example"
       activeKey={key}
-      onSelect={(k) =>setKey(k)}
+      onSelect={(k) => {setKey(k)
+        history.push(`/user/${params.id}?key=${k}`)}}
       justify
     >
       <Tab eventKey="info" title="Basic Information">

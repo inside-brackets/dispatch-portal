@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import status_map from "../assets/JsonData/status_map.json";
 import Badge from "../components/badge/Badge";
 import user_image from "../assets/images/taut.png";
+
 const Users = () => {
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);

@@ -43,7 +43,6 @@ const HRDashboard = lazy(() => import("../pages/HR/Dashboard"));
 const Interviews = lazy(()=> import("../pages/HR/Interviews"))
 const InterviewsDetail = lazy(()=> import("../pages/HR/InterviewDetail"))
 
-
 const Routes = () => {
   const { department } = useSelector((state) => state.user.user);
   const [refresh, setRefresh] = useState(true);
@@ -198,8 +197,7 @@ const Routes = () => {
         <Route path="/profile" component={Profile} />
         <Route path="/interviews" component={Interviews} exact />
         <Route path="/interviews/create/:id?" component={InterviewsDetail} />
-        
-        <Route path="*">
+                <Route path="*">
           <h1>Not found</h1>
         </Route>
       </Switch>

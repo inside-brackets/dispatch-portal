@@ -1,14 +1,9 @@
 import React from "react";
-// import { Link } from "react-router-dom";
-import usMap from "../../assets/images/us-map.jpg";
-import UsClock from "../../components/usClock/UsClock";
-// import { socket } from "../../index";
 import {Row, Col} from 'react-bootstrap'
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
 import { useSelector, useDispatch } from "react-redux";
-
 const Dashboard = () => {
   // const notify = () => {
   //   socket.emit("notify", "test");
