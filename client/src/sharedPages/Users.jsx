@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import status_map from "../assets/JsonData/status_map.json";
 import Badge from "../components/badge/Badge";
-
+import user_image from "../assets/images/taut.png";
 const Users = () => {
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);
@@ -18,6 +18,7 @@ const Users = () => {
   const [showModal, setShowModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [rerenderTable, setRerenderTable] = useState(null);
+
   const history = useHistory();
   const { company: selectedCompany } = useSelector((state) => state.user);
   useEffect(() => {
@@ -35,7 +36,7 @@ const Users = () => {
 
   const customerTableHead = [
     "#",
-    "User Name",
+    "User",
     "Phone #",
     "Email",
     "Designation",
@@ -64,7 +65,30 @@ const Users = () => {
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
-      <td>{`${item.user_name} ${item.first_name ? `( ${item.first_name} ${item.last_name} )` : ""} `}</td>
+      <td>
+        <Row>
+          <Col md={5}>
+            <div className="container pl-0">
+              <div className="circle mt-0">
+                <img src={item.profile_image ?? user_image} alt="." />
+              </div>
+            </div>
+          </Col>
+          <Col md={7}>
+            <Row>
+              <Col>{`${item.user_name}`} </Col></Row>
+            <Row>
+            <Col>
+              {`${
+                item.first_name
+                  ? `${item.first_name} ${item.last_name}`
+                  : "Not Added"
+              } `}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </td>
       <td>{item.phone_number ? item.phone_number : "N/A"}</td>
       <td>{item.email_address ? item.email_address : "N/A"}</td>
       <td>{item.designation}</td>

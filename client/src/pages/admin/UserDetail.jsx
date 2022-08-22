@@ -21,6 +21,7 @@ import {
 import Documents from "../Documents";
 import Badge from "../../components/badge/Badge";
 import status_map from "../../assets/JsonData/status_map.json";
+import user_image from'../../assets/images/taut.png'
 
 const UserDetailPage = ({ user }) => {
   const [data, setData] = useState(null);
@@ -172,7 +173,7 @@ const UserDetailPage = ({ user }) => {
               <Col md={2}>
                 <div className="container">
                   <div className="circle">
-                    <img src={user.profile_image} alt="." />
+                    <img src={user.profile_image ?? user_image} alt="." />
                   </div>
                 </div>
               </Col>
@@ -390,8 +391,7 @@ const location = useLocation()
     <Tabs
       id="controlled-tab-example"
       activeKey={key}
-      onSelect={(k) => {setKey(k)
-        history.push(`/user/${params.id}?key=${k}`)}}
+      onSelect={(k) =>setKey(k)}
       justify
     >
       <Tab eventKey="info" title="Basic Information">

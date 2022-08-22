@@ -25,10 +25,11 @@ const interviewSchema = new mongoose.Schema(
       default: "scheduled",
     },
     remarks: String,
-    time: Date,
+    time: {type:Date,required:true},
     interviewer: {
       type: mongoose.Types.ObjectId,
       ref: "User",
+      required:true
     },
   },
   {

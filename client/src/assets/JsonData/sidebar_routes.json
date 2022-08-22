@@ -97,7 +97,7 @@
       "icon": "bx bx-user"
     },
     {
-      "display_name": "Interviewa",
+      "display_name": "Interviews",
       "route": "/interviews",
       "icon": "bx bx-user"
     }

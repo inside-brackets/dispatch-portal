@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     },
     u_status: {
       type: String,
-      enum: ["probation", "active", "fired", "inactive"],
+      enum: ["probation", "active", "fired", "inactive","resigned"],
       default: "active",
     },
     password: String,
@@ -59,6 +59,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["elite", "alpha", "falcon"],
       required: true,
+    },
+    leaving_date:{
+      type:Date
     },
     files: [
       {

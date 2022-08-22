@@ -1,13 +1,13 @@
 const asyncHandler = require("express-async-handler");
 
-const InterviewModel = require("../models/interview");
+const Interview = require("../models/interview");
 
 // Access: Private
 // Method: POST
 // route: /interviews
 const createInterview = asyncHandler(async (req, res) => {
   try {
-    let createdInterview = await InterviewModel.create(req.body);
+    let createdInterview = await Interview.create(req.body);
 
     res.status(201);
 
@@ -23,9 +23,8 @@ const createInterview = asyncHandler(async (req, res) => {
 // route: /interviews/:id
 const getInterview = asyncHandler(async (req, res) => {
   try {
-    let interview = await InterviewModel.findById(req.params.id)
-      .lena()
-      .populate("interviewer.user_name");
+    let interview = await Interview.findById(req.params.id)
+      .populate("interviewer","user_name");
 
     res.status(200);
 
@@ -40,7 +39,7 @@ const getInterview = asyncHandler(async (req, res) => {
 // Method: PUT
 // route: /interviews/:id
 const updateInterview = asyncHandler(async (req, res) => {
-  let updatedInterviews = await InterviewModel.findOneAndUpdate(
+  let updatedInterviews = await Interview.findOneAndUpdate(
     { _id: req.params.id },
     req.body,
     { new: true }
@@ -56,7 +55,7 @@ const updateInterview = asyncHandler(async (req, res) => {
 // route: /interviews/:id
 const deleteInterview = asyncHandler(async (req, res) => {
   try {
-    let deletedInterview = await InterviewModel.deleteOne({
+    let deletedInterview = await Interview.deleteOne({
       _id: req.params.id,
     });
 
@@ -73,31 +72,46 @@ const deleteInterview = asyncHandler(async (req, res) => {
 // Method: GET
 // route: /interviews/:limit/:offset
 const listInterviews = asyncHandler(async (req, res) => {
-  try {
-    console.log("listInterviews", req.params.offset);
-    const offset = parseInt(req.params.offset);
-    const limit = parseInt(req.params.limit);
-    let filter = {};
-
-    const projects = await InterviewModel.find(filter)
-      .populate({
-        path: "interviewer",
-        select: ["user_name", "first_name", "last_name"],
-      })
-      .sort({ updatedAt: -1 })
-      .limit(limit)
-      .skip(offset);
-
-    const totalInterviews = await InterviewModel.find(filter);
-
-    res.status(200).json({
-      data: projects,
-      length: totalInterviews.length,
-      batchSize: projects.length,
-    });
-  } catch (error) {
-    throw new Error(error.message);
+  var filter = {}
+  console.log("body", req.body);
+  let search = req.query.search ? req.query.search : "";
+  if (!isNaN(search) && search !== "") {
+    filter.mc_number = search;
   }
+  if (req.body.filter.status.length > 0) {
+    filter.status = { $in: req.body.filter.status.map((item) => item.value) };
+  }
+  if (req.body.filter.department.length > 0) {
+    filter.candidate = {department: { $in: req.body.filter.department.map((item) => item.value) }};
+  }
+  console.log("filter", filter);
+  try {
+    let result = await Interview.find(filter).populate(
+      "interviewer",
+      { user_name: 1}
+    );
+    // if (req.body.company) {
+    //   result = result.filter(
+    //     (carry) => carry.salesman?.company == req.body.company
+    //   );
+    // }
+    if (search !== "" && isNaN(search)) {
+      search = search.trim().toLowerCase();
+      result = result.filter((interview) => {
+        return (
+          interview.interviewer?.user_name.toLowerCase().includes(search) ||
+          interview.candidate.first_name.toLowerCase().includes(search) ||
+          interview.candidate.last_name.toLowerCase().includes(search)
+        );
+      });
+    }
+    const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
+    res.send({ data: fResult, length: result.length });
+  } catch (error) {
+    res.status(500).send(error);
+  }  
+
+
 });
 
 module.exports = {

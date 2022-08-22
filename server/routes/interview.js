@@ -13,6 +13,6 @@ router.post("/", createInterview);
 router.get("/:id", getInterview);
 router.put("/:id", updateInterview);
 router.delete("/:id", deleteInterview);
-router.post("/:limit/:offset", listInterviews);
+router.post("/get-table-interviews", listInterviews);
 
 module.exports = router;

@@ -191,6 +191,7 @@ const login = (req, res) => {
             company: user.company,
             password: user.password,
             profile_image: user.profile_image,
+            user:user.u_status,
             files:user.files
           
           },
@@ -225,6 +226,7 @@ const refreshToken = async (req, res) => {
           company: user.company,
           password: user.password,
           profile_image: user.profile_image,
+          user:user.u_status,
           files:user.files
         },
         process.env.JWT

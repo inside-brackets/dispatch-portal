@@ -12,7 +12,9 @@ import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
 import Documents from "./Documents";
 import UploadProfilePicture from "../components/modals/profilePageModals/UploadProfilePicture";
-import UploadImage from "../assets/images/Capture.PNG";
+import user_image from "../assets/images/taut.png";
+import Badge from "../components/badge/Badge";
+import status_map from '../assets/JsonData/status_map.json'
 
 const BasicInformation = ({ user }) => {
   const [dbUser, setDbUser] = useState();
@@ -256,6 +258,9 @@ function Profile() {
     <Row>
       <Col md={3} className="profile-image-panel">
         <Row>
+        <Badge className="rounded-0 mt-4" type={status_map[user.u_status]} content={user.u_status} />
+        </Row>
+        <Row>
           <div className="container" onClick={() => setShowModal(true)}>
             <div className="circle">
               <img
@@ -264,7 +269,7 @@ function Profile() {
                     ? preview
                     : user.profile_image
                     ? user.profile_image
-                    : UploadImage
+                    : user_image
                 }
                 alt="profile-image"
               />
@@ -272,7 +277,7 @@ function Profile() {
           </div>
         </Row>
         <Row className="my-5 justify-content-center text-capitalize">
-          <Col md={4}>
+          <Col className='text-center'>
             <h3>{user.user_name}</h3>
           </Col>
         </Row>
@@ -299,7 +304,6 @@ function Profile() {
         <Tabs
           defaultActiveKey="home"
           id="justify-tab-example"
-          // className="mb-3"
           justify
         >
           <Tab eventKey="home" title="Basic Information">

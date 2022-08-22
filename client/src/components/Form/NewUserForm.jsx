@@ -13,6 +13,7 @@ const NewUserForm = ({
   setShowModal,
   setEditModal,
   setRefresh,
+  interview
 }) => {
   const [validated, setValidated] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(null);
@@ -89,7 +90,7 @@ const NewUserForm = ({
     const hash = await bcrypt.hash(password, 8);
 
     if (form.checkValidity() === true) {
-      if (defaultValue) {
+      if (defaultValue && !interview) {
         setButtonLoader(true);
         await axios
           .post(
@@ -121,6 +122,7 @@ const NewUserForm = ({
             designation,
             department,
             company: department === "admin" ? "falcon" : selectedCompany.value,
+            ...defaultValue
           })
           .then((response) => {
             console.log("response", response);
@@ -162,7 +164,7 @@ const NewUserForm = ({
             </Form.Text>
           )}
         </Form.Group>
-        {defaultValue ? (
+        {defaultValue && !interview ? (
           <Button
             as={Col}
             md="3"
@@ -247,7 +249,7 @@ const NewUserForm = ({
               Please provide a valid Salary.
             </Form.Control.Feedback>
           </Form.Group>
-          {!defaultValue ? (
+          {!defaultValue || interview ? (
             <Form.Group as={Col} md="6">
               <Form.Label>Joining Date</Form.Label>
               <Form.Control
