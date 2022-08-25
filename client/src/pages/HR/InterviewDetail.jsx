@@ -280,7 +280,7 @@ const InterviewDetail = ({ defaultValue }) => {
             />
           </Form.Group>
         </Row>
-        <Row>
+        <Row className='my-5'>
           {!params.id ? (
             <Col md={2}>
               <Button className="w-100" disabled={loading} type="submit">
@@ -301,6 +301,7 @@ const InterviewDetail = ({ defaultValue }) => {
               </Col>
             )
           )}
+        
           {params.id && (
             <Col md={2}>
               <Button
@@ -313,7 +314,7 @@ const InterviewDetail = ({ defaultValue }) => {
               </Button>
             </Col>
           )}
-
+  <Col></Col>
           {params.id && (
             <>
               {" "}

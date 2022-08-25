@@ -1,5 +1,7 @@
 const User = require("../models/user");
+const Interview = require("../models/interview")
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const addNewUser = async (req, res) => {
   const {
@@ -129,26 +131,23 @@ const getUsers = (req, res, next) => {
 const updateUser = async (req, res) => {
   console.log("updateUser", req.body);
   try {
-    let updatedUser; 
-    if(req.body.updateFiles){
+    let updatedUser;
+    if (req.body.updateFiles) {
       updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
-          "$push": { "files": req.body.files } }
-        ,
+          $push: { files: req.body.files },
+        },
         { new: true }
       );
-
     } else {
-
-    
-     updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
+      updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
     }
     res.status(200);
     res.send(updatedUser);
@@ -191,9 +190,8 @@ const login = (req, res) => {
             company: user.company,
             password: user.password,
             profile_image: user.profile_image,
-            user:user.u_status,
-            files:user.files
-          
+            user: user.u_status,
+            files: user.files,
           },
           process.env.JWT
         );
@@ -226,8 +224,8 @@ const refreshToken = async (req, res) => {
           company: user.company,
           password: user.password,
           profile_image: user.profile_image,
-          u_status:user.u_status,
-          files:user.files
+          u_status: user.u_status,
+          files: user.files,
         },
         process.env.JWT
       );
@@ -240,6 +238,51 @@ const refreshToken = async (req, res) => {
   }
 };
 
+const countUsers = async (req, res, next) => {
+  try {
+    let result = await User.aggregate([
+      {
+        $group: {
+          _id: { department: "$department", company: "$company" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const joinedThisMonth = await User.find({
+      joining_date: {
+        $gte: moment().startOf("month").format("YYYY-MM-DD"),
+        $lt: moment().endOf("month").format("YYYY-MM-DD"),
+      },
+    }).countDocuments();
+    const upcomingResource = await User.find({
+      joining_date: {
+        $gte: moment().format("YYYY-MM-DD")
+      },
+    }).countDocuments();
+
+    const interview = await Interview.aggregate([
+      {
+        $match: {
+          $or: [{ status: "pending-decision" }, { status: "scheduled" }],
+        },
+      },
+      { $group: { _id:{department: "$status"}, count: { $sum: 1 } } },
+    ]);
+    result.push({
+      _id: { department: "Joined this month" },
+      count: joinedThisMonth,
+    },{
+      _id: { department: "Upcoming Resource" },
+      count: upcomingResource,
+      
+    },...interview);
+    res.status(200);
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   addNewUser,
   getUser,
@@ -249,4 +292,5 @@ module.exports = {
   deleteUser,
   login,
   refreshToken,
+  countUsers,
 };

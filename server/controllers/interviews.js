@@ -23,8 +23,10 @@ const createInterview = asyncHandler(async (req, res) => {
 // route: /interviews/:id
 const getInterview = asyncHandler(async (req, res) => {
   try {
-    let interview = await Interview.findById(req.params.id)
-      .populate("interviewer","user_name");
+    let interview = await Interview.findById(req.params.id).populate(
+      "interviewer",
+      "user_name"
+    );
 
     res.status(200);
 
@@ -72,7 +74,7 @@ const deleteInterview = asyncHandler(async (req, res) => {
 // Method: GET
 // route: /interviews/:limit/:offset
 const listInterviews = asyncHandler(async (req, res) => {
-  var filter = {}
+  var filter = {};
   console.log("body", req.body);
   let search = req.query.search ? req.query.search : "";
   if (!isNaN(search) && search !== "") {
@@ -82,14 +84,22 @@ const listInterviews = asyncHandler(async (req, res) => {
     filter.status = { $in: req.body.filter.status.map((item) => item.value) };
   }
   if (req.body.filter.department.length > 0) {
-    filter.candidate = {department: { $in: req.body.filter.department.map((item) => item.value) }};
+    filter.candidate = {
+      department: { $in: req.body.filter.department.map((item) => item.value) },
+    };
+  }
+  if (req.body.start && req.body.end) {
+    filter.time = {
+      $gte: new Date(req.body.start),
+      $lte: new Date(req.body.end),
+    };
   }
   console.log("filter", filter);
   try {
-    let result = await Interview.find(filter).populate(
-      "interviewer",
-      { user_name: 1}
-    );
+    let result = await Interview.find(filter).populate("interviewer", {
+      user_name: 1,
+    });
+    console.log(result);
     // if (req.body.company) {
     //   result = result.filter(
     //     (carry) => carry.salesman?.company == req.body.company
@@ -109,10 +119,25 @@ const listInterviews = asyncHandler(async (req, res) => {
     res.send({ data: fResult, length: result.length });
   } catch (error) {
     res.status(500).send(error);
-  }  
-
-
+  }
 });
+
+const countInterview = async (req, res, next) => {
+  try {
+    const result = await Interview.aggregate([
+      {
+        $match: {
+          $or: [{ status: "pending-decision" }, { status: "scheduled" }],
+        },
+      },
+      { $group: { _id: "$status", count: { $sum: 1 } } },
+    ]);
+    res.status(200);
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   createInterview,
@@ -120,4 +145,5 @@ module.exports = {
   updateInterview,
   listInterviews,
   deleteInterview,
+  countInterview,
 };

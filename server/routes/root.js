@@ -1,4 +1,3 @@
-const User = require("../models/user");
 const express = require("express");
 
 const route = express.Router();
@@ -42,6 +41,7 @@ route.post("/get-table-users", userController.getTableUsers);
 // route.post("/updateuser", userController.updateUser);
 route.post("/updateuser/:id", userController.updateUser);
 route.get("/refreshtoken/:id",userController.refreshToken)
+route.get("/count-user/:company",userController.countUsers)
 
 // invoices
 route.post("/getinvoices", getInvoices);

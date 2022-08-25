@@ -67,15 +67,13 @@ const Interviews = () => {
        {item.candidate.first_name +" " + item.candidate.last_name}
       </td>
       <td>{item.interviewer ? item.interviewer.user_name : "N/A"}</td>
-      <td>{moment(item.time).format("DD MMMM hh:mm")}</td>
+      <td>{moment(item.time).format("DD MMMM hh:mm A")}</td>
       <td>{item.candidate ? item.candidate.department : "N/A"}</td>
       <td>
         <Badge type={status_map[item.status]} content={item.status} />
       </td>
       <td>
         <div className="edit__class">
-          <EditButton type="edit" onClick={() => editModalHnadler(item)} />
-
           <EditButton
             type="open"
             onClick={() => history.push(`/interviews/create/${item._id}`)}
