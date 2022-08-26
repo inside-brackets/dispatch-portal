@@ -29,7 +29,16 @@ const Dashboard = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
-  const [users, setUsers] = useState([1, 2, 3, 4]);
+  const [users, setUsers] = useState([
+    { icon: "bx bxs-group" },
+    { icon: "bx bx-id-card" },
+    { icon: "" },
+    { icon: "bx bxs-truck" },
+    { icon: "bx bx-user-check", },
+    { icon: "bx bx-user-plus" },
+    { icon: "bx bxs-hourglass" },
+    { icon: "bx bx-calendar-plus" },
+  ]);
   useEffect(() => {
     axios
       .post(
@@ -57,12 +66,14 @@ const Dashboard = () => {
         const result = [
           {
             department: "HR",
+            icon: "bx bxs-group",
             count: res.data
               .filter((item) => item._id.department === "HR")
               .reduce((pre, curr) => pre + curr.count, 0),
           },
           {
             department: "Accounts",
+            icon: "bx bx-id-card",
             count: res.data
               .filter((item) => item._id.department === "accounts")
               .reduce((pre, curr) => pre + curr.count, 0),
@@ -77,6 +88,7 @@ const Dashboard = () => {
           },
           {
             department: "Dispatch",
+            icon: "bx bxs-truck",
             count: res.data.find(
               (item) =>
                 item._id.department === "dispatch" &&
@@ -85,6 +97,7 @@ const Dashboard = () => {
           },
           {
             department: "Joined this month",
+            icon: "bx bx-user-check",
             count: res.data.find(
               (item) => item._id.department === "Joined this month"
             ).count,
@@ -92,7 +105,7 @@ const Dashboard = () => {
           ,
           {
             department: "Upcoming resource",
-            icon : "bx bx-user-check",
+            icon: "bx bx-user-plus",
             count: res.data.find(
               (item) => item._id.department === "Upcoming Resource"
             ).count,
@@ -100,6 +113,7 @@ const Dashboard = () => {
           ,
           {
             department: "Pending Decision",
+            icon: "bx bxs-hourglass",
             count: res.data.find(
               (item) => item._id.department === "pending-decision"
             ).count,
@@ -107,6 +121,7 @@ const Dashboard = () => {
           ,
           {
             department: "Scheduled",
+            icon: "bx bx-calendar-plus",
             count: res.data.find((item) => item._id.department === "scheduled")
               .count,
           },
@@ -163,7 +178,7 @@ const Dashboard = () => {
                   style={{ height: "163px" }}
                   key={index}
                   title={user.department ?? "loading"}
-                  icon= {user.icon ?? "bx bx-line-chart"}
+                  icon={user.icon ?? "bx bx-line-chart"}
                   count={user.count ?? 0}
                 />
               </Col>

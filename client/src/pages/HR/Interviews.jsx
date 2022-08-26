@@ -122,7 +122,7 @@ Schedule Interview
                   status: [
                     { label: "Scheduled", value: "scheduled" },
                     { label: "Hired", value: "hired" },
-                    { label: "Rejected", value: "Rejected" },
+                    { label: "Rejected", value: "rejected" },
                     { label: "Pending Decision", value: "pending-decision" },
                   ],
                 }}

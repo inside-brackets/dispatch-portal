@@ -21,7 +21,7 @@ const InterviewDetail = ({ defaultValue }) => {
   const [loading, setLoading] = useState(false);
   const [selectedInterviewer, setSelectedInterviewer] = useState([]);
   const [editale, setEditale] = useState(false);
-  const [editModal, setEditModal] = useState(false)
+  const [editModal, setEditModal] = useState(false);
 
   useEffect(() => {
     if (state.candidate.department) {
@@ -54,7 +54,10 @@ const InterviewDetail = ({ defaultValue }) => {
       axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/interviews/${params.id}`)
         .then((res) => {
-          setState(res.data);
+          setState({
+            ...res.data,
+            time: res.data.time.substr(0, res.data.time.lastIndexOf(":")),
+          });
           setSelectedInterviewer({
             label: res.data.interviewer.user_name,
             value: res.data.interviewer._id,
@@ -109,7 +112,7 @@ const InterviewDetail = ({ defaultValue }) => {
       );
     }
     setLoading(false);
-    toast.success("Interview Schedule Successfully")
+    toast.success("Interview Schedule Successfully");
   };
   console.log("state", state);
 
@@ -132,7 +135,7 @@ const InterviewDetail = ({ defaultValue }) => {
       .then((res) => toast.success("Hired Sucessfully"));
 
     setLoading(false);
-    setEditModal(false)
+    setEditModal(false);
   };
 
   return (
@@ -263,8 +266,6 @@ const InterviewDetail = ({ defaultValue }) => {
             >
               <option value={null}></option>
               <option value="scheduled">scheduled</option>
-              <option value="rejected">rejected</option>
-              <option value="hired">hired</option>
               <option value="pending-decision">pending-decision</option>
             </Form.Control>
           </Form.Group>
@@ -280,7 +281,7 @@ const InterviewDetail = ({ defaultValue }) => {
             />
           </Form.Group>
         </Row>
-        <Row className='my-5'>
+        <Row className="my-5">
           {!params.id ? (
             <Col md={2}>
               <Button className="w-100" disabled={loading} type="submit">
@@ -301,7 +302,7 @@ const InterviewDetail = ({ defaultValue }) => {
               </Col>
             )
           )}
-        
+
           {params.id && (
             <Col md={2}>
               <Button
@@ -314,7 +315,7 @@ const InterviewDetail = ({ defaultValue }) => {
               </Button>
             </Col>
           )}
-  <Col></Col>
+          <Col></Col>
           {params.id && (
             <>
               {" "}
@@ -333,7 +334,7 @@ const InterviewDetail = ({ defaultValue }) => {
                   className="w-100"
                   variant="success"
                   disabled={loading}
-                  onClick={()=> setEditModal(true)}
+                  onClick={() => setEditModal(true)}
                 >
                   Hire
                 </Button>
@@ -343,20 +344,20 @@ const InterviewDetail = ({ defaultValue }) => {
         </Row>
       </Form>
       <MyModal
-          size="lg"
-          show={editModal}
-          heading="Edit User"
-          onClose={()=> setEditModal(false)}
-          style={{ width: "auto" }}
-        >
-          <NewUserForm
-            // setEditModal={(data) => {
-            //   handleHire()}}
-              setRefresh={handleHire}
-              interview
-            defaultValue={state.candidate}
-          />
-        </MyModal>
+        size="lg"
+        show={editModal}
+        heading="Add User"
+        onClose={() => setEditModal(false)}
+        style={{ width: "auto" }}
+      >
+        <NewUserForm
+          // setEditModal={(data) => {
+          //   handleHire()}}
+          setRefresh={handleHire}
+          interview
+          defaultValue={state.candidate}
+        />
+      </MyModal>
     </Card>
   );
 };

@@ -74,19 +74,19 @@ const deleteInterview = asyncHandler(async (req, res) => {
 // Method: GET
 // route: /interviews/:limit/:offset
 const listInterviews = asyncHandler(async (req, res) => {
+  const {department,status} = req.body.filter
   var filter = {};
   console.log("body", req.body);
   let search = req.query.search ? req.query.search : "";
   if (!isNaN(search) && search !== "") {
     filter.mc_number = search;
   }
-  if (req.body.filter.status.length > 0) {
-    filter.status = { $in: req.body.filter.status.map((item) => item.value) };
+  if (status.length > 0) {
+    filter.status = { $in: status.map((item) => item.value) };
   }
-  if (req.body.filter.department.length > 0) {
-    filter.candidate = {
-      department: { $in: req.body.filter.department.map((item) => item.value) },
-    };
+  if (department.length > 0) {
+    filter["candidate.department"] =  { $in: department.map((item) => item.value) }
+  
   }
   if (req.body.start && req.body.end) {
     filter.time = {
