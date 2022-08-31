@@ -19,7 +19,7 @@ const renderBody = (item, index) => (
         ? `${item.candidate.first_name} ${item.candidate.last_name}`
         : "NA"}
     </td>
-    <td>{item.time ? moment(item.time).format("YYYY-MM-DD hh:mm A") : "NA"}</td>
+    <td>{item.time ? moment(item.time).format("hh:mm A") : "NA"}</td>
   </tr>
 );
 const Dashboard = () => {
@@ -29,12 +29,14 @@ const Dashboard = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
-  const [users, setUsers] = useState([
+  const [departmentalDistribution, setDepartmentalDistribution] = useState([
     { icon: "bx bxs-group" },
     { icon: "bx bx-id-card" },
     { icon: "" },
     { icon: "bx bxs-truck" },
-    { icon: "bx bx-user-check", },
+  ]);
+  const [interviewInsight, setInterviewInsight] = useState([
+    { icon: "bx bx-user-check" },
     { icon: "bx bx-user-plus" },
     { icon: "bx bxs-hourglass" },
     { icon: "bx bx-calendar-plus" },
@@ -63,7 +65,7 @@ const Dashboard = () => {
         `${process.env.REACT_APP_BACKEND_URL}/count-user/${selectedCompany.value}`
       )
       .then((res) => {
-        const result = [
+        const departmentalDistribution = [
           {
             department: "HR",
             icon: "bx bxs-group",
@@ -95,6 +97,8 @@ const Dashboard = () => {
                 item._id.company === selectedCompany.value
             ).count,
           },
+        ];
+        const interviewIns = [
           {
             department: "Joined this month",
             icon: "bx bx-user-check",
@@ -102,7 +106,6 @@ const Dashboard = () => {
               (item) => item._id.department === "Joined this month"
             ).count,
           },
-          ,
           {
             department: "Upcoming resource",
             icon: "bx bx-user-plus",
@@ -110,7 +113,6 @@ const Dashboard = () => {
               (item) => item._id.department === "Upcoming Resource"
             ).count,
           },
-          ,
           {
             department: "Pending Decision",
             icon: "bx bxs-hourglass",
@@ -118,7 +120,6 @@ const Dashboard = () => {
               (item) => item._id.department === "pending-decision"
             ).count,
           },
-          ,
           {
             department: "Scheduled",
             icon: "bx bx-calendar-plus",
@@ -126,10 +127,11 @@ const Dashboard = () => {
               .count,
           },
         ];
-        setUsers(result);
+        setDepartmentalDistribution(departmentalDistribution);
+        setInterviewInsight(interviewIns);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [selectedCompany.value]);
 
   return (
     <>
@@ -163,7 +165,7 @@ const Dashboard = () => {
       <Row>
         <Col md={4}>
           <DashboardUserCard
-            title="user"
+            title="Today's Interview"
             headData={headData}
             renderHead={(item, index) => renderHead(item, index)}
             data={data}
@@ -172,7 +174,22 @@ const Dashboard = () => {
         </Col>
         <Col>
           <Row>
-            {users.map((user, index) => (
+            <h2>Departmental Distribution</h2>
+            {departmentalDistribution.map((user, index) => (
+              <Col md={3}>
+                <StatusCard
+                  style={{ height: "163px" }}
+                  key={index}
+                  title={user.department ?? "loading"}
+                  icon={user.icon ?? "bx bx-line-chart"}
+                  count={user.count ?? 0}
+                />
+              </Col>
+            ))}
+          </Row>
+          <Row>
+            <h2>Interview Insight</h2>
+            {interviewInsight.map((user, index) => (
               <Col md={3}>
                 <StatusCard
                   style={{ height: "163px" }}

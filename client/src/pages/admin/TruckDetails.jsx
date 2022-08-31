@@ -7,7 +7,6 @@ import BackButton from "../../components/UI/BackButton";
 import axios from "axios";
 import { Form, Card, Row, Col, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { socket } from "../..";
 
 const transformToSelectValue = (value) => {
   if (value.constructor === Array) {

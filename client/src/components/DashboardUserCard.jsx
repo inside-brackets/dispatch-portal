@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Alert, Card } from "react-bootstrap";
 
 const DashboardUserCard = ({
   headData,
@@ -20,7 +20,7 @@ const DashboardUserCard = ({
         <Card.Title>{title}</Card.Title>
         <hr />
         {!data || data.length === 0 ? (
-          <>Not Enough Data to show</>
+          <Alert>Not Enough Data to show</Alert>
         ) : (
           <div className="tableFixHead">
             <table>

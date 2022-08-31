@@ -37,18 +37,20 @@ const BasicInformation = ({ user }) => {
 
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
-
+    setError("loading...")
     const passwordCheck = await bcrypt.compare(oldPassword, user.password);
+
     if (!oldPassword && !newPassword && !confirmPassword) {
       setError("Please fill all fields");
     } else if (!passwordCheck) {
       console.log("user.password", passwordCheck);
-      setError("Old Password is Not Correct");
+      setError("Old password is not Correct");
     } else if (newPassword !== confirmPassword) {
-      setError("Confirm Password is not same");
+      setError("Confirm password is not same");
     } else {
       setShowModal(false);
       const pass = await bcrypt.hash(newPassword, 8);
+      setError("")
       await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
         {
@@ -99,7 +101,7 @@ const BasicInformation = ({ user }) => {
     setShowModal(false);
   };
   return (
-    <Card style={{ border: "none", minHeight: "100vh" }}>
+    <Card style={{ border: "none", minHeight: "100vh", marginBottom:0 }}>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="m-3">
           <h4 className="mb-5">Personal Info</h4>
@@ -244,7 +246,7 @@ const BasicInformation = ({ user }) => {
           </Row>
         </Row>
         <hr />
-        <Button type="submit">Edit form</Button>
+        <Button type="submit" variant="warning">Update Form</Button>
       </Form>
     </Card>
   );
@@ -258,10 +260,16 @@ function Profile() {
     <Row>
       <Col md={3} className="profile-image-panel">
         <Row>
+          <Col md={2}>
         <Badge className="rounded-0 mt-4" type={status_map[user.u_status]} content={user.u_status} />
+        </Col>
         </Row>
-        <Row>
-          <div className="container" onClick={() => setShowModal(true)}>
+        <Row className="justify-content-center align-items-center">
+          <Col md={10}>
+          <div className="container" >
+            <span className="upload-img-icon" onClick={() => setShowModal(true)}>
+            <i className="bx bx-pencil"></i>
+            </span>
             <div className="circle">
               <img
                 src={
@@ -271,10 +279,11 @@ function Profile() {
                     ? user.profile_image
                     : user_image
                 }
-                alt="profile-image"
+                alt="profile"
               />
             </div>
           </div>
+          </Col>
         </Row>
         <Row className="my-5 justify-content-center text-capitalize">
           <Col className='text-center'>

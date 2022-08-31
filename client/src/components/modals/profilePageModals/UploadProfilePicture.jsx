@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Form, Image, Button, Spinner } from "react-bootstrap";
+import { Row, Col, Image, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../../store/user";

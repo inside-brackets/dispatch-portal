@@ -15,9 +15,7 @@ import user_image from "../assets/images/taut.png";
 const Users = () => {
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);
-  const [user, setUser] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
   const [rerenderTable, setRerenderTable] = useState(null);
 
   const history = useHistory();
@@ -52,13 +50,6 @@ const Users = () => {
   const closeCloseModel = () => {
     setShowModal(false);
   };
-  const closeEditModel = () => {
-    setEditModal(false);
-  };
-  const editModalHnadler = (item) => {
-    setEditModal(true);
-    setUser(item);
-  };
   const addUserHandler = () => {
     setShowModal(true);
   };
@@ -68,14 +59,14 @@ const Users = () => {
       <td>{index + 1}</td>
       <td>
         <Row>
-          <Col md={5}>
-            <div className="container pl-0">
+          <Col md={3} className='p-0'>
+            <div className="container p-0">
               <div className="circle mt-0">
                 <img src={item.profile_image ?? user_image} alt="." />
               </div>
             </div>
           </Col>
-          <Col md={7}>
+          <Col md={9}>
             <Row>
               <Col>{`${item.user_name}`} </Col></Row>
             <Row>
@@ -101,8 +92,6 @@ const Users = () => {
       </td>
       <td>
         <div className="edit__class">
-          <EditButton type="edit" onClick={() => editModalHnadler(item)} />
-
           <EditButton
             type="open"
             onClick={() => history.push(`/users/${item._id}`)}
@@ -138,7 +127,7 @@ const Users = () => {
                     company: selectedCompany.value,
                   },
                 }}
-                placeholder={"User Name"}
+                placeholder={"User Name | Full name"}
                 status_placeholder={"Designation:"}
                 filter={{
                   department: [
@@ -171,24 +160,6 @@ const Users = () => {
               setRerenderTable(Math.random());
             }}
             data={users}
-            setRefresh={setRefresh}
-          />
-        </MyModal>
-
-        <MyModal
-          size="lg"
-          show={editModal}
-          heading="Edit User"
-          onClose={closeEditModel}
-          style={{ width: "auto" }}
-        >
-          <NewUserForm
-            setEditModal={(data) => {
-              setEditModal(data);
-              setRerenderTable(Math.random());
-            }}
-            data={users}
-            defaultValue={user}
             setRefresh={setRefresh}
           />
         </MyModal>

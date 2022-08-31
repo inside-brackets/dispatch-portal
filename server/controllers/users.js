@@ -1,5 +1,5 @@
 const User = require("../models/user");
-const Interview = require("../models/interview")
+const Interview = require("../models/interview");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
@@ -82,7 +82,11 @@ const getTableUsers = (req, res, next) => {
       if (search !== "") {
         search = search.trim().toLowerCase();
         users = users.filter((user) => {
-          return user.user_name.toLowerCase().includes(search);
+          return (
+            user.user_name.toLowerCase().includes(search) ||
+            user.first_name?.toLowerCase().includes(search) ||
+            user.last_name?.includes(search)
+          );
         });
       }
       const fResult = users.slice(
@@ -92,6 +96,7 @@ const getTableUsers = (req, res, next) => {
       res.send({ data: fResult, length: users.length });
     })
     .catch((err) => {
+      console.log(err)
       res.send(err);
     });
 };
@@ -190,7 +195,7 @@ const login = (req, res) => {
             company: user.company,
             password: user.password,
             profile_image: user.profile_image,
-            user: user.u_status,
+            u_status: user.u_status,
             files: user.files,
           },
           process.env.JWT
@@ -256,7 +261,7 @@ const countUsers = async (req, res, next) => {
     }).countDocuments();
     const upcomingResource = await User.find({
       joining_date: {
-        $gte: moment().format("YYYY-MM-DD")
+        $gte: moment().format("YYYY-MM-DD"),
       },
     }).countDocuments();
 
@@ -266,16 +271,19 @@ const countUsers = async (req, res, next) => {
           $or: [{ status: "pending-decision" }, { status: "scheduled" }],
         },
       },
-      { $group: { _id:{department: "$status"}, count: { $sum: 1 } } },
+      { $group: { _id: { department: "$status" }, count: { $sum: 1 } } },
     ]);
-    result.push({
-      _id: { department: "Joined this month" },
-      count: joinedThisMonth,
-    },{
-      _id: { department: "Upcoming Resource" },
-      count: upcomingResource,
-      
-    },...interview);
+    result.push(
+      {
+        _id: { department: "Joined this month" },
+        count: joinedThisMonth,
+      },
+      {
+        _id: { department: "Upcoming Resource" },
+        count: upcomingResource,
+      },
+      ...interview
+    );
     res.status(200);
     res.json(result);
   } catch (error) {

@@ -25,7 +25,7 @@ const Timer = () => {
       .catch((err) => console.log(err));
      
       console.log("im run")
-  }, [value]);
+  }, [value,user?._id]);
 
   return <></>;
 };

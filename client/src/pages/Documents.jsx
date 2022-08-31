@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Button, Card } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 
 import AddDocuments from "../components/modals/AddDocuments";
@@ -62,9 +62,9 @@ const Documents = ({ user, profile,callBack }) => {
                   <a href={file.file}>
                     <i className="bx bx-file action-button"></i>
                   </a>
-                  <a onClick={() => setDeleteModa(file)}>
+                  <span  onClick={() => setDeleteModa(file)}>
                     <i className="bx bx-trash-alt action-button"></i>
-                  </a>{" "}
+                  </span>{" "}
                 </Col>
               </Row>
               <hr />
@@ -91,6 +91,7 @@ const Documents = ({ user, profile,callBack }) => {
         confirmModal={submitDelete}
         hideModal={() => setDeleteModa(false)}
         message={"Are you Sure to want to delete File?"}
+        title="Delete Confirmation"
       />
     </Card>
   );

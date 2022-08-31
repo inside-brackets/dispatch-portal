@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import Table from "../../components/table/SmartTable";
 import EditButton from "../../components/UI/EditButton";
 import moment from "moment";
@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 const Users = () => {
   const [rerenderTable, setRerenderTable] = useState(null);
   const history = useHistory();
-  const { user,company } = useSelector((state) => state.user);
+  const { company } = useSelector((state) => state.user);
 
   const customerTableHead = ["#", "MC", "Truck", "From", "To", "Actions"];
   const renderHead = (item, index) => <th key={index}>{item}</th>;

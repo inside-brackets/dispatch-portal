@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Form, Button, Spinner, Card } from "react-bootstrap";
+import { Col, Row, Form, Button, Card } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import MyModal from "../../components/modals/MyModal";
 import NewUserForm from "../../components/Form/NewUserForm";
+import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
 
 const InterviewDetail = ({ defaultValue }) => {
   const { company: selectedCompany } = useSelector((state) => state.user);
@@ -15,6 +16,7 @@ const InterviewDetail = ({ defaultValue }) => {
   const [state, setState] = useState({
     candidate: { company: selectedCompany.value },
   });
+  const history = useHistory();
   const [users, setUsers] = useState([]);
   console.log("params", params);
   const [validated, setValidated] = useState(false);
@@ -22,6 +24,7 @@ const InterviewDetail = ({ defaultValue }) => {
   const [selectedInterviewer, setSelectedInterviewer] = useState([]);
   const [editale, setEditale] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [handleRejectionModal, setHandleRejectionModal] = useState(false);
 
   useEffect(() => {
     if (state.candidate.department) {
@@ -66,12 +69,13 @@ const InterviewDetail = ({ defaultValue }) => {
     } else {
       setEditale(true);
     }
-  }, []);
+  }, [params.id]);
 
   let candidate;
   const handleChange = (evt) => {
     const value = evt.target.value;
     const name = evt.target.name;
+    if (name === "candidate.department") setSelectedInterviewer([]);
 
     if (name.split(".")[0] === "candidate") {
       candidate = { ...state.candidate, [name.split(".")[1]]: value };
@@ -105,11 +109,13 @@ const InterviewDetail = ({ defaultValue }) => {
         `${process.env.REACT_APP_BACKEND_URL}/interviews`,
         state
       );
+      history.push("/interviews");
     } else {
       await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/interviews/${params.id}`,
         state
       );
+      setEditale(false);
     }
     setLoading(false);
     toast.success("Interview Schedule Successfully");
@@ -125,6 +131,7 @@ const InterviewDetail = ({ defaultValue }) => {
       .then((res) => toast.success("Rejected Sucessfully"));
 
     setLoading(false);
+    history.push("/interviews");
   };
   const handleHire = async () => {
     setLoading(true);
@@ -132,10 +139,12 @@ const InterviewDetail = ({ defaultValue }) => {
       .put(`${process.env.REACT_APP_BACKEND_URL}/interviews/${params.id}`, {
         status: "hired",
       })
-      .then((res) => toast.success("Hired Sucessfully"));
+      .then((res) => toast.success("Hired Sucessfully"))
+      .catch((err) => toast.error(err.message));
 
     setLoading(false);
     setEditModal(false);
+    history.push("/interviews");
   };
 
   return (
@@ -199,6 +208,7 @@ const InterviewDetail = ({ defaultValue }) => {
               as="select"
               name="candidate.department"
               required
+              disabled={!editale}
               value={state.candidate.department ?? ""}
               placeholder="Select Department"
               onChange={handleChange}
@@ -209,7 +219,6 @@ const InterviewDetail = ({ defaultValue }) => {
               <option value="HR">HR</option>
               <option value="admin">Admin</option>
               <option value="accounts">Accounts</option>
-              <option value="undefined">Undefined</option>
             </Form.Control>
           </Form.Group>
           <Form.Group as={Col} md="6">
@@ -231,7 +240,9 @@ const InterviewDetail = ({ defaultValue }) => {
             <Select
               value={selectedInterviewer}
               onChange={setSelectedInterviewer}
-              isDisabled={users.length === 0 || !state.candidate.department}
+              isDisabled={
+                users.length === 0 || !state.candidate.department || !editale
+              }
               isSearchable={true}
               isRequired
               options={users.map((user) => {
@@ -264,7 +275,14 @@ const InterviewDetail = ({ defaultValue }) => {
               onChange={handleChange}
               readOnly={!editale}
             >
-              <option value={null}></option>
+              <option value={["hired", "rejected"].includes(state.status)
+                  ? state.status
+                  : ""}>
+                {" "}
+                {["hired", "rejected"].includes(state.status)
+                  ? state.status
+                  : ""}
+              </option>
               <option value="scheduled">scheduled</option>
               <option value="pending-decision">pending-decision</option>
             </Form.Control>
@@ -284,15 +302,15 @@ const InterviewDetail = ({ defaultValue }) => {
         <Row className="my-5">
           {!params.id ? (
             <Col md={2}>
-              <Button className="w-100" disabled={loading} type="submit">
-                Submit
+              <Button className="w-100 p-2" disabled={loading} type="submit">
+                {loading ? "loading..." : "Submit"}
               </Button>
             </Col>
           ) : (
             editale && (
               <Col md={2}>
                 <Button
-                  className="w-100"
+                  className="w-100 p-2"
                   variant="outline-success"
                   disabled={loading}
                   type="submit"
@@ -306,9 +324,13 @@ const InterviewDetail = ({ defaultValue }) => {
           {params.id && (
             <Col md={2}>
               <Button
-                className="w-100"
+                className="w-100 p-2"
                 variant={`outline-${!editale ? "primary" : "danger"}`}
-                disabled={loading}
+                disabled={
+                  loading ||
+                  state.status === "hired" ||
+                  state.status === "rejected"
+                }
                 onClick={() => setEditale(!editale)}
               >
                 {!editale ? "Edit" : "Close"}
@@ -321,19 +343,29 @@ const InterviewDetail = ({ defaultValue }) => {
               {" "}
               <Col className="float-right" md={2}>
                 <Button
-                  className="w-100"
+                  className="w-100 p-2"
                   variant="danger"
-                  disabled={loading}
-                  onClick={handleRejection}
+                  disabled={
+                    loading ||
+                    editale ||
+                    state.status === "hired" ||
+                    state.status === "rejected"
+                  }
+                  onClick={() => setHandleRejectionModal(true)}
                 >
                   Rejected
                 </Button>
               </Col>
               <Col md={2}>
                 <Button
-                  className="w-100"
+                  className="w-100 p-2"
                   variant="success"
-                  disabled={loading}
+                  disabled={
+                    loading ||
+                    editale ||
+                    state.status === "hired" ||
+                    state.status === "rejected"
+                  }
                   onClick={() => setEditModal(true)}
                 >
                   Hire
@@ -358,6 +390,13 @@ const InterviewDetail = ({ defaultValue }) => {
           defaultValue={state.candidate}
         />
       </MyModal>
+      <DeleteConfirmation
+        showModal={handleRejectionModal}
+        confirmModal={handleRejection}
+        hideModal={() => setHandleRejectionModal(false)}
+        message={"Are you Sure to want to Reject candidate?"}
+        title="Reject Confirmation"
+      />
     </Card>
   );
 };

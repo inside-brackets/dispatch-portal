@@ -61,7 +61,7 @@ const Invoice = () => {
       );
     };
     getData();
-  }, []);
+  }, [selectedCompany.value]);
 
   const renderBody = (item, index, currPage) => (
     <tr key={index}>
