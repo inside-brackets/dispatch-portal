@@ -36,15 +36,15 @@ import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
 import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
 
-const UserDetailPage = ({ user,callBack }) => {
+const UserDetailPage = ({ user, callBack }) => {
   const [data, setData] = useState(null);
-  console.log("user user user", user);
   const [message, setMessage] = useState(`Loading`);
   const [state, setState] = useState(user);
   const [loading, setLoading] = useState(false);
   const [editable, setEditable] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showError, setShowError] = useState(false)
   const handleChange = (evt) => {
     const value = evt.target.value;
     const name = evt.target.name;
@@ -64,7 +64,7 @@ const UserDetailPage = ({ user,callBack }) => {
       })
       .then((response) => {
         toast.success("Password has been successfully reset");
-        setShowModal(false)
+        setShowModal(false);
       })
       .catch((err) => toast.error(err));
   };
@@ -91,7 +91,7 @@ const UserDetailPage = ({ user,callBack }) => {
           }
           setEditable(false);
           setLoading(false);
-        callBack()
+          callBack();
         })
         .catch((err) => toast.error(err));
     }
@@ -231,18 +231,17 @@ const UserDetailPage = ({ user,callBack }) => {
   // };
   useEffect(() => {
     if (state.user_name) {
+      console.log(state.user_name)
       const indentifier = setTimeout(async () => {
         // if (userName !== defaultValue?.user_name) {
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/getusers`,
           {
             user_name: state.user_name
-              .replace(/\s+/g, " ")
-              .trim()
-              .toLowerCase(),
           }
         );
         console.log("checking username", response.data);
+        if(state.user_name !== response.data[0]?.user_name) setShowError(true)
         setUsernameIsValid(response.data.length === 0);
       }, 500);
       return () => {
@@ -270,25 +269,28 @@ const UserDetailPage = ({ user,callBack }) => {
                 <Form.Label>User Name</Form.Label>
                 <Form.Control
                   className={`${
-                    state.user_name && !usernameIsValid
+                    showError && editable && state.user_name && !usernameIsValid
                       ? "invalid is-invalid"
                       : ""
                   } no__feedback shadow-none`}
                   value={state.user_name}
                   onChange={handleChange}
                   type="text"
+                  readOnly={!editable}
                   placeholder="Enter username"
                   name="user_name"
                 />
-                {usernameIsValid && state.user_name && (
+                { editable && showError && usernameIsValid !== null && usernameIsValid  ? (
                   <Form.Text style={{ color: "green" }}>
                     Username is available!
                   </Form.Text>
-                )}
-                {usernameIsValid === false && state.user_name && (
-                  <Form.Text style={{ color: "red" }}>
-                    Whoops! username already exists.
-                  </Form.Text>
+                ) : (
+                  editable && showError &&  usernameIsValid === false &&
+                  (
+                    <Form.Text style={{ color: "red" }}>
+                      Whoops! username already exists.
+                    </Form.Text>
+                  )
                 )}
 
                 <Row>
@@ -301,7 +303,6 @@ const UserDetailPage = ({ user,callBack }) => {
                   </Col>
                 </Row>
               </Form.Group>
-
             </Row>
             <hr />
 
@@ -440,7 +441,6 @@ const UserDetailPage = ({ user,callBack }) => {
                   <option value="active">Active</option>
                   <option value="fired">Fired</option>
                   <option value="inactive">Inactive</option>
-
                 </Form.Control>
 
                 <Form.Control.Feedback type="invalid">
@@ -479,7 +479,7 @@ const UserDetailPage = ({ user,callBack }) => {
                   className="w-100 p-2"
                   variant="warning"
                   disabled={loading || editable}
-                  onClick={()=> setShowModal(true)}
+                  onClick={() => setShowModal(true)}
                 >
                   Reset Password
                 </Button>
@@ -569,7 +569,7 @@ const UserDetailPage = ({ user,callBack }) => {
 
 function UserDetail() {
   const params = useParams();
-  
+
   const [key, setKey] = useState("info");
 
   const [user, setUser] = useState(null);
@@ -582,7 +582,7 @@ function UserDetail() {
         setUser(res.data);
       })
       .catch((err) => console.log(err));
-  }, [reCall,params.id]);
+  }, [reCall, params.id]);
   return !user ? (
     <div className="spreadsheet__loader">
       <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
