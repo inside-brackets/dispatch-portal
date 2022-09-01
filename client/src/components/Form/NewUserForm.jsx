@@ -115,7 +115,7 @@ const NewUserForm = ({
         setButtonLoader(true);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
-            user_name: userName.replace(/\s+/g, " ").trim(),
+            user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
             password: hash,
             joining_date: new Date(joiningDate),
             salary,

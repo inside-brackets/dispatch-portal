@@ -237,7 +237,7 @@ const UserDetailPage = ({ user, callBack }) => {
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/getusers`,
           {
-            user_name: state.user_name
+            user_name: state.user_name.replace(/\s+/g, " ").trim().toLowerCase()
           }
         );
         console.log("checking username", response.data);
@@ -489,7 +489,7 @@ const UserDetailPage = ({ user, callBack }) => {
                 showModal={showModal}
                 confirmModal={handleReset}
                 hideModal={() => setShowModal(false)}
-                message={"Are you sure to want to Reset Password to 1234?"}
+                message={"Are you sure to want to Reset Password to 12345?"}
                 title="Reset Confirmation"
               />
             </Row>
