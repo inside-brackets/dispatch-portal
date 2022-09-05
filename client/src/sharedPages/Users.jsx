@@ -11,13 +11,14 @@ import { useHistory } from "react-router-dom";
 import status_map from "../assets/JsonData/status_map.json";
 import Badge from "../components/badge/Badge";
 import user_image from "../assets/images/taut.png";
+import Select from "react-select";
 
 const Users = () => {
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [rerenderTable, setRerenderTable] = useState(null);
-
+  const [filter, setFilter] = useState(null);
   const history = useHistory();
   const { company: selectedCompany } = useSelector((state) => state.user);
   useEffect(() => {
@@ -101,11 +102,35 @@ const Users = () => {
       </td>
     </tr>
   );
-
+  console.log(filter);
   return (
     <>
-      <Row className="m-3">
-        <Col md={3}></Col>
+      <Row className="my-3 mx-1">
+        <Col md={3} className='p-0'>
+          {/* <ReactSelect></ReactSelect> */}
+          <Select
+            label="Users"
+            value={filter}
+            onChange={(e) => {
+              setRerenderTable(Math.random());
+              setFilter(e);
+            }}
+            options={[
+              {
+                label: "Upcoming",
+                value: `upcoming`,
+              },
+              {
+                label: "All Users",
+                value: null,
+              },
+              {
+                label: "This Month",
+                value: "this_month",
+              },
+            ]}
+          />
+        </Col>
         <Col md={5}></Col>
         <Col md={4}>
           <Button onClick={addUserHandler} style={{ float: "right" }}>
@@ -126,6 +151,7 @@ const Users = () => {
                   url: `${process.env.REACT_APP_BACKEND_URL}/get-table-users`,
                   body: {
                     company: selectedCompany.value,
+                    joining_date: filter?.value,
                   },
                 }}
                 placeholder={"User Name | Full name"}

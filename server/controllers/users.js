@@ -70,6 +70,11 @@ const getTableUsers = (req, res, next) => {
       $in: req.body.filter.status.map((item) => item.value),
     };
   }
+  if (req.body.joining_date) {
+    req.body.joining_date === "upcoming"
+      ? (filter.joining_date = { $gte: new Date() })
+      : (filter.joining_date = { $gte: moment().startOf('month'), $lte: moment().endOf('month') });
+  }
   console.log(filter);
   User.find(filter, null, {
     // skip: 0, // Starting Row
@@ -96,7 +101,7 @@ const getTableUsers = (req, res, next) => {
       res.send({ data: fResult, length: users.length });
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       res.send(err);
     });
 };
@@ -125,7 +130,6 @@ const getUsers = (req, res, next) => {
     },
   })
     .then((users) => {
-      console.log(users);
       res.send(users);
     })
     .catch((err) => {
