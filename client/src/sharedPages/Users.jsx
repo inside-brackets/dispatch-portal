@@ -59,7 +59,7 @@ const Users = () => {
       <td>{index + 1}</td>
       <td>
         <Row>
-          <Col md={3} className='p-0'>
+          <Col md={3} className="p-0">
             <div className="container p-0">
               <div className="circle mt-0">
                 <img src={item.profile_image ?? user_image} alt="." />
@@ -68,14 +68,15 @@ const Users = () => {
           </Col>
           <Col md={9}>
             <Row>
-              <Col>{`${item.user_name}`} </Col></Row>
+              <Col>{`${item.user_name}`} </Col>
+            </Row>
             <Row>
-            <Col>
-              {`${
-                item.first_name
-                  ? `${item.first_name} ${item.last_name}`
-                  : "Not Added"
-              } `}
+              <Col>
+                {`${
+                  item.first_name
+                    ? `${item.first_name} ${item.last_name}`
+                    : "Not Added"
+                } `}
               </Col>
             </Row>
           </Col>
@@ -133,6 +134,7 @@ const Users = () => {
                   department: [
                     { label: "sales ", value: "sales" },
                     { label: "dispatch", value: "dispatch" },
+                    { label: "HR", value: "HR" },
                   ],
                   status: [
                     { label: "Fired ", value: "fired" },

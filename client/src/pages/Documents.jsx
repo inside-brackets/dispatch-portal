@@ -6,7 +6,7 @@ import AddDocuments from "../components/modals/AddDocuments";
 import DeleteConfirmation from "../components/modals/DeleteConfirmation";
 import MyModal from "../components/modals/MyModal";
 
-const Documents = ({ user, profile,callBack }) => {
+const Documents = ({ user, profile, callBack }) => {
   const [showModal, setShowModal] = useState(false);
   const [deleteModal, setDeleteModa] = useState(false);
   const submitDelete = async () => {
@@ -17,13 +17,14 @@ const Documents = ({ user, profile,callBack }) => {
       }
     );
     await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url-delete/user_documents/${deleteModal.file?.substring(
+      `${
+        process.env.REACT_APP_BACKEND_URL
+      }/s3url-delete/user_documents/${deleteModal.file?.substring(
         deleteModal.file?.lastIndexOf("/") + 1
       )}`
-    )
-    setDeleteModa(false)
-    callBack()
-
+    );
+    setDeleteModa(false);
+    callBack();
   };
 
   return (
@@ -58,13 +59,12 @@ const Documents = ({ user, profile,callBack }) => {
                   <h5> {file.name} </h5>
                 </Col>
                 <Col md={2}>
-                  {" "}
                   <a href={file.file}>
                     <i className="bx bx-file action-button"></i>
                   </a>
-                  <span  onClick={() => setDeleteModa(file)}>
+                  <span onClick={() => setDeleteModa(file)}>
                     <i className="bx bx-trash-alt action-button"></i>
-                  </span>{" "}
+                  </span>
                 </Col>
               </Row>
               <hr />
@@ -82,7 +82,7 @@ const Documents = ({ user, profile,callBack }) => {
         <AddDocuments
           profile={profile}
           user={user}
-          callBack={()=> callBack()}
+          callBack={() => callBack()}
           showModal={() => setShowModal(false)}
         />
       </MyModal>
