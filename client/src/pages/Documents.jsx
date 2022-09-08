@@ -26,7 +26,6 @@ const Documents = ({ user, profile, callBack }) => {
     setDeleteModa(false);
     callBack();
   };
-
   return (
     <Card style={{ border: "none", minHeight: "100vh" }}>
       <Col className="mx-3">
