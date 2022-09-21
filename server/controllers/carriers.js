@@ -91,6 +91,7 @@ const fetchLead = async (req, res, next) => {
   Carrier.findOne({
     salesman: mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
+    mc_number: {$gt : 990000},
     address: { $regex: callAbleStates(pst), $options: "i" },
   })
     .populate("salesman", { user_name: 1 })
@@ -99,11 +100,12 @@ const fetchLead = async (req, res, next) => {
       if (result === null) {
         const carrier = await Carrier.find({
           c_status: "unassigned",
+          mc_number: {$gt : 990000},
           address: { $regex: callAbleStates(pst), $options: "i" },
         })
-          .sort({ mc_number: -1 })
+          .sort({ mc_number: 1 })
           .limit(1);
-        if (carrier) {
+        if (carrier.length > 0) {
           await Carrier.findByIdAndUpdate(
             carrier[0]._id,
             {
