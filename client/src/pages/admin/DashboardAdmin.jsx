@@ -117,11 +117,11 @@ const DashboardAdmin = () => {
           }}
           options={[
             {
-              label: "Elite Dispatch Service",
+              label: "Company A",
               value: "elite",
             },
             {
-              label: "Alpha Dispatch Solution",
+              label: "Company B",
               value: "alpha",
             },
           ]}

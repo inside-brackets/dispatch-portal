@@ -13,7 +13,7 @@ import { io } from "socket.io-client";
 
 const socket = io(`${process.env.REACT_APP_BACKEND_URL}`);
 
-document.title = "Falcon Portal";
+document.title = "Dispatch Portal";
 
 ReactDOM.render(
   <Provider store={store}>

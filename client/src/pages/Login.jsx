@@ -62,11 +62,11 @@ const Login = () => {
                 company:
                   user.company === "alpha"
                     ? {
-                        label: "Alpha Dispatch Service",
+                        label: "Comppany B",
                         value: "alpha",
                       }
                     : {
-                        label: "Elite Dispatch Service",
+                        label: "Company A",
                         value: "elite",
                       },
               })
@@ -147,8 +147,8 @@ const Login = () => {
                       role="status"
                       aria-hidden="true"
                     />
-                  )}{" "}
-                  Login{" "}
+                  )}
+                  Looooogin
                 </Button>
               </Row>
             </Form>
@@ -157,7 +157,7 @@ const Login = () => {
         <Col md={6}>
           <Image
             className="justify-content-start align-items-center vh-100 vw-100"
-            src={logo}
+            src={"https://www.yatharthriti.com/image/elearning.webp"}
             fluid
           />
         </Col>
