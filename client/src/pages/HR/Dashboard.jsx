@@ -151,11 +151,11 @@ const Dashboard = () => {
             }}
             options={[
               {
-                label: "Company A",
+                label: "Elite Dispatch Service",
                 value: "elite",
               },
               {
-                label: "Company B",
+                label: "Alpha Dispatch Solution",
                 value: "alpha",
               },
             ]}
