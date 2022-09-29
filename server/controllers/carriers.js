@@ -101,7 +101,7 @@ const fetchLead = async (req, res, next) => {
           c_status: "unassigned",
           address: { $regex: callAbleStates(pst), $options: "i" },
         })
-          .sort({ mc_number: -1 })
+          .sort({ mc_number: 1 })
           .limit(1);
         if (carrier.length > 0) {
           await Carrier.findByIdAndUpdate(
