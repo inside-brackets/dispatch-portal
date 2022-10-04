@@ -13,7 +13,7 @@ const NewUserForm = ({
   setShowModal,
   setEditModal,
   setRefresh,
-  interview
+  interview,
 }) => {
   const [validated, setValidated] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(null);
@@ -122,7 +122,7 @@ const NewUserForm = ({
             designation,
             department,
             company: department === "admin" ? "falcon" : selectedCompany.value,
-            ...defaultValue
+            ...defaultValue,
           })
           .then((response) => {
             console.log("response", response);
@@ -223,12 +223,18 @@ const NewUserForm = ({
           <Form.Group as={Col} md="6">
             <Form.Label>Designation</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Designation"
+              as="select"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
               required
-            />
+            >
+              <option value={null}>Select Department</option>
+              <option value="Company">Company</option>
+              <option value="Manager">Manager</option>
+              <option value="Senior Employee">Senior Employee</option>
+              <option value="Junior Employee">Junior Employee</option>
+              <option value="Team Lead">Team Lead</option>
+            </Form.Control>
             <Form.Control.Feedback type="invalid">
               Please provide a valid Designation.
             </Form.Control.Feedback>
