@@ -1,0 +1,25 @@
+#  Template NodeJS build
+
+#  This template allows you to validate your NodeJS code.
+#  The workflow allows running tests and code linting on the default branch.
+
+image: node:16
+
+pipelines:
+   branches:
+     northwind:
+       - step: 
+           script: 
+            - ssh root@45.93.137.173
+            - Infamd!@34
+            - cd northwind
+            - git pull
+            - ATBBwDDdjZABgvVKwnv5pTcxLUjUD3706723
+            - pm2 restart api
+            - cd client
+            - npm run build
+            - rm -rfv /var/www/northwind/*
+            - mkdir /var/www/northwind/client
+            - cp -rv build/* /var/www/northwind/client
+            
+            
