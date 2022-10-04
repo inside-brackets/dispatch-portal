@@ -44,7 +44,7 @@ const UserDetailPage = ({ user, callBack }) => {
   const [editable, setEditable] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showError, setShowError] = useState(false)
+  const [showError, setShowError] = useState(false);
   const handleChange = (evt) => {
     const value = evt.target.value;
     const name = evt.target.name;
@@ -231,17 +231,20 @@ const UserDetailPage = ({ user, callBack }) => {
   // };
   useEffect(() => {
     if (state.user_name) {
-      console.log(state.user_name)
+      console.log(state.user_name);
       const indentifier = setTimeout(async () => {
         // if (userName !== defaultValue?.user_name) {
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_URL}/getusers`,
           {
-            user_name: state.user_name.replace(/\s+/g, " ").trim().toLowerCase()
+            user_name: state.user_name
+              .replace(/\s+/g, " ")
+              .trim()
+              .toLowerCase(),
           }
         );
         console.log("checking username", response.data);
-        if(state.user_name !== response.data[0]?.user_name) setShowError(true)
+        if (state.user_name !== response.data[0]?.user_name) setShowError(true);
         setUsernameIsValid(response.data.length === 0);
       }, 500);
       return () => {
@@ -280,13 +283,17 @@ const UserDetailPage = ({ user, callBack }) => {
                   placeholder="Enter username"
                   name="user_name"
                 />
-                { editable && showError && usernameIsValid !== null && usernameIsValid  ? (
+                {editable &&
+                showError &&
+                usernameIsValid !== null &&
+                usernameIsValid ? (
                   <Form.Text style={{ color: "green" }}>
                     Username is available!
                   </Form.Text>
                 ) : (
-                  editable && showError &&  usernameIsValid === false &&
-                  (
+                  editable &&
+                  showError &&
+                  usernameIsValid === false && (
                     <Form.Text style={{ color: "red" }}>
                       Whoops! username already exists.
                     </Form.Text>
@@ -393,13 +400,20 @@ const UserDetailPage = ({ user, callBack }) => {
               <Form.Group as={Col} md="6">
                 <Form.Label>Designation</Form.Label>
                 <Form.Control
-                  type="text"
+                  as="select"
                   value={state.designation}
                   readOnly={!editable}
                   onChange={handleChange}
-                  placeholder="Last name"
                   name="designation"
-                />
+                  required
+                >
+                  <option value={null}>Select Department</option>
+                  <option value="Company">Company</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Senior Employee">Senior Employee</option>
+                  <option value="Junior Employee">Junior Employee</option>
+                  <option value="Team Lead">Team Lead</option>
+                </Form.Control>
               </Form.Group>
 
               <Form.Group as={Col} md="6">
