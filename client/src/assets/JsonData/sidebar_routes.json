@@ -1,26 +1,42 @@
 {
-  "sales": [
-    {
-      "display_name": "Dashboard",
-      "route": "/dashboard",
-      "icon": "bx bx-category-alt"
-    },
-    {
-      "display_name": "Appointments",
-      "route": "/appointments",
-      "icon": "bx bx-user-pin"
-    },
-    {
-      "display_name": "Spread Sheet",
-      "route": "/spread_sheet",
-      "icon": "bx bx-spreadsheet"
-    },
-    {
-      "display_name": "Fetch leads",
-      "route": "/dialer",
-      "icon": "bx bx-phone-outgoing"
-    }
-  ],
+  "sales": {
+    "manager": [
+      {
+        "display_name": "Dashboard",
+        "route": "/dashboard",
+        "icon": "bx bx-category-alt"
+      }
+    ],
+    "teamlead": [
+      {
+        "display_name": "Dashboard",
+        "route": "/dashboard",
+        "icon": "bx bx-category-alt"
+      }
+    ],
+    "employee": [
+      {
+        "display_name": "Dashboard",
+        "route": "/dashboard",
+        "icon": "bx bx-category-alt"
+      },
+      {
+        "display_name": "Appointments",
+        "route": "/appointments",
+        "icon": "bx bx-user-pin"
+      },
+      {
+        "display_name": "Spread Sheet",
+        "route": "/spread_sheet",
+        "icon": "bx bx-spreadsheet"
+      },
+      {
+        "display_name": "Fetch leads",
+        "route": "/dialer",
+        "icon": "bx bx-phone-outgoing"
+      }
+    ]
+  },
   "admin": [
     {
       "display_name": "Dashboard",
@@ -63,28 +79,44 @@
       "icon": "bx bxs-report"
     }
   ],
-  "dispatch": [
-    {
-      "display_name": "Dashboard",
-      "route": "/dashboard",
-      "icon": "bx bx-category-alt"
-    },
-    {
-      "display_name": "My Trucks",
-      "route": "/mytrucks",
-      "icon": "bx bxs-truck"
-    },
-    {
-      "display_name": "Invoices",
-      "route": "/invoices",
-      "icon": "bx bx-paper-plane"
-    },
-    {
-      "display_name": "Report",
-      "route": "/reports",
-      "icon": "bx bxs-report"
-    }
-  ],
+  "dispatch": {
+    "manager": [
+      {
+        "display_name": "Dashboard",
+        "route": "/dashboard",
+        "icon": "bx bx-category-alt"
+      }
+    ],
+    "teamlead": [
+      {
+        "display_name": "Dashboard",
+        "route": "/dashboard",
+        "icon": "bx bx-category-alt"
+      }
+    ],
+    "employee": [
+      {
+        "display_name": "Dashboard",
+        "route": "/dashboard",
+        "icon": "bx bx-category-alt"
+      },
+      {
+        "display_name": "My Trucks",
+        "route": "/mytrucks",
+        "icon": "bx bxs-truck"
+      },
+      {
+        "display_name": "Invoices",
+        "route": "/invoices",
+        "icon": "bx bx-paper-plane"
+      },
+      {
+        "display_name": "Report",
+        "route": "/reports",
+        "icon": "bx bxs-report"
+      }
+    ]
+  },
   "HR": [
     {
       "display_name": "Dashboard",

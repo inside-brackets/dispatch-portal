@@ -31,6 +31,9 @@ const AppointmentDetail = lazy(() =>
 const Dialer = lazy(() => import("../pages/sales/Dialer"));
 const Profile = lazy(() => import("../pages/Profile"));
 
+// sales manager routes
+const SMDashboard = lazy(() => import("../pages/salesManager/Dashboard"));
+
 // dispatchers
 const TruckDetail = lazy(() => import("../pages/dispatch/TruckDetail"));
 const MyTrucks = lazy(() => import("../pages/dispatch/MyTrucks"));
@@ -40,11 +43,11 @@ const DispatchInvoices = lazy(() => import("../pages/dispatch/Invoices"));
 
 // HR
 const HRDashboard = lazy(() => import("../pages/HR/Dashboard"));
-const Interviews = lazy(()=> import("../pages/HR/Interviews"))
-const InterviewsDetail = lazy(()=> import("../pages/HR/InterviewDetail"))
+const Interviews = lazy(() => import("../pages/HR/Interviews"));
+const InterviewsDetail = lazy(() => import("../pages/HR/InterviewDetail"));
 
 const Routes = () => {
-  const { department } = useSelector((state) => state.user.user);
+  const { department, designation } = useSelector((state) => state.user.user);
   const [refresh, setRefresh] = useState(true);
   const dispatch = useDispatch();
   const { sendRequest: fetchCarriers } = useHttp();
@@ -80,33 +83,58 @@ const Routes = () => {
     }
   }, [dispatch, department, fetchCarriers, refresh, selectedCompany]);
   return department === "sales" ? (
-    <Suspense
-      fallback={
-        <div className="spreadsheet__loader">
-          <Loader
-            type="MutatingDots"
-            color="#349eff"
-            height={100}
-            width={100}
-          />
-        </div>
-      }
-    >
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to="/dashboard" />
-        </Route>
-        <Route path="/dashboard" exact component={Dashboard} />
-        <Route path="/spread_sheet" component={SpreadSheet} />
-        <Route path="/appointments" exact component={Appointments} />
-        <Route path="/appointments/:mc" component={AppointmentDetail} />
-        <Route path="/dialer" component={Dialer} />
-        <Route path="/profile" component={Profile} />
-        <Route path="*">
-          <h1>Not found</h1>
-        </Route>
-      </Switch>
-    </Suspense>
+    designation === "Manager" ? (
+      <Suspense
+        fallback={
+          <div className="spreadsheet__loader">
+            <Loader
+              type="MutatingDots"
+              color="#349eff"
+              height={100}
+              width={100}
+            />
+          </div>
+        }
+      >
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to="/dashboard" />
+          </Route>
+          <Route path="/dashboard" exact component={SMDashboard} />
+          <Route path="*">
+            <h1>Not found</h1>
+          </Route>
+        </Switch>
+      </Suspense>
+    ) : (
+      <Suspense
+        fallback={
+          <div className="spreadsheet__loader">
+            <Loader
+              type="MutatingDots"
+              color="#349eff"
+              height={100}
+              width={100}
+            />
+          </div>
+        }
+      >
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to="/dashboard" />
+          </Route>
+          <Route path="/dashboard" exact component={Dashboard} />
+          <Route path="/spread_sheet" component={SpreadSheet} />
+          <Route path="/appointments" exact component={Appointments} />
+          <Route path="/appointments/:mc" component={AppointmentDetail} />
+          <Route path="/dialer" component={Dialer} />
+          <Route path="/profile" component={Profile} />
+          <Route path="*">
+            <h1>Not found</h1>
+          </Route>
+        </Switch>
+      </Suspense>
+    )
   ) : department === "admin" ? (
     <Suspense
       fallback={
@@ -197,7 +225,7 @@ const Routes = () => {
         <Route path="/profile" component={Profile} />
         <Route path="/interviews" component={Interviews} exact />
         <Route path="/interviews/create/:id?" component={InterviewsDetail} />
-                <Route path="*">
+        <Route path="*">
           <h1>Not found</h1>
         </Route>
       </Switch>
