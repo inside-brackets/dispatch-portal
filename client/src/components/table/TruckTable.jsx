@@ -55,8 +55,8 @@ const TruckTable = (props) => {
     setEditModal(true);
   };
   const closeEditModal = () => {
-    setTruck(null);
     setEditModal(false);
+    // setTruck(null);
   };
 
   const deleteTruckHandler = (truck_number) => {
@@ -197,6 +197,7 @@ const TruckTable = (props) => {
 
       <Modal
         show={truckModal}
+        size="lg"
         heading="Add New Truck"
         onClose={closeTruckModal}
       >
@@ -207,7 +208,12 @@ const TruckTable = (props) => {
         />
       </Modal>
 
-      <Modal show={editModal} heading="Edit Truck" onClose={closeEditModal}>
+      <Modal
+        size="lg"
+        show={editModal}
+        heading="Edit Truck"
+        onClose={closeEditModal}
+      >
         <TruckForm
           admin={user.department === "admin"}
           setTrucks={setTrucks}

@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Form, Alert } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Alert,
+  Tab,
+  Tabs,
+  Button,
+} from "react-bootstrap";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Loader from "react-loader-spinner";
@@ -18,31 +27,86 @@ import {
   Label,
 } from "recharts";
 
-const UserDetail = () => {
-  const params = useParams();
-  const [user, setUser] = useState(null);
+import Documents from "../Documents";
+import Badge from "../../components/badge/Badge";
+import status_map from "../../assets/JsonData/status_map.json";
+import user_image from "../../assets/images/taut.png";
+import { socket } from "../../index";
+import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
+import bcrypt from "bcryptjs";
+import { toast } from "react-toastify";
+
+const UserDetailPage = ({ user, callBack }) => {
   const [data, setData] = useState(null);
   const [message, setMessage] = useState(`Loading`);
+  const [state, setState] = useState(user);
+  const [loading, setLoading] = useState(false);
+  const [editable, setEditable] = useState(false);
+  const [usernameIsValid, setUsernameIsValid] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const handleChange = (evt) => {
+    const value = evt.target.value;
+    const name = evt.target.name;
 
-  let totalLenght = 0;
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${params.id}`)
-      .then((res) => {
-        setUser(res.data);
+    setState({
+      ...state,
+      [name]: value,
+    });
+  };
+  const handleReset = async () => {
+    const pass = "12345";
+    const reHash = await bcrypt.hash(pass, 8);
+
+    await axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`, {
+        password: reHash,
       })
-      .catch((err) => console.log(err));
+      .then((response) => {
+        toast.success("Password has been successfully reset");
+        setShowModal(false);
+      })
+      .catch((err) => toast.error(err));
+  };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+
+    if (form.checkValidity() === true) {
+      setLoading(true);
+      await axios
+        .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`, {
+          user_name: state.user_name.replace(/\s+/g, " ").trim(),
+          joining_date: new Date(state.joining_date),
+          salary: state.salary,
+          designation: state.designation,
+          department: state.department,
+          u_status: state.u_status,
+        })
+        .then((response) => {
+          toast.success("Successfully updated user");
+          if (response.data.u_status === "fired") {
+            socket.emit("user-fired", `${state._id}`);
+          }
+          setEditable(false);
+          setLoading(false);
+          callBack();
+        })
+        .catch((err) => toast.error(err));
+    }
+  };
+
+  useEffect(() => {
     axios
       .post(
         `${process.env.REACT_APP_BACKEND_URL}/admin/registered-and-rejected`,
         {
-          user_id: params.id,
+          user_id: user._id,
           change: ["rejected", "registered", "appointment"],
         }
       )
       .then((res) => {
-        totalLenght = res.data.length;
         const rejected = res.data.filter(
           (carrier) => carrier.change === "rejected"
         );
@@ -68,7 +132,7 @@ const UserDetail = () => {
         }
       })
       .catch((err) => console.log(err));
-  }, [params.id]);
+  }, [user._id]);
 
   function CustomLabel({ viewBox, value1, value2 }) {
     const { cx, cy } = viewBox;
@@ -139,65 +203,112 @@ const UserDetail = () => {
 
   const COLORS = ["#00FF00", "#FF0000", "#FFFF00"];
 
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
-    index,
-  }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  // const RADIAN = Math.PI / 180;
+  // const renderCustomizedLabel = ({
+  //   cx,
+  //   cy,
+  //   midAngle,
+  //   innerRadius,
+  //   outerRadius,
+  //   percent,
+  //   index,
+  // }) => {
+  //   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  //   const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  //   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    );
-  };
+  //   return (
+  //     <text
+  //       x={x}
+  //       y={y}
+  //       fill="white"
+  //       textAnchor={x > cx ? "start" : "end"}
+  //       dominantBaseline="central"
+  //     >
+  //       {`${(percent * 100).toFixed(0)}%`}
+  //     </text>
+  //   );
+  // };
+  useEffect(() => {
+    if (state.user_name) {
+      console.log(state.user_name);
+      const indentifier = setTimeout(async () => {
+        // if (userName !== defaultValue?.user_name) {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+          {
+            user_name: state.user_name
+              .replace(/\s+/g, " ")
+              .trim()
+              .toLowerCase(),
+          }
+        );
+        console.log("checking username", response.data);
+        if (state.user_name !== response.data[0]?.user_name) setShowError(true);
+        setUsernameIsValid(response.data.length === 0);
+      }, 500);
+      return () => {
+        clearTimeout(indentifier);
+      };
+    }
+  }, [state.user_name]);
 
-  return !user ? (
-    <div className="spreadsheet__loader">
-      <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
-    </div>
-  ) : (
+  return (
     <Row className="justify-content-center">
       <Col>
-        <Card>
-          <Form>
+        <Card style={{ border: "none", minHeight: "100vh" }}>
+          <Form onSubmit={handleSubmit}>
             <Row className="m-3">
               <h1 className="text-center">User Detail</h1>
               <hr />
-              <Form.Group as={Col} md="6">
+              <Col md={2}>
+                <div className="container">
+                  <div className="circle">
+                    <img src={user.profile_image ?? user_image} alt="." />
+                  </div>
+                </div>
+              </Col>
+              <Form.Group as={Col} md="4" className="mt-4">
                 <Form.Label>User Name</Form.Label>
                 <Form.Control
+                  className={`${
+                    showError && editable && state.user_name && !usernameIsValid
+                      ? "invalid is-invalid"
+                      : ""
+                  } no__feedback shadow-none`}
+                  value={state.user_name}
+                  onChange={handleChange}
                   type="text"
-                  placeholder="First Name"
-                  aria-describedby="inputGroupPrepend"
-                  value={user.user_name}
+                  readOnly={!editable}
+                  placeholder="Enter username"
                   name="user_name"
-                  required
                 />
-              </Form.Group>
-              <Form.Group as={Col} md="6">
-                <Form.Label>User Status</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Last Name"
-                  name="user_status"
-                  value={user.u_status}
-                  required
-                />
+                {editable &&
+                showError &&
+                usernameIsValid !== null &&
+                usernameIsValid ? (
+                  <Form.Text style={{ color: "green" }}>
+                    Username is available!
+                  </Form.Text>
+                ) : (
+                  editable &&
+                  showError &&
+                  usernameIsValid === false && (
+                    <Form.Text style={{ color: "red" }}>
+                      Whoops! username already exists.
+                    </Form.Text>
+                  )
+                )}
+
+                <Row>
+                  <Col md={2}>
+                    <Badge
+                      className="rounded-0 mt-4"
+                      type={status_map[user.u_status]}
+                      content={user.u_status}
+                    />
+                  </Col>
+                </Row>
               </Form.Group>
             </Row>
             <hr />
@@ -209,6 +320,7 @@ const UserDetail = () => {
                 <Form.Control
                   type="text"
                   placeholder="First name"
+                  readOnly
                   name="first_name"
                   value={user.first_name}
                 />
@@ -217,6 +329,7 @@ const UserDetail = () => {
                 <Form.Label>Last name</Form.Label>
                 <Form.Control
                   type="text"
+                  readOnly
                   value={user.last_name}
                   placeholder="Last name"
                   name="last_name"
@@ -227,6 +340,7 @@ const UserDetail = () => {
                 <Form.Label>Phone #</Form.Label>
                 <Form.Control
                   type="text"
+                  readOnly
                   placeholder="Phone #"
                   name="phone_number"
                   value={user.phone_number}
@@ -236,6 +350,7 @@ const UserDetail = () => {
                 <Form.Label>Address</Form.Label>
                 <Form.Control
                   type="text"
+                  readOnly
                   placeholder="Address"
                   name="address"
                   value={user.address}
@@ -246,6 +361,7 @@ const UserDetail = () => {
                 <Form.Control
                   type="date"
                   name="date_of_birth"
+                  readOnly
                   Value={
                     user.date_of_birth
                       ? moment(user.date_of_birth).format("YYYY-MM-DD")
@@ -260,20 +376,44 @@ const UserDetail = () => {
               <Form.Group as={Col} md="6">
                 <Form.Label>Department</Form.Label>
                 <Form.Control
-                  type="text"
-                  placeholder="Department"
-                  name="first_name"
-                  value={user.department}
-                />
+                  as="select"
+                  value={state.department}
+                  onChange={handleChange}
+                  disabled={!editable}
+                  name="department"
+                  required
+                >
+                  <option value={null}></option>
+                  <option value="sales">Sales</option>
+                  <option value="dispatch">Dispatch</option>
+                  {/* <option value="accounts">Accounts</option> */}
+                  <option value="HR">HR</option>
+                  {user.department !== "HR" && (
+                    <option value="admin">Admin</option>
+                  )}
+                </Form.Control>
+
+                <Form.Control.Feedback type="invalid">
+                  Please provide a valid Department.
+                </Form.Control.Feedback>
               </Form.Group>
               <Form.Group as={Col} md="6">
                 <Form.Label>Designation</Form.Label>
                 <Form.Control
-                  type="text"
-                  value={user.designation}
-                  placeholder="Last name"
-                  name="last_name"
-                />
+                  as="select"
+                  value={state.designation}
+                  readOnly={!editable}
+                  onChange={handleChange}
+                  name="designation"
+                  required
+                >
+                  <option value={null}>Select Department</option>
+                  <option value="Company">Company</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Senior Employee">Senior Employee</option>
+                  <option value="Junior Employee">Junior Employee</option>
+                  <option value="Team Lead">Team Lead</option>
+                </Form.Control>
               </Form.Group>
 
               <Form.Group as={Col} md="6">
@@ -282,21 +422,90 @@ const UserDetail = () => {
                   type="text"
                   placeholder="Salary"
                   name="salary"
-                  value={user.salary}
+                  readOnly={!editable}
+                  value={state.salary}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group as={Col} md="6">
-                <Form.Label>Date of Birth</Form.Label>
+                <Form.Label>Joining Date</Form.Label>
                 <Form.Control
                   type="date"
-                  name="date_of_birth"
+                  readOnly={!editable}
+                  name="joining_date"
                   Value={
-                    user.joining_date
+                    state.joining_date
                       ? moment(user.joining_date).format("YYYY-MM-DD")
                       : ""
                   }
+                  onChange={handleChange}
                 />
               </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Status</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={state.u_status}
+                  onChange={handleChange}
+                  disabled={!editable}
+                  name="u_status"
+                  required
+                >
+                  <option value={null}></option>
+                  <option value="active">Active</option>
+                  <option value="fired">Fired</option>
+                  <option value="inactive">Inactive</option>
+                </Form.Control>
+
+                <Form.Control.Feedback type="invalid">
+                  Please provide a valid Status.
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+
+            <Row className="my-5">
+              {editable && (
+                <Col md={2}>
+                  <Button
+                    className="w-100 p-2"
+                    variant="outline-success"
+                    disabled={loading}
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </Col>
+              )}
+
+              <Col md={2}>
+                <Button
+                  className="w-100 p-2"
+                  variant={`outline-${!editable ? "primary" : "danger"}`}
+                  disabled={loading}
+                  onClick={() => setEditable(!editable)}
+                >
+                  {!editable ? "Edit" : "Close"}
+                </Button>
+              </Col>
+              <Col></Col>
+              <Col className="float-right" md={2}>
+                <Button
+                  className="w-100 p-2"
+                  variant="warning"
+                  disabled={loading || editable}
+                  onClick={() => setShowModal(true)}
+                >
+                  Reset Password
+                </Button>
+              </Col>
+
+              <DeleteConfirmation
+                showModal={showModal}
+                confirmModal={handleReset}
+                hideModal={() => setShowModal(false)}
+                message={"Are you sure to want to Reset Password to 12345?"}
+                title="Reset Confirmation"
+              />
             </Row>
           </Form>
         </Card>
@@ -372,4 +581,40 @@ const UserDetail = () => {
   );
 };
 
+function UserDetail() {
+  const params = useParams();
+
+  const [key, setKey] = useState("info");
+
+  const [user, setUser] = useState(null);
+  const [reCall, setReCall] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${params.id}`)
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, [reCall, params.id]);
+  return !user ? (
+    <div className="spreadsheet__loader">
+      <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
+    </div>
+  ) : (
+    <Tabs
+      id="controlled-tab-example"
+      activeKey={key}
+      onSelect={(k) => setKey(k)}
+      justify
+    >
+      <Tab eventKey="info" title="Basic Information">
+        <UserDetailPage user={user} callBack={() => setReCall(Math.random())} />
+      </Tab>
+      <Tab eventKey="documents" title="Documents">
+        <Documents callBack={() => setReCall(Math.random())} user={user} />
+      </Tab>
+    </Tabs>
+  );
+}
 export default UserDetail;

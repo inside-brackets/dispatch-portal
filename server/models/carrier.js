@@ -131,7 +131,7 @@ const carrierSchema = new mongoose.Schema(
           },
         ],
         temperature_restriction: Number,
-        trip_durration: Number,
+        trip_duration: Number,
         off_days: [String],
         t_status: {
           type: String,
@@ -150,14 +150,25 @@ const carrierSchema = new mongoose.Schema(
     appointment: {
       type: Date,
     },
+    updatedAt: {
+      type: Date,
+      default: new Date(),
+    },
     mc_file: String,
     noa_file: String,
     insurance_file: String,
     w9_file: String,
   },
+
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
+var updateDate = function (next) {
+  this.findOneAndUpdate({}, { $set: { updatedAt: new Date() } });
+  next();
+};
+
+carrierSchema.pre("findOneAndUpdate", updateDate);
 
 module.exports = mongoose.model("Carrier", carrierSchema);

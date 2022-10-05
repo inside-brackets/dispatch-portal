@@ -75,12 +75,31 @@
       "icon": "bx bxs-truck"
     },
     {
-      "display_name": "Report",
-      "route": "/reports",
-      "icon": "bx bxs-report",
       "display_name": "Invoices",
       "route": "/invoices",
       "icon": "bx bx-paper-plane"
+    },
+    {
+      "display_name": "Report",
+      "route": "/reports",
+      "icon": "bx bxs-report"
+    }
+  ],
+  "HR": [
+    {
+      "display_name": "Dashboard",
+      "route": "/dashboard",
+      "icon": "bx bx-category-alt"
+    },
+    {
+      "display_name": "Users",
+      "route": "/users",
+      "icon": "bx bx-user"
+    },
+    {
+      "display_name": "Interviews",
+      "route": "/interviews",
+      "icon": "bx bx-user"
     }
   ]
 }

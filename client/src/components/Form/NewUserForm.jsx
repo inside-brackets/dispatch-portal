@@ -13,6 +13,7 @@ const NewUserForm = ({
   setShowModal,
   setEditModal,
   setRefresh,
+  interview,
 }) => {
   const [validated, setValidated] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(null);
@@ -43,7 +44,7 @@ const NewUserForm = ({
         }
       : null
   );
-  const { company: selectedCompany } = useSelector((state) => state.user);
+  const { company: selectedCompany, user } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (userName) {
@@ -53,7 +54,7 @@ const NewUserForm = ({
             `${process.env.REACT_APP_BACKEND_URL}/getusers`,
             { user_name: userName.replace(/\s+/g, " ").trim().toLowerCase() }
           );
-          console.log("checking username",response.data);
+          console.log("checking username", response.data);
           setUsernameIsValid(response.data.length === 0);
         } else {
           setUsernameIsValid(true);
@@ -89,7 +90,7 @@ const NewUserForm = ({
     const hash = await bcrypt.hash(password, 8);
 
     if (form.checkValidity() === true) {
-      if (defaultValue) {
+      if (defaultValue && !interview) {
         setButtonLoader(true);
         await axios
           .post(
@@ -114,13 +115,14 @@ const NewUserForm = ({
         setButtonLoader(true);
         await axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
-            user_name: userName.replace(/\s+/g, " ").trim(),
+            user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
             password: hash,
             joining_date: new Date(joiningDate),
             salary,
             designation,
             department,
             company: department === "admin" ? "falcon" : selectedCompany.value,
+            ...defaultValue,
           })
           .then((response) => {
             console.log("response", response);
@@ -162,7 +164,7 @@ const NewUserForm = ({
             </Form.Text>
           )}
         </Form.Group>
-        {defaultValue ? (
+        {defaultValue && !interview ? (
           <Button
             as={Col}
             md="3"
@@ -210,8 +212,8 @@ const NewUserForm = ({
               <option value="sales">Sales</option>
               <option value="dispatch">Dispatch</option>
               {/* <option value="accounts">Accounts</option> */}
-              {/* <option value="HR">HR</option> */}
-              <option value="admin">Admin</option>
+              <option value="HR">HR</option>
+              {user.department !== "HR" && <option value="admin">Admin</option>}
             </Form.Control>
 
             <Form.Control.Feedback type="invalid">
@@ -221,12 +223,18 @@ const NewUserForm = ({
           <Form.Group as={Col} md="6">
             <Form.Label>Designation</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Designation"
+              as="select"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
               required
-            />
+            >
+              <option value={null}>Select Department</option>
+              <option value="Company">Company</option>
+              <option value="Manager">Manager</option>
+              <option value="Senior Employee">Senior Employee</option>
+              <option value="Junior Employee">Junior Employee</option>
+              <option value="Team Lead">Team Lead</option>
+            </Form.Control>
             <Form.Control.Feedback type="invalid">
               Please provide a valid Designation.
             </Form.Control.Feedback>
@@ -239,6 +247,7 @@ const NewUserForm = ({
               type="number"
               placeholder="Salary"
               value={salary}
+              disabled={user._id === defaultValue?._id}
               onChange={(e) => setSalary(e.target.value)}
               required
             />
@@ -246,7 +255,7 @@ const NewUserForm = ({
               Please provide a valid Salary.
             </Form.Control.Feedback>
           </Form.Group>
-          {!defaultValue ? (
+          {!defaultValue || interview ? (
             <Form.Group as={Col} md="6">
               <Form.Label>Joining Date</Form.Label>
               <Form.Control

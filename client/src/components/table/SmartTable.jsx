@@ -180,14 +180,23 @@ const Table = (props) => {
               ) : null}
             </table>
             {bodyData["page0"]?.length === 0 && (
-                <Row className="justify-content-center">
-                  <Col md={6}>
-                    <Alert variant="danger" className="text-center text-capitalize m-3">
-                    No {window.location.pathname.replace('/',"")} to show
-                    </Alert>
-                  </Col>
-                </Row>
-              )}
+              <Row className="justify-content-center">
+                <Col md={6}>
+                  <Alert
+                    variant="danger"
+                    className="text-center text-capitalize m-3"
+                  >
+                    No{" "}
+                    {window.location.pathname
+                      .replace("/", " ")
+                      .replace("/", " ")
+                      .replace("/", " ")
+                      .replace(/[0-9]/g, "")}
+                    to show
+                  </Alert>
+                </Col>
+              </Row>
+            )}
             {pages > 1 ? (
               <>
                 <div className="table__pagination">

@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 import { Form, Col, Row, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 import { str } from "../../data/usStates";
 
 const AddNewCarrierModal = ({ mc, closeModal }) => {

@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./sidebar.css";
 import logo from "../../assets/images/logo.png";
+import logo2 from "../../assets/images/White-Christmas.png";
 import sidebar_items from "../../assets/JsonData/sidebar_routes.json";
 import { useSelector } from "react-redux";
 
@@ -33,11 +34,10 @@ const Sidebar = (props) => {
       : department.toLowerCase() === "sales"
       ? "MARKETING"
       : department.toUpperCase();
-
   return (
     <div className="sidebar">
-      <div className="sidebar__logo">
-        <img className="logo" src={logo} alt="company logo" />
+      <div className={process.env.REACT_APP_FALCON === "TRUE" ? `sidebar__logo_falcon`:"sidebar__logo"}>
+        <img className="logo img-fluid" src={process.env.REACT_APP_FALCON === "TRUE" ? logo : logo2} alt="company logo" />
       </div>
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>

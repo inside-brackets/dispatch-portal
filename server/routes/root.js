@@ -1,4 +1,3 @@
-const User = require("../models/user");
 const express = require("express");
 
 const route = express.Router();
@@ -11,10 +10,10 @@ const {
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
-const { rename, test, changeAppointment,findDublicates,changeStatus } = require("../controllers/db");
+const { rename, test, changeAppointment,findDublicates,changeStatus, addCarrierIdInInvoices } = require("../controllers/db");
 
 const { setIp, getIpList } = require("../util/ipList");
-const { generateUploadURL } = require("../util/s3");
+const { generateUploadURL,deleteUploadedURL } = require("../util/s3");
 const auth = require("../middlewares/auth");
 
 // const upload = require("../middlewares/upload");
@@ -41,6 +40,8 @@ route.post("/getusers", userController.getUsers);
 route.post("/get-table-users", userController.getTableUsers);
 // route.post("/updateuser", userController.updateUser);
 route.post("/updateuser/:id", userController.updateUser);
+route.get("/refreshtoken/:id",userController.refreshToken)
+route.get("/count-user/:company",userController.countUsers)
 
 // invoices
 route.post("/getinvoices", getInvoices);
@@ -69,9 +70,13 @@ route.get("/myip", (req, res) => {
 route.post("/login", auth, userController.login);
 
 //s3-bucket
-route.get("/s3url/:folder/:fileName", async (req, res) => {
-  const url = await generateUploadURL(req.params.folder, req.params.fileName);
+route.get("/s3url/:folder/:fileName/:del?", async (req, res) => {
+  const url = await generateUploadURL(req.params.folder, req.params.fileName,req.params.del);
   res.send(url);
+});
+route.get("/s3url-delete/:folder/:fileName", async (req, res) => {
+  const response = await deleteUploadedURL(req.params.folder, req.params.fileName);
+  res.send(response);
 });
 
 // edit database
@@ -80,6 +85,7 @@ route.post("/test", test);
 route.post("/changeappointment", changeAppointment);
 route.get("/dublicates",findDublicates)
 route.get("/change-status",changeStatus)
+route.get("/add-id-invoices", addCarrierIdInInvoices)
 
 
 module.exports = route;

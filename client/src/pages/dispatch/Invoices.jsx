@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Row } from "react-bootstrap";
 import Table from "../../components/table/SmartTable";
 import EditButton from "../../components/UI/EditButton";
@@ -9,7 +9,6 @@ import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 import PdfTest from "../../components/PdfTest";
-import axios from "axios";
 const invoiceTableHead = [
   "#",
   "MC",
@@ -26,42 +25,7 @@ const invoiceTableHead = [
 const Invoice = () => {
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-  const { company: selectedCompany,user:user } = useSelector((state) => state.user);
-  const [sales, setSales] = useState([]);
-  const [dispatcher, setDispatcher] = useState([]);
-
-  useEffect(() => {
-    const getData = async () => {
-      const {data} = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-        {
-          company: selectedCompany.value,
-          department: ["sales", "dispatch"],
-        }
-      );
-      setSales(
-        data
-          .filter((user) => user.department === "sales")
-          .map((u) => {
-            return {
-              label: u.user_name,
-              value: u._id,
-            };
-          })
-      );
-      setDispatcher(
-        data
-          .filter((user) => user.department === "dispatch")
-          .map((u) => {
-            return {
-              label: u.user_name,
-              value: u._id,
-            };
-          })
-      );
-    };
-    getData();
-  }, []);
+  const { company: selectedCompany,user } = useSelector((state) => state.user);
 
   const renderBody = (item, index, currPage) => (
     <tr key={index}>

@@ -103,7 +103,8 @@ const DashboardAdmin = () => {
 
   return (
     <div>
-      <Row>
+      <Row className='my-4'>
+        <Col md={4}>
         <MySelect
           isMulti={false}
           value={selectedCompany}
@@ -116,15 +117,16 @@ const DashboardAdmin = () => {
           }}
           options={[
             {
-              label: "Elite Dispatch Service",
+              label:process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
               value: "elite",
             },
             {
-              label: "Alpha Dispatch Solution",
+              label:process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
               value: "alpha",
             },
           ]}
         />
+        </Col>
       </Row>
       <Row>
         <Col>

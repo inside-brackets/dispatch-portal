@@ -101,9 +101,9 @@ const fetchLead = async (req, res, next) => {
           c_status: "unassigned",
           address: { $regex: callAbleStates(pst), $options: "i" },
         })
-          .sort({ mc_number: -1 })
+          .sort({ mc_number: 1 })
           .limit(1);
-        if (carrier) {
+        if (carrier.length > 0) {
           await Carrier.findByIdAndUpdate(
             carrier[0]._id,
             {
@@ -180,7 +180,7 @@ const getTableCarriers = async (req, res, next) => {
   try {
     let result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
-      { user_name: 1, company: 1 }
+      { user_name: 1, company: 1,first_name:1,last_name:1 }
     );
     if (req.body.company) {
       result = result.filter(
@@ -229,7 +229,7 @@ const getCarriers = async (req, res, next) => {
   try {
     const result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
-      { user_name: 1, company: 1 }
+      { user_name: 1, company: 1 ,first_name:1,last_name:1 }
     );
     if (req.body.company) {
       const filteredResult = result.filter(

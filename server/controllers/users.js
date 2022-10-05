@@ -1,5 +1,7 @@
 const User = require("../models/user");
+const Interview = require("../models/interview");
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const addNewUser = async (req, res) => {
   const {
@@ -80,7 +82,11 @@ const getTableUsers = (req, res, next) => {
       if (search !== "") {
         search = search.trim().toLowerCase();
         users = users.filter((user) => {
-          return user.user_name.toLowerCase().includes(search);
+          return (
+            user.user_name.toLowerCase().includes(search) ||
+            user.first_name?.toLowerCase().includes(search) ||
+            user.last_name?.includes(search)
+          );
         });
       }
       const fResult = users.slice(
@@ -90,6 +96,7 @@ const getTableUsers = (req, res, next) => {
       res.send({ data: fResult, length: users.length });
     })
     .catch((err) => {
+      console.log(err)
       res.send(err);
     });
 };
@@ -129,13 +136,24 @@ const getUsers = (req, res, next) => {
 const updateUser = async (req, res) => {
   console.log("updateUser", req.body);
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
+    let updatedUser;
+    if (req.body.updateFiles) {
+      updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $push: { files: req.body.files },
+        },
+        { new: true }
+      );
+    } else {
+      updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+    }
     res.status(200);
     res.send(updatedUser);
   } catch (error) {
@@ -176,6 +194,9 @@ const login = (req, res) => {
             designation: user.designation,
             company: user.company,
             password: user.password,
+            profile_image: user.profile_image,
+            u_status: user.u_status,
+            files: user.files,
           },
           process.env.JWT
         );
@@ -188,6 +209,87 @@ const login = (req, res) => {
     res.status(500).send({ msg: err.message });
   }
 };
+const refreshToken = async (req, res) => {
+  try {
+    const filter = {};
+    filter.u_status = filter.u_status = {
+      $nin: ["fired", "inactive"],
+    };
+
+    const user = await User.findById(req.params.id);
+    if (user) {
+      let userToken = jwt.sign(
+        {
+          _id: user._id,
+          user_name: user.user_name,
+          department: user.department,
+          salary: user.salary,
+          joining_date: user.joining_date,
+          designation: user.designation,
+          company: user.company,
+          password: user.password,
+          profile_image: user.profile_image,
+          u_status: user.u_status,
+          files: user.files,
+        },
+        process.env.JWT
+      );
+      res.status(200).send(userToken);
+    } else {
+      res.status(200).send("Unable to Login");
+    }
+  } catch (err) {
+    res.status(500).send({ msg: err.message });
+  }
+};
+
+const countUsers = async (req, res, next) => {
+  try {
+    let result = await User.aggregate([
+      {
+        $group: {
+          _id: { department: "$department", company: "$company" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const joinedThisMonth = await User.find({
+      joining_date: {
+        $gte: moment().startOf("month").format("YYYY-MM-DD"),
+        $lt: moment().endOf("month").format("YYYY-MM-DD"),
+      },
+    }).countDocuments();
+    const upcomingResource = await User.find({
+      joining_date: {
+        $gte: moment().format("YYYY-MM-DD"),
+      },
+    }).countDocuments();
+
+    const interview = await Interview.aggregate([
+      {
+        $match: {
+          $or: [{ status: "pending-decision" }, { status: "scheduled" }],
+        },
+      },
+      { $group: { _id: { department: "$status" }, count: { $sum: 1 } } },
+    ]);
+    result.push(
+      {
+        _id: { department: "Joined this month" },
+        count: joinedThisMonth,
+      },
+      {
+        _id: { department: "Upcoming Resource" },
+        count: upcomingResource,
+      },
+      ...interview
+    );
+    res.status(200);
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   addNewUser,
@@ -197,4 +299,6 @@ module.exports = {
   updateUser,
   deleteUser,
   login,
+  refreshToken,
+  countUsers,
 };

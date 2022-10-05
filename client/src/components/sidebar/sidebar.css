@@ -16,6 +16,9 @@
 }
 
 .sidebar__logo > img {
+  height: 60px;
+}
+.sidebar__logo_falcon > img {
   height: 200px;
 }
 

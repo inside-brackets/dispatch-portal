@@ -54,16 +54,36 @@ const DonutGraphs = (props) => {
       </text>
     );
   }
+  const renderLegend = (props) => {
+    const { payload } = props;
+    if(props.loadedMiles === 0 && props.deadHeadMiles === 0){
+      return  <Alert variant="danger" className="text-center w-65">Not Enough data to show</Alert>
+    }
+    return (
+      <div className="d-flex ">
+        {
+          payload.map((entry, index) => (
+            
+            <li style={{
+              color:entry.color
+            }} className="m-1" key={`item-${index}`}>{entry.value}</li>
+          ))
+        }
+      </div>
+    );
+  }
   return (
     <>
       {" "}
-      <PieChart width={300} height={400}>
+      <PieChart style={{
+        left:'170px'
+      }} width={400} height={400}>
         <Pie
         data={props.loadedMiles === 0 && props.deadHeadMiles === 0 ? data2 : data}
           cx={120}
           cy={200}
-          innerRadius={60}
-          outerRadius={80}
+          innerRadius={95}
+          outerRadius={125}
           fill="#8884d8"
           paddingAngle={5}
           dataKey="value"
@@ -73,15 +93,15 @@ const DonutGraphs = (props) => {
           ))}
           <Label
             width={30}
-            position="center"
+            position="initial"
             content={<CustomLabel value1={data} value2="Total" />}
           ></Label>
         </Pie>
         <Tooltip />
-        {props.loadedMiles !== 0 && props.deadHeadMiles !== 0  && <Legend />}     
+         <Legend content={renderLegend}  />
 
       </PieChart>
-      {props.loadedMiles === 0 && props.deadHeadMiles === 0 && <Alert variant="danger" className="text-center w-65">Not Enough data to show</Alert>}
+      
  
     </>
   );

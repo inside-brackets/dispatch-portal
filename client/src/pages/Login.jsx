@@ -6,6 +6,7 @@ import { themeActions } from "../store/theme";
 import { Col, Row, Form, Image, Button, Spinner } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
+import logo2 from "../assets/images/White Christmas2.png";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwtDecode from "jwt-decode";
@@ -62,11 +63,11 @@ const Login = () => {
                 company:
                   user.company === "alpha"
                     ? {
-                        label: "Alpha Dispatch Service",
+                        label: process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
                         value: "alpha",
                       }
                     : {
-                        label: "Elite Dispatch Service",
+                        label:process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
                         value: "elite",
                       },
               })
@@ -157,7 +158,7 @@ const Login = () => {
         <Col md={6}>
           <Image
             className="justify-content-start align-items-center vh-100 vw-100"
-            src={logo}
+            src={ process.env.REACT_APP_FALCON === "TRUE" ? logo : logo2}
             fluid
           />
         </Col>

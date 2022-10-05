@@ -14,12 +14,20 @@ const salesSlice = createSlice({
       for (var i = 0; i < data.length; i++) {
         for (var j = 0; j < data[i].trucks.length; j++) {
           if (data[i].trucks[j].t_status === "new") {
+            console.log("data updated at", data[i].updatedAt);
             newCarrier.push({
               mc_number: data[i].mc_number,
               trailer_type: data[i].trucks[j].trailer_type,
               truck_number: data[i].trucks[j].truck_number,
               company_name: data[i].company_name,
-              salesman: data[i].salesman ? data[i].salesman.user_name : "N/A",
+              salesman: data[i].salesman
+                ? `${data[i].salesman.user_name} ${
+                    data[i].salesman.first_name
+                      ? `( ${data[i].salesman.first_name} ${data[i].salesman.last_name} )`
+                      : ""
+                  } `
+                : "N/A",
+              updatedAt: data[i].updatedAt ?? "N/A",
             });
           }
         }

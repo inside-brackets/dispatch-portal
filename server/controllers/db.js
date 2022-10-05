@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Load = require("../models/load");
 const Carrier = require("../models/carrier");
 const User = require("../models/user");
+const Invoices = require("../models/invoice");
 
 const rename = async (req, res) => {
   const result = await Load.updateMany(
@@ -102,10 +103,38 @@ const changeStatus = async (req, res) => {
   res.send(result);
 };
 
+const addCarrierIdInInvoices = async (req, res) => {
+  console.log("start");
+  try {
+    const invoices = await Invoices.find();
+    for (let i = 0; i < invoices.length; i++) {
+      const invoice = invoices[i];
+     const carrier = await Carrier.findOne({
+        mc_number: invoice.mc_number,
+      });
+  
+      if(carrier){
+      const result = await Invoices.findByIdAndUpdate(
+        {
+          _id: invoice._id,
+        },
+        {
+          carrier: carrier._id,
+        }
+      );
+      }
+    }
+    res.send("done")
+  } catch (error) {
+    res.send(error.message)
+  }
+};
+
 module.exports = {
   rename,
   test,
   changeAppointment,
   findDublicates,
   changeStatus,
+  addCarrierIdInInvoices,
 };

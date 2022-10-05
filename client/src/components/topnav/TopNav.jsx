@@ -6,8 +6,7 @@ import ThemeMenu from "../thememenu/ThemeMenu";
 import user_image from "../../assets/images/taut.png";
 import user_menu from "../../assets/JsonData/user_menus.json";
 import SearchBar from "../UI/SearchBar";
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../../store/user";
+import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import Badge from "../badge/Badge";
 import company_status_map from "../../assets/JsonData/company.json";
@@ -26,7 +25,7 @@ const Topnav = () => {
   // };
   const curr_user = {
     display_name: user.user_name,
-    image: user_image,
+    image: user.profile_image ?? user_image,
   };
 
   // const renderNotificationItem = (item, index) => (
@@ -63,7 +62,7 @@ const Topnav = () => {
       <div className="topnav__right">
         <div className="bd-brand-item">
           <span className="h3">
-            {user.department === "admin" ? (
+            {user.department === "admin" || user.department === "HR" ? (
               <Badge
                 type={company_status_map[company.value]}
                 content={company.label}

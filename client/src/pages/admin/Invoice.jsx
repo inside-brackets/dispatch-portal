@@ -61,13 +61,13 @@ const Invoice = () => {
       );
     };
     getData();
-  }, []);
+  }, [selectedCompany.value]);
 
   const renderBody = (item, index, currPage) => (
     <tr key={index}>
       <td>{index + 1 + currPage * 10}</td>
-      <td>{item.mc_number ? item.mc_number : "NA"}</td>
-      <td>{item.carrierCompany ? item.carrierCompany : "NA"}</td>
+      <td>{item.carrier ? item.carrier.mc_number : "NA"}</td>
+      <td>{item.carrier ? item.carrier.company_name : "NA"}</td>
       <td>{item.truckNumber ? item.truckNumber : "NA"}</td>
 
       <td>

@@ -3,12 +3,13 @@ import Table from "../../components/table/Table";
 import useHttp from "../../hooks/use-https";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Spinner,Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
+import moment from 'moment';
 
 const carrierTableHead = [
   "#",
@@ -17,6 +18,7 @@ const carrierTableHead = [
   "Truck Number",
   "Trailer Type",
   "Sales Person",
+  "Closed",
   "",
 ];
 
@@ -24,7 +26,7 @@ const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const AssignSales = () => {
   const history = useHistory();
-  // const [carriers, setCarriers] = useState([]);
+
   const { carriers } = useSelector((state) => state.sales);
   const dispatch = useDispatch();
   const [dispatchers, setDispatchers] = useState([]);
@@ -104,8 +106,10 @@ const AssignSales = () => {
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.company_name}</td>
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.truck_number}</td>
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.trailer_type}</td>
+      
       <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.salesman ? item.salesman : "N/A"}</td>
       {/* <td>{item.salesman}</td> */}
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.updatedAt !== "N/A" ? moment(new Date(item.updatedAt)).fromNow() : "N/A"}</td>
       <td >
         <Button
           style={{ paddingLeft: "40px", paddingRight: "40px" }}
@@ -150,8 +154,9 @@ const AssignSales = () => {
   return (
     <div>
       <h2> Carriers: </h2>
-      <dev className="assign__sale__down">
-        <dev className="assign__text"> ADD DISPATCHER:</dev>
+      <Row className='justify-content-end my-2'>
+        <Col md={4}>
+        <div className="assign__text"> ADD DISPATCHER:</div>
         <MySelect
           isMulti={false}
           value={selectedDispatcher}
@@ -163,7 +168,8 @@ const AssignSales = () => {
             };
           })}
         />
-      </dev>
+        </Col>
+      </Row>
       <div className="row">
         <div className="col-12">
           <div className="card">
