@@ -151,7 +151,7 @@ const App = () => {
             userActions.login({
               user,
               company: {
-                label: "Company A",
+                label: "Elite Dispatch Service",
                 value: "elite",
               },
             })
@@ -165,11 +165,11 @@ const App = () => {
             company:
               user.company === "alpha"
                 ? {
-                    label: "Company B",
+                    label: "Alpha Dispatch Service",
                     value: "alpha",
                   }
                 : {
-                    label: "Company A",
+                    label: "Elite Dispatch Service",
                     value: "elite",
                   },
           })

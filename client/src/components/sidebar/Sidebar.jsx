@@ -36,9 +36,9 @@ const Sidebar = (props) => {
 
   return (
     <div className="sidebar">
-      {/* <div className="sidebar__logo">
-        <img className="logo" src={""} alt="company logo" />
-      </div> */}
+      <div className="sidebar__logo">
+        <img className="logo" src={logo} alt="company logo" />
+      </div>
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>
