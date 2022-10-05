@@ -57,11 +57,11 @@ const UploadProfilePicture = ({ user, setModal }) => {
           company:
             res.data.company === "alpha"
               ? {
-                  label: "Alpha Dispatch Service",
+                  label:process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
                   value: "alpha",
                 }
               : {
-                  label: "Elite Dispatch Service",
+                  label: process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
                   value: "elite",
                 },
         })
