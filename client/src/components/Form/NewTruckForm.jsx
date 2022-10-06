@@ -161,6 +161,8 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
             required
             type="number"
             placeholder="Enter 17 digit code.."
+            min="17"
+            max="17"
             name="vin_number"
             defaultValue={defaultValue ? defaultValue.vin_number : ""}
           />
@@ -293,10 +295,11 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           />
         </Form.Group>
         <Form.Group as={Col} controlId="validationCustom01">
-          <Form.Label>Drviver Email</Form.Label>
+          <Form.Label>Driver Email</Form.Label>
           <Form.Control
+            pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$"
             type="text"
-            placeholder="Drviver Email"
+            placeholder="Driver Email"
             name="driver1_email"
             defaultValue={
               defaultValue ? defaultValue.drivers[0]?.email_address : ""
@@ -306,11 +309,11 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
       </Row>
       <Row>
         <Form.Group as={Col} controlId="validationCustom01">
-          <Form.Label>Drviver Phone Number</Form.Label>
+          <Form.Label>Driver Phone Number</Form.Label>
           <Form.Control
             required
             type="number"
-            placeholder="Drviver Phone Number"
+            placeholder="Driver Phone Number"
             name="driver1_phone"
             defaultValue={
               defaultValue ? defaultValue.drivers[0]?.phone_number : ""
@@ -326,16 +329,17 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
               <Form.Control
                 required={driverType === "teamDriver"}
                 type="text"
-                placeholder="Diver Name"
+                placeholder="Driver Name"
                 defaultValue={defaultValue ? defaultValue.drivers[1]?.name : ""}
                 name="driver2_name"
               />
             </Form.Group>
             <Form.Group as={Col} controlId="validationCustom01">
-              <Form.Label>Drviver Email</Form.Label>
+              <Form.Label>Driver Email</Form.Label>
               <Form.Control
+                pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$"
                 type="email"
-                placeholder="Drviver Email"
+                placeholder="Driver Email"
                 name="driver2_email"
                 defaultValue={
                   defaultValue ? defaultValue.drivers[1]?.email_address : ""
@@ -345,11 +349,11 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           </Row>
           <Row>
             <Form.Group as={Col} controlId="validationCustom01">
-              <Form.Label>Drviver Phone Number</Form.Label>
+              <Form.Label>Driver Phone Number</Form.Label>
               <Form.Control
                 required={driverType === "teamDriver"}
                 type="number"
-                placeholder="Drviver Phone Number"
+                placeholder="Driver Phone Number"
                 name="driver2_phone"
                 defaultValue={
                   defaultValue ? defaultValue.drivers[1]?.phone_number : ""
