@@ -5,6 +5,26 @@
         "display_name": "Dashboard",
         "route": "/dashboard",
         "icon": "bx bx-category-alt"
+      },
+      {
+        "display_name": "Carriers",
+        "route": "/carriers",
+        "icon": "bx bxs-truck"
+      },
+      {
+        "display_name": "Search Carrier",
+        "route": "/searchcarrier",
+        "icon": "bx bx-search-alt"
+      },
+      {
+        "display_name": "Users",
+        "route": "/users",
+        "icon": "bx bx-user"
+      },
+      {
+        "display_name": "Fetch leads",
+        "route": "/dialer",
+        "icon": "bx bx-phone-outgoing"
       }
     ],
     "teamlead": [

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -45,6 +46,9 @@ const UserDetailPage = ({ user, callBack }) => {
   const [usernameIsValid, setUsernameIsValid] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showError, setShowError] = useState(false);
+
+  const { department } = useSelector((state) => state.user.user);
+
   const handleChange = (evt) => {
     const value = evt.target.value;
     const name = evt.target.name;
@@ -463,50 +467,52 @@ const UserDetailPage = ({ user, callBack }) => {
               </Form.Group>
             </Row>
 
-            <Row className="my-5">
-              {editable && (
+            {department === "admin" && (
+              <Row className="my-5">
+                {editable && (
+                  <Col md={2}>
+                    <Button
+                      className="w-100 p-2"
+                      variant="outline-success"
+                      disabled={loading}
+                      type="submit"
+                    >
+                      Save
+                    </Button>
+                  </Col>
+                )}
+
                 <Col md={2}>
                   <Button
                     className="w-100 p-2"
-                    variant="outline-success"
+                    variant={`outline-${!editable ? "primary" : "danger"}`}
                     disabled={loading}
-                    type="submit"
+                    onClick={() => setEditable(!editable)}
                   >
-                    Save
+                    {!editable ? "Edit" : "Close"}
                   </Button>
                 </Col>
-              )}
+                <Col></Col>
+                <Col className="float-right" md={2}>
+                  <Button
+                    className="w-100 p-2"
+                    variant="warning"
+                    disabled={loading || editable}
+                    onClick={() => setShowModal(true)}
+                  >
+                    Reset Password
+                  </Button>
+                </Col>
 
-              <Col md={2}>
-                <Button
-                  className="w-100 p-2"
-                  variant={`outline-${!editable ? "primary" : "danger"}`}
-                  disabled={loading}
-                  onClick={() => setEditable(!editable)}
-                >
-                  {!editable ? "Edit" : "Close"}
-                </Button>
-              </Col>
-              <Col></Col>
-              <Col className="float-right" md={2}>
-                <Button
-                  className="w-100 p-2"
-                  variant="warning"
-                  disabled={loading || editable}
-                  onClick={() => setShowModal(true)}
-                >
-                  Reset Password
-                </Button>
-              </Col>
-
-              <DeleteConfirmation
-                showModal={showModal}
-                confirmModal={handleReset}
-                hideModal={() => setShowModal(false)}
-                message={"Are you sure to want to Reset Password to 12345?"}
-                title="Reset Confirmation"
-              />
-            </Row>
+                <DeleteConfirmation
+                  showModal={showModal}
+                  confirmModal={handleReset}
+                  hideModal={() => setShowModal(false)}
+                  message={"Are you sure to want to Reset Password to 12345?"}
+                  title="Reset Confirmation"
+                />
+              </Row>
+            )}
           </Form>
         </Card>
         {user.department === "sales" && (

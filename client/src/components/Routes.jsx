@@ -83,7 +83,7 @@ const Routes = () => {
     }
   }, [dispatch, department, fetchCarriers, refresh, selectedCompany]);
   return department === "sales" ? (
-    designation === "Manager" ? (
+    designation === "manager" ? (
       <Suspense
         fallback={
           <div className="spreadsheet__loader">
@@ -101,6 +101,18 @@ const Routes = () => {
             <Redirect to="/dashboard" />
           </Route>
           <Route path="/dashboard" exact component={SMDashboard} />
+          <Route path="/carriers" exact component={Carriers} />
+          <Route path="/searchcarrier" exact component={SearchCarrier} />
+          <Route path="/addcarrier/:mc" component={AddCarrier} />
+          <Route path="/carrierview/:mc" exact component={CarrierView} />
+          <Route
+            path="/carrierview/:mc/:truck"
+            exact
+            component={TruckDetails}
+          />
+          <Route path="/users" exact component={Users} />
+          <Route path="/users/:id" exact component={UserDetail} />
+          <Route path="/dialer" component={Dialer} />
           <Route path="*">
             <h1>Not found</h1>
           </Route>

@@ -73,9 +73,18 @@ const getTableUsers = (req, res, next) => {
   if (req.body.joining_date) {
     req.body.joining_date === "upcoming"
       ? (filter.joining_date = { $gte: new Date() })
-      : (filter.joining_date = { $gte: moment().startOf('month'), $lte: moment().endOf('month') });
+      : (filter.joining_date = {
+          $gte: moment().startOf("month"),
+          $lte: moment().endOf("month"),
+        });
   }
-  console.log(filter);
+  let exclude = "";
+  if (req.body.department != "admin") {
+    filter.department = {
+      $nin: ["admin"],
+    };
+    exclude = "-salary";
+  }
   User.find(filter, null, {
     // skip: 0, // Starting Row
     // limit: 1, // Ending Row
@@ -83,6 +92,7 @@ const getTableUsers = (req, res, next) => {
       joining_date: -1, //Sort by Date Added DESC
     },
   })
+    .select(exclude)
     .then((users) => {
       if (search !== "") {
         search = search.trim().toLowerCase();
