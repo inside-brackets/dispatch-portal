@@ -158,6 +158,7 @@ const carrierSchema = new mongoose.Schema(
     noa_file: String,
     insurance_file: String,
     w9_file: String,
+    cargo_carried: [String],
   },
 
   {

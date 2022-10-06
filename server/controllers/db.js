@@ -109,25 +109,63 @@ const addCarrierIdInInvoices = async (req, res) => {
     const invoices = await Invoices.find();
     for (let i = 0; i < invoices.length; i++) {
       const invoice = invoices[i];
-     const carrier = await Carrier.findOne({
+      const carrier = await Carrier.findOne({
         mc_number: invoice.mc_number,
       });
-  
-      if(carrier){
-      const result = await Invoices.findByIdAndUpdate(
-        {
-          _id: invoice._id,
-        },
-        {
-          carrier: carrier._id,
-        }
-      );
+
+      if (carrier) {
+        const result = await Invoices.findByIdAndUpdate(
+          {
+            _id: invoice._id,
+          },
+          {
+            carrier: carrier._id,
+          }
+        );
       }
     }
-    res.send("done")
+    res.send("done");
   } catch (error) {
-    res.send(error.message)
+    res.send(error.message);
   }
+};
+
+const changeDesignation = async (req, res) => {
+  console.log("start");
+  try {
+    const bornCity = await User.find().distinct("designation");
+    res.send(bornCity);
+  } catch (error) {
+    res.send(error.message);
+  }
+};
+
+const changeCarrierToInitial = async (req, res) => {
+  console.log("start");
+  const result = await Carrier.updateMany(
+    {},
+    {
+      $unset: {
+        owner_name: "",
+        dispatcher_fee: "",
+        tax_id_number: "",
+        working_since: "",
+        factoring: "",
+        insurance: "",
+        payment_method: "",
+        trucks: "",
+        comment: "",
+        dispatcher_comment: "",
+        appointment: "",
+        // updatedAt: "",
+        mc_file: "",
+        noa_file: "",
+        insurance_file: "",
+        w9_file: "",
+      },
+    }
+  );
+  res.send(result);
 };
 
 module.exports = {
@@ -137,4 +175,6 @@ module.exports = {
   findDublicates,
   changeStatus,
   addCarrierIdInInvoices,
+  changeDesignation,
+  changeCarrierToInitial,
 };
