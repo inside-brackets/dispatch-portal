@@ -24,7 +24,7 @@ jobs:
           git pull
       - name: Install Server Dependencies
         run: |
-          cd server
+          cd ~/dispatchportal-staging/server
           npm i
       - name: Reload pm2 test-api
         run: |
