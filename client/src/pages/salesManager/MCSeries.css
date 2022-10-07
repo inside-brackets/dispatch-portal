@@ -1,0 +1,6 @@
+.h-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--txt-color);
+  opacity: 0.2;
+}

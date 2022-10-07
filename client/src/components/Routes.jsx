@@ -33,6 +33,7 @@ const Profile = lazy(() => import("../pages/Profile"));
 
 // sales manager routes
 const SMDashboard = lazy(() => import("../pages/salesManager/Dashboard"));
+const MCSeries = lazy(() => import("../pages/salesManager/MCSeries"));
 
 // dispatchers
 const TruckDetail = lazy(() => import("../pages/dispatch/TruckDetail"));
@@ -113,6 +114,7 @@ const Routes = () => {
           <Route path="/users" exact component={Users} />
           <Route path="/users/:id" exact component={UserDetail} />
           <Route path="/dialer" component={Dialer} />
+          <Route path="/series" component={MCSeries} />
           <Route path="/profile" component={Profile} />
           <Route path="*">
             <h1>Not found</h1>

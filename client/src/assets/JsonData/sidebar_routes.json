@@ -25,6 +25,11 @@
         "display_name": "Fetch leads",
         "route": "/dialer",
         "icon": "bx bx-phone-outgoing"
+      },
+      {
+        "display_name": "MC Series",
+        "route": "/series",
+        "icon": "bx bx-sort-down"
       }
     ],
     "teamlead": [
