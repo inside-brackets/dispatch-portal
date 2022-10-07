@@ -113,6 +113,7 @@ const Routes = () => {
           <Route path="/users" exact component={Users} />
           <Route path="/users/:id" exact component={UserDetail} />
           <Route path="/dialer" component={Dialer} />
+          <Route path="/profile" component={Profile} />
           <Route path="*">
             <h1>Not found</h1>
           </Route>
