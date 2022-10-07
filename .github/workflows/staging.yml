@@ -1,0 +1,23 @@
+name: Staging-Deployment
+
+#############################
+# Start the job on all push #
+#############################
+on:
+  push:
+    branches:
+      - staging
+
+###############
+# Set the Job #
+###############
+jobs:
+  initial_test:
+    name: Deploying changes
+    runs-on: [self-hosted, derp]
+    timeout-minutes: 5
+    steps:
+      - name: Pull changes
+        run: |
+          cd ~/dispatchportal-staging
+          echo "hello" > hello.txt
