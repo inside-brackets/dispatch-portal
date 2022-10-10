@@ -4,3 +4,22 @@
   background-color: var(--txt-color);
   opacity: 0.2;
 }
+.range-input {
+  width: 6rem;
+}
+.range-input-group {
+  display: flex;
+  align-items: center;
+}
+.range-input-label {
+  margin: 0;
+  margin-right: 1rem;
+}
+.to-label {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.dateTime {
+  font-size: 12px;
+  color: var(--txt-color);
+}
