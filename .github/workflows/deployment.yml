@@ -26,7 +26,7 @@ jobs:
         run: |
           cd ~/dispatch-portal/server
           npm i
-      - name: Reload pm2 test-api
+      - name: Reload pm2 api
         run: |
           pm2 reload api
       - name: Build client
