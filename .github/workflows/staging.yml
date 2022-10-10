@@ -29,7 +29,7 @@ jobs:
       - name: Reload pm2 test-api
         run: |
           pm2 reload test-api
-      - name: Build client
+      - name: Build Client
         run: |
           cd ~/dispatch-staging/client
           npm run build
