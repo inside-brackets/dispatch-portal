@@ -1,24 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
+import axios from "axios";
 import "./MCSeries.css";
 
 function MCSeries() {
   const [series, setSeries] = useState({
-    order: "",
+    order: 1,
     isCustom: false,
     customFrom: 1,
     customTo: 999,
   });
   const [refresh, setRefresh] = useState(new Date().toLocaleString() + "");
+  const [isDirty, setIsDirty] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings`)
+      .then(({ data }) => {
+        setSeries(data.mcSeries);
+      });
+  }, []);
 
   const handleChange = (e) => {
     e.persist();
     console.log(e.currentTarget.id);
+    setIsDirty(true);
 
     if (e.currentTarget.id === "seriesOrder") {
       setSeries((prevState) => ({
         ...prevState,
-        order: e.target.value,
+        order: Number(e.target.value),
       }));
     } else if (e.currentTarget.id === "customCheckbox") {
       setSeries((prevState) => ({
@@ -28,19 +39,28 @@ function MCSeries() {
     } else if (e.currentTarget.id === "fromRange") {
       setSeries((prevState) => ({
         ...prevState,
-        customFrom: e.target.value,
+        customFrom: Number(e.target.value),
       }));
     } else if (e.currentTarget.id === "toRange") {
       setSeries((prevState) => ({
         ...prevState,
-        customTo: e.target.value,
+        customTo: Number(e.target.value),
       }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(series);
+    await axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_BACKEND_URL}/settings/update`,
+      headers: { "Content-Type": "application/json" },
+      data: {
+        mcSeries: series,
+      },
+    });
+    setIsDirty(false);
   };
 
   return (
@@ -56,18 +76,18 @@ function MCSeries() {
               <Form onSubmit={handleSubmit} className="mt-3 mb-3">
                 <Form.Group controlId="seriesOrder">
                   <Form.Check
-                    value="asc"
+                    value={1}
                     type="radio"
                     label="Ascending"
                     onChange={handleChange}
-                    checked={series.order === "asc"}
+                    checked={series.order === 1}
                   />
                   <Form.Check
-                    value="desc"
+                    value={-1}
                     type="radio"
                     label="Descending"
                     onChange={handleChange}
-                    checked={series.order === "desc"}
+                    checked={series.order === -1}
                   />
                 </Form.Group>
                 <Form.Group controlId="customCheckbox" className="mt-3">
@@ -84,10 +104,11 @@ function MCSeries() {
                     id="fromRange"
                     size="sm"
                     type="number"
-                    min="1"
-                    max="999"
+                    min={1}
+                    max={999}
                     className="range-input"
-                    placeholder="1"
+                    placeholder={series.customFrom}
+                    value={series.isCustom && series.customFrom}
                     disabled={!series.isCustom}
                     onChange={handleChange}
                   />
@@ -96,15 +117,21 @@ function MCSeries() {
                     id="toRange"
                     size="sm"
                     type="number"
-                    min="1"
-                    max="999"
+                    min={1}
+                    max={999}
                     className="range-input"
-                    placeholder="999"
+                    placeholder={series.customTo}
+                    value={series.isCustom && series.customTo}
                     disabled={!series.isCustom}
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="mt-3">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="mt-3"
+                  disabled={!isDirty}
+                >
                   Set Series
                 </Button>
               </Form>

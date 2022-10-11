@@ -18,8 +18,8 @@ const updateSettings = async (req, res) => {
 const getSettings = async (req, res) => {
   console.log("getSettings");
   try {
-    let prevSettings = await settings.find({});
-    if (prevSettings.length == 0) {
+    let prevSettings = await settings.findOne({});
+    if (!prevSettings) {
       prevSettings = await settings.create({});
     }
     res.status(200).send(prevSettings);
