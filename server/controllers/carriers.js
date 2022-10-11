@@ -180,7 +180,7 @@ const getTableCarriers = async (req, res, next) => {
   try {
     let result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
-      { user_name: 1, company: 1,first_name:1,last_name:1 }
+      { user_name: 1, company: 1, first_name: 1, last_name: 1 }
     );
     if (req.body.company) {
       result = result.filter(
@@ -229,7 +229,7 @@ const getCarriers = async (req, res, next) => {
   try {
     const result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
-      { user_name: 1, company: 1 ,first_name:1,last_name:1 }
+      { user_name: 1, company: 1, first_name: 1, last_name: 1 }
     );
     if (req.body.company) {
       const filteredResult = result.filter(
@@ -322,12 +322,11 @@ const countCarriers = async (req, res, next) => {
     })
       .populate("salesman", { company: 1 })
       .lean();
-    console.log("fetch", new Date());
     if (carrier.length > 0) {
       let filteredCarrier = carrier.filter(
         (carry) => carry.salesman?.company == req.body.company
       );
-      stats.total = await carrier.length;
+      stats.total = await Carrier.countDocuments({});
       stats.appointments = filteredCarrier.filter(
         (carry) => carry.c_status == "appointment"
       ).length;
@@ -338,11 +337,13 @@ const countCarriers = async (req, res, next) => {
         const carrier = registeredCarrier[i];
         const res = carrier.trucks.reduce(function (acc, curr) {
           return (
-            acc[curr.t_status] ? ++acc[curr.t_status] : (acc[curr.t_status] = 1),
+            acc[curr.t_status]
+              ? ++acc[curr.t_status]
+              : (acc[curr.t_status] = 1),
             acc
           );
         }, {});
-  
+
         if (res["active"] > 0) {
           stats.activeTrucks = stats["activeTrucks"] + res["active"];
         } else if (res["pending"] > 0) {
@@ -360,13 +361,11 @@ const countCarriers = async (req, res, next) => {
         // pendingCount += pendingTrucks.length;
         // activeCount += activeTrucks.length;
       }
-      console.log(stats,new Date());
+      console.log(stats, new Date());
     }
- return  res.send(stats);
-  
-    
+    return res.send(stats);
   } catch (error) {
-    return res.send(error.message)
+    return res.send(error.message);
   }
 };
 
