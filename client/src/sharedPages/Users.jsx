@@ -18,7 +18,10 @@ const Users = () => {
   const [refresh, setRefresh] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [rerenderTable, setRerenderTable] = useState(null);
-  const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState({
+    label: "All",
+    value: null,
+  });
   const history = useHistory();
   const { company: selectedCompany } = useSelector((state) => state.user);
   useEffect(() => {
@@ -42,7 +45,6 @@ const Users = () => {
     "Designation",
     "Department",
     "Joining Date",
-    "Basic Salary",
     "User Status",
     "Actions",
   ];
@@ -88,7 +90,6 @@ const Users = () => {
       <td>{item.designation}</td>
       <td>{item.department}</td>
       <td>{moment(item.joining_date).format("ll")}</td>
-      <td>{item.salary}</td>
       <td>
         <Badge type={status_map[item.u_status]} content={item.u_status} />
       </td>
@@ -102,12 +103,11 @@ const Users = () => {
       </td>
     </tr>
   );
-  console.log(filter);
   return (
     <>
       <Row className="my-3 mx-1">
-        <Col md={3} className='p-0'>
-          {/* <ReactSelect></ReactSelect> */}
+        <Col md={3} className="p-0">
+          <label>Users</label>
           <Select
             label="Users"
             value={filter}
@@ -117,15 +117,15 @@ const Users = () => {
             }}
             options={[
               {
-                label: "Upcoming",
-                value: `upcoming`,
-              },
-              {
-                label: "All Users",
+                label: "All",
                 value: null,
               },
               {
-                label: "This Month",
+                label: "Joining Soon",
+                value: `upcoming`,
+              },
+              {
+                label: "Joined This Month",
                 value: "this_month",
               },
             ]}
