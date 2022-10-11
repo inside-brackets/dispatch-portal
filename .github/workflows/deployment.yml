@@ -1,4 +1,4 @@
-name: Staging-Deployment
+name: Dispatch-Deployment
 
 #############################
 # Start the job on all push #
