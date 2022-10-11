@@ -19,6 +19,8 @@ const interviewRoutes = require("./routes/interview");
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
 
+process.env.TZ = 'Asia/Karachi' 
+
 const app = express();
 const httpServer = createServer(app);
 
