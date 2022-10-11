@@ -11,13 +11,17 @@ import { useHistory } from "react-router-dom";
 import status_map from "../assets/JsonData/status_map.json";
 import Badge from "../components/badge/Badge";
 import user_image from "../assets/images/taut.png";
+import Select from "react-select";
 
 const Users = () => {
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [rerenderTable, setRerenderTable] = useState(null);
-
+  const [filter, setFilter] = useState({
+    label: "All",
+    value: null,
+  });
   const history = useHistory();
   const { company: selectedCompany } = useSelector((state) => state.user);
   useEffect(() => {
@@ -41,7 +45,6 @@ const Users = () => {
     "Designation",
     "Department",
     "Joining Date",
-    "Basic Salary",
     "User Status",
     "Actions",
   ];
@@ -87,7 +90,6 @@ const Users = () => {
       <td>{item.designation}</td>
       <td>{item.department}</td>
       <td>{moment(item.joining_date).format("ll")}</td>
-      <td>{item.salary}</td>
       <td>
         <Badge type={status_map[item.u_status]} content={item.u_status} />
       </td>
@@ -101,11 +103,34 @@ const Users = () => {
       </td>
     </tr>
   );
-
   return (
     <>
-      <Row className="m-3">
-        <Col md={3}></Col>
+      <Row className="my-3 mx-1">
+        <Col md={3} className="p-0">
+          <label>Users</label>
+          <Select
+            label="Users"
+            value={filter}
+            onChange={(e) => {
+              setRerenderTable(Math.random());
+              setFilter(e);
+            }}
+            options={[
+              {
+                label: "All",
+                value: null,
+              },
+              {
+                label: "Joining Soon",
+                value: `upcoming`,
+              },
+              {
+                label: "Joined This Month",
+                value: "this_month",
+              },
+            ]}
+          />
+        </Col>
         <Col md={5}></Col>
         <Col md={4}>
           <Button onClick={addUserHandler} style={{ float: "right" }}>
@@ -126,6 +151,7 @@ const Users = () => {
                   url: `${process.env.REACT_APP_BACKEND_URL}/get-table-users`,
                   body: {
                     company: selectedCompany.value,
+                    joining_date: filter?.value,
                   },
                 }}
                 placeholder={"User Name | Full name"}
