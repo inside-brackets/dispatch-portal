@@ -314,42 +314,60 @@ const countCarriers = async (req, res, next) => {
     pendingTrucks: 0,
     total: 0,
   };
-  var filteredCarrier = [];
-  await Carrier.find({ c_status: { $nin: "unassigned" } })
-    .populate("salesman", { company: 1 })
-    .then(async (carrier) => {
-      filteredCarrier = carrier.filter(
+  try {
+    console.log("start", new Date());
+
+    const carrier = await Carrier.find({
+      c_status: { $nin: "unassigned" },
+    })
+      .populate("salesman", { company: 1 })
+      .lean();
+    console.log("fetch", new Date());
+    if (carrier.length > 0) {
+      let filteredCarrier = carrier.filter(
         (carry) => carry.salesman?.company == req.body.company
       );
-      stats.total = await Carrier.countDocuments({});
-      const appointmentCarrier = filteredCarrier.filter(
+      stats.total = await carrier.length;
+      stats.appointments = filteredCarrier.filter(
         (carry) => carry.c_status == "appointment"
-      );
-      stats.appointments = appointmentCarrier.length;
-
+      ).length;
       const registeredCarrier = filteredCarrier.filter(
         (carry) => carry.c_status == "registered"
       );
-      let pendingCount = 0;
-      let activeCount = 0;
-      registeredCarrier.forEach((carrier) => {
-        const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
-          ([pending, active, fail], item) =>
-            item.t_status === "pending"
-              ? [[...pending, item], active, fail]
-              : item.t_status === "active"
-              ? [pending, [...active, item], fail]
-              : [pending, active, [...fail, item]],
-          [[], [], []]
-        );
-        pendingCount += pendingTrucks.length;
-        activeCount += activeTrucks.length;
-      });
-
-      stats.pendingTrucks = pendingCount;
-      stats.activeTrucks = activeCount;
-    });
-  res.send(stats);
+      for (let i = 0; i < registeredCarrier.length; i++) {
+        const carrier = registeredCarrier[i];
+        const res = carrier.trucks.reduce(function (acc, curr) {
+          return (
+            acc[curr.t_status] ? ++acc[curr.t_status] : (acc[curr.t_status] = 1),
+            acc
+          );
+        }, {});
+  
+        if (res["active"] > 0) {
+          stats.activeTrucks = stats["activeTrucks"] + res["active"];
+        } else if (res["pending"] > 0) {
+          stats.pendingTrucks = stats["pendingTrucks"] + res["pending"];
+        }
+        // const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
+        //   ([pending, active, fail], item) =>
+        //     item.t_status === "pending"
+        //       ? [[...pending, item], active, fail]
+        //       : item.t_status === "active"
+        //       ? [pending, [...active, item], fail]
+        //       : [pending, active, [...fail, item]],
+        //   [[], [], []]
+        // );
+        // pendingCount += pendingTrucks.length;
+        // activeCount += activeTrucks.length;
+      }
+      console.log(stats,new Date());
+    }
+ return  res.send(stats);
+  
+    
+  } catch (error) {
+    return res.send(error.message)
+  }
 };
 
 const nearestAppointment = async (req, res, next) => {
@@ -432,26 +450,24 @@ const rejectAndRegistered = async (req, res, next) => {
   }
 };
 
-const fetchDialerCounter = async (req,res) => {
+const fetchDialerCounter = async (req, res) => {
   try {
-const result =   await Hcarrier.find({
-  createdAt: { $gt: new Date(Date.now() - 10 * 60 * 60 * 1000) },
-      change:{$in:["didnotpick","rejected","appointment"]},
-      user: req.params.id
-    })
+    const result = await Hcarrier.find({
+      createdAt: { $gt: new Date(Date.now() - 10 * 60 * 60 * 1000) },
+      change: { $in: ["didnotpick", "rejected", "appointment"] },
+      user: req.params.id,
+    });
     return res.status(200).send({
-      success:true,
-      result:result,
-      message:"Fetch Counter Successfully",
-      
-    })
+      success: true,
+      result: result,
+      message: "Fetch Counter Successfully",
+    });
   } catch (error) {
     return res.send({
-      success:false,
+      success: false,
       // result:result,
-      message:error.message,
-      
-    })
+      message: error.message,
+    });
   }
 };
 

@@ -11,10 +11,12 @@ import { themeActions } from "../../store/theme";
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
 
-  const [carriers, setCarriers] = useState(0);
-  const [appointment, setAppointment] = useState(0);
-  const [active, setActive] = useState(0);
-  const [pending, setPending] = useState(0);
+  const [carriers, setCarriers] = useState({
+    active: null,
+    pending: null,
+    appointment: null,
+    carrier: null,
+  });
   const [data, setData] = useState(null);
   const [topDispatcher, setTopDispatcher] = useState(null);
 
@@ -72,12 +74,13 @@ const DashboardAdmin = () => {
       .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`, {
         company: selectedCompany.value,
       })
-      .then((res) => {
-        let data = res.data;
-        setCarriers(data.total);
-        setAppointment(data.appointments);
-        setActive(data.activeTrucks);
-        setPending(data.pendingTrucks);
+      .then(({ data }) => {
+        setCarriers({
+          carrier: data.total,
+          appointment: data.appointments,
+          active: data.activeTrucks,
+          pending: data.pendingTrucks,
+        });
       });
 
     axios
@@ -85,9 +88,8 @@ const DashboardAdmin = () => {
         company: selectedCompany.value,
       })
       .then((res) => {
-        console.log("top sales",res.data)
+        console.log("top sales", res.data);
         setData(res.data);
-
       })
       .catch((err) => console.log(err));
 
@@ -161,14 +163,14 @@ const DashboardAdmin = () => {
               <StatusCard
                 title="Active Trucks"
                 icon="bx bx-line-chart"
-                count={active}
+                count={carriers.active}
               />
             </Col>
             <Col>
               <StatusCard
                 title=" Appointments"
                 icon="bx bx-calendar-check"
-                count={appointment}
+                count={carriers.appointment}
               />
             </Col>
           </Row>
@@ -177,14 +179,14 @@ const DashboardAdmin = () => {
               <StatusCard
                 title="Pendings Trucks"
                 icon="bx bx-time-five"
-                count={pending}
+                count={carriers.pending}
               />
             </Col>
             <Col>
               <StatusCard
                 title="Total Carriers"
                 icon="bx bxs-truck"
-                count={carriers}
+                count={carriers.carrier}
               />
             </Col>
           </Row>
@@ -246,7 +248,7 @@ const DashboardAdmin = () => {
             <Card.Body>
               <Card.Title>Sales Stats</Card.Title>
               <hr />
-              {!data||  data.length === 0 ?  (
+              {!data || data.length === 0 ? (
                 <>Not Enough Data to show</>
               ) : (
                 <div className="tableFixHead">
