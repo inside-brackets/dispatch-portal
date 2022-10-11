@@ -26,9 +26,7 @@ dotenv.config();
 
 mongoose
   .connect(
-    process.env.PROD === "true"
-      ? process.env.FALCON_DB
-      : process.env.FALCON_DB_TEST,
+    process.env.PROD === "true" ? process.env.DB_URI : process.env.TEST_DB_URI,
     {
       useUnifiedTopology: true,
       useNewUrlParser: true,
@@ -122,9 +120,10 @@ app.use("/interviews", interviewRoutes);
 app.use("/", rootRoutes);
 
 app.get("/hello", (req, res) => {
+  console.log("hello");
   res.status(200).send({ msg: "hello" });
 });
 
 httpServer.listen(process.env.PORT || 8800, () =>
-  console.log("Api is running")
+  console.log("Api is running on port: ", process.env.PORT || 8800)
 );
