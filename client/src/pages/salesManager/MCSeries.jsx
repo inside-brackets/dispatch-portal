@@ -10,15 +10,15 @@ function MCSeries() {
     customFrom: 1,
     customTo: 999,
   });
-  const [refresh, setRefresh] = useState(new Date().toLocaleString() + "");
+  const [freeRes, setFreeRes] = useState(0);
+  const [refresh, setRefresh] = useState(
+    new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  );
   const [isDirty, setIsDirty] = useState(false);
+  const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings`)
-      .then(({ data }) => {
-        setSeries(data.mcSeries);
-      });
+    handleRefresh();
   }, []);
 
   const handleChange = (e) => {
@@ -60,7 +60,31 @@ function MCSeries() {
         mcSeries: series,
       },
     });
+    handleRefresh();
+  };
+
+  const handleRefresh = async (e) => {
+    setAnimate(true);
+    await axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings`)
+      .then(({ data }) => {
+        setSeries(data);
+        axios({
+          method: "POST",
+          url: `${process.env.REACT_APP_BACKEND_URL}/settings/free`,
+          headers: { "Content-Type": "application/json" },
+          data: {
+            series: data,
+          },
+        }).then(({ data }) => {
+          setFreeRes(data);
+        });
+      });
+    setAnimate(false);
     setIsDirty(false);
+    setRefresh(
+      new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    );
   };
 
   return (
@@ -69,7 +93,7 @@ function MCSeries() {
       <br />
       <div className="row">
         <div className="col-12">
-          <div className="card" style={{ minHeight: "70vh" }}>
+          <div className="card">
             <div className="card__body p-3">
               <h4>Series Order</h4>
               <div className="h-line"></div>
@@ -145,7 +169,7 @@ function MCSeries() {
                   <Form.Control
                     size="sm"
                     className="range-input"
-                    placeholder="999"
+                    placeholder={freeRes}
                     readOnly={true}
                   />
                   <svg
@@ -154,7 +178,10 @@ function MCSeries() {
                     fill="currentColor"
                     width={24}
                     height={24}
-                    className="to-label"
+                    className={`to-label refresh-btn ${
+                      animate ? `refresh` : ``
+                    }`}
+                    onClick={handleRefresh}
                   >
                     <path
                       fillRule="evenodd"
@@ -164,6 +191,9 @@ function MCSeries() {
                   </svg>
                 </Form.Group>
                 <span className="dateTime">Last refreshed: {refresh}</span>
+                <Form.Group className="mt-4">
+                  <Button variant="secondary">Free Resource</Button>
+                </Form.Group>
               </Form>
             </div>
           </div>
