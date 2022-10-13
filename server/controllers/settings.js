@@ -47,4 +47,30 @@ const getFreeResources = async (req, res) => {
   }
 };
 
-module.exports = { updateSettings, getMCSettings, getFreeResources };
+const freeUpResource = async (req, res) => {
+  console.log("freeUpResources");
+  try {
+    await Carrier.updateMany(
+      {
+        c_status: "didnotpick",
+      },
+      { $unset: { salesman: 1 }, $set: { c_status: "unassigned" } }
+    )
+      .then((data) => {
+        res.status(200).send();
+      })
+      .catch((error) => {
+        throw error;
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+module.exports = {
+  updateSettings,
+  getMCSettings,
+  getFreeResources,
+  freeUpResource,
+};

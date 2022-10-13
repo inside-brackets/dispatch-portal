@@ -87,6 +87,17 @@ function MCSeries() {
     );
   };
 
+  const handleFreeResource = async (e) => {
+    await axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/freeres`)
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response.data);
+        }
+      });
+    handleRefresh();
+  };
+
   return (
     <div>
       <h2>MC Series</h2>
@@ -129,7 +140,6 @@ function MCSeries() {
                     size="sm"
                     type="number"
                     min={1}
-                    max={999}
                     className="w-6rem"
                     placeholder={series.customFrom}
                     value={series.isCustom && series.customFrom}
@@ -142,7 +152,6 @@ function MCSeries() {
                     size="sm"
                     type="number"
                     min={1}
-                    max={999}
                     className="w-6rem"
                     placeholder={series.customTo}
                     value={series.isCustom && series.customTo}
@@ -190,7 +199,9 @@ function MCSeries() {
                 </Form.Group>
                 <span className="time-text">Last refreshed: {refresh}</span>
                 <Form.Group className="mt-4">
-                  <Button variant="secondary">Free Resource</Button>
+                  <Button variant="secondary" onClick={handleFreeResource}>
+                    Free Resources
+                  </Button>
                 </Form.Group>
               </Form>
             </div>
