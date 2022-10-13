@@ -122,28 +122,28 @@ function MCSeries() {
                     checked={series.isCustom}
                   />
                 </Form.Group>
-                <Form.Group className="range-input-group">
-                  <Form.Label className="range-input-label">Range:</Form.Label>
+                <Form.Group className="disp-flex">
+                  <Form.Label className="mr-right">Range:</Form.Label>
                   <Form.Control
                     id="fromRange"
                     size="sm"
                     type="number"
                     min={1}
                     max={999}
-                    className="range-input"
+                    className="w-6rem"
                     placeholder={series.customFrom}
                     value={series.isCustom && series.customFrom}
                     disabled={!series.isCustom}
                     onChange={handleChange}
                   />
-                  <span className="to-label">to</span>
+                  <span className="mr-left-right">to</span>
                   <Form.Control
                     id="toRange"
                     size="sm"
                     type="number"
                     min={1}
                     max={999}
-                    className="range-input"
+                    className="w-6rem"
                     placeholder={series.customTo}
                     value={series.isCustom && series.customTo}
                     disabled={!series.isCustom}
@@ -162,13 +162,11 @@ function MCSeries() {
               <h4>Resources</h4>
               <div className="h-line"></div>
               <Form className="mt-3 mb-3">
-                <Form.Group className="range-input-group">
-                  <Form.Label className="range-input-label">
-                    Available:
-                  </Form.Label>
+                <Form.Group className="disp-flex">
+                  <Form.Label className="mr-right">Available:</Form.Label>
                   <Form.Control
                     size="sm"
-                    className="range-input"
+                    className="w-6rem"
                     placeholder={freeRes}
                     readOnly={true}
                   />
@@ -178,7 +176,7 @@ function MCSeries() {
                     fill="currentColor"
                     width={24}
                     height={24}
-                    className={`to-label refresh-btn ${
+                    className={`mr-left-right refresh-btn ${
                       animate ? `refresh` : ``
                     }`}
                     onClick={handleRefresh}
@@ -190,7 +188,7 @@ function MCSeries() {
                     />
                   </svg>
                 </Form.Group>
-                <span className="dateTime">Last refreshed: {refresh}</span>
+                <span className="time-text">Last refreshed: {refresh}</span>
                 <Form.Group className="mt-4">
                   <Button variant="secondary">Free Resource</Button>
                 </Form.Group>

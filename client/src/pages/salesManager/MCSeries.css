@@ -4,24 +4,27 @@
   background-color: var(--txt-color);
   opacity: 0.2;
 }
-.range-input {
-  width: 6rem;
-}
-.range-input-group {
+.disp-flex {
   display: flex;
   align-items: center;
 }
-.range-input-label {
+.mr-right {
   margin: 0;
   margin-right: 1rem;
 }
-.to-label {
+.w-6rem {
+  width: 6rem;
+}
+.mr-left-right {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
 }
-.dateTime {
+.time-text {
   font-size: 12px;
   color: var(--txt-color);
+}
+.refresh-btn {
+  cursor: pointer;
 }
 @keyframes spin {
   from {
@@ -37,7 +40,4 @@
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-play-state: running;
-}
-.refresh-btn {
-  cursor: pointer;
 }
