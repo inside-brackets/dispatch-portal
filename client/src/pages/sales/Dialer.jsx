@@ -72,6 +72,7 @@ const Dialer = () => {
     );
     dispatch(change(Math.random()));
     setLoading(false);
+    setCarrier(null);
   };
 
   const didnotPickHandler = async () => {
@@ -92,6 +93,7 @@ const Dialer = () => {
       transformData
     );
     setLoading(false);
+    setCarrier(null);
   };
   const buttonClickHandler = () => {
     setModal(true);
@@ -126,6 +128,7 @@ const Dialer = () => {
       transformData
     );
     setLoading(false);
+    setCarrier(null);
   };
 
   const buttonrClickHandler = () => {
@@ -258,7 +261,7 @@ const Dialer = () => {
             <Col>
               <h6>{carrier.mc_number}</h6>
             </Col>
-          </Row >
+          </Row>
           <Row className="justify-content-between">
             <Col md={5}>
               <h5>Phone:</h5>
@@ -271,7 +274,7 @@ const Dialer = () => {
             <Col md={5}>
               <h5>Email:</h5>
             </Col>
-            <Col className='text-break' md={7}>
+            <Col className="text-break" md={7}>
               <h6> {carrier.email} </h6>
             </Col>
           </Row>

@@ -4,6 +4,7 @@ const Hcarrier = require("../models/hcarrier");
 var moment = require("moment-timezone");
 const { callAbleStates } = require("../util/convertTZ");
 const { getToken } = require("../util/getToken");
+const settings = require("../models/setting");
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
@@ -91,17 +92,29 @@ const fetchLead = async (req, res, next) => {
   Carrier.findOne({
     salesman: mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
-    address: { $regex: callAbleStates(pst), $options: "i" },
+    // address: { $regex: callAbleStates(pst), $options: "i" },
   })
     .populate("salesman", { user_name: 1 })
     .then(async (result) => {
       console.log("result", result);
       if (result === null) {
+        let prevSettings = await settings.findOne({});
+        if (!prevSettings) {
+          prevSettings = await settings.create({});
+        }
         const carrier = await Carrier.find({
           c_status: "unassigned",
-          address: { $regex: callAbleStates(pst), $options: "i" },
+          // address: { $regex: callAbleStates(pst), $options: "i" },
+          mc_number: {
+            $gte: prevSettings.mcSeries.isCustom
+              ? prevSettings.mcSeries.customFrom
+              : 0,
+            $lte: prevSettings.mcSeries.isCustom
+              ? prevSettings.mcSeries.customTo
+              : 990000,
+          },
         })
-          .sort({ mc_number: 1 })
+          .sort({ mc_number: prevSettings.mcSeries.order })
           .limit(1);
         if (carrier.length > 0) {
           await Carrier.findByIdAndUpdate(

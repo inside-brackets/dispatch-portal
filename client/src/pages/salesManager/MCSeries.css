@@ -35,9 +35,27 @@
   }
 }
 .refresh {
-  animation-name: spin;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+  animation: spin 1s linear infinite;
   animation-play-state: running;
+}
+.load-icon {
+  margin-left: -0.25rem;
+  margin-right: 0.75rem;
+  color: white;
+  animation: spin 1s linear infinite;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.sec-btn {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+.sec-btn:hover {
+  background-color: #166534;
+  border-color: #166534;
+}
+.sec-btn:disabled {
+  background-color: #4ade80;
+  border-color: #4ade80;
 }
