@@ -227,7 +227,12 @@ const Dialer = () => {
   } else if (carrier === null)
     return (
       <div className="spreadsheet__loader">
-        <h2 style={{ color: "green" }}>No more carriers to show.</h2>
+        <h2 style={{ color: "green" }}>No more Carriers.</h2>
+        <p style={{ fontSize: "18px", marginBottom: "4px" }}>
+          Possible reasons:
+        </p>
+        <p style={{ margin: 0 }}>1. Current query returned no result.</p>
+        <p>2. No callable carriers right now.</p>
       </div>
     );
 
