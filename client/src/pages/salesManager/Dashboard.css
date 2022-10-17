@@ -6,7 +6,7 @@
 }
 .label-txt {
   font-size: 32px;
-  color: #349eff;
+  color: var(--main-color-blue);
 }
 .secondary-txt {
   font-size: 24px;
@@ -22,8 +22,8 @@
   color: gray;
 }
 .CircularProgressbar-path {
-  stroke: #349eff !important;
+  stroke: var(--main-color-blue) !important;
 }
 .CircularProgressbar-trail {
-  stroke: #ebebeb !important;
+  stroke: var(--second-bg) !important;
 }

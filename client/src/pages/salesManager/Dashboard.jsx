@@ -49,7 +49,9 @@ const Dashboard = () => {
         <div className="col-xl-4 col-lg-6 col-md-8 col-sm-12">
           <div className="card">
             <div className="card__body p-3">
-              <h4 className="text-center">Current Month Target</h4>
+              <h4 className="text-center">
+                {new Date().toLocaleString("default", { month: "long" })} Target
+              </h4>
               <div className="progress-wrapper">
                 <CircularProgressbarWithChildren
                   value={percentage}
