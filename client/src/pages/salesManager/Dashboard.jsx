@@ -36,14 +36,10 @@ const Dashboard = () => {
 
   const countDaysLeft = () => {
     const today = new Date();
-    const nextMonth = new Date();
-    nextMonth.setDate(0);
-    nextMonth.setMonth(nextMonth.getMonth() + 1);
-    let days =
-      nextMonth.getDate() > today.getDate()
-        ? nextMonth.getDate() - today.getDate()
-        : 0;
-    setDaysLeft(days + 1);
+    setDaysLeft(
+      new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() -
+        today.getDate()
+    );
   };
 
   return (
