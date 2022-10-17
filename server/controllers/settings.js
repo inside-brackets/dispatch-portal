@@ -1,5 +1,6 @@
 const settings = require("../models/setting");
 const Carrier = require("../models/carrier");
+const Hcarrier = require("../models/hcarrier");
 
 const updateSettings = async (req, res) => {
   console.log("updateSettings", req.body);
@@ -24,6 +25,20 @@ const getMCSettings = async (req, res) => {
       prevSettings = await settings.create({});
     }
     res.status(200).send(prevSettings.mcSeries);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getCurrTarget = async (req, res) => {
+  console.log("getTarget");
+  try {
+    let prevSettings = await settings.findOne({});
+    if (!prevSettings) {
+      prevSettings = await settings.create({});
+    }
+    res.status(200).send(prevSettings.target);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -68,9 +83,27 @@ const freeUpResource = async (req, res) => {
   }
 };
 
+const getCurrDials = async (req, res) => {
+  console.log("getCurrDials");
+  try {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    let result = await Hcarrier.countDocuments({
+      createdAt: { $gte: today },
+      change: { $in: ["didnotpick", "rejected", "appointment"] },
+    });
+    res.status(200).send(result.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   updateSettings,
   getMCSettings,
   getFreeResources,
   freeUpResource,
+  getCurrTarget,
+  getCurrDials,
 };

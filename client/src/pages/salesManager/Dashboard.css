@@ -1,0 +1,29 @@
+.progress-wrapper {
+  margin: 42px auto;
+  margin-bottom: 32px;
+  width: 200px;
+  height: 200px;
+}
+.label-txt {
+  font-size: 32px;
+  color: #349eff;
+}
+.secondary-txt {
+  font-size: 24px;
+  color: gray;
+}
+.days-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.days-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: gray;
+}
+.CircularProgressbar-path {
+  stroke: #349eff !important;
+}
+.CircularProgressbar-trail {
+  stroke: #ebebeb !important;
+}

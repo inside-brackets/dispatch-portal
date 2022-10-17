@@ -113,7 +113,7 @@ function MCSeries() {
       <h2>MC Series</h2>
       <br />
       <div className="row">
-        <div className="col-12">
+        <div className="col-xl-4 col-lg-8 col-md-10 col-sm-12">
           <div className="card">
             <div className="card__body p-3">
               <h4>Series Order</h4>
