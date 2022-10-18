@@ -1,3 +1,11 @@
+.no-pad {
+  padding: 0 !important;
+}
+.crd-header {
+  border-top-left-radius: var(--border-radius) !important;
+  border-top-right-radius: var(--border-radius) !important;
+  padding: 1rem 1rem !important;
+}
 .progress-wrapper {
   margin: 42px auto;
   margin-bottom: 32px;
@@ -11,10 +19,6 @@
 .secondary-txt {
   font-size: 24px;
   color: gray;
-}
-.days-wrapper {
-  display: flex;
-  justify-content: center;
 }
 .days-label {
   font-size: 18px;

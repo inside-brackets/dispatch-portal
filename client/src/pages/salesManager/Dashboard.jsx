@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
 import axios from "axios";
 
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -43,15 +47,15 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <>
       <h2 className="page-header">Manager Dashboard</h2>
-      <div className="row">
-        <div className="col-xl-4 col-lg-6 col-md-8 col-sm-12">
-          <div className="card">
-            <div className="card__body p-3">
-              <h4 className="text-center">
-                {new Date().toLocaleString("default", { month: "long" })} Target
-              </h4>
+      <Row>
+        <Col xl={4} lg={6} md={8} sm={12}>
+          <Card className="text-center no-pad">
+            <Card.Header as="h4" className="crd-header">
+              {new Date().toLocaleString("default", { month: "long" })} Target
+            </Card.Header>
+            <Card.Body>
               <div className="progress-wrapper">
                 <CircularProgressbarWithChildren
                   value={percentage}
@@ -63,14 +67,12 @@ const Dashboard = () => {
                   </strong>
                 </CircularProgressbarWithChildren>
               </div>
-              <div className="days-wrapper">
-                <span className="days-label">{daysLeft} days left.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              <span className="days-label">{daysLeft} days left.</span>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </>
   );
 };
 
