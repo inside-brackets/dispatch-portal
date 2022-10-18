@@ -1,0 +1,59 @@
+.no-pad {
+  padding: 0 !important;
+}
+.crd-header {
+  border-top-left-radius: var(--border-radius) !important;
+  border-top-right-radius: var(--border-radius) !important;
+  padding: 1rem 1rem !important;
+}
+.progress-wrapper {
+  margin: 24px auto;
+  margin-bottom: 32px;
+  width: 200px;
+  height: 200px;
+}
+.label-txt {
+  font-size: 32px;
+}
+.secondary-txt {
+  font-size: 24px;
+  color: gray;
+}
+.days-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: gray;
+}
+.CircularProgressbar-trail {
+  stroke: var(--second-bg) !important;
+}
+.set-target-div {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.curr-target-label {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--txt-color);
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.load-icon {
+  margin-left: -0.25rem;
+  margin-right: 0.75rem;
+  color: white;
+  animation: spin 1s linear infinite;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
