@@ -108,7 +108,7 @@ const TargetDisplay = ({ designation }) => {
                 Current Target: <strong>{target}</strong>
               </span>
               <Button variant="primary" onClick={() => setShowModal(true)}>
-                Change Target
+                {percentage == 100 ? "Set Target" : "Change Target"}
               </Button>{" "}
             </div>
           )}

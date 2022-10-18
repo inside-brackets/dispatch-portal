@@ -22,6 +22,16 @@
         "icon": "bx bx-user"
       },
       {
+        "display_name": "Appointments",
+        "route": "/appointments",
+        "icon": "bx bx-user-pin"
+      },
+      {
+        "display_name": "Spread Sheet",
+        "route": "/spread_sheet",
+        "icon": "bx bx-spreadsheet"
+      },
+      {
         "display_name": "Fetch leads",
         "route": "/dialer",
         "icon": "bx bx-phone-outgoing"
