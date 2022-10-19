@@ -28,7 +28,7 @@ const TargetDisplay = ({ designation }) => {
         setNewTarget(data.curr_target);
       });
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/dials`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/registered`)
       .then(({ data }) => {
         console.log(data);
         setCurrDials(data);
@@ -54,7 +54,6 @@ const TargetDisplay = ({ designation }) => {
   const handleTargetChange = async (e) => {
     e.persist();
     setNewTarget(Number(e.target.value));
-    console.log(newTarget);
   };
 
   const handleTargetSubmit = async (e) => {
@@ -89,12 +88,12 @@ const TargetDisplay = ({ designation }) => {
               maxValue={100}
               styles={{
                 path: {
-                  stroke: percentage == 100 ? "#019707" : "#349eff",
+                  stroke: percentage === 100 ? "#019707" : "#349eff",
                 },
               }}
             >
               <strong
-                style={{ color: percentage == 100 ? "#019707" : "#349eff" }}
+                style={{ color: percentage === 100 ? "#019707" : "#349eff" }}
                 className="label-txt"
               >
                 {currDials}/<span className="secondary-txt">{target}</span>
@@ -108,7 +107,7 @@ const TargetDisplay = ({ designation }) => {
                 Current Target: <strong>{target}</strong>
               </span>
               <Button variant="primary" onClick={() => setShowModal(true)}>
-                {percentage == 100 ? "Set Target" : "Change Target"}
+                {percentage === 100 ? "Set Target" : "Change Target"}
               </Button>{" "}
             </div>
           )}

@@ -5,7 +5,7 @@ const {
   getFreeResources,
   freeUpResource,
   getCurrTarget,
-  getCurrDials,
+  getRegistered,
 } = require("../controllers/settings");
 
 const router = express.Router();
@@ -13,8 +13,8 @@ const router = express.Router();
 router.post("/update", updateSettings);
 router.get("/", getMCSettings);
 router.post("/free", getFreeResources);
-router.get("/freeres", freeUpResource);
+router.get("/freeup", freeUpResource);
 router.get("/target", getCurrTarget);
-router.get("/dials", getCurrDials);
+router.get("/registered", getRegistered);
 
 module.exports = router;

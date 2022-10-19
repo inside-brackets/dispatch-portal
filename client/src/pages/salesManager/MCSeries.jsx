@@ -97,7 +97,7 @@ function MCSeries() {
   const handleFreeResource = async (e) => {
     setFreeResource(true);
     await axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/freeres`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/freeup`)
       .catch((error) => {
         if (error.response) {
           console.log(error.response.data);

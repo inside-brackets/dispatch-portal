@@ -83,14 +83,14 @@ const freeUpResource = async (req, res) => {
   }
 };
 
-const getCurrDials = async (req, res) => {
-  console.log("getCurrDials");
+const getRegistered = async (req, res) => {
+  console.log("getRegistered");
   try {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
     let result = await Hcarrier.countDocuments({
-      createdAt: { $gte: today },
-      change: { $in: ["didnotpick", "rejected", "appointment"] },
+      createdAt: { $gte: new Date(today.getFullYear(), today.getMonth(), 0) },
+      change: { $in: ["registered"] },
     });
     res.status(200).send(result.toString());
   } catch (error) {
@@ -105,5 +105,5 @@ module.exports = {
   getFreeResources,
   freeUpResource,
   getCurrTarget,
-  getCurrDials,
+  getRegistered,
 };
