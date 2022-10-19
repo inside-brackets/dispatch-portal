@@ -6,6 +6,7 @@ const {
   freeUpResource,
   getCurrTarget,
   getRegistered,
+  getChartData,
 } = require("../controllers/settings");
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.post("/free", getFreeResources);
 router.get("/freeup", freeUpResource);
 router.get("/target", getCurrTarget);
 router.get("/registered", getRegistered);
+router.get("/chart", getChartData);
 
 module.exports = router;

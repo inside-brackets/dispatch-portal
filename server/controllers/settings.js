@@ -99,6 +99,34 @@ const getRegistered = async (req, res) => {
   }
 };
 
+const getChartData = async (req, res) => {
+  console.log("getChartData");
+  try {
+    let data = [];
+    let result;
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    for (var i = 0; i < 12; i++) {
+      if (i > today.getMonth()) {
+        data.push(null);
+      } else {
+        result = await Hcarrier.countDocuments({
+          createdAt: {
+            $gte: new Date(today.getFullYear(), i, 0),
+            $lt: new Date(today.getFullYear(), i + 1, 0),
+          },
+          change: { $in: ["registered"] },
+        });
+        data.push(result);
+      }
+    }
+    res.status(200).send(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   updateSettings,
   getMCSettings,
@@ -106,4 +134,5 @@ module.exports = {
   freeUpResource,
   getCurrTarget,
   getRegistered,
+  getChartData,
 };
