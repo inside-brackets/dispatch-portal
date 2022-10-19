@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
@@ -70,6 +71,7 @@ const TargetDisplay = ({ designation }) => {
       },
     });
     setTarget(newTarget);
+    toast.success("Target set successfully");
     setIsSubmitting(false);
     setShowModal(false);
   };
