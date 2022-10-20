@@ -17,6 +17,10 @@ const Dashboard = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
 
   const [series, setSeries] = useState([]);
+  const [leads, setLeads] = useState(0);
+  const [activeTrucks, setActiveTrucks] = useState(0);
+  const [activeSalePersons, setActiveSalePersons] = useState(0);
+  const [pendingSalePersons, setPendingSalePersons] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -24,13 +28,41 @@ const Dashboard = () => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/settings/chart`)
       .then(({ data }) => {
-        console.log(data);
         setSeries([
           {
             name: "Registered",
             data: data,
           },
         ]);
+      });
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_BACKEND_URL}/settings/free`,
+      headers: { "Content-Type": "application/json" },
+      data: {
+        series: {
+          isCustom: false,
+        },
+      },
+    }).then(({ data }) => {
+      setLeads(data);
+    });
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`, {
+        company: selectedCompany.value,
+      })
+      .then(({ data }) => {
+        setActiveTrucks(data.activeTrucks);
+      });
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/count/active/sales`)
+      .then(({ data }) => {
+        setActiveSalePersons(data);
+      });
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/count/pending/sales`)
+      .then(({ data }) => {
+        setPendingSalePersons(data);
       });
   }, []);
 
@@ -132,26 +164,27 @@ const Dashboard = () => {
       {/* Status Cards */}
       <Row>
         <Col>
-          <StatusCard title="Lorem ipsum" icon="bx bx-line-chart" count={23} />
+          <StatusCard title="Leads" icon="bx bx-data" count={leads} />
         </Col>
         <Col>
           <StatusCard
-            title="Lorem ipsum"
-            icon="bx bx-calendar-check"
-            count={16}
+            title="Active Trucks"
+            icon="bx bxs-truck"
+            count={activeTrucks}
           />
         </Col>
         <Col>
-          <StatusCard title="Lorem ipsum" icon="bx bx-time-five" count={2} />
-        </Col>
-        <Col>
-          <StatusCard title="Lorem ipsum" icon="bx bxs-truck" count={100} />
+          <StatusCard
+            title="Sales Person"
+            icon="bx bx-user"
+            count={activeSalePersons}
+          />
         </Col>
         <Col>
           <StatusCard
-            title="Lorem ipsum"
-            icon="bx bx-calendar-check"
-            count={89}
+            title="Upcoming Sales Person"
+            icon="bx bxs-user-plus"
+            count={pendingSalePersons}
           />
         </Col>
       </Row>

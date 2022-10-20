@@ -305,6 +305,50 @@ const countUsers = async (req, res, next) => {
   }
 };
 
+const getSalesCount = async (req, res) => {
+  console.log("getSalesCount");
+  try {
+    let filter = {
+      u_status: {
+        $in: ["probation", "active"],
+      },
+      department: {
+        $in: ["sales"],
+      },
+      designation: {
+        $nin: ["manager"],
+      },
+    };
+    let result = await User.countDocuments(filter);
+    res.status(200).send(result.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getUpcomingSalesCount = async (req, res) => {
+  console.log("getUpcomingSalesCount");
+  try {
+    let filter = {
+      u_status: {
+        $in: ["pending"],
+      },
+      department: {
+        $in: ["sales"],
+      },
+      designation: {
+        $nin: ["manager"],
+      },
+    };
+    let result = await User.countDocuments(filter);
+    res.status(200).send(result.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addNewUser,
   getUser,
@@ -315,4 +359,6 @@ module.exports = {
   login,
   refreshToken,
   countUsers,
+  getSalesCount,
+  getUpcomingSalesCount,
 };
