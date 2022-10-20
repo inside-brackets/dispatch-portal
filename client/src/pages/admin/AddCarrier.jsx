@@ -5,6 +5,7 @@ import Input from "../../components/UI/MyInput";
 import TruckTable from "../../components/table/TruckTable";
 import Button from "../../components/UI/MyButton";
 import Modal from "../../components/modals/MyModal";
+import ModalToAssignSale from "../../components/modals/ModalToAssignSale";
 import TextArea from "../../components/UI/TextArea";
 import useHttp from "../../hooks/use-https";
 import Loader from "react-loader-spinner";
@@ -15,6 +16,8 @@ import useInput from "../../hooks/use-input";
 import Select from "react-select";
 import { Col, Row, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 const isNotEmpty = (value) => value.trim() !== "";
 
@@ -23,6 +26,32 @@ const AppointmentDetail = () => {
   const [users, setUsers] = useState([]);
   const [buttonLoader, setButtonLoader] = useState(false);
   const { company } = useSelector((state) => state.user);
+
+  const { sendRequest: fetchSalesPerson } = useHttp();
+  const { company: selectedCompany } = useSelector((state) => state.user);
+  // const [modal, setModal] = useState();
+
+// useEffect(()=>{
+//   // const transformData = (data) => {
+//   //   // dispatch(salesActions.setAndPrepare(data));
+//   // };
+
+//   fetchSalesPerson(
+//     {
+//       url: `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+
+//       body: {
+//         department: "sales",
+//         company: selectedCompany.value,
+//       },
+//     },
+//     // transformDispatch
+//   );
+
+// },[])
+// console.log(fetchSalesPerson())
 
   useEffect(() => {
     axios
@@ -145,6 +174,7 @@ const AppointmentDetail = () => {
   const params = useParams();
   const [carrier, setCarrier] = useState({});
   const [showCloseModal, setShowCloseModal] = useState(false);
+  const [ShowCloseModalPoint, setShowCloseModalPoint] = useState(false);
   const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
   const { sendRequest: updateCarrier } = useHttp();
 
@@ -217,6 +247,11 @@ const AppointmentDetail = () => {
   const showCloseModalHandler = () => {
     saveCarrier();
     setShowCloseModal(true);
+  };
+  const showCloseModalPointHandler = () => {
+    console.log("showCloseModalPointHandler")
+    // saveCarrier();
+    setShowCloseModalPoint(true);
   };
 
   // submit
@@ -331,6 +366,20 @@ const AppointmentDetail = () => {
   }
 
   console.log("trucks", trucks);
+
+  // Modal for carrier assign to a sale person
+  // const appointmentRef = useRef();
+  // const commentSaleRef = useRef();
+  const onClose = () => {
+    setShowCloseModalPoint(false);
+    // setLoading(false);
+  };
+  const onConfirm=()=>{
+    setShowCloseModalPoint(false);
+    return toast.success("Carrier Assigned to Sale Person")
+  };
+
+
   return (
     <>
       <BackButton onClick={() => history.push("/searchcarrier")} />
@@ -345,6 +394,12 @@ const AppointmentDetail = () => {
                 color: "green",
                 onClick: showCloseModalHandler,
                 disabled: !formIsValid,
+              },
+              {
+                buttonText: "appoint a sale person",
+                color: "green",
+                onClick: showCloseModalPointHandler,
+                // disabled: !formIsValid,
               },
             ]}
           >
@@ -698,6 +753,61 @@ const AppointmentDetail = () => {
             />
           </div>
         </Modal>
+
+      <ModalToAssignSale
+     show={ShowCloseModalPoint}
+     heading="Appoint a saleperson"
+    //  disabled={loading}
+     onConfirm={onConfirm}
+     onClose={onClose}
+        >
+          <form action="">
+
+          <Row className='justify-content-end my-2'>
+        <Col md={12}>
+        <div className="assign__text">SalesPerson:</div>
+        <MySelect
+          // isMulti={false}
+          // value={selectedDispatcher}
+          // onChange={setSelectedDispatcher}
+          options={['arbaz','sufyan','qamar'].map((item) => {
+            return {
+              label: item, // change later
+              value: item,
+            };
+          })}
+        />
+        </Col>
+      </Row>
+
+            <Input
+              type="datetime-local"
+              label="Call back time:"
+              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
+              // ref={appointmentRef}
+            />
+            <TextArea
+              name="Comment:"
+              placeholder="Add a note about this appointment ..."
+              // ref={commentSaleRef}
+            />
+
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            ></div>
+
+
+          </form>
+
+         
+
+
+        </ModalToAssignSale>
+
       </div>
       <TruckTable
             mc={carrier.mc_number}
