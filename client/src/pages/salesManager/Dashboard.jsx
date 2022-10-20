@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import TargetDisplay from "../../components/targetDisplay/TargetDisplay";
+import { useSelector, useDispatch } from "react-redux";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 import axios from "axios";
 
+import TargetDisplay from "../../components/targetDisplay/TargetDisplay";
+import StatusCard from "../../components/status-card/StatusCard";
+import MySelect from "../../components/UI/MySelect";
+import { userActions } from "../../store/user";
+import { themeActions } from "../../store/theme";
+
 const Dashboard = () => {
   const { user } = useSelector((state) => state.user);
+  const { company: selectedCompany } = useSelector((state) => state.user);
+
   const [series, setSeries] = useState([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -36,7 +45,7 @@ const Dashboard = () => {
         show: false,
       },
     },
-    colors: ["#349eff", "#019707"],
+    colors: ["var(--main-color)", "#019707"],
     dataLabels: {
       enabled: false,
     },
@@ -89,9 +98,66 @@ const Dashboard = () => {
 
   return (
     <>
-      <h2 className="page-header">Manager Dashboard</h2>
+      {/* Slect Company & Heading */}
+      <Row className="mb-3">
+        <Col>
+          <h2 className="page-header mb-3">Manager Dashboard</h2>
+        </Col>
+        <Col md={8} lg={6} xl={4} style={{ zIndex: 999 }}>
+          <MySelect
+            isMulti={false}
+            value={selectedCompany}
+            onChange={(option) => {
+              dispatch(userActions.changeCompany(option));
+              var color =
+                option.value === "elite"
+                  ? "theme-color-blue"
+                  : "theme-color-red";
+              dispatch(themeActions.setColor(color));
+              localStorage.setItem("selectedCompany", JSON.stringify(option));
+            }}
+            options={[
+              {
+                label: "Company A",
+                value: "elite",
+              },
+              {
+                label: "Company B",
+                value: "alpha",
+              },
+            ]}
+          />
+        </Col>
+      </Row>
+      {/* Status Cards */}
       <Row>
-        <Col xl={8} lg={12}>
+        <Col>
+          <StatusCard title="Lorem ipsum" icon="bx bx-line-chart" count={23} />
+        </Col>
+        <Col>
+          <StatusCard
+            title="Lorem ipsum"
+            icon="bx bx-calendar-check"
+            count={16}
+          />
+        </Col>
+        <Col>
+          <StatusCard title="Lorem ipsum" icon="bx bx-time-five" count={2} />
+        </Col>
+        <Col>
+          <StatusCard title="Lorem ipsum" icon="bx bxs-truck" count={100} />
+        </Col>
+        <Col>
+          <StatusCard
+            title="Lorem ipsum"
+            icon="bx bx-calendar-check"
+            count={89}
+          />
+        </Col>
+      </Row>
+      {/* Chart & Target Display */}
+      <Row>
+        <Col lg={12} xl={8}>
           <Card>
             <Card.Body>
               <Chart
@@ -103,7 +169,7 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col xl={4} lg={6} md={8} sm={12}>
+        <Col sm={12} md={8} lg={6} xl={4}>
           <TargetDisplay designation={user.designation} />
         </Col>
       </Row>

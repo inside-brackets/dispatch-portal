@@ -90,15 +90,18 @@ const TargetDisplay = ({ designation }) => {
               maxValue={100}
               styles={{
                 path: {
-                  stroke: percentage === 100 ? "#019707" : "#349eff",
+                  stroke: percentage === 100 ? "#019707" : "var(--main-color)",
                 },
               }}
             >
               <strong
-                style={{ color: percentage === 100 ? "#019707" : "#349eff" }}
+                style={{
+                  color: percentage === 100 ? "#019707" : "var(--main-color)",
+                }}
                 className="label-txt"
               >
-                {currDials}/<span className="secondary-txt">{target}</span>
+                {currDials}
+                <span className="secondary-txt">/{target}</span>
               </strong>
             </CircularProgressbarWithChildren>
           </div>
