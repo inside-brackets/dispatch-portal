@@ -23,50 +23,39 @@ const isNotEmpty = (value) => value.trim() !== "";
 
 const AppointmentDetail = () => {
   const [selectedSalesman, setSelectedSalesman] = useState("");
-  const [users, setUsers] = useState([]);
+  const [selectedSalesperson, setSelectedSalesperson] = useState("");
+  const appointmentRef = useRef();
+  const commentedRef = useRef();
   const [buttonLoader, setButtonLoader] = useState(false);
   const { company } = useSelector((state) => state.user);
-
-  const { sendRequest: fetchSalesPerson } = useHttp();
   const { company: selectedCompany } = useSelector((state) => state.user);
-  // const [modal, setModal] = useState();
+  const [salesperson, setSalesperson] = useState()
+  const commentRef = useRef();
+  const ownerNameRef = useRef();
+  const mcRef = useRef();
+  const noaRef = useRef();
+  const w9Ref = useRef();
+  const [selectedPayment, setSelectedPayment] = useState("");
+  const [trucks, setTrucks] = useState([]);
 
-// useEffect(()=>{
-//   // const transformData = (data) => {
-//   //   // dispatch(salesActions.setAndPrepare(data));
-//   // };
-
-//   fetchSalesPerson(
-//     {
-//       url: `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-
-//       body: {
-//         department: "sales",
-//         company: selectedCompany.value,
-//       },
-//     },
-//     // transformDispatch
-//   );
-
-// },[])
-// console.log(fetchSalesPerson())
+  const history = useHistory();
+  const params = useParams();
+  const [carrier, setCarrier] = useState({});
+  const [showCloseModal, setShowCloseModal] = useState(false);
+  const [ShowCloseModalPoint, setShowCloseModalPoint] = useState(false);
+  const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
+  const { sendRequest: updateCarrier } = useHttp();
 
   useEffect(() => {
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
         company: company.value,
+        department: "sales",
       })
       .then(({ data }) => {
-        setUsers(data);
-        console.log(data);
+        setSalesperson(data);
       });
   }, [company.value]);
-
-  const commentRef = useRef();
-  const ownerNameRef = useRef();
-  // const taxIdRef = useRef();
 
   const {
     value: taxId,
@@ -148,7 +137,6 @@ const AppointmentDetail = () => {
     inputBlurHandler: insuranceBlurHandler,
   } = useInput(isNotEmpty);
 
-  const mcRef = useRef();
   const {
     value: mc,
     isValid: mcIsValid,
@@ -157,8 +145,6 @@ const AppointmentDetail = () => {
     inputBlurHandler: mcBlurHandler,
   } = useInput(isNotEmpty);
 
-  const noaRef = useRef();
-  const w9Ref = useRef();
   const {
     value: w9,
     isValid: w9IsValid,
@@ -167,27 +153,13 @@ const AppointmentDetail = () => {
     inputBlurHandler: w9BlurHandler,
   } = useInput(isNotEmpty);
 
-  const [selectedPayment, setSelectedPayment] = useState("");
-  const [trucks, setTrucks] = useState([]);
-
-  const history = useHistory();
-  const params = useParams();
-  const [carrier, setCarrier] = useState({});
-  const [showCloseModal, setShowCloseModal] = useState(false);
-  const [ShowCloseModalPoint, setShowCloseModalPoint] = useState(false);
-  const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
-  const { sendRequest: updateCarrier } = useHttp();
-
   useEffect(() => {
-
-     axios.put(
+    axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
       {
         c_status: "inprogress",
       }
-    ).then(({data})=>{
-      
-      console.log("updated carrier response",data)
+    ).then(({ data }) => {
       setCarrier(data);
       setTrucks(data.trucks);
       if (data.tax_id_number) {
@@ -227,7 +199,6 @@ const AppointmentDetail = () => {
           target: { value: `${data.insurance.agent_email}` },
         });
       }
-
     })
   }, [
     feeChangeHandler,
@@ -249,7 +220,6 @@ const AppointmentDetail = () => {
     setShowCloseModal(true);
   };
   const showCloseModalPointHandler = () => {
-    console.log("showCloseModalPointHandler")
     // saveCarrier();
     setShowCloseModalPoint(true);
   };
@@ -299,8 +269,6 @@ const AppointmentDetail = () => {
       upObj["dispatcher_fee"] = 0;
     }
     const transformData = (data) => {
-      console.log("carrier saved", data);
-      console.log("saved");
     };
     updateCarrier(
       {
@@ -364,22 +332,22 @@ const AppointmentDetail = () => {
       </div>
     );
   }
-
-  console.log("trucks", trucks);
-
-  // Modal for carrier assign to a sale person
-  // const appointmentRef = useRef();
-  // const commentSaleRef = useRef();
   const onClose = () => {
     setShowCloseModalPoint(false);
-    // setLoading(false);
   };
-  const onConfirm=()=>{
+  const onConfirm = async () => {
     setShowCloseModalPoint(false);
+    const data = await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+      {
+        c_status: "appointment",
+        salesman: selectedSalesperson.value,
+        comment: commentedRef.current.value,
+        appointment: new Date(appointmentRef.current.value),
+      }
+    );
     return toast.success("Carrier Assigned to Sale Person")
   };
-
-
   return (
     <>
       <BackButton onClick={() => history.push("/searchcarrier")} />
@@ -658,9 +626,8 @@ const AppointmentDetail = () => {
               <Col>
                 <Form.Label>Select Salesman:</Form.Label>
                 <Select
-                  options={users
-                    .filter((item) => item.department === "sales")
-                    .map((item) => {
+                  options={
+                    salesperson && salesperson.map((item) => {
                       return {
                         label: item.user_name, // change later
                         value: item._id,
@@ -754,44 +721,39 @@ const AppointmentDetail = () => {
           </div>
         </Modal>
 
-      <ModalToAssignSale
-     show={ShowCloseModalPoint}
-     heading="Appoint a saleperson"
-    //  disabled={loading}
-     onConfirm={onConfirm}
-     onClose={onClose}
+        <ModalToAssignSale
+          show={ShowCloseModalPoint}
+          heading="Appoint a saleperson"
+          onConfirm={onConfirm}
+          onClose={onClose}
         >
           <form action="">
-
-          <Row className='justify-content-end my-2'>
-        <Col md={12}>
-        <div className="assign__text">SalesPerson:</div>
-        <MySelect
-          // isMulti={false}
-          // value={selectedDispatcher}
-          // onChange={setSelectedDispatcher}
-          options={['arbaz','sufyan','qamar'].map((item) => {
-            return {
-              label: item, // change later
-              value: item,
-            };
-          })}
-        />
-        </Col>
-      </Row>
-
+            <Row className='justify-content-end my-2'>
+              <Col md={12}>
+                <div className="assign__text">SalesPerson:</div>
+                <MySelect
+                  value={selectedSalesperson}
+                  onChange={setSelectedSalesperson}
+                  options={salesperson && salesperson.map((item) => {
+                    return {
+                      label: item.user_name, // change later
+                      value: item._id,
+                    };
+                  })}
+                />
+              </Col>
+            </Row>
             <Input
               type="datetime-local"
               label="Call back time:"
               defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
-              // ref={appointmentRef}
+              ref={appointmentRef}
             />
             <TextArea
               name="Comment:"
               placeholder="Add a note about this appointment ..."
-              // ref={commentSaleRef}
+              ref={commentedRef}
             />
-
             <div
               style={{
                 width: "100%",
@@ -799,21 +761,14 @@ const AppointmentDetail = () => {
                 justifyContent: "flex-end",
               }}
             ></div>
-
-
           </form>
-
-         
-
-
         </ModalToAssignSale>
-
       </div>
       <TruckTable
-            mc={carrier.mc_number}
-            trucks={trucks}
-            setTrucks={setTrucks}
-          />
+        mc={carrier.mc_number}
+        trucks={trucks}
+        setTrucks={setTrucks}
+      />
     </>
   );
 };
