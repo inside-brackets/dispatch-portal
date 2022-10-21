@@ -135,7 +135,7 @@ const Dashboard = () => {
         <Col>
           <h2 className="page-header mb-3">Manager Dashboard</h2>
         </Col>
-        <Col md={8} lg={6} xl={4} style={{ zIndex: 999 }}>
+        <Col md={8} lg={6} xl={4} style={{ zIndex: 2 }}>
           <MySelect
             isMulti={false}
             value={selectedCompany}
