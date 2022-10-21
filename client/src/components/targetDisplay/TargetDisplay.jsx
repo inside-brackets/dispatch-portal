@@ -29,7 +29,7 @@ const TargetDisplay = ({ designation }) => {
         setNewTarget(data.curr_target);
       });
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/registered`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/target/progress`)
       .then(({ data }) => {
         console.log(data);
         setCurrDials(data);

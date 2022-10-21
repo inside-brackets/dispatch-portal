@@ -37,7 +37,7 @@ const Dashboard = () => {
       });
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACKEND_URL}/settings/free`,
+      url: `${process.env.REACT_APP_BACKEND_URL}/count/leads`,
       headers: { "Content-Type": "application/json" },
       data: {
         series: {

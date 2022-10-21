@@ -68,6 +68,10 @@ route.post("/getload", loadsController.getLoad);
 route.get("/count/active/sales", userController.getSalesCount);
 route.get("/count/pending/sales", userController.getUpcomingSalesCount);
 
+// Free Resource a.k.a Leads
+route.post("/count/leads", carriersController.getLeads);
+route.get("/free/leads", carriersController.freeUpLeads);
+
 // security
 route.post("/whitelist/:mac/:ip", (req, res) => {
   setIp(req.params.mac, req.params.ip);

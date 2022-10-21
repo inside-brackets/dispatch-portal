@@ -11,14 +11,14 @@ function MCSeries() {
     customFrom: 1,
     customTo: 999,
   });
-  const [freeRes, setFreeRes] = useState(0);
-  const [refresh, setRefresh] = useState(
+  const [leads, setLeads] = useState(0);
+  const [refTime, setRefTime] = useState(
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
   );
   const [isDirty, setIsDirty] = useState(false);
   const [animate, setAnimate] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [freeResource, setFreeResource] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     handleRefresh();
@@ -78,26 +78,26 @@ function MCSeries() {
         setSeries(data);
         axios({
           method: "POST",
-          url: `${process.env.REACT_APP_BACKEND_URL}/settings/free`,
+          url: `${process.env.REACT_APP_BACKEND_URL}/count/leads`,
           headers: { "Content-Type": "application/json" },
           data: {
             series: data,
           },
         }).then(({ data }) => {
-          setFreeRes(data);
+          setLeads(data);
         });
       });
     setAnimate(false);
     setIsDirty(false);
-    setRefresh(
+    setRefTime(
       new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     );
   };
 
   const handleFreeResource = async (e) => {
-    setFreeResource(true);
+    setRefresh(true);
     await axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/freeup`)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/free/leads`)
       .catch((error) => {
         if (error.response) {
           console.log(error.response.data);
@@ -105,7 +105,7 @@ function MCSeries() {
       });
     toast.success("Resources freed up!");
     handleRefresh();
-    setFreeResource(false);
+    setRefresh(false);
   };
 
   return (
@@ -210,7 +210,7 @@ function MCSeries() {
                   <Form.Control
                     size="sm"
                     className="w-6rem"
-                    placeholder={freeRes}
+                    placeholder={leads}
                     readOnly={true}
                   />
                   <svg
@@ -231,15 +231,15 @@ function MCSeries() {
                     />
                   </svg>
                 </Form.Group>
-                <span className="time-text">Last refreshed: {refresh}</span>
+                <span className="time-text">Last refreshed: {refTime}</span>
                 <Form.Group className="mt-4">
                   <Button
                     variant="secondary"
                     className="sec-btn disp-flex"
                     onClick={handleFreeResource}
-                    disabled={freeResource}
+                    disabled={refresh}
                   >
-                    {freeResource && (
+                    {refresh && (
                       <svg
                         className="load-icon"
                         xmlns="http://www.w3.org/2000/svg"

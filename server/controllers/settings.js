@@ -1,9 +1,7 @@
 const settings = require("../models/setting");
-const Carrier = require("../models/carrier");
 const Hcarrier = require("../models/hcarrier");
 
 const updateSettings = async (req, res) => {
-  console.log("updateSettings", req.body);
   try {
     let updatedSettings = await settings.findOneAndUpdate(
       {},
@@ -18,7 +16,6 @@ const updateSettings = async (req, res) => {
 };
 
 const getMCSettings = async (req, res) => {
-  console.log("getSettings");
   try {
     let prevSettings = await settings.findOne({});
     if (!prevSettings) {
@@ -32,7 +29,6 @@ const getMCSettings = async (req, res) => {
 };
 
 const getCurrTarget = async (req, res) => {
-  console.log("getTarget");
   try {
     let prevSettings = await settings.findOne({});
     if (!prevSettings) {
@@ -45,46 +41,7 @@ const getCurrTarget = async (req, res) => {
   }
 };
 
-const getFreeResources = async (req, res) => {
-  console.log("getFreeResources");
-  try {
-    let freeResources = await Carrier.countDocuments({
-      c_status: "unassigned",
-      mc_number: {
-        $gte: req.body.series.isCustom ? req.body.series.customFrom : 0,
-        $lte: req.body.series.isCustom ? req.body.series.customTo : 990000,
-      },
-    });
-    res.status(200).send(freeResources.toString());
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
-  }
-};
-
-const freeUpResource = async (req, res) => {
-  console.log("freeUpResources");
-  try {
-    await Carrier.updateMany(
-      {
-        c_status: "didnotpick",
-      },
-      { $unset: { salesman: 1 }, $set: { c_status: "unassigned" } }
-    )
-      .then((data) => {
-        res.status(200).send();
-      })
-      .catch((error) => {
-        throw error;
-      });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
-  }
-};
-
-const getRegistered = async (req, res) => {
-  console.log("getRegistered");
+const getTargetProgress = async (req, res) => {
   try {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
@@ -100,7 +57,6 @@ const getRegistered = async (req, res) => {
 };
 
 const getChartData = async (req, res) => {
-  console.log("getChartData");
   try {
     let data = [];
     let result;
@@ -130,9 +86,7 @@ const getChartData = async (req, res) => {
 module.exports = {
   updateSettings,
   getMCSettings,
-  getFreeResources,
-  freeUpResource,
   getCurrTarget,
-  getRegistered,
+  getTargetProgress,
   getChartData,
 };

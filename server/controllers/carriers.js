@@ -488,6 +488,43 @@ const fetchDialerCounter = async (req, res) => {
   }
 };
 
+// Free Resource a.k.a Leads
+const getLeads = async (req, res) => {
+  try {
+    let leads = await Carrier.countDocuments({
+      c_status: "unassigned",
+      mc_number: {
+        $gte: req.body.series.isCustom ? req.body.series.customFrom : 0,
+        $lte: req.body.series.isCustom ? req.body.series.customTo : 990000,
+      },
+    });
+    res.status(200).send(leads.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const freeUpLeads = async (req, res) => {
+  try {
+    await Carrier.updateMany(
+      {
+        c_status: "didnotpick",
+      },
+      { $unset: { salesman: 1 }, $set: { c_status: "unassigned" } }
+    )
+      .then((data) => {
+        res.status(200).send();
+      })
+      .catch((error) => {
+        throw error;
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -504,4 +541,6 @@ module.exports = {
   changeTypeController,
   rejectAndRegistered,
   fetchDialerCounter,
+  getLeads,
+  freeUpLeads,
 };
