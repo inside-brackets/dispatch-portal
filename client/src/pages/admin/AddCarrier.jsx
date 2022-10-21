@@ -28,7 +28,6 @@ const AppointmentDetail = () => {
   const commentedRef = useRef();
   const [buttonLoader, setButtonLoader] = useState(false);
   const { company } = useSelector((state) => state.user);
-  const { company: selectedCompany } = useSelector((state) => state.user);
   const [salesperson, setSalesperson] = useState()
   const commentRef = useRef();
   const ownerNameRef = useRef();
@@ -37,7 +36,6 @@ const AppointmentDetail = () => {
   const w9Ref = useRef();
   const [selectedPayment, setSelectedPayment] = useState("");
   const [trucks, setTrucks] = useState([]);
-
   const history = useHistory();
   const params = useParams();
   const [carrier, setCarrier] = useState({});
@@ -45,18 +43,6 @@ const AppointmentDetail = () => {
   const [ShowCloseModalPoint, setShowCloseModalPoint] = useState(false);
   const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
   const { sendRequest: updateCarrier } = useHttp();
-
-  useEffect(() => {
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
-        company: company.value,
-        department: "sales",
-      })
-      .then(({ data }) => {
-        setSalesperson(data);
-      });
-  }, [company.value]);
-
   const {
     value: taxId,
     isValid: taxIdIsValid,
@@ -152,6 +138,17 @@ const AppointmentDetail = () => {
     valueChangeHandler: w9ChangeHandler,
     inputBlurHandler: w9BlurHandler,
   } = useInput(isNotEmpty);
+  
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
+        company: company.value,
+        department: "sales",
+      })
+      .then(({ data }) => {
+        setSalesperson(data);
+      });
+  }, [company.value]);
 
   useEffect(() => {
     axios.put(
@@ -224,21 +221,6 @@ const AppointmentDetail = () => {
     setShowCloseModalPoint(true);
   };
 
-  // submit
-  let formIsValid = false;
-  if (
-    taxIdIsValid &&
-    feeIsValid &&
-    insAgentNameIsValid &&
-    insPhoneIsValid &&
-    insCompNameIsValid &&
-    insAgentEmailIsValid &&
-    insAddressIsValid &&
-    trucks &&
-    trucks.length !== 0
-  ) {
-    formIsValid = true;
-  }
   const saveCarrier = () => {
     const upObj = {
       comment: commentRef.current.value,
@@ -337,7 +319,7 @@ const AppointmentDetail = () => {
   };
   const onConfirm = async () => {
     setShowCloseModalPoint(false);
-    const data = await axios.put(
+   await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
       {
         c_status: "appointment",
@@ -348,6 +330,22 @@ const AppointmentDetail = () => {
     );
     return toast.success("Carrier Assigned to Sale Person")
   };
+
+   // submit
+   let formIsValid = false;
+   if (
+     taxIdIsValid &&
+     feeIsValid &&
+     insAgentNameIsValid &&
+     insPhoneIsValid &&
+     insCompNameIsValid &&
+     insAgentEmailIsValid &&
+     insAddressIsValid &&
+     trucks &&
+     trucks.length !== 0
+   ) {
+     formIsValid = true;
+   }
   return (
     <>
       <BackButton onClick={() => history.push("/searchcarrier")} />
@@ -358,13 +356,13 @@ const AppointmentDetail = () => {
             className="appointment__detail"
             buttons={[
               {
-                buttonText: "Assign",
+                buttonText: "Registered",
                 color: "green",
                 onClick: showCloseModalHandler,
                 disabled: !formIsValid,
               },
               {
-                buttonText: "appoint a sale person",
+                buttonText: "Appointment",
                 color: "green",
                 onClick: showCloseModalPointHandler,
                 // disabled: !formIsValid,
