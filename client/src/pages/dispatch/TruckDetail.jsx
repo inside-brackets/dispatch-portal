@@ -10,6 +10,7 @@ import MySelect from "../../components/UI/MySelect";
 import BackButton from "../../components/UI/BackButton";
 import Loader from "react-loader-spinner";
 import { toast } from "react-toastify";
+import '../../assets/css/dispatch/truckDetail.css'
 
 const transformToSelectValue = (value) => {
   if (value.constructor === Array) {
@@ -671,7 +672,7 @@ const TruckDetail = ({ match }) => {
                       />
                     </Form.Group>
                   </Row>
-                  <Row>
+                  <Row className="mt-3">
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Temperature Restrictions:</Form.Label>
                       <Form.Control
@@ -694,8 +695,8 @@ const TruckDetail = ({ match }) => {
                       />
                     </Form.Group>
                   </Row>
-                  <Row>
-                    <Col>
+                  <Row className="mt-3">
+                    <Col md="4">
                       <MySelect
                         label="Region"
                         isMulti={true}
@@ -712,8 +713,9 @@ const TruckDetail = ({ match }) => {
                     </Col>
                     <Col
                       style={{
-                        marginLeft: "-300px",
+                        // marginLeft: "-300px",
                       }}
+                      md="4"
                     >
                       <MySelect
                         label="Trailer Type:"
@@ -735,7 +737,7 @@ const TruckDetail = ({ match }) => {
                     <Col
                       md={4}
                       style={{
-                        marginLeft: "-300px",
+                        // marginLeft: "-300px",
                       }}
                     >
                       <MySelect
@@ -754,12 +756,12 @@ const TruckDetail = ({ match }) => {
                     </Col>
                   </Row>
                 </Row>
-                <Row className="mt-3">
-                  <hr />
-                  <h3>Drivers:</h3>
+                <hr />
+                <h3>Drivers:</h3>
+                <Row className="m-3">
                   {drivers.map((element, index) => (
                     <div className="form-inline" key={index}>
-                      <Row className="justify-content-end">
+                      {/* <Row className="justify-content-end " >
                         <Col md={3}>
                           {drivers.length === 2 && (
                             <i
@@ -768,7 +770,7 @@ const TruckDetail = ({ match }) => {
                             ></i>
                           )}
                         </Col>
-                      </Row>
+                      </Row> */}
                       <Row>
                         <Form.Group
                           as={Col}
@@ -802,7 +804,7 @@ const TruckDetail = ({ match }) => {
                         </Form.Group>
                         <Form.Group
                           as={Col}
-                          md="4"
+                          md="3"
                           controlId="validationCustom03"
                         >
                           <Form.Label>Driver Phone</Form.Label>
@@ -815,6 +817,16 @@ const TruckDetail = ({ match }) => {
                             value={element.phone_number}
                           />
                         </Form.Group>
+                        
+                      <Col md={1} className='bx-trashh'>
+                          {/* {drivers.length === 2 && ( */}
+                            <i
+                            disabled
+                              className="bx bx-x"
+                              onClick={() => removeFormFields(index)}
+                            ></i>
+                           {/* )}  */}
+                      </Col>
                       </Row>
                     </div>
                   ))}
@@ -826,6 +838,42 @@ const TruckDetail = ({ match }) => {
                     </div>
                   ) : null}
                 </Row>
+
+
+                <Modal
+            show={true}
+            heading="Driver Remove"
+            // onConfirm={rejectHandler}
+            // onClose={onrClose}
+          >
+            <div className="confirmText">Are You Sure!</div>
+            <div className="proceedText">If you proceed, You will lose all driver data. Are You sure do you want to delete your driver information?</div>
+            <div className="buttonWrapper">
+            <Button variant="secondary">Cancel</Button>
+            <Button variant='danger'>Confirm</Button>
+            </div>
+            {/* <form>
+              <TextArea
+                name="Comment:"
+                placeholder="Comment here..."
+                // value={commentRef.current.value}
+                // defaultValue={commentRef.current && commentRef.current.value}
+                // onChange={(e) => setComment(e.target.value)}
+                // ref={commentRef}
+              />
+
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              ></div>
+            </form> */}
+          </Modal>
+
+
+
                 <hr />
                 <h3>Carrier Documents:</h3>
                 <Row xs="auto" className="m-3">

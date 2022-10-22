@@ -18,6 +18,7 @@ import MyModal from "../../components/modals/MyModal";
 import AddNewCarrierModal from "../../components/modals/AddNewCarrierModal";
 
 const CardRow = ({ field, value, badge }) => {
+  console.log(`value ${status_map[value]}`)
   return (
     <Row>
       <Col>

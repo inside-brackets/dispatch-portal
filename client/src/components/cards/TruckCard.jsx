@@ -77,12 +77,18 @@ const body = (carrier) => (
 
 const TruckCard = ({ item }) => {
   return (
-    <Card>
+    <Card  style={{
+      minWidth:"368px"
+    }} className={`${item.out_of ? '':'background'}`}>
       <Card.Body style={{
             display: "flex",
             height: "100%",
             flexDirection: "column",
             justifyContent: "space-between",
+            // backgroundColor:"#62b4ff"
+            
+            
+            // padding:"10px 0px" 
       }}>
         <Card.Title>{item.company_name}</Card.Title>
 
@@ -105,7 +111,9 @@ const TruckCard = ({ item }) => {
               {`Out of:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  ${item.out_of}`}
             </div>
           ) : (
-            <h3 className="text-center new-carrier">New Carrier!</h3>
+            <div style={{display:'flex',justifyContent:'center', alignItems:'center',height:'63px'}}>
+            <h3 className="text-center ">New Carrier!</h3>
+            </div>
           )}
         </Card.Footer>
       </Card.Body>

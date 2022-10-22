@@ -124,7 +124,7 @@ const MyTrucks = () => {
       </div>
     );
   return (
-    <div className="row">
+    <div className="row" >
       <div className="row align-items-center mb-3">
         <div className="col-md-3">
           <label>Search</label>
@@ -137,9 +137,11 @@ const MyTrucks = () => {
             onKeyDown={search}
           />
         </div>
-        <div className="col-md-3">
+        {/* form-select */}
+        <div className="col-md-4" >
           <label>Search</label>
           <Select
+            // className=""
             isMulti
             value={statusFilter}
             onChange={setStatusFilter}

@@ -403,3 +403,16 @@ th {
   z-index: 99;
   font-size: x-large;
 }
+.background{
+   background-color:#abd7ff !important;
+}
+.bx-trashh{
+  cursor: pointer;
+  color:var(--main-color-red);
+  font-size: 49px;
+    top: 6px;
+  position: relative;
+  align-items: end;
+    justify-content: flex-start;
+    display: flex;
+}
