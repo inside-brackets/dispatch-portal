@@ -2,8 +2,14 @@
     display:'flex';
     justify-content:'center'; 
     align-items:'center';
-    height:'63px';
+    height:'63px '!important;
 }
+/* display: flex;
+width: auto;
+height: auto;
+height: 89px;
+justify-content: center;
+align-items: center; */
 .cardBody{
         display: "flex";
         height: "100%";

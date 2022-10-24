@@ -57,7 +57,6 @@ const TruckDetail = ({ match }) => {
   const [factAgentEmail, setfactAgentEmail] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [t_status, setT_status] = useState(``);
-  const [confirmdr, setconfirmdr] = useState(false);
   const [confirmModal, setconfirmModal] = useState({value:false,index:0})
   const [drivers, setDrivers] = useState([
     {
@@ -725,6 +724,7 @@ const TruckDetail = ({ match }) => {
                     <Col
                       style={{
                         // marginLeft: "-300px",
+                        padding:'0px'
                       }}
                       md="4"
                     >

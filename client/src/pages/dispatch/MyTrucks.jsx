@@ -19,6 +19,8 @@ const MyTrucks = () => {
     { label: "Pending", value: "pending" },
   ]);
   const history = useHistory();
+  const searchRef = useRef();
+  const [searchedCarrier, setSearchedCarrier] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -95,9 +97,6 @@ const MyTrucks = () => {
   }, [currUserId, statusFilter]);
 
   //search
-  const searchRef = useRef();
-
-  const [searchedCarrier, setSearchedCarrier] = useState([]);
   const search = (e) => {
     if (e.key === "Enter") {
       const searched = carriersList.filter((c) => {

@@ -102,7 +102,7 @@ const TruckCard = ({ item }) => {
               {`Out of:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  ${item.out_of}`}
             </div>
           ) : (
-            <div className="newCarrierContainer">
+            <div className="newCarrierContainer" style={{height:'69px'}}>
             <h3 className="text-center ">New Carrier!</h3>
             </div>
           )}
