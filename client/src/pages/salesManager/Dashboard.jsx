@@ -17,6 +17,7 @@ const Dashboard = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
 
   const [series, setSeries] = useState([]);
+  const [pieChart, setPieChart] = useState([]);
   const [leads, setLeads] = useState(0);
   const [activeTrucks, setActiveTrucks] = useState(0);
   const [activeSalePersons, setActiveSalePersons] = useState(0);
@@ -30,10 +31,15 @@ const Dashboard = () => {
       .then(({ data }) => {
         setSeries([
           {
+            name: "Appointment",
+            data: data.appointment,
+          },
+          {
             name: "Registered",
-            data: data,
+            data: data.registered,
           },
         ]);
+        setPieChart(data.pieChart);
       });
     axios({
       method: "POST",
@@ -66,9 +72,9 @@ const Dashboard = () => {
       });
   }, []);
 
-  const options = {
+  const lineChartOptions = {
     chart: {
-      height: 370,
+      width: "100%",
       type: "line",
       zoom: {
         enabled: false,
@@ -77,15 +83,15 @@ const Dashboard = () => {
         show: false,
       },
     },
-    colors: ["var(--main-color)", "#019707"],
+    colors: ["rgb(248, 248, 0)", "var(--main-color-green)"],
     dataLabels: {
       enabled: false,
     },
     stroke: {
-      curve: "straight",
+      curve: "smooth",
     },
     title: {
-      text: "Carriers Registered",
+      text: "Growth",
       align: "left",
     },
     grid: {
@@ -125,6 +131,32 @@ const Dashboard = () => {
       floating: true,
       offsetY: -25,
       offsetX: -5,
+    },
+  };
+
+  const pieChartOptions = {
+    chart: {
+      width: "100%",
+      type: "pie",
+      toolbar: {
+        show: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    colors: [
+      "var(--main-color-green)",
+      "rgb(248, 248, 0)",
+      "var(--main-color-red)",
+    ],
+    labels: ["Registered", "Appointment", "Rejected"],
+    title: {
+      text: "This Month",
+      align: "center",
+    },
+    legend: {
+      position: "bottom",
     },
   };
 
@@ -188,13 +220,13 @@ const Dashboard = () => {
           />
         </Col>
       </Row>
-      {/* Chart & Target Display */}
+      {/* Charts */}
       <Row>
         <Col lg={12} xl={8}>
-          <Card>
+          <Card style={{ minHeight: "400px" }}>
             <Card.Body>
               <Chart
-                options={options}
+                options={lineChartOptions}
                 series={series}
                 type="line"
                 height={370}
@@ -202,6 +234,20 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
+        <Col sm={12} md={8} lg={6} xl={4}>
+          <Card style={{ minHeight: "calc(100% - 15px)" }}>
+            <Card.Body>
+              <Chart
+                options={pieChartOptions}
+                series={pieChart}
+                type="pie"
+                height={410}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
         <Col sm={12} md={8} lg={6} xl={4}>
           <TargetDisplay designation={user.designation} />
         </Col>
