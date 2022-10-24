@@ -18,3 +18,13 @@
     padding-bottom: 1rem;
     text-align: justify;
 }
+.bx-trashh{
+    cursor: pointer;
+    color:var(--main-color-red);
+    font-size: 49px;
+      top: 6px;
+    position: relative;
+    align-items: end;
+      justify-content: flex-start;
+      display: flex;
+  }

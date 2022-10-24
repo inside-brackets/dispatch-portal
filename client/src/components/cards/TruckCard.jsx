@@ -6,7 +6,7 @@ import moment from "moment";
 
 import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import load_status_map from "../../assets/JsonData/load_status_map.json";
-
+import './truckCard.css';
 const body = (carrier) => (
   <div>
     <Row>
@@ -79,17 +79,8 @@ const TruckCard = ({ item }) => {
   return (
     <Card  style={{
       minWidth:"368px"
-    }} className={`${item.out_of ? '':'background'}`}>
-      <Card.Body style={{
-            display: "flex",
-            height: "100%",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            // backgroundColor:"#62b4ff"
-            
-            
-            // padding:"10px 0px" 
-      }}>
+    }} className={`${item.out_of ? '':'newCarrierBackground'}`}>
+      <Card.Body className="cardBody">
         <Card.Title>{item.company_name}</Card.Title>
 
         <hr />
@@ -111,7 +102,7 @@ const TruckCard = ({ item }) => {
               {`Out of:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  ${item.out_of}`}
             </div>
           ) : (
-            <div style={{display:'flex',justifyContent:'center', alignItems:'center',height:'63px'}}>
+            <div className="newCarrierContainer">
             <h3 className="text-center ">New Carrier!</h3>
             </div>
           )}

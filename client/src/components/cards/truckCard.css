@@ -1,0 +1,14 @@
+.newCarrierContainer{
+    display:'flex';
+    justify-content:'center'; 
+    align-items:'center';
+    height:'63px';
+}
+.cardBody{
+        display: "flex";
+        height: "100%";
+        flex-direction: "column";
+        justify-content: "space-between"; 
+}
+.newCarrierBackground{ background-color:#abd7ff !important;}
+

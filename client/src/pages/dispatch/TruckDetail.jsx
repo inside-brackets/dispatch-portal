@@ -10,7 +10,7 @@ import MySelect from "../../components/UI/MySelect";
 import BackButton from "../../components/UI/BackButton";
 import Loader from "react-loader-spinner";
 import { toast } from "react-toastify";
-import '../../assets/css/dispatch/truckDetail.css'
+import "../../assets/css/dispatch/truckDetail.css"
 
 const transformToSelectValue = (value) => {
   if (value.constructor === Array) {
@@ -57,6 +57,8 @@ const TruckDetail = ({ match }) => {
   const [factAgentEmail, setfactAgentEmail] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [t_status, setT_status] = useState(``);
+  const [confirmdr, setconfirmdr] = useState(false);
+  const [confirmModal, setconfirmModal] = useState({value:false,index:0})
   const [drivers, setDrivers] = useState([
     {
       name: "",
@@ -227,10 +229,19 @@ const TruckDetail = ({ match }) => {
     ]);
   };
   let removeFormFields = (i) => {
+    setconfirmModal(confirmModal.value)
+    if(confirmModal.value){
     let newFormValues = [...drivers];
-    newFormValues.splice(i, 1);
+    newFormValues.splice(confirmModal.index, 1);
     setDrivers(newFormValues);
+      setconfirmModal(false)
+  }
+    
   };
+
+  const onmClose=()=>{
+    setconfirmModal({value:false})
+  }
 
   return (
     <>
@@ -821,11 +832,10 @@ const TruckDetail = ({ match }) => {
                       <Col md={1} className='bx-trashh'>
                           {/* {drivers.length === 2 && ( */}
                             <i
-                            disabled
                               className="bx bx-x"
-                              onClick={() => removeFormFields(index)}
+                              onClick={() => setconfirmModal({value:true,index:index})}
                             ></i>
-                           {/* )}  */}
+                          {/* // )} */}
                       </Col>
                       </Row>
                     </div>
@@ -839,41 +849,19 @@ const TruckDetail = ({ match }) => {
                   ) : null}
                 </Row>
 
-
                 <Modal
-            show={true}
-            heading="Driver Remove"
+            show={confirmModal.value}
+            heading="Remove Driver"
             // onConfirm={rejectHandler}
-            // onClose={onrClose}
+            onClose={onmClose}
           >
             <div className="confirmText">Are You Sure!</div>
             <div className="proceedText">If you proceed, You will lose all driver data. Are You sure do you want to delete your driver information?</div>
             <div className="buttonWrapper">
-            <Button variant="secondary">Cancel</Button>
-            <Button variant='danger'>Confirm</Button>
+            <Button variant="secondary"  onClick={()=>setconfirmModal({value:false})}>Cancel</Button>
+            <Button variant='danger' onClick={() => removeFormFields(confirmModal)} disabled={drivers.length === 2 ?false:true}>Confirm</Button>
             </div>
-            {/* <form>
-              <TextArea
-                name="Comment:"
-                placeholder="Comment here..."
-                // value={commentRef.current.value}
-                // defaultValue={commentRef.current && commentRef.current.value}
-                // onChange={(e) => setComment(e.target.value)}
-                // ref={commentRef}
-              />
-
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              ></div>
-            </form> */}
           </Modal>
-
-
-
                 <hr />
                 <h3>Carrier Documents:</h3>
                 <Row xs="auto" className="m-3">
