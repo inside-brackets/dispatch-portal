@@ -1,0 +1,7 @@
+.min-h-400 {
+  min-height: 400px !important;
+}
+.pie-card {
+  min-height: calc(100% - 15px) !important;
+  padding: 0 !important;
+}

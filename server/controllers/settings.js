@@ -56,73 +56,90 @@ const getTargetProgress = async (req, res) => {
   }
 };
 
+const filterHistory = (history) => {
+  let filtered = Object.values(
+    history.reduce((a, b) => {
+      if (a[b.mc_number]) {
+        if (a[b.mc_number].updatedAt < b.updatedAt) {
+          a[b.mc_number] = b;
+        }
+      } else {
+        a[b.mc_number] = b;
+      }
+      return a;
+    }, {})
+  );
+  return filtered;
+};
+
 const getChartData = async (req, res) => {
   try {
     let data = {
       registered: [],
       appointment: [],
       pieChart: [],
+      users: [],
     };
-    let register, appoint, pie;
+
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
+
     for (var i = 0; i < 12; i++) {
-      if (i > today.getMonth()) {
+      if (i == today.getMonth()) {
+        const history = await Hcarrier.find({
+          updatedAt: {
+            $gte: new Date(today.getFullYear(), i, 0),
+            $lt: new Date(today.getFullYear(), i + 1, 0),
+          },
+          change: ["rejected", "registered", "appointment"],
+        });
+        const filteredHistory = filterHistory(history);
+        data.users = filteredHistory;
+
+        data.registered.push(
+          filteredHistory.filter((carrier) => carrier.change === "registered")
+            .length ?? 0
+        );
+        data.appointment.push(
+          filteredHistory.filter((carrier) => carrier.change === "appointment")
+            .length ?? 0
+        );
+
+        data.pieChart.push(
+          filteredHistory.filter((carrier) => carrier.change === "registered")
+            .length ?? 0
+        );
+        data.pieChart.push(
+          filteredHistory.filter((carrier) => carrier.change === "appointment")
+            .length ?? 0
+        );
+        data.pieChart.push(
+          filteredHistory.filter((carrier) => carrier.change === "rejected")
+            .length ?? 0
+        );
+      } else if (i > today.getMonth()) {
         data.registered.push(null);
         data.appointment.push(null);
       } else {
-        register = await Hcarrier.countDocuments({
-          createdAt: {
+        const history = await Hcarrier.find({
+          updatedAt: {
             $gte: new Date(today.getFullYear(), i, 0),
             $lt: new Date(today.getFullYear(), i + 1, 0),
           },
-          change: { $in: ["registered"] },
+          change: ["registered", "appointment"],
         });
-        appoint = await Hcarrier.countDocuments({
-          createdAt: {
-            $gte: new Date(today.getFullYear(), i, 0),
-            $lt: new Date(today.getFullYear(), i + 1, 0),
-          },
-          change: { $in: ["appointment"] },
-        });
-        data.registered.push(register);
-        data.appointment.push(appoint);
+        const filteredHistory = filterHistory(history);
+
+        data.registered.push(
+          filteredHistory.filter((carrier) => carrier.change === "registered")
+            .length ?? 0
+        );
+        data.appointment.push(
+          filteredHistory.filter((carrier) => carrier.change === "appointment")
+            .length ?? 0
+        );
       }
     }
-    const result = await Hcarrier.find({
-      updatedAt: {
-        $gte: new Date(today.getFullYear(), today.getMonth(), 0),
-        $lt: new Date(today.getFullYear(), today.getMonth() + 1, 0),
-      },
-      change: ["rejected", "registered", "appointment"],
-    });
-    pie = Object.values(
-      result.reduce((a, b) => {
-        if (a[b.mc_number]) {
-          if (a[b.mc_number].updatedAt < b.updatedAt) {
-            a[b.mc_number] = b;
-          }
-        } else {
-          a[b.mc_number] = b;
-        }
-        return a;
-      }, {})
-    );
-    const rejected = pie.filter((carrier) => carrier.change === "rejected");
-    const registered = pie.filter((carrier) => carrier.change === "registered");
-    const appointment = pie.filter(
-      (carrier) => carrier.change === "appointment"
-    );
-    data.pieChart.push(
-      registered && registered.length === 0 ? 0 : Number(registered.length)
-    );
-    data.pieChart.push(
-      appointment && appointment.length === 0 ? 0 : Number(appointment.length)
-    );
-    data.pieChart.push(
-      rejected && rejected.length === 0 ? 0 : Number(rejected.length)
-    );
-
     res.status(200).send(data);
   } catch (error) {
     console.log(error);

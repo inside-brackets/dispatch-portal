@@ -9,27 +9,38 @@ import axios from "axios";
 import TargetDisplay from "../../components/targetDisplay/TargetDisplay";
 import StatusCard from "../../components/status-card/StatusCard";
 import MySelect from "../../components/UI/MySelect";
+import DetailsModal from "../../components/DetailsModal/DetailsModal";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.user);
   const { company: selectedCompany } = useSelector((state) => state.user);
 
-  const [series, setSeries] = useState([]);
+  const [lineChart, setLineChart] = useState([]);
   const [pieChart, setPieChart] = useState([]);
-  const [leads, setLeads] = useState(0);
-  const [activeTrucks, setActiveTrucks] = useState(0);
-  const [activeSalePersons, setActiveSalePersons] = useState(0);
-  const [pendingSalePersons, setPendingSalePersons] = useState(0);
+  const [topSales, setTopSales] = useState([]);
+  const [stats, setStats] = useState({
+    leads: 0,
+    activeTrucks: 0,
+    activeSalePersons: 0,
+    pendingSalePersons: 0,
+  });
+  const [show, setShow] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    fetchChart();
+    fetchStats();
+  }, []);
+
+  const fetchChart = () => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/settings/chart`)
       .then(({ data }) => {
-        setSeries([
+        setLineChart([
           {
             name: "Appointment",
             data: data.appointment,
@@ -40,7 +51,18 @@ const Dashboard = () => {
           },
         ]);
         setPieChart(data.pieChart);
+
+        let temp = [];
+        for (let i = 0; i < data.users.length; i++) {
+          temp.push(data.users[i].user);
+        }
+        temp = [...new Set(temp)];
+
+        setTopSales(temp);
       });
+  };
+
+  const fetchStats = () => {
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_BACKEND_URL}/count/leads`,
@@ -51,26 +73,38 @@ const Dashboard = () => {
         },
       },
     }).then(({ data }) => {
-      setLeads(data);
+      setStats((prevState) => ({
+        ...prevState,
+        leads: data,
+      }));
     });
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`, {
         company: selectedCompany.value,
       })
       .then(({ data }) => {
-        setActiveTrucks(data.activeTrucks);
+        setStats((prevState) => ({
+          ...prevState,
+          activeTrucks: data.activeTrucks,
+        }));
       });
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/count/active/sales`)
       .then(({ data }) => {
-        setActiveSalePersons(data);
+        setStats((prevState) => ({
+          ...prevState,
+          activeSalePersons: data,
+        }));
       });
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/count/pending/sales`)
       .then(({ data }) => {
-        setPendingSalePersons(data);
+        setStats((prevState) => ({
+          ...prevState,
+          pendingSalePersons: data,
+        }));
       });
-  }, []);
+  };
 
   const lineChartOptions = {
     chart: {
@@ -141,6 +175,11 @@ const Dashboard = () => {
       toolbar: {
         show: false,
       },
+      events: {
+        legendClick: function (chartContext, seriesIndex, config) {
+          setShow(true);
+        },
+      },
     },
     dataLabels: {
       enabled: false,
@@ -151,12 +190,13 @@ const Dashboard = () => {
       "var(--main-color-red)",
     ],
     labels: ["Registered", "Appointment", "Rejected"],
-    title: {
-      text: "This Month",
-      align: "center",
-    },
     legend: {
       position: "bottom",
+    },
+    tooltip: {
+      style: {
+        fontSize: "16px",
+      },
     },
   };
 
@@ -196,38 +236,38 @@ const Dashboard = () => {
       {/* Status Cards */}
       <Row>
         <Col>
-          <StatusCard title="Leads" icon="bx bx-data" count={leads} />
+          <StatusCard title="Leads" icon="bx bx-data" count={stats.leads} />
         </Col>
         <Col>
           <StatusCard
             title="Active Trucks"
             icon="bx bxs-truck"
-            count={activeTrucks}
+            count={stats.activeTrucks}
           />
         </Col>
         <Col>
           <StatusCard
             title="Sales Person"
             icon="bx bx-user"
-            count={activeSalePersons}
+            count={stats.activeSalePersons}
           />
         </Col>
         <Col>
           <StatusCard
             title="Upcoming Sales Person"
             icon="bx bxs-user-plus"
-            count={pendingSalePersons}
+            count={stats.pendingSalePersons}
           />
         </Col>
       </Row>
       {/* Charts */}
       <Row>
         <Col lg={12} xl={8}>
-          <Card style={{ minHeight: "400px" }}>
+          <Card className="min-h-400">
             <Card.Body>
               <Chart
                 options={lineChartOptions}
-                series={series}
+                series={lineChart}
                 type="line"
                 height={370}
               />
@@ -235,23 +275,32 @@ const Dashboard = () => {
           </Card>
         </Col>
         <Col sm={12} md={8} lg={6} xl={4}>
-          <Card style={{ minHeight: "calc(100% - 15px)" }}>
+          <Card className="pie-card">
+            <Card.Header as="h4" className="crd-header text-center">
+              {new Date().toLocaleString("default", { month: "long" })} Stats
+            </Card.Header>
             <Card.Body>
               <Chart
                 options={pieChartOptions}
                 series={pieChart}
                 type="pie"
-                height={410}
+                height={370}
               />
             </Card.Body>
           </Card>
         </Col>
       </Row>
+      {/* Target Display */}
       <Row>
         <Col sm={12} md={8} lg={6} xl={4}>
           <TargetDisplay designation={user.designation} />
         </Col>
       </Row>
+      <DetailsModal
+        show={show}
+        onHide={() => setShow(false)}
+        users={topSales}
+      />
     </>
   );
 };
