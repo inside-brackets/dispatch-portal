@@ -20,7 +20,7 @@ const customerTableHead = [
   "Pickup  ",
   "Drop ",
   "Status",
-  "",
+  "Actions",
 ];
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -87,7 +87,7 @@ const LoadTable = ({ truck_number, carrier }) => {
       </td>
 
       <td>
-        <div className="edit__class">
+        <div className="edit__class"     >
           <EditButton
             type="edit"
             onClick={() => {

@@ -9,6 +9,7 @@ import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 import PdfTest from "../../components/PdfTest";
+import TooltipCustom from '../../components/tooltip/TooltipCustom'
 const invoiceTableHead = [
   "#",
   "MC",
@@ -59,17 +60,24 @@ const Invoice = () => {
       </td>
       <td>
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-          }}
+             style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: '76px'
+            }}
         >
-          <EditButton type="open" onClick={() => viewInvoiceModal(item)} />
+          <div data-tip data-for="viewInvoice">
+          <EditButton type="eye" onClick={() => viewInvoiceModal(item)} />
+          </div>
+          <TooltipCustom text='View Details' id='viewInvoice'></TooltipCustom>
+          <div data-tip data-for="printinvoice">
           <i
             class="bx bx-printer action-button"
             onClick={() => viewPdfModal(item)}
           ></i>
+          </div>
+          <TooltipCustom text='Print Details' id='printinvoice' ></TooltipCustom>
         </div>
       </td>
     </tr>

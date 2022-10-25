@@ -4,7 +4,7 @@ import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 import EditButton from "../../components/UI/EditButton";
 import Badge from "../../components/badge/Badge";
-
+import TooltipCustom from '../../components/tooltip/TooltipCustom'
 import { useSelector } from "react-redux";
 import status_map from "../../assets/JsonData/load_status_map.json";
 
@@ -58,7 +58,7 @@ const renderBody = (item, index, currPage) => (
     </td>
 
     <td>
-      <div className="edit__class">
+      <div className="edit__class" data-tip data-for="loadtips">
         <EditButton
           type="view"
           onClick={() => {
@@ -67,6 +67,7 @@ const renderBody = (item, index, currPage) => (
           }}
         />
       </div>
+      <TooltipCustom text='Print Details' id='loadtips' left='25' top="8"></TooltipCustom>
     </td>
   </tr>
 );
