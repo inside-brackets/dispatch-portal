@@ -296,7 +296,7 @@ const AppointmentDetail = () => {
         ...files,
       }
     );
-
+    
     setShowCloseModal(false);
     history.push("/searchcarrier");
   };
