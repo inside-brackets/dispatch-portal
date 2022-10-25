@@ -5,7 +5,7 @@ import TruckForm from "../Form/NewTruckForm";
 import Modal from "../modals/MyModal";
 import "./trucktable.css";
 import useHttp from "../../hooks/use-https";
-
+import TooltipCustom from '../../components/tooltip/TooltipCustom'
 import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
@@ -117,6 +117,8 @@ const TruckTable = (props) => {
             user.department === "admin" &&
             item.t_status === "new" && (
               <>
+              <div className="actionbuttonWrapper">
+                <div data-tip data-for="viewTruck">
                 <EditButton
                   type="open"
                   onClick={() => {
@@ -125,12 +127,19 @@ const TruckTable = (props) => {
                     history.push(`/carrierview/${mc}/${item.truck_number}`);
                   }}
                 />
-                <EditButton
+                </div>
+                <TooltipCustom text='View Detail Page' id='viewTruck' ></TooltipCustom>
+                <div style={{paddingLeft:'20px'}}  data-tip data-for="truckdelete">
+
+                <EditButton 
                   type="delete"
                   onClick={() => {
                     deleteTruckHandler(item.truck_number);
                   }}
                 />
+                </div>
+                <TooltipCustom text='Delete Truck' id='truckdelete' right='10' ></TooltipCustom>
+                </div>
               </>
             )
           )}

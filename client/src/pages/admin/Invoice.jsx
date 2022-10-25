@@ -10,6 +10,11 @@ import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 import PdfTest from "../../components/PdfTest";
 import axios from "axios";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+
+import TooltipCustom from '../../components/tooltip/TooltipCustom'
+
 const invoiceTableHead = [
   "#",
   "MC",
@@ -32,7 +37,7 @@ const Invoice = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/getusers`,
         {
           company: selectedCompany.value,
@@ -95,17 +100,25 @@ const Invoice = () => {
       </td>
       <td>
         <div
+
           style={{
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "space-between",
             alignItems: "center",
+            width: '76px'
           }}
         >
-          <EditButton type="open" onClick={() => viewInvoiceModal(item)} />
-          <i
-            className="bx bx-printer action-button"
-            onClick={() => viewPdfModal(item)}
-          ></i>
+
+          <div data-tip data-for="invoiceEye" >
+            <EditButton type="eye" onClick={() => viewInvoiceModal(item)} />
+          </div>
+          <TooltipCustom text='View Details' id='invoiceEye' ></TooltipCustom>
+          <div data-tip data-for="invoicePrint">
+            <i 
+              className="bx bx-printer action-button"
+              onClick={() => viewPdfModal(item)}
+            ></i></div>
+          <TooltipCustom text='Print Details' id='invoicePrint' ></TooltipCustom>
         </div>
       </td>
     </tr>
@@ -149,10 +162,10 @@ const Invoice = () => {
                   { label: "cleared ", value: "cleared" },
                   { label: "pending ", value: "pending" },
                 ],
-                
+
                 "sales person": sales,
                 dispatcher: dispatcher,
-                date_range:"date-range",
+                date_range: "date-range",
               }}
               renderBody={(item, index, currPage) =>
                 renderBody(item, index, currPage)
