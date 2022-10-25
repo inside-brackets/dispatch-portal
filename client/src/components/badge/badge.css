@@ -27,3 +27,7 @@
 .badge-brown {
   background-color: burlywood;
 }
+
+.badge-inprogress {
+  background-color: rgb(248, 248, 141);
+}

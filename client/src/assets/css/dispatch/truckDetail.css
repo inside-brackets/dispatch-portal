@@ -1,0 +1,30 @@
+.buttonWrapper{
+    display:flex;
+    justify-content:space-between;
+    padding-top: 2rem;
+}
+.confirmText{
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: red;
+    padding-bottom: 1rem;
+}
+.proceedText{
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0 5rem;
+    padding-top: 0.4rem;
+    padding-bottom: 1rem;
+    text-align: justify;
+}
+.bx-trashh{
+    cursor: pointer;
+    color:var(--main-color-red);
+    font-size: 49px;
+      top: 6px;
+    position: relative;
+    align-items: end;
+      justify-content: flex-start;
+      display: flex;
+  }
