@@ -43,6 +43,10 @@ const HRDashboard = lazy(() => import("../pages/HR/Dashboard"));
 const Interviews = lazy(()=> import("../pages/HR/Interviews"))
 const InterviewsDetail = lazy(()=> import("../pages/HR/InterviewDetail"))
 
+//shared pages
+const CarrierDetail = lazy(() => import("../sharedPages/CarrierDetail"));
+
+
 const Routes = () => {
   const { department } = useSelector((state) => state.user.user);
   const [refresh, setRefresh] = useState(true);
@@ -99,7 +103,8 @@ const Routes = () => {
         <Route path="/dashboard" exact component={Dashboard} />
         <Route path="/spread_sheet" component={SpreadSheet} />
         <Route path="/appointments" exact component={Appointments} />
-        <Route path="/appointments/:mc" component={AppointmentDetail} />
+        <Route path="/appointments_old/:mc" component={AppointmentDetail} />
+        <Route path="/appointments/:mc" component={CarrierDetail} />
         <Route path="/dialer" component={Dialer} />
         <Route path="/profile" component={Profile} />
         <Route path="*">
@@ -128,7 +133,8 @@ const Routes = () => {
         <Route path="/carriers" exact component={Carriers} />
         <Route path="/searchcarrier" exact component={SearchCarrier} />
         <Route path="/addcarrier/:mc" component={AddCarrier} />
-        <Route path="/carrierview/:mc" exact component={CarrierView} />
+        <Route path="/carrierview/:mc" exact component={CarrierDetail} />
+        {/* <Route path="/carrierview/:mc" exact component={CarrierView} /> */}
         <Route path="/carrierview/:mc/:truck" exact component={TruckDetails} />
         <Route path="/assignsales" exact component={AssignSales} />
         <Route path="/profile" component={Profile} />
