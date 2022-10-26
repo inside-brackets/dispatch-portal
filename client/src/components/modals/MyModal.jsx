@@ -15,6 +15,7 @@ const MyModal = (props) => {
           show={props.show}
           className="rounded-lg"
           onHide={props.onClose}
+          
         >
           <Modal.Header closeButton>
             <Modal.Title>{props.heading}</Modal.Title>
@@ -26,6 +27,7 @@ const MyModal = (props) => {
               <Button
                 buttonText="Submit"
                 color="inherit"
+                mc={props.mc}
                 disabled={props.disabled}
                 onClick={props.onConfirm}
                 className="button__class"
