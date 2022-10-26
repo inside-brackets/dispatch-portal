@@ -11,6 +11,10 @@ export default function DetailsModal(props) {
     fetchDetails();
   }, [props.users]);
 
+  useEffect(() => {
+    users.sort((a, b) => b.registered - a.registered);
+  }, [users]);
+
   const fetchDetails = () => {
     for (let i = 0; i < props.users.length; i++) {
       axios
@@ -47,7 +51,6 @@ export default function DetailsModal(props) {
             });
         });
     }
-    console.log(users);
   };
 
   return (

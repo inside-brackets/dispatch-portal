@@ -83,61 +83,43 @@ const getChartData = async (req, res) => {
 
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
+    let register, appoint, reject;
 
     for (var i = 0; i < 12; i++) {
+      const history = await Hcarrier.find({
+        updatedAt: {
+          $gte: new Date(today.getFullYear(), i, 0),
+          $lt: new Date(today.getFullYear(), i + 1, 0),
+        },
+        change: ["rejected", "registered", "appointment"],
+      });
+      const filteredHistory = filterHistory(history);
+
+      register =
+        filteredHistory.filter((carrier) => carrier.change === "registered")
+          .length ?? 0;
+      appoint =
+        filteredHistory.filter((carrier) => carrier.change === "appointment")
+          .length ?? 0;
+      reject =
+        filteredHistory.filter((carrier) => carrier.change === "rejected")
+          .length ?? 0;
+
       if (i == today.getMonth()) {
-        const history = await Hcarrier.find({
-          updatedAt: {
-            $gte: new Date(today.getFullYear(), i, 0),
-            $lt: new Date(today.getFullYear(), i + 1, 0),
-          },
-          change: ["rejected", "registered", "appointment"],
-        });
-        const filteredHistory = filterHistory(history);
         data.users = filteredHistory;
 
-        data.registered.push(
-          filteredHistory.filter((carrier) => carrier.change === "registered")
-            .length ?? 0
-        );
-        data.appointment.push(
-          filteredHistory.filter((carrier) => carrier.change === "appointment")
-            .length ?? 0
-        );
+        data.registered.push(register);
+        data.appointment.push(appoint);
 
-        data.pieChart.push(
-          filteredHistory.filter((carrier) => carrier.change === "registered")
-            .length ?? 0
-        );
-        data.pieChart.push(
-          filteredHistory.filter((carrier) => carrier.change === "appointment")
-            .length ?? 0
-        );
-        data.pieChart.push(
-          filteredHistory.filter((carrier) => carrier.change === "rejected")
-            .length ?? 0
-        );
+        data.pieChart.push(register);
+        data.pieChart.push(appoint);
+        data.pieChart.push(reject);
       } else if (i > today.getMonth()) {
         data.registered.push(null);
         data.appointment.push(null);
       } else {
-        const history = await Hcarrier.find({
-          updatedAt: {
-            $gte: new Date(today.getFullYear(), i, 0),
-            $lt: new Date(today.getFullYear(), i + 1, 0),
-          },
-          change: ["registered", "appointment"],
-        });
-        const filteredHistory = filterHistory(history);
-
-        data.registered.push(
-          filteredHistory.filter((carrier) => carrier.change === "registered")
-            .length ?? 0
-        );
-        data.appointment.push(
-          filteredHistory.filter((carrier) => carrier.change === "appointment")
-            .length ?? 0
-        );
+        data.registered.push(register);
+        data.appointment.push(appoint);
       }
     }
     res.status(200).send(data);
