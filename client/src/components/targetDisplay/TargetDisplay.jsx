@@ -31,7 +31,6 @@ const TargetDisplay = ({ designation }) => {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/settings/target/progress`)
       .then(({ data }) => {
-        console.log(data);
         setCurrDials(data);
       });
   }, []);

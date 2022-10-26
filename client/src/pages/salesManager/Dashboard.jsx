@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   const [lineChart, setLineChart] = useState([]);
   const [pieChart, setPieChart] = useState([]);
-  const [topSales, setTopSales] = useState([]);
+  const [topUsers, setTopUsers] = useState([]);
   const [stats, setStats] = useState({
     leads: 0,
     activeTrucks: 0,
@@ -51,14 +51,7 @@ const Dashboard = () => {
           },
         ]);
         setPieChart(data.pieChart);
-
-        let temp = [];
-        for (let i = 0; i < data.users.length; i++) {
-          temp.push(data.users[i].user);
-        }
-        temp = [...new Set(temp)];
-
-        setTopSales(temp);
+        setTopUsers(data.users);
       });
   };
 
@@ -285,6 +278,7 @@ const Dashboard = () => {
                 series={pieChart}
                 type="pie"
                 height={370}
+                id="pie-chart"
               />
             </Card.Body>
           </Card>
@@ -299,7 +293,7 @@ const Dashboard = () => {
       <DetailsModal
         show={show}
         onHide={() => setShow(false)}
-        users={topSales}
+        users={topUsers}
       />
     </>
   );

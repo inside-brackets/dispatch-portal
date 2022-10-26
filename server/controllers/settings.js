@@ -106,7 +106,7 @@ const getChartData = async (req, res) => {
           .length ?? 0;
 
       if (i == today.getMonth()) {
-        data.users = filteredHistory;
+        data.users.push(filteredHistory);
 
         data.registered.push(register);
         data.appointment.push(appoint);
@@ -118,6 +118,8 @@ const getChartData = async (req, res) => {
         data.registered.push(null);
         data.appointment.push(null);
       } else {
+        data.users.push(filteredHistory);
+
         data.registered.push(register);
         data.appointment.push(appoint);
       }
