@@ -136,10 +136,46 @@ const getChartData = async (req, res) => {
   }
 };
 
+const fetchUserStats = async (req, res) => {
+  try {
+    let data = {
+      users: [],
+    };
+
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    let notpick;
+
+    for (var i = 0; i < 12; i++) {
+      const history = await Hcarrier.find({
+        updatedAt: {
+          $gte: new Date(today.getFullYear(), i, 0),
+          $lt: new Date(today.getFullYear(), i + 1, 0),
+        },
+        change: ["didnotpick", "rejected", "registered", "appointment"],
+        user: req.body.user_id,
+      });
+      const filteredHistory = filterHistory(history);
+
+      notpick = history.filter((carrier) => carrier.change === "didnotpick");
+
+      if (i <= today.getMonth()) {
+        data.users.push(filteredHistory);
+        data.users[i] = data.users[i].concat(notpick);
+      }
+    }
+    res.status(200).send(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   updateSettings,
   getMCSettings,
   getCurrTarget,
   getTargetProgress,
   getChartData,
+  fetchUserStats,
 };

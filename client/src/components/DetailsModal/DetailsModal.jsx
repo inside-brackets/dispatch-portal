@@ -10,6 +10,8 @@ export default function DetailsModal(props) {
   const [today, setToday] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
+  const modalSwitch = props.mSwitch;
+
   useEffect(() => {
     removeDuplicates();
   }, [props.users, today]);
@@ -19,22 +21,28 @@ export default function DetailsModal(props) {
   }, [data]);
 
   useEffect(() => {
-    users.sort((a, b) => b.registered - a.registered);
+    if (modalSwitch) {
+      users.sort((a, b) => b.registered - a.registered);
+    }
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   }, [users]);
 
   const removeDuplicates = () => {
-    setLoading(true);
-    if (props.users[today.getMonth()]) {
-      let temp = [];
-      for (let i = 0; i < props.users[today.getMonth()].length; i++) {
-        temp.push(props.users[today.getMonth()][i].user);
+    if (modalSwitch) {
+      setLoading(true);
+      if (props.users[today.getMonth()]) {
+        let temp = [];
+        for (let i = 0; i < props.users[today.getMonth()].length; i++) {
+          temp.push(props.users[today.getMonth()][i].user);
+        }
+        temp = [...new Set(temp)];
+        setData(temp);
+        setUsers([]);
       }
-      temp = [...new Set(temp)];
-      setData(temp);
-      setUsers([]);
+    } else {
+      fetchStats();
     }
   };
 
@@ -76,6 +84,47 @@ export default function DetailsModal(props) {
     }
   };
 
+  const fetchStats = () => {
+    for (let i = 0; i < props.users.length; i++) {
+      if (props.users[i]) {
+        const didnotpick = props.users[i].filter(
+          (carrier) => carrier.change === "didnotpick"
+        );
+        const rejected = props.users[i].filter(
+          (carrier) => carrier.change === "rejected"
+        );
+        const registered = props.users[i].filter(
+          (carrier) => carrier.change === "registered"
+        );
+        const appointment = props.users[i].filter(
+          (carrier) => carrier.change === "appointment"
+        );
+
+        setUsers((prevState) => [
+          ...prevState,
+          {
+            month: months[i],
+            registered: registered.length ?? 0,
+            appointment: appointment.length ?? 0,
+            rejected: rejected.length ?? 0,
+            didnotpick: didnotpick.length ?? 0,
+          },
+        ]);
+      } else {
+        setUsers((prevState) => [
+          ...prevState,
+          {
+            month: months[i],
+            registered: 0,
+            appointment: 0,
+            rejected: 0,
+            didnotpick: 0,
+          },
+        ]);
+      }
+    }
+  };
+
   const handleChange = (e) => {
     if (Number(e.target.value) > today.getMonth()) {
       setUsers([]);
@@ -83,10 +132,29 @@ export default function DetailsModal(props) {
     setToday(new Date(today.getFullYear(), Number(e.target.value)));
   };
 
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   return (
     <Modal show={props.show} size="lg" centered>
       <Modal.Header>
-        <Modal.Title>Top Sales</Modal.Title>
+        {modalSwitch ? (
+          <Modal.Title>Top Sales</Modal.Title>
+        ) : (
+          <Modal.Title>User Stats</Modal.Title>
+        )}
       </Modal.Header>
       <Modal.Body>
         {loading ? (
@@ -94,14 +162,25 @@ export default function DetailsModal(props) {
         ) : (
           <Table hover>
             <thead>
-              <tr>
-                <th className="text-center">Rank</th>
-                <th>Details</th>
-                <th className="text-center">Registered</th>
-                <th className="text-center">Appointment</th>
-                <th className="text-center">Rejected</th>
-                <th className="text-center">Total</th>
-              </tr>
+              {modalSwitch ? (
+                <tr>
+                  <th className="text-center">Rank</th>
+                  <th>User</th>
+                  <th className="text-center">Registered</th>
+                  <th className="text-center">Appointment</th>
+                  <th className="text-center">Rejected</th>
+                  <th className="text-center">Total</th>
+                </tr>
+              ) : (
+                <tr>
+                  <th className="text-center">No.</th>
+                  <th>Month</th>
+                  <th className="text-center">Registered</th>
+                  <th className="text-center">Appointment</th>
+                  <th className="text-center">Rejected</th>
+                  <th className="text-center">Total</th>
+                </tr>
+              )}
             </thead>
             <tbody>
               {users.length > 0 ? (
@@ -109,7 +188,11 @@ export default function DetailsModal(props) {
                   return (
                     <tr key={index}>
                       <td className="text-center">{index + 1}</td>
-                      <td>{user.user_name}</td>
+                      {modalSwitch ? (
+                        <td>{user.user_name}</td>
+                      ) : (
+                        <td>{months[index]}</td>
+                      )}
                       <td className="text-center">{user.registered}</td>
                       <td className="text-center">{user.appointment}</td>
                       <td className="text-center">{user.rejected}</td>
@@ -138,26 +221,28 @@ export default function DetailsModal(props) {
         )}
       </Modal.Body>
       <Modal.Footer>
-        <div>
-          <select
-            className="form-select"
-            value={today.getMonth()}
-            onChange={handleChange}
-          >
-            <option value="0">January</option>
-            <option value="1">February</option>
-            <option value="2">March</option>
-            <option value="3">April</option>
-            <option value="4">May</option>
-            <option value="5">June</option>
-            <option value="6">July</option>
-            <option value="7">August</option>
-            <option value="8">September</option>
-            <option value="9">October</option>
-            <option value="10">November</option>
-            <option value="11">December</option>
-          </select>
-        </div>
+        {modalSwitch && (
+          <div>
+            <select
+              className="form-select"
+              value={today.getMonth()}
+              onChange={handleChange}
+            >
+              <option value="0">January</option>
+              <option value="1">February</option>
+              <option value="2">March</option>
+              <option value="3">April</option>
+              <option value="4">May</option>
+              <option value="5">June</option>
+              <option value="6">July</option>
+              <option value="7">August</option>
+              <option value="8">September</option>
+              <option value="9">October</option>
+              <option value="10">November</option>
+              <option value="11">December</option>
+            </select>
+          </div>
+        )}
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>

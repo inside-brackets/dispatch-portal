@@ -285,6 +285,7 @@ const Dashboard = () => {
         show={show}
         onHide={() => setShow(false)}
         users={topUsers}
+        mSwitch={true}
       />
     </>
   );
