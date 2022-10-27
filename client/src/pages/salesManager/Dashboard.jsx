@@ -167,11 +167,6 @@ const Dashboard = () => {
       toolbar: {
         show: false,
       },
-      events: {
-        legendClick: function (chartContext, seriesIndex, config) {
-          setShow(true);
-        },
-      },
     },
     dataLabels: {
       enabled: false,
@@ -265,8 +260,14 @@ const Dashboard = () => {
         </Col>
         <Col sm={12} md={8} lg={6} xl={4}>
           <Card className="pie-card">
-            <Card.Header as="h4" className="crd-header text-center">
-              {new Date().toLocaleString("default", { month: "long" })} Stats
+            <Card.Header
+              as="h4"
+              className="stat-header d-flex justify-content-between"
+            >
+              Stats
+              <button className="details-btn" onClick={() => setShow(true)}>
+                Details{">"}
+              </button>
             </Card.Header>
             <Card.Body>
               <Chart

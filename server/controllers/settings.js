@@ -69,6 +69,7 @@ const filterHistory = (history) => {
       return a;
     }, {})
   );
+  filtered = filtered.filter((carrier) => carrier.change != "didnotpick");
   return filtered;
 };
 
@@ -83,7 +84,7 @@ const getChartData = async (req, res) => {
 
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
-    let register, appoint, reject;
+    let register, appoint, reject, notpick;
 
     for (var i = 0; i < 12; i++) {
       const history = await Hcarrier.find({
@@ -91,7 +92,7 @@ const getChartData = async (req, res) => {
           $gte: new Date(today.getFullYear(), i, 0),
           $lt: new Date(today.getFullYear(), i + 1, 0),
         },
-        change: ["rejected", "registered", "appointment"],
+        change: ["didnotpick", "rejected", "registered", "appointment"],
       });
       const filteredHistory = filterHistory(history);
 
@@ -105,8 +106,11 @@ const getChartData = async (req, res) => {
         filteredHistory.filter((carrier) => carrier.change === "rejected")
           .length ?? 0;
 
+      notpick = history.filter((carrier) => carrier.change === "didnotpick");
+
       if (i == today.getMonth()) {
         data.users.push(filteredHistory);
+        data.users[i] = data.users[i].concat(notpick);
 
         data.registered.push(register);
         data.appointment.push(appoint);
@@ -119,6 +123,7 @@ const getChartData = async (req, res) => {
         data.appointment.push(null);
       } else {
         data.users.push(filteredHistory);
+        data.users[i] = data.users[i].concat(notpick);
 
         data.registered.push(register);
         data.appointment.push(appoint);

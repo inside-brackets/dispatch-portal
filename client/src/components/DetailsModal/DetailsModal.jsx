@@ -44,6 +44,10 @@ export default function DetailsModal(props) {
         axios
           .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${data[i]}`)
           .then((res) => {
+            const didnotpick = props.users[today.getMonth()].filter(
+              (carrier) =>
+                carrier.change === "didnotpick" && carrier.user == data[i]
+            );
             const rejected = props.users[today.getMonth()].filter(
               (carrier) =>
                 carrier.change === "rejected" && carrier.user == data[i]
@@ -64,6 +68,7 @@ export default function DetailsModal(props) {
                 registered: registered.length ?? 0,
                 appointment: appointment.length ?? 0,
                 rejected: rejected.length ?? 0,
+                didnotpick: didnotpick.length ?? 0,
               },
             ]);
           });
@@ -108,7 +113,12 @@ export default function DetailsModal(props) {
                       <td className="text-center">{user.registered}</td>
                       <td className="text-center">{user.appointment}</td>
                       <td className="text-center">{user.rejected}</td>
-                      <td className="text-center">-</td>
+                      <td className="text-center">
+                        {user.registered +
+                          user.appointment +
+                          user.rejected +
+                          user.didnotpick}
+                      </td>
                     </tr>
                   );
                 })

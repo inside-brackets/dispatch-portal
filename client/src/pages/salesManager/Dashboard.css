@@ -8,3 +8,17 @@
 #pie-chart .apexcharts-tooltip {
   color: #000000;
 }
+.stat-header {
+  border-top-left-radius: var(--border-radius) !important;
+  border-top-right-radius: var(--border-radius) !important;
+  padding: 1rem 1rem !important;
+}
+.details-btn {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--main-color-blue);
+  background-color: transparent;
+}
+.details-btn:hover {
+  text-decoration: underline;
+}
