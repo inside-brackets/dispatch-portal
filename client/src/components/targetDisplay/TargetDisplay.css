@@ -7,10 +7,10 @@
   padding: 1rem 1rem !important;
 }
 .progress-wrapper {
-  margin: 24px auto;
-  margin-bottom: 32px;
-  width: 200px;
-  height: 200px;
+  margin: 2rem auto;
+  margin-bottom: 40px;
+  width: 210px;
+  height: 210px;
 }
 .label-txt {
   font-size: 32px;
@@ -28,8 +28,9 @@
   stroke: var(--second-bg) !important;
 }
 .set-target-div {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: baseline;

@@ -37,9 +37,9 @@
         "icon": "bx bx-phone-outgoing"
       },
       {
-        "display_name": "MC Series",
-        "route": "/series",
-        "icon": "bx bx-sort-down"
+        "display_name": "Settings",
+        "route": "/settings",
+        "icon": "bx bx-cog"
       }
     ],
     "teamlead": [

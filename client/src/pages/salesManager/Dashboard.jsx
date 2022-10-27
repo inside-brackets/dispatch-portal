@@ -6,7 +6,6 @@ import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 import axios from "axios";
 
-import TargetDisplay from "../../components/targetDisplay/TargetDisplay";
 import StatusCard from "../../components/status-card/StatusCard";
 import MySelect from "../../components/UI/MySelect";
 import DetailsModal from "../../components/DetailsModal/DetailsModal";
@@ -195,7 +194,6 @@ const Dashboard = () => {
 
   return (
     <>
-      {/* Slect Company & Heading */}
       <Row className="mb-3">
         <Col>
           <h2 className="page-header mb-3">Manager Dashboard</h2>
@@ -226,7 +224,6 @@ const Dashboard = () => {
           />
         </Col>
       </Row>
-      {/* Status Cards */}
       <Row>
         <Col>
           <StatusCard title="Leads" icon="bx bx-data" count={stats.leads} />
@@ -253,7 +250,6 @@ const Dashboard = () => {
           />
         </Col>
       </Row>
-      {/* Charts */}
       <Row>
         <Col lg={12} xl={8}>
           <Card className="min-h-400">
@@ -282,12 +278,6 @@ const Dashboard = () => {
               />
             </Card.Body>
           </Card>
-        </Col>
-      </Row>
-      {/* Target Display */}
-      <Row>
-        <Col sm={12} md={8} lg={6} xl={4}>
-          <TargetDisplay designation={user.designation} />
         </Col>
       </Row>
       <DetailsModal

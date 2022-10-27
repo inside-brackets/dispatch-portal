@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { useSelector } from "react-redux";
 import { Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import axios from "axios";
+
+import TargetDisplay from "../../components/targetDisplay/TargetDisplay";
 import "./MCSeries.css";
 
 function MCSeries() {
+  const { user } = useSelector((state) => state.user);
+  const { company: selectedCompany } = useSelector((state) => state.user);
+
   const [series, setSeries] = useState({
     order: 1,
     isCustom: false,
@@ -110,10 +118,10 @@ function MCSeries() {
 
   return (
     <div>
-      <h2>MC Series</h2>
+      <h2>Settings</h2>
       <br />
-      <div className="row">
-        <div className="col-xl-4 col-lg-8 col-md-10 col-sm-12">
+      <Row>
+        <Col sm={12} md={10} lg={8} xl={4}>
           <div className="card">
             <div className="card__body p-3">
               <h4>Series Order</h4>
@@ -269,8 +277,11 @@ function MCSeries() {
               </Form>
             </div>
           </div>
-        </div>
-      </div>
+        </Col>
+        <Col sm={12} md={8} lg={6} xl={4}>
+          <TargetDisplay designation={user.designation} />
+        </Col>
+      </Row>
     </div>
   );
 }
