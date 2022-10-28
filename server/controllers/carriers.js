@@ -218,11 +218,11 @@ const getCarriers = async (req, res, next) => {
         ? { ...req.body, ...defaultFilter }
         : defaultFilter;
   }
-  if(req.body["trucks.t_status"]){
-    req.body = {...req.body,"trucks.t_status":{
-      $in: req.body["trucks.t_status"].map((item) => item.value),
-    }}
-  }
+  // if(req.body["trucks.t_status"]){
+  //   req.body = {...req.body,"trucks.t_status":{
+  //     $in: req.body["trucks.t_status"].map((item) => item.value),
+  //   }}
+  // }
   if (req.body.salesman && req.body.c_status) {
     filter = req.body;
   }
