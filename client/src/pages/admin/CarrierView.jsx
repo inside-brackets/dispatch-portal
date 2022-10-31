@@ -622,7 +622,19 @@ const AppointmentDetail = () => {
               >
                 <hr />
                 <Col md={6}>
-                  <Button
+                <Button
+                    style={{ float: "left" }}
+                    size="lg"
+                    variant="danger"
+                    onClick={openModal}
+                    disabled={carrier.c_status !== "registered"}
+                  >
+                    Deactivate Carrier
+                  </Button>
+                </Col>
+                <Col md={6}>
+                <Button
+                    style={{float: "right"}}
                     disabled={loaderButton}
                     variant="success"
                     size="lg"
@@ -638,17 +650,6 @@ const AppointmentDetail = () => {
                       />
                     )}
                     Update Carrier
-                  </Button>
-                </Col>
-                <Col md={6}>
-                  <Button
-                    style={{ float: "right" }}
-                    size="lg"
-                    variant="danger"
-                    onClick={openModal}
-                    disabled={carrier.c_status !== "registered"}
-                  >
-                    Deactivate Carrier
                   </Button>
                 </Col>
               </Row>
