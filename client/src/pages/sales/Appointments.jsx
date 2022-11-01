@@ -17,20 +17,17 @@ const Appointments = (props) => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const [carriersList, setCarriersList] = useState([]);
   const [currentmc, setCurrentMC] = useState();
-  const history = useHistory();
   const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
-   
+   const history = useHistory()
   //changes//
   const onConfirm = (mc) => {
     setCurrentMC(mc);
-        setrModal(true);
+    setrModal(true);
   };
   const [rmodal, setrModal] = useState();
   const [carrier, setCarrier] = useState({});
   const commentRef = useRef();
-  const onrClose = () => {
-    setrModal(false);
-  };
+  
 
   const rejectMC = async () => {
     await axios.put(
@@ -40,8 +37,15 @@ const Appointments = (props) => {
         comment: commentRef.current.value,
       }
     );
+    setCurrentMC();
     setrModal(false);
-    history.push("/appointments");
+    setCarriersList(prev=>{
+      const temp_list = prev
+      return temp_list.filter(carrier=>carrier.mc_number!==currentmc)
+    })
+  };
+  const onrClose = () => {
+    setrModal(false);
   };
   //changes//
   useEffect(() => {
@@ -55,7 +59,6 @@ const Appointments = (props) => {
         return new Date(b.appointment) - new Date(a.appointment);
       });
       setCarriersList(data);
-      setSearchedCarrier(data);
     };
     fetchCarrier(
       {
@@ -73,7 +76,7 @@ const Appointments = (props) => {
   //search
   const searchRef = useRef();
 
-  const [searchedCarrier, setSearchedCarrier] = useState([]);
+  const [savedCarriers, setSavedCarries] = useState([]);
   const search = (e) => {
     if (e.key === "Enter") {
       var searchValue = searchRef.current.value.trim();
@@ -88,15 +91,16 @@ const Appointments = (props) => {
               .includes(searchValue.toLowerCase())
           ) {
             return true;
-            // return load.broker === searchRef.current.value.trim();
           }
           return false;
         }
       });
       if (searched.length !== 0) {
-        setSearchedCarrier(searched);
+        setSavedCarries(carriersList);
+        setCarriersList(searched)
       } else {
-        setSearchedCarrier(carriersList);
+        setCarriersList(savedCarriers);
+        setSavedCarries([])
       }
     }
   };
@@ -156,42 +160,33 @@ const Appointments = (props) => {
       </Row>
     </Row>
   );
+  var appointmentList = (
+    <div className="spreadsheet__loader">
+      <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
+    </div>
+  );
   if (isLoading && !httpError) {
-    return (
+    appointmentList = (
       <div className="spreadsheet__loader">
         <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
       </div>
     );
   } else if (!isLoading && httpError) {
-    return (
+    appointmentList = (
       <div className="spreadsheet__loader">
         <h2 style={{ color: "red" }}>ERROR: SERVER MIGHT BE DOWN</h2>
       </div>
     );
   } else if (carriersList.length === 0)
-    return (
+  appointmentList = (
       <div className="spreadsheet__loader">
         <h2 style={{ color: "green" }}>No Appointments yet.</h2>
       </div>
     );
-  return (
-    <div className="row">
-      <div className="row align-items-center mb-3">
-        <div className="col-md-3">
-          <label className="mb-2">Search:</label>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Company / MC"
-            icon="bx bx-search"
-            ref={searchRef}
-            onKeyDown={search}
-          />
-        </div>
-      </div>
-      {searchedCarrier.map((item, index) => (
+    else{
+      appointmentList =     (<div className="row"> {carriersList.map((item, index) => (
         <div className="col-4" key={index}>
-            {
+            
               <Card
                 className=""
                 style={{
@@ -216,28 +211,48 @@ const Appointments = (props) => {
                       )}`}</h5>
                     }
                   </Card.Footer>
-                  <div className="row" style={{marginTop: "20px"}}>
-                    <div className="col-1">
+                  <div class="d-flex justify-content-between">
+
                   <MyButton 
-                  style={{marginLeft: "10px"}}
                   color="red"
                   buttonText={'Reject'}
                   onClick={() => {onConfirm(item.mc_number)}}
                   onClose={onrClose}
                   mc={item.mc_number}
-                  >
-                  </MyButton>
-                  </div>
-                  <div className="col-2" style={{marginLeft: "110px"}}>
-                  <Link style={{marginLeft:'130px'}} to={`/appointments/${item.mc_number}`}>
+                  />
+         
                   <MyButton
                   color="primary"
                   buttonText={'Details'}
+                  onClick={() => {history.push(`/appointments/${item.mc_number}`)}}
+
                   />
-                  </Link>
                   </div>
-            </div>
-            <Modal
+           
+                </Card.Body>
+              </Card>
+            
+        </div>
+      ))}</div>)
+    }
+  return (
+    <div className="row">
+      
+      <div className="row align-items-center mb-3">
+        <div className="col-md-3">
+          <label className="mb-2">Search:</label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Company / MC"
+            icon="bx bx-search"
+            ref={searchRef}
+            onKeyDown={search}
+          />
+        </div>
+      </div>
+{appointmentList}
+       <Modal
             show={rmodal}
             heading="Reject Carrier"
             onConfirm={rejectMC}
@@ -262,11 +277,6 @@ const Appointments = (props) => {
               ></div>
             </form>
           </Modal>
-                </Card.Body>
-              </Card>
-            }
-        </div>
-      ))}
     </div>
   );
 };
