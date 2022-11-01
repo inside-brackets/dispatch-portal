@@ -123,15 +123,16 @@ const AppointmentDetail = () => {
   return (
     <div className="row">
       <div className="col">
-        <BackButton onClick={() => history.push("/searchcarrier")} />
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Card
             className="truck-detail-card"
             style={{
-              marginLeft: "60px",
+              marginLeft: "30px",
               marginRight: "30px",
             }}
           >
+          <BackButton onClick={() => history.push("/searchcarrier")}/>
+
             <Card.Body>
               <h1 className="text-center">{carrier.company_name}</h1>
               <hr />
@@ -621,7 +622,19 @@ const AppointmentDetail = () => {
               >
                 <hr />
                 <Col md={6}>
-                  <Button
+                <Button
+                    style={{ float: "left" }}
+                    size="lg"
+                    variant="danger"
+                    onClick={openModal}
+                    disabled={carrier.c_status !== "registered"}
+                  >
+                    Deactivate Carrier
+                  </Button>
+                </Col>
+                <Col md={6}>
+                <Button
+                    style={{float: "right"}}
                     disabled={loaderButton}
                     variant="success"
                     size="lg"
@@ -637,17 +650,6 @@ const AppointmentDetail = () => {
                       />
                     )}
                     Update Carrier
-                  </Button>
-                </Col>
-                <Col md={6}>
-                  <Button
-                    style={{ float: "right" }}
-                    size="lg"
-                    variant="danger"
-                    onClick={openModal}
-                    disabled={carrier.c_status !== "registered"}
-                  >
-                    Deactivate Carrier
                   </Button>
                 </Col>
               </Row>
