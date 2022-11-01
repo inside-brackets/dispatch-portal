@@ -294,14 +294,10 @@ const InvoiceModal = ({
           <Button onClick={submitHandler}>Submit</Button>
         ) : (
           invoice && (
-            <Row className="justify-content-start align-items-center" style={{marginLeft: "1%", marginTop: "10px", marginBottom:"10px"}}>
-              <Col md={2} className="text-start">
-                <Button disabled={department !== "admin"} className="w-100" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
-              </Col>
-              <Col md={2} className="text-end" style={{marginLeft: "64.5%"}}>
-                <Button disabled={department !== "admin"} className="w-100" variant="success" onClick={changeStatusHandler}>Clear</Button>
-              </Col>
-            </Row>
+            <div className="d-flex justify-content-between align-items-center">
+                <Button disabled={department !== "admin"} className="button-size" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
+                <Button disabled={department !== "admin"} className="button-size" variant="success" onClick={changeStatusHandler}>Clear</Button>
+            </div>
           )
         )}
       </Row>
