@@ -315,6 +315,7 @@ const AppointmentDetail = () => {
 
     for (const property in files) {
       if (files[property]) {
+        console.log(files[property].name)
         const { data: url } = await axios(
           `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
         );

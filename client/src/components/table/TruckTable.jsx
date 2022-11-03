@@ -27,6 +27,7 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
+  // console.log(props.trucks);
   const history = useHistory();
 
   // reassign states

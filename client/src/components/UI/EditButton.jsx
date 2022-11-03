@@ -12,9 +12,12 @@ const EditButton = (props) => {
           <i className="bx bx-file action-button"></i>
         ) : props.type === "open" ? (
           <i className="bx bx-window-open action-button"></i>
-        ) : (
+        ) : props.type === "file" ? (
+          <i className="bx bxs-file-plus action-button"></i>)
+          : (
           <i className="bx bx-trash-alt action-button"></i>
         )}
+        
       </span>
     </>
   );

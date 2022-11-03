@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
-// import TruckTable from "../../components/table/TruckTable";
 import TruckTable from "../components/table/TruckTable";
+import FileHandleTable from "../components/table/FileHandleTable";
 import TextArea from "../components/UI/TextArea";
 import Loader from "react-loader-spinner";
 import BackButton from "../components/UI/BackButton";
@@ -9,9 +9,14 @@ import Modal from "../components/modals/MyModal";
 import axios from "axios";
 import { Form, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
+import MySelect from "../components/UI/MySelect";
+import Input from "../components/UI/MyInput";
 // import { socket } from "../../index";
 import { socket } from "../index";
 import { useSelector } from "react-redux";
+import useHttp from "../hooks/use-https";
+import useInput from "../hooks/use-input";
+
 const CarrierDetail = () => {
   const currUser = useSelector((state) => state.user.user);
   const [trucks, setTrucks] = useState([]);
@@ -24,7 +29,29 @@ const CarrierDetail = () => {
   const [validated, setValidated] = useState(false);
   const [loaderButton, setloaderButton] = useState(false);
   const [rmodal, setrModal] = useState();
-  const commentRef = useRef();
+  const { sendRequest: updateCarrier } = useHttp();
+
+  const factAddressRef = useRef();//
+  const factPhoneRef = useRef();//
+  const factAgentNameRef = useRef();//
+  const factAgentEmailRef = useRef();//
+  const carrierEmailRef = useRef();//
+  
+  const commentRef = useRef();//
+  const ownerNameRef = useRef();//
+  const factCompNameRef = useRef();//
+
+  const insAgentNameRef = useRef();//
+  const isNotEmpty = (value) => value.trim() !== "";
+  const {
+    value: fee,
+    isValid: feeIsValid,
+    hasError: feeHasError,
+    valueChangeHandler: feeChangeHandler,
+    inputBlurHandler: feeBlurHandler,
+  } = useInput(isNotEmpty);
+
+  
 
   useEffect(() => {
     setIsLoading(true);
@@ -44,6 +71,66 @@ const CarrierDetail = () => {
         setIsLoading(false);
       });
   }, [params.mc]);
+  const [selectedPayment, setSelectedPayment] = useState("");
+  const appointmentRef = useRef();
+  // const selectedPayment = useRef();
+  const taxId = useRef();
+  const insCompName = useRef();
+  const insAddress = useRef();
+  const insPhone = useRef();
+  const insAgentName = useRef();
+  const insAgentEmail = useRef();
+  // const fee = useRef();
+
+  const saveCarrier = async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    // let owner = event.target.owner_name.value 
+    // console.log(owner)
+    setValidated(true);
+    if (form.checkValidity() === true) {
+      setloaderButton(true);
+      const upObj = {
+        owner_name: event.target.owner_name.value,
+        phone_number: event.target.phone_number.value,
+        email: event.target.email.value,
+        tax_id_number: event.target.tax_id.value,
+        insurance: {
+          name: event.target.i_company_name.value,
+          address: event.target.i_address.value,
+          phone_no: event.target.i_phone_number.value,
+          agent_name: event.target.i_agent_name.value,
+          agent_email: event.target.i_agent_email.value,
+        },
+      };
+      if (carrier.payment_method === "factoring") {
+        upObj["factoring"] = {};
+        upObj["factoring"]["name"] = event.target.f_name.value;
+        upObj["factoring"]["address"] = event.target.f_address.value;
+        upObj["factoring"]["agent_name"] = event.target.f_agent_name.value;
+        upObj["factoring"]["agent_email"] = event.target.f_agent_email.value;
+        upObj["factoring"]["phone_no"] = event.target.f_phone.value;
+      }
+      await axios
+        .put(
+          `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
+          upObj
+        )
+        .then((response) => {
+          console.log(response.data);
+          toast.success("Carrier Saved");
+          setCarrier(response.data);
+          setloaderButton(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setloaderButton(false);
+        });
+    }
+  };
+
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -208,6 +295,7 @@ const CarrierDetail = () => {
                     </Col>
                     <Col md={9}>
                       <Form.Control
+                      
                         type="text"
                         placeholder="Payment Method"
                         name="phone_number"
@@ -228,6 +316,7 @@ const CarrierDetail = () => {
                     </Col>
                     <Col md={9}>
                       <Form.Control
+                      ref= {carrierEmailRef}
                         type="text"
                         required
                         name="email"
@@ -322,7 +411,66 @@ const CarrierDetail = () => {
                       Please provide a valid entity.
                     </Form.Control.Feedback>
                   </Form.Group>
-                  <Col></Col>
+                  {/* <Col></Col> */}
+                  {currUser.department === "sales" && (
+                  <>
+
+                    <Form.Group as={Col} md="4" controlId="validationCustom03">
+                    <Form.Label>*Dispatch Fee:</Form.Label>
+                    <Form.Control
+                      type="Number"
+                      placeholder="*Dispatch Fee:"
+                      name="owner_name"
+                      defaultValue={ carrier.dispatcher_fee ? carrier.dispatcher_fee : 0}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid entity.
+                    </Form.Control.Feedback>
+                  </Form.Group>                  
+
+
+
+
+
+                  <Col>
+                  <div
+                className="col-6"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  marginTop: "50px",
+                }}
+              >
+                <MySelect
+                  isMulti={false}
+                  value={selectedPayment}
+                  onChange={setSelectedPayment}
+                  label="Payment Method:"
+                  options={[
+                    { label: "Factoring ", value: "factoring" },
+                    { label: "Quickpay ", value: "quickpay" },
+                    { label: "Standardpay ", value: "standardpay" },
+                  ]}
+                />
+                <Input
+                  type="number"
+                  label="*Dispatch Fee:"
+                  placeholder="Enter Fee"
+                  className={feeHasError ? "invalid" : ""}
+                  value={fee}
+                  onChange={feeChangeHandler}
+                  onBlur={feeBlurHandler}
+                  defaultValue={
+                    carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
+                  }
+                />
+              </div>
+                  </Col>
+                  </>)}
+
+                  {currUser.department === "admin" && (
+                  <>
                   <Form.Group as={Col} md="3" controlId="validationCustom05">
                     <Form.Label>Payment Method:</Form.Label>
                     <Form.Control
@@ -336,6 +484,7 @@ const CarrierDetail = () => {
                       Please provide a valid entity.
                     </Form.Control.Feedback>
                   </Form.Group>
+                  </>)}
                 </Row>
                 <Row className="my-3">
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
@@ -356,6 +505,7 @@ const CarrierDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>Company's Name:</Form.Label>
                     <Form.Control
+                    ref={insAgentNameRef}
                       type="text"
                       placeholder="Company's Name"
                       name="i_company_name"
@@ -373,6 +523,7 @@ const CarrierDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>Address:</Form.Label>
                     <Form.Control
+                    ref={insAddress}
                       type="text"
                       name="i_address"
                       defaultValue={
@@ -392,6 +543,7 @@ const CarrierDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>Agent's Name:</Form.Label>
                     <Form.Control
+                    ref={factAgentNameRef}
                       type="text"
                       placeholder="Agent's Name"
                       name="i_agent_name"
@@ -411,6 +563,7 @@ const CarrierDetail = () => {
                     <Form.Label>Agent's Email:</Form.Label>
                     <Form.Control
                       type="text"
+                      ref={factAgentEmailRef}
                       placeholder="Agent's Email"
                       name="i_agent_email"
                       defaultValue={
@@ -427,6 +580,7 @@ const CarrierDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>Phone Number:</Form.Label>
                     <Form.Control
+                    ref={factPhoneRef}
                       type="text"
                       placeholder="Phone Number"
                       name="i_phone_number"
@@ -454,6 +608,7 @@ const CarrierDetail = () => {
                       >
                         <Form.Label>Company's Name:</Form.Label>
                         <Form.Control
+                        ref={factCompNameRef}
                           type="text"
                           placeholder="Company's Name"
                           name="f_name"
@@ -582,7 +737,10 @@ const CarrierDetail = () => {
                 </>
               )}
               <h3>Carrier Documents:</h3>
-              <Row xs="auto" className="m-3">
+              <FileHandleTable carrier={carrier}/>
+
+
+              {/* <Row xs="auto" className="m-3">
                 <Col>
                   {carrier &&
                     carrier.insurance_file &&
@@ -633,15 +791,16 @@ const CarrierDetail = () => {
                     </Button>
                   )}
                 </Col>
-              </Row>
+              </Row> */}
               <Row
                 className="justify-content-between"
                 style={{ marginTop: "10px" }}
               >
                 <hr />
-                <Col md={6}>
+                <Col md={4}>
                   <Button
                     disabled={loaderButton}
+                    // onClick={handleSubmit}
                     variant="success"
                     size="lg"
                     type="submit"
@@ -658,7 +817,10 @@ const CarrierDetail = () => {
                     {currUser.department === "sales" ? "Save":"Update Carrier"}
                   </Button>
                 </Col>
-                <Col md={6}>
+                <Col md={4} className="d-flex justify-content-center"><Button size="lg" 
+                // onClick={saveCarrier}
+                >Close Sale</Button></Col>
+                <Col md={4}>
                 {currUser.department === "admin" && (<> <Button
                     style={{ float: "right" }}
                     size="lg"
@@ -715,8 +877,6 @@ const CarrierDetail = () => {
               ></div>
             </form>
           </Modal>
-
-
         <Modal
           show={dModal}
           heading="Deactivate Carrier"
@@ -727,6 +887,10 @@ const CarrierDetail = () => {
         >
           <p>Are You Sure you want to deactivate?</p>
         </Modal>
+
+
+
+
 
         <TruckTable
           mc={carrier.mc_number}

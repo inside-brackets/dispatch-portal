@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import "./myinput.css";
+// import "./myinput.css";
 const MyInput = forwardRef((props, ref) => {
   return props.type !== "file" ? (
     <div className="__input">

@@ -52,7 +52,10 @@ const deleteUploadedURL = async (folder, fileName) => {
 
        await s3.deleteObject(params1, function (err, data) {
         if (err) return err; // error
-        else return data; // deleted
+        else {
+          console.log("fil deleted ")
+          data; // deleted
+        }
       });
 
   } catch (error) {

@@ -5,13 +5,17 @@ import TextArea from "../../components/UI/TextArea";
 import Loader from "react-loader-spinner";
 import BackButton from "../../components/UI/BackButton";
 import Modal from "../../components/modals/MyModal";
+import MySelect from "../../components/UI/MySelect";
 import axios from "axios";
 import { Form, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { socket } from "../../index";
+import Input from "../../components/UI/MyInput";
 import { useSelector } from "react-redux";
+import useInput from "../../hooks/use-input";
 
 const AppointmentDetail = () => {
+  const isNotEmpty = (value) => value.trim() !== "";
   const currUser = useSelector((state) => state.user.user);
   const [trucks, setTrucks] = useState([]);
   const history = useHistory();
@@ -22,6 +26,15 @@ const AppointmentDetail = () => {
   const [error, setError] = useState(false);
   const [validated, setValidated] = useState(false);
   const [loaderButton, setloaderButton] = useState(false);
+
+  const [selectedPayment, setSelectedPayment] = useState("");
+  const {
+    value: fee,
+    isValid: feeIsValid,
+    hasError: feeHasError,
+    valueChangeHandler: feeChangeHandler,
+    inputBlurHandler: feeBlurHandler,
+  } = useInput(isNotEmpty);
 
   useEffect(() => {
     setIsLoading(true);
@@ -119,6 +132,8 @@ const AppointmentDetail = () => {
       </div>
     );
   }
+
+
 
   return (
     <div className="row">
@@ -422,7 +437,48 @@ const AppointmentDetail = () => {
                   </Form.Group>
                 </Row>
 
+                {currUser.department === "sales" && (
+                  <>
+                <Row>
+                 <div
+                className="col-2"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  marginTop: "50px",
+                }}
+              >
+                <MySelect
+                  isMulti={false}
+                  value={selectedPayment}
+                  onChange={setSelectedPayment}
+                  label="Payment Method:"
+                  options={[
+                    { label: "Factoring ", value: "factoring" },
+                    { label: "Quickpay ", value: "quickpay" },
+                    { label: "Standardpay ", value: "standardpay" },
+                  ]}
+                />
+                <Input
+                  type="number"
+                  label="*Dispatch Fee:"
+                  placeholder="Enter Fee"
+                  className={feeHasError ? "invalid" : ""}
+                  value={fee}
+                  onChange={feeChangeHandler}
+                  onBlur={feeBlurHandler}
+                  defaultValue={
+                    carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
+                  }
+                />
+              </div>
+              </Row>
+              </>
+                )}
+
                 {carrier.payment_method === "factoring" ? (
+                
                   <div>
                     <h2>Factoring Details:</h2>
                     <Row className="my-3">
@@ -539,6 +595,7 @@ const AppointmentDetail = () => {
                   </div>
                 ) : null}
               </Row>
+             
               <hr />
               {currUser.department === "admin" && (
                 <>

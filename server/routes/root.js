@@ -92,5 +92,10 @@ route.get("/s3url-delete/:folder/:fileName", async (req, res) => {
   );
   res.send(response);
 });
+route.delete("/s3url-delete/:folder/:fileName", async (req, res) => {
+
+  const response = await deleteUploadedURL(req.params.folder, req.params.fileName);
+  res.send(response);
+});
 
 module.exports = route;
