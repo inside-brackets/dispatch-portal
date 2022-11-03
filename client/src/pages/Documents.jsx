@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 
@@ -9,6 +10,9 @@ import MyModal from "../components/modals/MyModal";
 const Documents = ({ user, profile, callBack }) => {
   const [showModal, setShowModal] = useState(false);
   const [deleteModal, setDeleteModa] = useState(false);
+
+  const { department } = useSelector((state) => state.user.user);
+
   const submitDelete = async () => {
     await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
@@ -33,20 +37,22 @@ const Documents = ({ user, profile, callBack }) => {
           <Col>
             <h4>Documents</h4>
           </Col>
-          <Col className="mb-4" md={2}>
-            <p
-              style={{
-                color: "blue",
-                textDecoration: "underline",
-                cursor: "pointer",
-                textDecorationLine: "underline",
-              }}
-              onClick={() => setShowModal(true)}
-            >
-              {" "}
-              + Add Document
-            </p>
-          </Col>
+          {department === "admin" && (
+            <Col className="mb-4" md={2}>
+              <p
+                style={{
+                  color: "blue",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  textDecorationLine: "underline",
+                }}
+                onClick={() => setShowModal(true)}
+              >
+                {" "}
+                + Add Document
+              </p>
+            </Col>
+          )}
           <hr />
         </Row>
 
@@ -61,9 +67,11 @@ const Documents = ({ user, profile, callBack }) => {
                   <a href={file.file}>
                     <i className="bx bx-file action-button"></i>
                   </a>
-                  <span onClick={() => setDeleteModa(file)}>
-                    <i className="bx bx-trash-alt action-button"></i>
-                  </span>
+                  {department === "admin" && (
+                    <span onClick={() => setDeleteModa(file)}>
+                      <i className="bx bx-trash-alt action-button"></i>
+                    </span>
+                  )}
                 </Col>
               </Row>
               <hr />

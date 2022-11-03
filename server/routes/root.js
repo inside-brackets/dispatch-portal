@@ -10,10 +10,19 @@ const {
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
-const { rename, test, changeAppointment,findDublicates,changeStatus, addCarrierIdInInvoices,changeDesignation,changeCarrierToInitial } = require("../controllers/db");
+const {
+  rename,
+  test,
+  changeAppointment,
+  findDublicates,
+  changeStatus,
+  addCarrierIdInInvoices,
+  changeDesignation,
+  changeCarrierToInitial,
+} = require("../controllers/db");
 
 const { setIp, getIpList } = require("../util/ipList");
-const { generateUploadURL,deleteUploadedURL } = require("../util/s3");
+const { generateUploadURL, deleteUploadedURL } = require("../util/s3");
 const auth = require("../middlewares/auth");
 
 // const upload = require("../middlewares/upload");
@@ -40,8 +49,8 @@ route.post("/getusers", userController.getUsers);
 route.post("/get-table-users", userController.getTableUsers);
 // route.post("/updateuser", userController.updateUser);
 route.post("/updateuser/:id", userController.updateUser);
-route.get("/refreshtoken/:id",userController.refreshToken)
-route.get("/count-user/:company",userController.countUsers)
+route.get("/refreshtoken/:id", userController.refreshToken);
+route.get("/count-user/:company", userController.countUsers);
 
 // invoices
 route.post("/getinvoices", getInvoices);
@@ -54,6 +63,14 @@ route.put("/updateinvoice", updateInvoiceStatus);
 route.post("/getloads", loadsController.getLoads);
 route.post("/get-table-loads", loadsController.getTableLoads);
 route.post("/getload", loadsController.getLoad);
+
+// count active & upcoming sales person
+route.get("/count/active/sales", userController.getSalesCount);
+route.get("/count/pending/sales", userController.getUpcomingSalesCount);
+
+// Free Resource a.k.a Leads
+route.post("/count/leads", carriersController.getLeads);
+route.get("/free/leads", carriersController.freeUpLeads);
 
 // security
 route.post("/whitelist/:mac/:ip", (req, res) => {
@@ -71,11 +88,18 @@ route.post("/login", auth, userController.login);
 
 //s3-bucket
 route.get("/s3url/:folder/:fileName/:del?", async (req, res) => {
-  const url = await generateUploadURL(req.params.folder, req.params.fileName,req.params.del);
+  const url = await generateUploadURL(
+    req.params.folder,
+    req.params.fileName,
+    req.params.del
+  );
   res.send(url);
 });
 route.get("/s3url-delete/:folder/:fileName", async (req, res) => {
-  const response = await deleteUploadedURL(req.params.folder, req.params.fileName);
+  const response = await deleteUploadedURL(
+    req.params.folder,
+    req.params.fileName
+  );
   res.send(response);
 });
 
@@ -83,11 +107,10 @@ route.get("/s3url-delete/:folder/:fileName", async (req, res) => {
 route.post("/rename", rename);
 route.post("/test", test);
 route.post("/changeappointment", changeAppointment);
-route.get("/dublicates",findDublicates)
-route.get("/change-status",changeStatus)
-route.get("/add-id-invoices", addCarrierIdInInvoices)
-route.get("/change-designation", changeDesignation)
-route.get("/reset-carrier", changeCarrierToInitial)
-
+route.get("/dublicates", findDublicates);
+route.get("/change-status", changeStatus);
+route.get("/add-id-invoices", addCarrierIdInInvoices);
+route.get("/change-designation", changeDesignation);
+route.get("/reset-carrier", changeCarrierToInitial);
 
 module.exports = route;

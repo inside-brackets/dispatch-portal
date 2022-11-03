@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./sidebar.css";
 import logo from "../../assets/images/logo.png";
-import logo2 from "../../assets/images/White-Christmas.png";
 import sidebar_items from "../../assets/JsonData/sidebar_routes.json";
 import { useSelector } from "react-redux";
 
@@ -27,23 +26,29 @@ const SidebarItem = (props) => {
 };
 
 const Sidebar = (props) => {
-  const { department } = useSelector((state) => state.user.user);
+  const { department, designation } = useSelector((state) => state.user.user);
   const sidebarHeading =
     department.toLowerCase() === "dispatch"
       ? "SERVICES "
       : department.toLowerCase() === "sales"
       ? "MARKETING"
       : department.toUpperCase();
+
+  const sidebarItems =
+    department === "sales" || department === "dispatch"
+      ? sidebar_items[department][designation]
+      : sidebar_items[department];
+
   return (
     <div className="sidebar">
-      <div className={process.env.REACT_APP_FALCON === "TRUE" ? `sidebar__logo_falcon`:"sidebar__logo"}>
-        <img className="logo img-fluid" src={process.env.REACT_APP_FALCON === "TRUE" ? logo : logo2} alt="company logo" />
-      </div>
+      {/* <div className="sidebar__logo">
+        <img className="logo" src={""} alt="company logo" />
+      </div> */}
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>
       <div className="sidebar-items">
-        {sidebar_items[department].map((item, index) => (
+        {sidebarItems.map((item, index) => (
           <NavLink
             activeClassName="active__sidebar"
             to={item.route}

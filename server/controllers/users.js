@@ -73,9 +73,18 @@ const getTableUsers = (req, res, next) => {
   if (req.body.joining_date) {
     req.body.joining_date === "upcoming"
       ? (filter.joining_date = { $gte: new Date() })
-      : (filter.joining_date = { $gte: moment().startOf('month'), $lte: moment().endOf('month') });
+      : (filter.joining_date = {
+          $gte: moment().startOf("month"),
+          $lte: moment().endOf("month"),
+        });
   }
-  console.log(filter);
+  let exclude = "";
+  if (req.body.department != "admin") {
+    filter.department = {
+      $nin: ["admin"],
+    };
+    exclude = "-salary";
+  }
   User.find(filter, null, {
     // skip: 0, // Starting Row
     // limit: 1, // Ending Row
@@ -83,6 +92,7 @@ const getTableUsers = (req, res, next) => {
       joining_date: -1, //Sort by Date Added DESC
     },
   })
+    .select(exclude)
     .then((users) => {
       if (search !== "") {
         search = search.trim().toLowerCase();
@@ -295,6 +305,50 @@ const countUsers = async (req, res, next) => {
   }
 };
 
+const getSalesCount = async (req, res) => {
+  console.log("getSalesCount");
+  try {
+    let filter = {
+      u_status: {
+        $in: ["probation", "active"],
+      },
+      department: {
+        $in: ["sales"],
+      },
+      designation: {
+        $nin: ["manager"],
+      },
+    };
+    let result = await User.countDocuments(filter);
+    res.status(200).send(result.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getUpcomingSalesCount = async (req, res) => {
+  console.log("getUpcomingSalesCount");
+  try {
+    let filter = {
+      u_status: {
+        $in: ["pending"],
+      },
+      department: {
+        $in: ["sales"],
+      },
+      designation: {
+        $nin: ["manager"],
+      },
+    };
+    let result = await User.countDocuments(filter);
+    res.status(200).send(result.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addNewUser,
   getUser,
@@ -305,4 +359,6 @@ module.exports = {
   login,
   refreshToken,
   countUsers,
+  getSalesCount,
+  getUpcomingSalesCount,
 };

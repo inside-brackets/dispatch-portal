@@ -16,6 +16,8 @@ const dispatchRoutes = require("./routes/dispatch");
 const notificationsRoutes = require("./routes/notification");
 const interviewRoutes = require("./routes/interview");
 
+const settingsRoutes = require("./routes/settings");
+
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
 
@@ -119,6 +121,7 @@ app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
 app.use("/notification", notificationsRoutes);
 app.use("/interviews", interviewRoutes);
+app.use("/settings", settingsRoutes);
 app.use("/", rootRoutes);
 
 app.get("/hello", (req, res) => {

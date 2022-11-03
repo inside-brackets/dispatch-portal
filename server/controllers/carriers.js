@@ -4,6 +4,7 @@ const Hcarrier = require("../models/hcarrier");
 var moment = require("moment-timezone");
 const { callAbleStates } = require("../util/convertTZ");
 const { getToken } = require("../util/getToken");
+const settings = require("../models/setting");
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
@@ -91,17 +92,28 @@ const fetchLead = async (req, res, next) => {
   Carrier.findOne({
     salesman: mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
-    address: { $regex: callAbleStates(pst), $options: "i" },
   })
     .populate("salesman", { user_name: 1 })
     .then(async (result) => {
       console.log("result", result);
       if (result === null) {
+        let prevSettings = await settings.findOne({});
+        if (!prevSettings) {
+          prevSettings = await settings.create({});
+        }
         const carrier = await Carrier.find({
           c_status: "unassigned",
           address: { $regex: callAbleStates(pst), $options: "i" },
+          mc_number: {
+            $gte: prevSettings.mcSeries.isCustom
+              ? prevSettings.mcSeries.customFrom
+              : 0,
+            $lte: prevSettings.mcSeries.isCustom
+              ? prevSettings.mcSeries.customTo
+              : 990000,
+          },
         })
-          .sort({ mc_number: 1 })
+          .sort({ mc_number: prevSettings.mcSeries.order })
           .limit(1);
         if (carrier.length > 0) {
           await Carrier.findByIdAndUpdate(
@@ -476,6 +488,43 @@ const fetchDialerCounter = async (req, res) => {
   }
 };
 
+// Free Resource a.k.a Leads
+const getLeads = async (req, res) => {
+  try {
+    let leads = await Carrier.countDocuments({
+      c_status: "unassigned",
+      mc_number: {
+        $gte: req.body.series.isCustom ? req.body.series.customFrom : 0,
+        $lte: req.body.series.isCustom ? req.body.series.customTo : 990000,
+      },
+    });
+    res.status(200).send(leads.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const freeUpLeads = async (req, res) => {
+  try {
+    await Carrier.updateMany(
+      {
+        c_status: "didnotpick",
+      },
+      { $unset: { salesman: 1 }, $set: { c_status: "unassigned" } }
+    )
+      .then((data) => {
+        res.status(200).send();
+      })
+      .catch((error) => {
+        throw error;
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addNewCarrier,
   addNewTruck,
@@ -492,4 +541,6 @@ module.exports = {
   changeTypeController,
   rejectAndRegistered,
   fetchDialerCounter,
+  getLeads,
+  freeUpLeads,
 };
