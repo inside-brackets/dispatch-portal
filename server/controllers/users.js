@@ -160,6 +160,22 @@ const updateUser = async (req, res) => {
         { new: true }
       );
     } else {
+      let userName = req.body.user_name;
+
+      if (req.body.u_status === "fired") {
+        const date = new Date();
+        userName =
+          userName +
+          "_" +
+          date.getDate() +
+          "-" +
+          date.getMonth() +
+          "-" +
+          date.getFullYear();
+      }
+
+      req.body.user_name = userName;
+
       updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
