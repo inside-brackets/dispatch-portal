@@ -27,10 +27,12 @@ td {
 
 tr:hover {
   background-color: #83c8f2;
-  color: var(--txt-white);
+  color: var(--txt-white) !important;
   
 }
-
+th,tr:hover{
+  color: black;
+}
 .table__pagination {
   display: flex;
   width: 100%;

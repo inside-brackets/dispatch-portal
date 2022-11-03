@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Table from "../components/table/SmartTable";
 import EditButton from "../components/UI/EditButton";
@@ -13,17 +13,8 @@ import Badge from "../components/badge/Badge";
 import user_image from "../assets/images/taut.png";
 import Select from "react-select";
 import TooltipCustom from "../components/tooltip/TooltipCustom"
-import Overlay from 'react-bootstrap/Overlay';
-
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-
-import ReactTooltip from "react-tooltip";
 
 const Users = () => {
-  const [show, setShow] = useState(false);
-  const target = useRef(null);
-
   const [users, setUsers] = useState("");
   const [refresh, setRefresh] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -34,6 +25,8 @@ const Users = () => {
   });
   const history = useHistory();
   const { company: selectedCompany } = useSelector((state) => state.user);
+  const departments = useSelector((state) => state.user);
+
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await axios.post(
@@ -66,11 +59,7 @@ const Users = () => {
   const addUserHandler = () => {
     setShowModal(true);
   };
-  // const renderTooltip = (props) => (
-  //   <Tooltip id="button-tooltip" {...props}>
-  //     Simple tooltip
-  //   </Tooltip>
-  // );
+
   const renderBody = (item, index) =>{
 
     return(
@@ -113,38 +102,13 @@ const Users = () => {
  
       </td>
       <td key={index} style={{position:'relative'}}>
-      {/* <OverlayTrigger
-      placement="top"
-      delay={{ show: 250, hide: 400 }}
-      overlay={<Tooltip id="button-tooltip"  
-> View Details Page</Tooltip>}
-    > */}
         <div className="edit__classUser" data-tip data-for="registerTipUser" >
-        {/* <div className="edit__class" key={index}  ref={target} onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(true)} > */}
           <EditButton
             type="open"
             onClick={() => history.push(`/users/${item._id}`)}
             />
         </div>
-        <TooltipCustom text='View Detail Page' id='registerTipUser' left='30'></TooltipCustom>
-        {/* <Overlay key={index} target={target.current} show={show} placement="top">
-        {({ placement, arrowProps, show: _show, popper, ...props }) => (
-          <div
-            {...props}
-            style={{
-              // position: 'absolute',
-              backgroundColor: 'rgba(255, 100, 100, 0.85)',
-              padding: '2px 10px',
-              color: 'white',
-              borderRadius: 3,
-              ...props.style,
-            }}
-          >
-            Simple tooltip
-          </div>
-        )}
-      </Overlay> */}
-        {/* </OverlayTrigger> */}
+        <TooltipCustom text='View Detail Page' id='registerTipUser'></TooltipCustom>
       </td>
     </tr>
   );}
@@ -196,6 +160,7 @@ const Users = () => {
                   url: `${process.env.REACT_APP_BACKEND_URL}/get-table-users`,
                   body: {
                     company: selectedCompany.value,
+                    department: departments.user.department,
                     joining_date: filter?.value,
                   },
                 }}
@@ -203,7 +168,7 @@ const Users = () => {
                 status_placeholder={"Designation:"}
                 filter={{
                   department: [
-                    { label: "sales ", value: "sales" },
+                    { label: "sales", value: "sales" },
                     { label: "dispatch", value: "dispatch" },
                     { label: "HR", value: "HR" },
                   ],
@@ -237,10 +202,6 @@ const Users = () => {
           />
         </MyModal>
       </Row>
-      {/* <Button variant="danger" ref={target} onMouseEnter={() => setShow(!show)} onMouseLeave={() => setShow(!show)}>
-        Click me to see
-      </Button> */}
-
     </>
   );
 };

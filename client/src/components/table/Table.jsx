@@ -41,7 +41,7 @@ const Table = (props) => {
         <table>
           {props.headData && props.renderHead ? (
             <thead>
-              <tr>
+              <tr className="table-head">
                 {props.headData.map((item, index) =>
                   props.renderHead(item, index)
                 )}

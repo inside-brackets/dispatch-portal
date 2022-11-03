@@ -10,9 +10,6 @@ import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 import PdfTest from "../../components/PdfTest";
 import axios from "axios";
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-
 import TooltipCustom from '../../components/tooltip/TooltipCustom'
 
 const invoiceTableHead = [
