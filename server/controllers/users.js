@@ -310,6 +310,7 @@ const countUsers = async (req, res, next) => {
       },
       { $group: { _id: { department: "$status" }, count: { $sum: 1 } } },
     ]);
+    
     result.push(
       {
         _id: { department: "Joined this month" },
