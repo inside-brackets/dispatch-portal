@@ -10,16 +10,6 @@ const {
 } = require("../controllers/invoices");
 const loadsController = require("../controllers/loads");
 const userController = require("../controllers/users");
-const {
-  rename,
-  test,
-  changeAppointment,
-  findDublicates,
-  changeStatus,
-  addCarrierIdInInvoices,
-  changeDesignation,
-  changeCarrierToInitial,
-} = require("../controllers/db");
 
 const { setIp, getIpList } = require("../util/ipList");
 const { generateUploadURL, deleteUploadedURL } = require("../util/s3");
@@ -102,15 +92,5 @@ route.get("/s3url-delete/:folder/:fileName", async (req, res) => {
   );
   res.send(response);
 });
-
-// edit database
-route.post("/rename", rename);
-route.post("/test", test);
-route.post("/changeappointment", changeAppointment);
-route.get("/dublicates", findDublicates);
-route.get("/change-status", changeStatus);
-route.get("/add-id-invoices", addCarrierIdInInvoices);
-route.get("/change-designation", changeDesignation);
-route.get("/reset-carrier", changeCarrierToInitial);
 
 module.exports = route;

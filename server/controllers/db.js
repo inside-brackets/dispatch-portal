@@ -130,11 +130,10 @@ const addCarrierIdInInvoices = async (req, res) => {
   }
 };
 
-const changeDesignation = async (req, res) => {
-  console.log("start");
+const getUniqueDesignations = async (req, res) => {
   try {
-    const bornCity = await User.find().distinct("designation");
-    res.send(bornCity);
+    const designations = await User.find({}).distinct("designation");
+    res.send(designations);
   } catch (error) {
     res.send(error.message);
   }
@@ -175,6 +174,7 @@ module.exports = {
   findDublicates,
   changeStatus,
   addCarrierIdInInvoices,
-  changeDesignation,
+  getUniqueDesignations,
   changeCarrierToInitial,
+  getUniqueDesignations,
 };
