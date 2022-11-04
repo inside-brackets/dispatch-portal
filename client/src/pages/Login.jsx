@@ -64,14 +64,14 @@ const Login = () => {
                   user.company === "alpha"
                     ? {
                         label:
-                          process.env.REACT_APP_FALCON === "TRUE"
+                          process.env.REACT_APP_FALCON === "true"
                             ? "Alpha Dispatch Service"
                             : "Company A",
                         value: "alpha",
                       }
                     : {
                         label:
-                          process.env.REACT_APP_FALCON === "TRUE"
+                          process.env.REACT_APP_FALCON === "true"
                             ? "Elite Dispatch Service"
                             : "Company B",
                         value: "elite",
@@ -164,7 +164,7 @@ const Login = () => {
         <Col md={6}>
           <Image
             className="justify-content-start align-items-center vh-100 vw-100"
-            src={process.env.REACT_APP_FALCON === "TRUE" ? logo : logo2}
+            src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
             fluid
           />
         </Col>

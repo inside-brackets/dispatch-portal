@@ -123,14 +123,14 @@ const DashboardAdmin = () => {
             options={[
               {
                 label:
-                  process.env.REACT_APP_FALCON === "TRUE"
+                  process.env.REACT_APP_FALCON === "true"
                     ? "Elite Dispatch Service"
                     : "Company B",
                 value: "elite",
               },
               {
                 label:
-                  process.env.REACT_APP_FALCON === "TRUE"
+                  process.env.REACT_APP_FALCON === "true"
                     ? "Alpha Dispatch Service"
                     : "Company A",
                 value: "alpha",
