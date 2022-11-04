@@ -6,7 +6,7 @@ import { themeActions } from "../store/theme";
 import { Col, Row, Form, Image, Button, Spinner } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
-import logo2 from "../assets/images/White Christmas2.png";
+import logo2 from "../assets/images/White-Christmas.png";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwtDecode from "jwt-decode";
@@ -161,9 +161,9 @@ const Login = () => {
             </Form>
           </FormContainer>
         </Col>
-        <Col md={6}>
+        <Col md={6} className={`${process.env.REACT_APP_FALCON === "true" ? "":"logo-inside"}`}>
           <Image
-            className="justify-content-start align-items-center vh-100 vw-100"
+            className={`justify-content-start align-items-center ${process.env.REACT_APP_FALCON === "true" ? "vh-100 vw-100":"logo-inside-ml"}`}
             src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
             fluid
           />
