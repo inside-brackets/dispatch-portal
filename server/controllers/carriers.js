@@ -238,12 +238,6 @@ const getCarriers = async (req, res, next) => {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
-  if (req.body.trucks_status?.length > 0) {
-    filter["trucks.t_status"] = {
-      $in: req.body.filter.trucks_status.map((item) => item.value),
-    };
-  }
-console.log("truck filter",filter)
   try {
     const result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
@@ -333,54 +327,27 @@ const countCarriers = async (req, res, next) => {
     total: 0,
   };
   try {
-    console.log("start", new Date());
-
-    const carrier = await Carrier.find({
-      c_status: { $nin: "unassigned" },
-    })
-      .populate("salesman", { company: 1 })
-      .lean();
-    if (carrier.length > 0) {
-      let filteredCarrier = carrier.filter(
-        (carry) => carry.salesman?.company == req.body.company
+    stats.total = await Carrier.countDocuments({});
+    stats.appointments = await Carrier.find({
+      c_status: "appointment",
+    }).countDocuments();
+    registeredCarriers = await Carrier.find({
+      c_status: "registered",
+    });
+    registeredCarriers.map((carrier) => {
+      const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
+        ([pending, active, fail], item) =>
+          item.t_status === "pending"
+            ? [[...pending, item], active, fail]
+            : item.t_status === "active"
+            ? [pending, [...active, item], fail]
+            : [pending, active, [...fail, item]],
+        [[], [], []]
       );
-      stats.total = await Carrier.countDocuments({});
-      stats.appointments = filteredCarrier.filter(
-        (carry) => carry.c_status == "appointment"
-      ).length;
-      const registeredCarrier = filteredCarrier.filter(
-        (carry) => carry.c_status == "registered"
-      );
-      for (let i = 0; i < registeredCarrier.length; i++) {
-        const carrier = registeredCarrier[i];
-        const res = carrier.trucks.reduce(function (acc, curr) {
-          return (
-            acc[curr.t_status]
-              ? ++acc[curr.t_status]
-              : (acc[curr.t_status] = 1),
-            acc
-          );
-        }, {});
+      stats.pendingTrucks += pendingTrucks.length;
+      stats.activeTrucks += activeTrucks.length;
+    });
 
-        if (res["active"] > 0) {
-          stats.activeTrucks = stats["activeTrucks"] + res["active"];
-        } else if (res["pending"] > 0) {
-          stats.pendingTrucks = stats["pendingTrucks"] + res["pending"];
-        }
-        // const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
-        //   ([pending, active, fail], item) =>
-        //     item.t_status === "pending"
-        //       ? [[...pending, item], active, fail]
-        //       : item.t_status === "active"
-        //       ? [pending, [...active, item], fail]
-        //       : [pending, active, [...fail, item]],
-        //   [[], [], []]
-        // );
-        // pendingCount += pendingTrucks.length;
-        // activeCount += activeTrucks.length;
-      }
-      console.log(stats, new Date());
-    }
     return res.send(stats);
   } catch (error) {
     return res.send(error.message);

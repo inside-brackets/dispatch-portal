@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
 import useHttp from "../../hooks/use-https";
 import MyButton from "../../components/UI/MyButton";
 import Modal from "../../components/modals/MyModal";

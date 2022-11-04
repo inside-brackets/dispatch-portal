@@ -55,6 +55,14 @@ const getUser = (req, res) => {
 };
 const getTableUsers = (req, res, next) => {
   filter = {};
+  let exclude = "";
+  console.log("req.body.department",req.body.department)
+  if (req.body.department !== "admin") {
+    filter.department = {
+      $nin: ["admin"],
+    };
+    exclude = "-salary";
+  }
   filter.u_status = {
     $nin: ["fired"],
   };
@@ -78,13 +86,8 @@ const getTableUsers = (req, res, next) => {
           $lte: moment().endOf("month"),
         });
   }
-  let exclude = "";
-  if (req.body.department != "admin") {
-    filter.department = {
-      $nin: ["admin"],
-    };
-    exclude = "-salary";
-  }
+  
+
   User.find(filter, null, {
     // skip: 0, // Starting Row
     // limit: 1, // Ending Row
@@ -116,7 +119,11 @@ const getTableUsers = (req, res, next) => {
     });
 };
 
-const getUsers = (req, res, next) => {
+const getUsers = (req, res, next) => 
+
+
+
+{
   let filter = {};
   filter.u_status = {
     $nin: ["fired"],
@@ -303,6 +310,7 @@ const countUsers = async (req, res, next) => {
       },
       { $group: { _id: { department: "$status" }, count: { $sum: 1 } } },
     ]);
+    
     result.push(
       {
         _id: { department: "Joined this month" },

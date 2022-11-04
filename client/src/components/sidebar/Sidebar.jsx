@@ -27,6 +27,7 @@ const SidebarItem = (props) => {
 
 const Sidebar = (props) => {
   const { department, designation } = useSelector((state) => state.user.user);
+  console.log(department, designation)
   const sidebarHeading =
     department.toLowerCase() === "dispatch"
       ? "SERVICES "
@@ -34,7 +35,8 @@ const Sidebar = (props) => {
       ? "MARKETING"
       : department.toUpperCase();
 
-  const sidebarItems =
+      console.log(sidebarHeading)
+  const sidebarItems = 
     department === "sales" || department === "dispatch"
       ? sidebar_items[department][designation]
       : sidebar_items[department];
@@ -48,7 +50,9 @@ const Sidebar = (props) => {
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>
       <div className="sidebar-items">
-        {sidebarItems.map((item, index) => (
+        {sidebarItems.map((item, index) => {
+          console.log(item,index)
+          return (
           <NavLink
             activeClassName="active__sidebar"
             to={item.route}
@@ -56,7 +60,7 @@ const Sidebar = (props) => {
           >
             <SidebarItem title={item.display_name} icon={item.icon} />
           </NavLink>
-        ))}
+)})}
       </div>
     </div>
   );

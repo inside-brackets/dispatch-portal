@@ -370,9 +370,7 @@ const topDispatcher = async (req, res, next) => {
       },
       { $sort: { total: -1 } },
     ]);
-    console.log("beofre", user);
     const result = user.filter((item) => item.total > 0);
-    console.log("after", result);
     return res.send(result);
   } catch (error) {
     res.send(error.message);

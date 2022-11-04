@@ -435,12 +435,11 @@ const UserDetailPage = ({ user, callBack }) => {
                     name="designation"
                     required
                   >
-                    <option value={null}>Select Department</option>
-                    <option value="Company">Company</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Senior Employee">Senior Employee</option>
-                    <option value="Junior Employee">Junior Employee</option>
-                    <option value="Team Lead">Team Lead</option>
+                    <option value={null}>Select Designation</option>
+                    <option value="company">Company</option>
+                    <option value="manager">Manager</option>
+                    <option value="team_lead">Team Lead</option>
+                    <option value="senior_employee">Employee</option>
                   </Form.Control>
                 </Form.Group>
 
