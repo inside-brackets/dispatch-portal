@@ -37,7 +37,6 @@ const Documents = ({ user, profile, callBack }) => {
           <Col>
             <h4>Documents</h4>
           </Col>
-          {department === "admin" && (
             <Col className="mb-4" md={2}>
               <p
                 style={{
@@ -52,7 +51,6 @@ const Documents = ({ user, profile, callBack }) => {
                 + Add Document
               </p>
             </Col>
-          )}
           <hr />
         </Row>
 
