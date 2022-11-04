@@ -407,3 +407,11 @@ th {
   z-index: 99;
   font-size: x-large;
 }
+.logo-inside{
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.logo-inside-ml{
+  margin-left: -7rem;
+}
