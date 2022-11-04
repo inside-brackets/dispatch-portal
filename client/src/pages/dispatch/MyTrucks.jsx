@@ -87,7 +87,9 @@ const MyTrucks = () => {
       .post(`${process.env.REACT_APP_BACKEND_URL}/getcarriers`, {
         "trucks.dispatcher": currUserId,
         c_status: "registered",
-        "trucks.t_status": statusFilter,
+        "trucks.t_status": {
+          $in: statusFilter.map((item) => item.value),
+        },
       })
       .then(transformData)
       .catch((err) => {
@@ -123,7 +125,7 @@ const MyTrucks = () => {
       </div>
     );
   return (
-    <div className="row" >
+    <div className="row">
       <div className="row align-items-center mb-3">
         <div className="col-md-3">
           <label>Search</label>
@@ -137,7 +139,7 @@ const MyTrucks = () => {
           />
         </div>
         {/* form-select */}
-        <div className="col-md-4" >
+        <div className="col-md-4">
           <label>Search</label>
           <Select
             // className=""

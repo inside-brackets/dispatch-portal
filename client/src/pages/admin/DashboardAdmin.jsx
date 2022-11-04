@@ -75,6 +75,7 @@ const DashboardAdmin = () => {
         company: selectedCompany.value,
       })
       .then(({ data }) => {
+        console.log(data);
         setCarriers({
           carrier: data.total,
           appointment: data.appointments,
@@ -105,29 +106,37 @@ const DashboardAdmin = () => {
 
   return (
     <div>
-      <Row className='my-4'>
+      <Row className="my-4">
         <Col md={4}>
-        <MySelect
-          isMulti={false}
-          value={selectedCompany}
-          onChange={(option) => {
-            dispatch(userActions.changeCompany(option));
-            var color =
-              option.value === "elite" ? "theme-color-blue" : "theme-color-red";
-            dispatch(themeActions.setColor(color));
-            localStorage.setItem("selectedCompany", JSON.stringify(option));
-          }}
-          options={[
-            {
-              label:process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
-              value: "elite",
-            },
-            {
-              label:process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
-              value: "alpha",
-            },
-          ]}
-        />
+          <MySelect
+            isMulti={false}
+            value={selectedCompany}
+            onChange={(option) => {
+              dispatch(userActions.changeCompany(option));
+              var color =
+                option.value === "elite"
+                  ? "theme-color-blue"
+                  : "theme-color-red";
+              dispatch(themeActions.setColor(color));
+              localStorage.setItem("selectedCompany", JSON.stringify(option));
+            }}
+            options={[
+              {
+                label:
+                  process.env.REACT_APP_FALCON === "TRUE"
+                    ? "Elite Dispatch Service"
+                    : "Company B",
+                value: "elite",
+              },
+              {
+                label:
+                  process.env.REACT_APP_FALCON === "TRUE"
+                    ? "Alpha Dispatch Service"
+                    : "Company A",
+                value: "alpha",
+              },
+            ]}
+          />
         </Col>
       </Row>
       <Row>
