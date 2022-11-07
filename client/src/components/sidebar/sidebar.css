@@ -6,6 +6,8 @@
   top: 0;
   background-color: var(--main-bg);
   box-shadow: var(--box-shadow);
+  padding-top: 80px;
+  z-index: 1;
 }
 
 .sidebar__logo {
@@ -17,7 +19,7 @@
 }
 
 .sidebar__logo > img {
-  height: 60px;
+  height: 40px;
 }
 .sidebar__logo_falcon > img {
   height: 200px;

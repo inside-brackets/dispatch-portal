@@ -1,9 +1,13 @@
 .topnav {
-  padding: 30px;
+  padding: 0px 16px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: var(--topnav-height);
+  height: 80px;
+  background-color: var(--main-color);
+  z-index: 999;
+  position: fixed;
 }
 
 .topnav__search > input {
@@ -68,6 +72,7 @@
 .topnav__right-user__name {
   font-size: 1rem;
   font-weight: 600;
+  color: #fff;
 }
 
 .bd-brand-item {

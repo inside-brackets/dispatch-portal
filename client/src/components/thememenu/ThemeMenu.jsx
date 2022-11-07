@@ -114,7 +114,7 @@ const ThemeMenu = () => {
         className="dropdown__toggle"
         onClick={() => setActiveMenu()}
       >
-        <i className="bx bx-palette"></i>
+        <i className="bx bx-palette" style={{ color: "#FFF" }}></i>
       </button>
       <div ref={menu_ref} className="theme-menu">
         <h4>Theme settings</h4>
@@ -138,7 +138,7 @@ const ThemeMenu = () => {
             ))}
           </ul>
         </div>
-        { /*<div className="theme-menu__select">
+        {/*<div className="theme-menu__select">
           <span>Choose color</span>
           <ul className="mode-list">
             {color_settings.map((item, index) => (
