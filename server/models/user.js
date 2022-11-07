@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     },
     u_status: {
       type: String,
-      enum: ["probation", "active", "fired", "inactive","resigned"],
+      enum: ["probation", "active", "fired", "inactive", "resigned"],
       default: "active",
     },
     password: String,
@@ -28,6 +28,21 @@ const userSchema = new mongoose.Schema(
       type: Number,
       require: true,
       trim: true,
+    },
+    dispatch_salary_slots: {
+      first: {
+        lower_bound: { type: Number, default: 1500 },
+        upper_bound: { type: Number, default: 4500 },
+        percentage: { type: Number, default: 8 },
+      },
+      second: {
+        upper_bound: { type: Number, default: 7000 },
+        percentage: { type: Number, default: 10 },
+      },
+      third: {
+        upper_bound: { type: Number, default: 9999999 },
+        percentage: { type: Number, default: 12 },
+      },
     },
     joining_date: {
       type: Date,
@@ -60,8 +75,8 @@ const userSchema = new mongoose.Schema(
       enum: ["elite", "alpha", "falcon"],
       required: true,
     },
-    leaving_date:{
-      type:Date
+    leaving_date: {
+      type: Date,
     },
     files: [
       {
