@@ -36,7 +36,8 @@
 }
 .file_input_label {
     font-weight: bolder;
-    font-size: 19px
+    font-size: 19px;
+    width: 151px;
 }
 
 .actions_wrapper {
@@ -46,9 +47,14 @@
 
 .actions_button_wrapper {
     display: flex;
-    justify-content: space-around
+    justify-content: space-between;
+    padding: 0px 6px;
 }
-
+.actions_button_misc_wrapper{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 13px;
+}
 .action_button {
     padding: 0;
     background-color: transparent;
@@ -63,4 +69,14 @@
 
 .fileHeading{
     padding-left: 45px;
+    font-size: 1.35rem !important;
+}
+/* .fileHeading{
+    font-size: 1.35rem !important;
+} */
+.misc_file_name{
+    padding-left: 3rem;
+}
+.miscWrapper{
+    padding-bottom:3px;
 }

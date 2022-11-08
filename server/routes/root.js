@@ -23,6 +23,7 @@ route.post("/getcarrier", carriersController.getCarrier);
 route.post("/get-table-carriers", carriersController.getTableCarriers);
 route.post("/getcarriers", carriersController.getCarriers);
 route.put("/updatecarrier/:mcNumber", carriersController.updateCarrier);
+route.post("/updatecarriermisc/:mcNumber", carriersController.updateCarrierMisc);
 route.put("/addnewTruck/:mcNumber", carriersController.addNewTruck);
 route.get(
   "/deletetruck/:mcNumber/:truckNumber",

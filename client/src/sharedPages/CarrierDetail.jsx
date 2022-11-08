@@ -6,7 +6,9 @@ import TooltipCustom from "../components/tooltip/TooltipCustom";
 import TextArea from "../components/UI/TextArea";
 import Loader from "react-loader-spinner";
 import BackButton from "../components/UI/BackButton";
+import DeleteConfirmation from "../components/modals/DeleteConfirmation"
 import Modal from "../components/modals/MyModal";
+import MyModal from "../components/modals/MyModal";
 import axios from "axios";
 import { Form, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -33,6 +35,8 @@ const CarrierDetail = () => {
   const [rmodal, setrModal] = useState();
   const { sendRequest: updateCarrier } = useHttp();
 
+
+
   const factAddressRef = useRef();//
   const factPhoneRef = useRef();//
   const factAgentNameRef = useRef();//
@@ -58,8 +62,14 @@ const CarrierDetail = () => {
   const [onSelectedNoaFile, setonSelectedNoaFile] = useState()
   const [onSelectedW9File, setonSelectedW9File] = useState()
 
+  const [selectedMiscFile, setselectedMiscFile] = useState(null);
+  const [nameMisc, setnameMisc] = useState(null);
+
+  const [showMicsModal, setshowMicsModal] = useState(false)
   const [viewfile, setviewfile] = useState(false)
 
+  const [rerender, setrerender] = useState(false)
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -82,7 +92,7 @@ const CarrierDetail = () => {
         setonSelectedW9File(undefined);
         setIsLoading(false);
       });
-  }, [params.mc, viewfile]);
+  }, [params.mc, viewfile,rerender]);
   const [selectedPayment, setSelectedPayment] = useState("");
   const appointmentRef = useRef();
   // const selectedPayment = useRef();
@@ -385,6 +395,60 @@ const CarrierDetail = () => {
     toast.success(carrier.w9_file ? "File Updated" : "File Uploaded");
 
   }
+
+  const onSelectFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setselectedMiscFile(undefined);
+      return;
+    }
+    // I've kept this example simple by using the first image instead of multiple
+    setselectedMiscFile(e.target.files[0]);
+  };
+
+const handleSubmitMisc =async (e)=>{
+  console.log("handleSubmit")
+  
+  console.log("filename",nameMisc)
+    const { data: url } = await axios(
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}.${selectedMiscFile.type.split("/")[1]}`
+      );
+    await axios.put(url, selectedMiscFile);
+      console.log(url.split("?")[0], " url of Misc")
+    const res = await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/updatecarriermisc/${carrier.mc_number}`,
+      {
+        files: {
+          name: nameMisc,
+          file: url.split("?")[0],
+        },
+        updateFiles: true,
+      }
+    );
+    console.log(res, " res")
+    setshowMicsModal(false)
+    setrerender(!rerender)
+    toast.success("File Uploaded");
+  };
+  const submitDeleteMisc=async () => {
+    console.log(deleteModal,"deletemodal")
+    console.log("submitdeletedMisc")
+    await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+      {
+        files: carrier.files.filter((item) => item._id !== deleteModal._id),
+      }
+    );
+    await axios(
+      `${
+        process.env.REACT_APP_BACKEND_URL
+      }/s3url-delete/carrier_documents/${deleteModal.file?.substring(
+        deleteModal.file?.lastIndexOf("/") + 1
+      )}`
+    );
+    setDeleteModal(false);
+    setrerender(!rerender)
+    toast.success("File Deleted");
+  };
 
   return (
     <div className="row">
@@ -897,8 +961,8 @@ const CarrierDetail = () => {
 {/* MC FILE START */}
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} className="fileHeading">
-                  <h3 className=""> MC </h3>
+                <Col md={2} >
+                  <h3 className="fileHeading"> MC </h3>
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier">
                   <Form.Label className="file_input_label">{carrier.mc_file ? "file uploaded" : "No file uploaded"}</Form.Label>
@@ -927,8 +991,8 @@ const CarrierDetail = () => {
 {/* noa FILE START */}
 <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} className="fileHeading">
-                  <h3> Noa </h3>
+                <Col md={2} >
+                  <h3 className="fileHeading"> Noa </h3>
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier">
                   <Form.Label className="file_input_label">{carrier.noa_file? "file uploaded" : "No file uploaded"}</Form.Label>
@@ -957,8 +1021,8 @@ const CarrierDetail = () => {
 {/* w9 FILE START */}
 <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} className="fileHeading">
-                  <h3> W9 </h3>
+                <Col md={2} >
+                  <h3 className="fileHeading"> W9 </h3>
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier">
                   <Form.Label className="file_input_label">{carrier.w9_file ? "file uploaded" : "No file uploaded"}</Form.Label>
@@ -987,8 +1051,8 @@ const CarrierDetail = () => {
 {/* insurance_file FILE START */}
 <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} className="fileHeading">
-                  <h3> Insurance </h3>
+                <Col md={2} >
+                  <h3 className="fileHeading"> Insurance </h3>
                 </Col>
                 
                 <Form.Group as={Col} md={4} className="file__input__contaier">
@@ -1018,8 +1082,96 @@ const CarrierDetail = () => {
 {/* insurance_file FILE END */}
 
               {/* Misc Files */}
+<Row>
+{carrier.files?.map((file) => {
+          return (
+            <div key={file.file} className="miscWrapper">
+              <Row className="justify-content-start" >
+                <Col md={6}>
+                  <h5 className="misc_file_name"> {file.name.length>10?file.name.substring(0,11)+"...":file.name} </h5>
+                </Col>
+                <Col md={1}>
+                <TooltipCustom text='view file' id={file.name} ></TooltipCustom>
+                <TooltipCustom text='delete file' id={file.file} ></TooltipCustom>
+                <div className="actions_button_misc_wrapper">
+                  <div data-tip data-for={file.file}>
+                    <span onClick={() => setDeleteModal(file)}>
+                      <i className="bx bx-trash-alt action-button"></i>
+                    </span>
+                    </div>
+                    <div data-tip data-for={file.name}>
+                  <a href={file.file}>
+                    <i className="bx bx-show-alt action-button"></i>
+                  </a>
+                  </div>
+                </div>
+                </Col>
+              </Row>
+            </div>
+          );
+        })}
+</Row>
 
+<DeleteConfirmation
+        showModal={deleteModal}
+        confirmModal={submitDeleteMisc}
+        hideModal={() => setDeleteModal(false)}
+        message={"Are you Sure to want to delete File?"}
+        title="Delete Confirmation"
+      />
 
+<Row>
+  <Col md={2}><Button onClick={()=>{setshowMicsModal(true)}}>Add Misc</Button></Col>
+</Row>
+<Row>
+<MyModal
+        size="lg"
+        show={showMicsModal}
+        heading="Add Document"
+        onClose={() => setshowMicsModal(false)}
+        style={{ width: "auto" }}
+      >
+
+          <Row className="justify-content-center">
+            <Form.Group as={Col} md={10} controlId="validationCustom01">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                required
+                type="text"
+                onChange={(e) => setnameMisc(e.target.value)}
+                placeholder="First name"
+              />
+              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+            </Form.Group>
+          </Row>
+          <Row className="justify-content-center">
+            <Form.Group as={Col} md={10} className="position-relative my-5">
+              <Form.Label>Attachments</Form.Label>
+              <Form.Control
+                type="file"
+                required
+                name="file"
+                onChange={onSelectFile}
+              />
+              <Form.Control.Feedback
+                type="invalid"
+                tooltip
+              ></Form.Control.Feedback>
+            </Form.Group>
+          </Row>{" "}
+          <Button
+            style={{
+              float: "right",
+            }}
+            // disabled={loading}
+            onClick={handleSubmitMisc}
+            type="submit"
+          >
+            Add
+          </Button>
+    </MyModal>
+
+</Row>
 
 
               {/* Mise Files */}
@@ -1175,11 +1327,6 @@ const CarrierDetail = () => {
         >
           <p>Are You Sure you want to deactivate?</p>
         </Modal>
-
-
-
-
-
         <TruckTable
           mc={carrier.mc_number}
           trucks={trucks}
