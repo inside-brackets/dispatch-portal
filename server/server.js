@@ -18,6 +18,7 @@ const interviewRoutes = require("./routes/interview");
 const dbOperationsRoutes = require("./routes/dbOperations");
 
 const settingsRoutes = require("./routes/settings");
+const salaryRoutes = require("./routes/salary");
 
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
@@ -124,6 +125,7 @@ app.use("/dispatch", dispatchRoutes);
 app.use("/notification", notificationsRoutes);
 app.use("/interviews", interviewRoutes);
 app.use("/settings", settingsRoutes);
+app.use("/salary", salaryRoutes);
 app.use("/dbop", dbOperationsRoutes);
 app.use("/", rootRoutes);
 

@@ -3,43 +3,31 @@ import Table from "react-bootstrap/Table";
 
 import "./SalarySlots.css";
 
-function SalarySlots({ user, editable }) {
-  const [first, setFirst] = useState({});
-  const [second, setSecond] = useState({});
-  const [third, setThird] = useState({});
-
-  useEffect(() => {
-    setFirst({
-      lower: user.dispatch_salary_slots.first.lower_bound,
-      upper: user.dispatch_salary_slots.first.upper_bound,
-      percent: user.dispatch_salary_slots.first.percentage,
-    });
-    setSecond({
-      upper: user.dispatch_salary_slots.second.upper_bound,
-      percent: user.dispatch_salary_slots.second.percentage,
-    });
-    setThird({
-      upper: user.dispatch_salary_slots.third.upper_bound,
-      percent: user.dispatch_salary_slots.third.percentage,
-    });
-  }, [user]);
-
+function SalarySlots({
+  first,
+  setFirst,
+  second,
+  setSecond,
+  third,
+  setThird,
+  editable,
+}) {
   const handleFirstChange = (e) => {
     e.persist();
     if (e.currentTarget.id === "lower") {
       setFirst((prevState) => ({
         ...prevState,
-        lower: Number(e.target.value),
+        lower_bound: Number(e.target.value),
       }));
     } else if (e.currentTarget.id === "upper") {
       setFirst((prevState) => ({
         ...prevState,
-        upper: Number(e.target.value),
+        upper_bound: Number(e.target.value),
       }));
     } else if (e.currentTarget.id === "percent") {
       setFirst((prevState) => ({
         ...prevState,
-        percent: Number(e.target.value),
+        percentage: Number(e.target.value),
       }));
     }
   };
@@ -49,12 +37,12 @@ function SalarySlots({ user, editable }) {
     if (e.currentTarget.id === "upper") {
       setSecond((prevState) => ({
         ...prevState,
-        upper: Number(e.target.value),
+        upper_bound: Number(e.target.value),
       }));
     } else if (e.currentTarget.id === "percent") {
       setSecond((prevState) => ({
         ...prevState,
-        percent: Number(e.target.value),
+        percentage: Number(e.target.value),
       }));
     }
   };
@@ -64,12 +52,12 @@ function SalarySlots({ user, editable }) {
     if (e.currentTarget.id === "upper") {
       setThird((prevState) => ({
         ...prevState,
-        upper: Number(e.target.value),
+        upper_bound: Number(e.target.value),
       }));
     } else if (e.currentTarget.id === "percent") {
       setThird((prevState) => ({
         ...prevState,
-        percent: Number(e.target.value),
+        percentage: Number(e.target.value),
       }));
     }
   };
@@ -94,36 +82,36 @@ function SalarySlots({ user, editable }) {
               <input
                 className="custom-input"
                 id="lower"
-                value={first.lower ?? 0}
+                value={first.lower_bound ?? 0}
                 onChange={handleFirstChange}
               />
             </td>
           ) : (
-            <td className="text-center">{first.lower ?? "-"}</td>
+            <td className="text-center">{first.lower_bound ?? "-"}</td>
           )}
           {editable ? (
             <td className="text-center">
               <input
                 className="custom-input"
                 id="upper"
-                value={first.upper ?? 0}
+                value={first.upper_bound ?? 0}
                 onChange={handleFirstChange}
               />
             </td>
           ) : (
-            <td className="text-center">{first.upper ?? "-"}</td>
+            <td className="text-center">{first.upper_bound ?? "-"}</td>
           )}
           {editable ? (
             <td className="text-center">
               <input
                 className="custom-input"
                 id="percent"
-                value={first.percent ?? 0}
+                value={first.percentage ?? 0}
                 onChange={handleFirstChange}
               />
             </td>
           ) : (
-            <td className="text-center">{first.percent ?? "-"}%</td>
+            <td className="text-center">{first.percentage ?? "-"}%</td>
           )}
         </tr>
         <tr>
@@ -134,36 +122,36 @@ function SalarySlots({ user, editable }) {
               <input
                 className="custom-input"
                 id="upper"
-                value={first.upper ?? 0}
+                value={first.upper_bound ?? 0}
                 onChange={handleFirstChange}
               />
             </td>
           ) : (
-            <td className="text-center">{first.upper ?? "-"}</td>
+            <td className="text-center">{first.upper_bound ?? "-"}</td>
           )}
           {editable ? (
             <td className="text-center">
               <input
                 className="custom-input"
                 id="upper"
-                value={second.upper ?? 0}
+                value={second.upper_bound ?? 0}
                 onChange={handleSecondChange}
               />
             </td>
           ) : (
-            <td className="text-center">{second.upper ?? "-"}</td>
+            <td className="text-center">{second.upper_bound ?? "-"}</td>
           )}
           {editable ? (
             <td className="text-center">
               <input
                 className="custom-input"
                 id="percent"
-                value={second.percent ?? 0}
+                value={second.percentage ?? 0}
                 onChange={handleSecondChange}
               />
             </td>
           ) : (
-            <td className="text-center">{second.percent ?? "-"}%</td>
+            <td className="text-center">{second.percentage ?? "-"}%</td>
           )}
         </tr>
         <tr>
@@ -174,36 +162,36 @@ function SalarySlots({ user, editable }) {
               <input
                 className="custom-input"
                 id="upper"
-                value={second.upper ?? 0}
+                value={second.upper_bound ?? 0}
                 onChange={handleSecondChange}
               />
             </td>
           ) : (
-            <td className="text-center">{second.upper ?? "-"}</td>
+            <td className="text-center">{second.upper_bound ?? "-"}</td>
           )}
           {editable ? (
             <td className="text-center">
               <input
                 className="custom-input"
                 id="upper"
-                value={third.upper ?? 0}
+                value={third.upper_bound ?? 0}
                 onChange={handleThirdChange}
               />
             </td>
           ) : (
-            <td className="text-center">{third.upper ?? "-"}</td>
+            <td className="text-center">{third.upper_bound ?? "-"}</td>
           )}
           {editable ? (
             <td className="text-center">
               <input
                 className="custom-input"
                 id="percent"
-                value={third.percent ?? 0}
+                value={third.percentage ?? 0}
                 onChange={handleThirdChange}
               />
             </td>
           ) : (
-            <td className="text-center">{third.percent ?? "-"}%</td>
+            <td className="text-center">{third.percentage ?? "-"}%</td>
           )}
         </tr>
       </tbody>
