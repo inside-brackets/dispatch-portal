@@ -2,7 +2,12 @@
   border: none;
   background-color: var(--main-color-blue);
   height: 40px;
-  width: 150px;
+  min-width: 150px;
+}
+.button-size{
+  border: none;
+  height: 40px;
+  min-width: 150px;
 }
 
 .mybutton:hover {

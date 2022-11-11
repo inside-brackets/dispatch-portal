@@ -102,11 +102,13 @@ const Table = (props) => {
                     onChange={(e) => setStartDate(e.target.value)}
                     type="date"
                     className="form-control"
+                    style={{marginBottom: "20px"}}
                   />
                 </Col>
                 <Col md={3}>
                   <label>To</label>
                   <input
+                    style={{marginBottom: "20px"}}
                     disabled={!startDate}
                     onChange={(e) => {
                       setEndDate(e.target.value);

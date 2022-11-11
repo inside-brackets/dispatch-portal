@@ -32,15 +32,16 @@ const Table = (props) => {
 
   return (
     <div>
-      <div
-        className={`table-wrapper ${
+      <div 
+        className={`table-wrapper  ${
           props.overflowHidden ? "overflow__hidden" : ""
         }`}
       >
+        <div className="d-flex justify-content-center">
         <table>
           {props.headData && props.renderHead ? (
             <thead>
-              <tr>
+              <tr className="table-head">
                 {props.headData.map((item, index) =>
                   props.renderHead(item, index)
                 )}
@@ -53,6 +54,7 @@ const Table = (props) => {
             </tbody>
           ) : null}
         </table>
+        </div>
       </div>
       {pages > 1 ? (
         <div className="table__pagination">

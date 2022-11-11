@@ -20,7 +20,7 @@ const customerTableHead = [
   "Pickup  ",
   "Drop ",
   "Status",
-  "",
+  "Actions",
 ];
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -87,7 +87,7 @@ const LoadTable = ({ truck_number, carrier }) => {
       </td>
 
       <td>
-        <div className="edit__class">
+        <div className="edit__class"     >
           <EditButton
             type="edit"
             onClick={() => {
@@ -107,25 +107,26 @@ const LoadTable = ({ truck_number, carrier }) => {
   );
   return (
     <div>
-      <Row>
-        <h2>Loads:</h2>
-        <Col></Col>
-        <Col className="text-center">
+      <Row >
+        
+        <Col md="9"><h2>Loads:</h2></Col>
+        <Col md='3' className="text-center mb-4">
           <BButton
             variant="success"
             size="lg"
             onClick={invoiceModalHandler}
-            className="mb-4"
-          >
+            className=" "
+          style={{margin:'0px'}}>
             Generate Invoice
           </BButton>{" "}
-        </Col>
-        <Col className="text-center">
-          {" "}
           <BButton size="lg" onClick={loadModalHandler}>
             Add Loads
           </BButton>
         </Col>
+        {/* <Col className="text-center">
+          {" "}
+
+        </Col> */}
       </Row>
       <Row>
         <div className="card">

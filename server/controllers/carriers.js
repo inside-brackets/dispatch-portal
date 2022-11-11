@@ -4,6 +4,7 @@ const Hcarrier = require("../models/hcarrier");
 var moment = require("moment-timezone");
 const { callAbleStates } = require("../util/convertTZ");
 const { getToken } = require("../util/getToken");
+const settings = require("../models/setting");
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
 const updateCarrier = (req, res, next) => {
@@ -91,17 +92,28 @@ const fetchLead = async (req, res, next) => {
   Carrier.findOne({
     salesman: mongoose.Types.ObjectId(req.body._id),
     c_status: "unreached",
-    address: { $regex: callAbleStates(pst), $options: "i" },
   })
     .populate("salesman", { user_name: 1 })
     .then(async (result) => {
       console.log("result", result);
       if (result === null) {
+        let prevSettings = await settings.findOne({});
+        if (!prevSettings) {
+          prevSettings = await settings.create({});
+        }
         const carrier = await Carrier.find({
           c_status: "unassigned",
           address: { $regex: callAbleStates(pst), $options: "i" },
+          mc_number: {
+            $gte: prevSettings.mcSeries.isCustom
+              ? prevSettings.mcSeries.customFrom
+              : 0,
+            $lte: prevSettings.mcSeries.isCustom
+              ? prevSettings.mcSeries.customTo
+              : 990000,
+          },
         })
-          .sort({ mc_number: 1 })
+          .sort({ mc_number: prevSettings.mcSeries.order })
           .limit(1);
         if (carrier.length > 0) {
           await Carrier.findByIdAndUpdate(
@@ -180,7 +192,7 @@ const getTableCarriers = async (req, res, next) => {
   try {
     let result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
-      { user_name: 1, company: 1,first_name:1,last_name:1 }
+      { user_name: 1, company: 1, first_name: 1, last_name: 1 }
     );
     if (req.body.company) {
       result = result.filter(
@@ -218,6 +230,7 @@ const getCarriers = async (req, res, next) => {
         ? { ...req.body, ...defaultFilter }
         : defaultFilter;
   }
+
   if (req.body.salesman && req.body.c_status) {
     filter = req.body;
   }
@@ -225,11 +238,10 @@ const getCarriers = async (req, res, next) => {
     const { company, ...newFilter } = req.body;
     filter = newFilter;
   }
-
   try {
     const result = await Carrier.find(filter).populate(
       "salesman trucks.dispatcher",
-      { user_name: 1, company: 1 ,first_name:1,last_name:1 }
+      { user_name: 1, company: 1, first_name: 1, last_name: 1 }
     );
     if (req.body.company) {
       const filteredResult = result.filter(
@@ -314,42 +326,32 @@ const countCarriers = async (req, res, next) => {
     pendingTrucks: 0,
     total: 0,
   };
-  var filteredCarrier = [];
-  await Carrier.find({ c_status: { $nin: "unassigned" } })
-    .populate("salesman", { company: 1 })
-    .then(async (carrier) => {
-      filteredCarrier = carrier.filter(
-        (carry) => carry.salesman?.company == req.body.company
-      );
-      stats.total = await Carrier.countDocuments({});
-      const appointmentCarrier = filteredCarrier.filter(
-        (carry) => carry.c_status == "appointment"
-      );
-      stats.appointments = appointmentCarrier.length;
-
-      const registeredCarrier = filteredCarrier.filter(
-        (carry) => carry.c_status == "registered"
-      );
-      let pendingCount = 0;
-      let activeCount = 0;
-      registeredCarrier.forEach((carrier) => {
-        const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
-          ([pending, active, fail], item) =>
-            item.t_status === "pending"
-              ? [[...pending, item], active, fail]
-              : item.t_status === "active"
-              ? [pending, [...active, item], fail]
-              : [pending, active, [...fail, item]],
-          [[], [], []]
-        );
-        pendingCount += pendingTrucks.length;
-        activeCount += activeTrucks.length;
-      });
-
-      stats.pendingTrucks = pendingCount;
-      stats.activeTrucks = activeCount;
+  try {
+    stats.total = await Carrier.countDocuments({});
+    stats.appointments = await Carrier.find({
+      c_status: "appointment",
+    }).countDocuments();
+    registeredCarriers = await Carrier.find({
+      c_status: "registered",
     });
-  res.send(stats);
+    registeredCarriers.map((carrier) => {
+      const [pendingTrucks, activeTrucks] = carrier.trucks.reduce(
+        ([pending, active, fail], item) =>
+          item.t_status === "pending"
+            ? [[...pending, item], active, fail]
+            : item.t_status === "active"
+            ? [pending, [...active, item], fail]
+            : [pending, active, [...fail, item]],
+        [[], [], []]
+      );
+      stats.pendingTrucks += pendingTrucks.length;
+      stats.activeTrucks += activeTrucks.length;
+    });
+
+    return res.send(stats);
+  } catch (error) {
+    return res.send(error.message);
+  }
 };
 
 const nearestAppointment = async (req, res, next) => {
@@ -432,26 +434,61 @@ const rejectAndRegistered = async (req, res, next) => {
   }
 };
 
-const fetchDialerCounter = async (req,res) => {
+const fetchDialerCounter = async (req, res) => {
   try {
-const result =   await Hcarrier.find({
-  createdAt: { $gt: new Date(Date.now() - 10 * 60 * 60 * 1000) },
-      change:{$in:["didnotpick","rejected","appointment"]},
-      user: req.params.id
-    })
+    const result = await Hcarrier.find({
+      createdAt: { $gt: new Date(Date.now() - 10 * 60 * 60 * 1000) },
+      change: { $in: ["didnotpick", "rejected", "appointment"] },
+      user: req.params.id,
+    });
     return res.status(200).send({
-      success:true,
-      result:result,
-      message:"Fetch Counter Successfully",
-      
-    })
+      success: true,
+      result: result,
+      message: "Fetch Counter Successfully",
+    });
   } catch (error) {
     return res.send({
-      success:false,
+      success: false,
       // result:result,
-      message:error.message,
-      
-    })
+      message: error.message,
+    });
+  }
+};
+
+// Free Resource a.k.a Leads
+const getLeads = async (req, res) => {
+  try {
+    let leads = await Carrier.countDocuments({
+      c_status: "unassigned",
+      mc_number: {
+        $gte: req.body.series.isCustom ? req.body.series.customFrom : 0,
+        $lte: req.body.series.isCustom ? req.body.series.customTo : 990000,
+      },
+    });
+    res.status(200).send(leads.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const freeUpLeads = async (req, res) => {
+  try {
+    await Carrier.updateMany(
+      {
+        c_status: "didnotpick",
+      },
+      { $unset: { salesman: 1 }, $set: { c_status: "unassigned" } }
+    )
+      .then((data) => {
+        res.status(200).send();
+      })
+      .catch((error) => {
+        throw error;
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
   }
 };
 
@@ -471,4 +508,6 @@ module.exports = {
   changeTypeController,
   rejectAndRegistered,
   fetchDialerCounter,
+  getLeads,
+  freeUpLeads,
 };

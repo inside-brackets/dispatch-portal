@@ -6,8 +6,6 @@
   height: var(--topnav-height);
 }
 
-
-
 .topnav__search > input {
   height: 100%;
   width: 100%;
@@ -45,7 +43,6 @@
 
 .notification-item > i {
   margin-right: 20px;
-  font-size: 1.5rem;
 }
 
 .topnav__right-user {
@@ -73,6 +70,6 @@
   font-weight: 600;
 }
 
-.bd-brand-item{
+.bd-brand-item {
   margin-right: 20px;
 }

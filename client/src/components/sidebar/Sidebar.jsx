@@ -27,31 +27,52 @@ const SidebarItem = (props) => {
 };
 
 const Sidebar = (props) => {
-  const { department } = useSelector((state) => state.user.user);
+  const { department, designation } = useSelector((state) => state.user.user);
+  console.log(department, designation);
   const sidebarHeading =
     department.toLowerCase() === "dispatch"
       ? "SERVICES "
       : department.toLowerCase() === "sales"
       ? "MARKETING"
       : department.toUpperCase();
+
+  console.log(sidebarHeading);
+  const sidebarItems =
+    department === "sales" || department === "dispatch"
+      ? sidebar_items[department][designation]
+      : sidebar_items[department];
+
   return (
     <div className="sidebar">
-      <div className={process.env.REACT_APP_FALCON === "TRUE" ? `sidebar__logo_falcon`:"sidebar__logo"}>
-        <img className="logo img-fluid" src={process.env.REACT_APP_FALCON === "TRUE" ? logo : logo2} alt="company logo" />
+      <div
+        className={
+          process.env.REACT_APP_FALCON === "true"
+            ? `sidebar__logo_falcon`
+            : "sidebar__logo"
+        }
+      >
+        <img
+          className="logo img-fluid"
+          src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
+          alt="company logo"
+        />
       </div>
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>
       <div className="sidebar-items">
-        {sidebar_items[department].map((item, index) => (
-          <NavLink
-            activeClassName="active__sidebar"
-            to={item.route}
-            key={index}
-          >
-            <SidebarItem title={item.display_name} icon={item.icon} />
-          </NavLink>
-        ))}
+        {sidebarItems.map((item, index) => {
+          console.log(item, index);
+          return (
+            <NavLink
+              activeClassName="active__sidebar"
+              to={item.route}
+              key={index}
+            >
+              <SidebarItem title={item.display_name} icon={item.icon} />
+            </NavLink>
+          );
+        })}
       </div>
     </div>
   );

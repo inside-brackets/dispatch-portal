@@ -5,6 +5,7 @@ import Input from "../../components/UI/MyInput";
 import TruckTable from "../../components/table/TruckTable";
 import Button from "../../components/UI/MyButton";
 import Modal from "../../components/modals/MyModal";
+import ModalToAssignSale from "../../components/modals/ModalToAssignSale";
 import TextArea from "../../components/UI/TextArea";
 import useHttp from "../../hooks/use-https";
 import Loader from "react-loader-spinner";
@@ -15,30 +16,33 @@ import useInput from "../../hooks/use-input";
 import Select from "react-select";
 import { Col, Row, Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import moment from "moment";
+import { toast } from "react-toastify";
 
 const isNotEmpty = (value) => value.trim() !== "";
 
 const AppointmentDetail = () => {
   const [selectedSalesman, setSelectedSalesman] = useState("");
-  const [users, setUsers] = useState([]);
+  const [selectedSalesperson, setSelectedSalesperson] = useState("");
+  const appointmentRef = useRef();
+  const commentedRef = useRef();
   const [buttonLoader, setButtonLoader] = useState(false);
   const { company } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
-        company: company.value,
-      })
-      .then(({ data }) => {
-        setUsers(data);
-        console.log(data);
-      });
-  }, [company.value]);
-
+  const [salesperson, setSalesperson] = useState()
   const commentRef = useRef();
   const ownerNameRef = useRef();
-  // const taxIdRef = useRef();
-
+  const mcRef = useRef();
+  const noaRef = useRef();
+  const w9Ref = useRef();
+  const [selectedPayment, setSelectedPayment] = useState("");
+  const [trucks, setTrucks] = useState([]);
+  const history = useHistory();
+  const params = useParams();
+  const [carrier, setCarrier] = useState({});
+  const [showCloseModal, setShowCloseModal] = useState(false);
+  const [ShowCloseModalPoint, setShowCloseModalPoint] = useState(false);
+  const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
+  const { sendRequest: updateCarrier } = useHttp();
   const {
     value: taxId,
     isValid: taxIdIsValid,
@@ -119,7 +123,6 @@ const AppointmentDetail = () => {
     inputBlurHandler: insuranceBlurHandler,
   } = useInput(isNotEmpty);
 
-  const mcRef = useRef();
   const {
     value: mc,
     isValid: mcIsValid,
@@ -128,8 +131,6 @@ const AppointmentDetail = () => {
     inputBlurHandler: mcBlurHandler,
   } = useInput(isNotEmpty);
 
-  const noaRef = useRef();
-  const w9Ref = useRef();
   const {
     value: w9,
     isValid: w9IsValid,
@@ -137,27 +138,25 @@ const AppointmentDetail = () => {
     valueChangeHandler: w9ChangeHandler,
     inputBlurHandler: w9BlurHandler,
   } = useInput(isNotEmpty);
-
-  const [selectedPayment, setSelectedPayment] = useState("");
-  const [trucks, setTrucks] = useState([]);
-
-  const history = useHistory();
-  const params = useParams();
-  const [carrier, setCarrier] = useState({});
-  const [showCloseModal, setShowCloseModal] = useState(false);
-  const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
-  const { sendRequest: updateCarrier } = useHttp();
+  
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
+        company: company.value,
+        department: "sales",
+      })
+      .then(({ data }) => {
+        setSalesperson(data);
+      });
+  }, [company.value]);
 
   useEffect(() => {
-
-     axios.put(
+    axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
       {
         c_status: "inprogress",
       }
-    ).then(({data})=>{
-      
-      console.log("updated carrier response",data)
+    ).then(({ data }) => {
       setCarrier(data);
       setTrucks(data.trucks);
       if (data.tax_id_number) {
@@ -197,7 +196,6 @@ const AppointmentDetail = () => {
           target: { value: `${data.insurance.agent_email}` },
         });
       }
-
     })
   }, [
     feeChangeHandler,
@@ -218,22 +216,11 @@ const AppointmentDetail = () => {
     saveCarrier();
     setShowCloseModal(true);
   };
+  const showCloseModalPointHandler = () => {
+    // saveCarrier();
+    setShowCloseModalPoint(true);
+  };
 
-  // submit
-  let formIsValid = false;
-  if (
-    taxIdIsValid &&
-    feeIsValid &&
-    insAgentNameIsValid &&
-    insPhoneIsValid &&
-    insCompNameIsValid &&
-    insAgentEmailIsValid &&
-    insAddressIsValid &&
-    trucks &&
-    trucks.length !== 0
-  ) {
-    formIsValid = true;
-  }
   const saveCarrier = () => {
     const upObj = {
       comment: commentRef.current.value,
@@ -264,8 +251,6 @@ const AppointmentDetail = () => {
       upObj["dispatcher_fee"] = 0;
     }
     const transformData = (data) => {
-      console.log("carrier saved", data);
-      console.log("saved");
     };
     updateCarrier(
       {
@@ -311,7 +296,7 @@ const AppointmentDetail = () => {
         ...files,
       }
     );
-
+    
     setShowCloseModal(false);
     history.push("/searchcarrier");
   };
@@ -329,8 +314,38 @@ const AppointmentDetail = () => {
       </div>
     );
   }
+  const onClose = () => {
+    setShowCloseModalPoint(false);
+  };
+  const onConfirm = async () => {
+    setShowCloseModalPoint(false);
+   await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+      {
+        c_status: "appointment",
+        salesman: selectedSalesperson.value,
+        comment: commentedRef.current.value,
+        appointment: new Date(appointmentRef.current.value),
+      }
+    );
+    return toast.success("Carrier Assigned to Sale Person")
+  };
 
-  console.log("trucks", trucks);
+   // submit
+   let formIsValid = false;
+   if (
+     taxIdIsValid &&
+     feeIsValid &&
+     insAgentNameIsValid &&
+     insPhoneIsValid &&
+     insCompNameIsValid &&
+     insAgentEmailIsValid &&
+     insAddressIsValid &&
+     trucks &&
+     trucks.length !== 0
+   ) {
+     formIsValid = true;
+   }
   return (
     <>
       <BackButton onClick={() => history.push("/searchcarrier")} />
@@ -341,10 +356,16 @@ const AppointmentDetail = () => {
             className="appointment__detail"
             buttons={[
               {
-                buttonText: "Assign",
+                buttonText: "Registered",
                 color: "green",
                 onClick: showCloseModalHandler,
                 disabled: !formIsValid,
+              },
+              {
+                buttonText: "Appointment",
+                color: "green",
+                onClick: showCloseModalPointHandler,
+                // disabled: !formIsValid,
               },
             ]}
           >
@@ -603,9 +624,8 @@ const AppointmentDetail = () => {
               <Col>
                 <Form.Label>Select Salesman:</Form.Label>
                 <Select
-                  options={users
-                    .filter((item) => item.department === "sales")
-                    .map((item) => {
+                  options={
+                    salesperson && salesperson.map((item) => {
                       return {
                         label: item.user_name, // change later
                         value: item._id,
@@ -698,12 +718,55 @@ const AppointmentDetail = () => {
             />
           </div>
         </Modal>
+
+        <ModalToAssignSale
+          show={ShowCloseModalPoint}
+          heading="Appoint a saleperson"
+          onConfirm={onConfirm}
+          onClose={onClose}
+        >
+          <form action="">
+            <Row className='justify-content-end my-2'>
+              <Col md={12}>
+                <div className="assign__text">SalesPerson:</div>
+                <MySelect
+                  value={selectedSalesperson}
+                  onChange={setSelectedSalesperson}
+                  options={salesperson && salesperson.map((item) => {
+                    return {
+                      label: item.user_name, // change later
+                      value: item._id,
+                    };
+                  })}
+                />
+              </Col>
+            </Row>
+            <Input
+              type="datetime-local"
+              label="Call back time:"
+              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
+              ref={appointmentRef}
+            />
+            <TextArea
+              name="Comment:"
+              placeholder="Add a note about this appointment ..."
+              ref={commentedRef}
+            />
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            ></div>
+          </form>
+        </ModalToAssignSale>
       </div>
       <TruckTable
-            mc={carrier.mc_number}
-            trucks={trucks}
-            setTrucks={setTrucks}
-          />
+        mc={carrier.mc_number}
+        trucks={trucks}
+        setTrucks={setTrucks}
+      />
     </>
   );
 };

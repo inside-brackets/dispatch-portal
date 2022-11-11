@@ -8,5 +8,6 @@
   "rejected":"danger",
   "hired":"success",
   "scheduled":"primary",
-  "pending-decision":"yellow"
+  "pending-decision":"yellow",
+  "inprogress":"inprogress"
 }

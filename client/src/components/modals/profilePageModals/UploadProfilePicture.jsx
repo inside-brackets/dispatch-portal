@@ -57,11 +57,17 @@ const UploadProfilePicture = ({ user, setModal }) => {
           company:
             res.data.company === "alpha"
               ? {
-                  label:process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
+                  label:
+                    process.env.REACT_APP_FALCON === "true"
+                      ? "Alpha Dispatch Service"
+                      : "Company A",
                   value: "alpha",
                 }
               : {
-                  label: process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
+                  label:
+                    process.env.REACT_APP_FALCON === "true"
+                      ? "Elite Dispatch Service"
+                      : "Company B",
                   value: "elite",
                 },
         })
@@ -97,10 +103,11 @@ const UploadProfilePicture = ({ user, setModal }) => {
           {selectedFile && <Image fluid src={preview} />}
         </Col>
       </Row>
-      <Row className='justify-content-end mt-3'>
-
+      <Row className="justify-content-end mt-3">
         <Col md={2}>
-          <Button className='w-100' onClick={() => setModal()}>Cancel</Button>
+          <Button className="w-100" onClick={() => setModal()}>
+            Cancel
+          </Button>
         </Col>
         <Col md={3}>
           <Button disabled={!preview} onClick={handleSubmit}>

@@ -223,7 +223,7 @@ const InvoiceModal = ({
         <Col md={9}>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <TextArea
-              style={{ width: "500px" }}
+              style={{ width: "500px", marginLeft: "35px" }}
               placeholder="Add comments here"
               // value={comment}
               defaultValue={invoice ? invoice.comment : ""}
@@ -289,18 +289,15 @@ const InvoiceModal = ({
           )}
         </Col>
 
+        <hr style={{marginTop: "2%"}}></hr>
         {load.length > 0 && !invoice ? (
           <Button onClick={submitHandler}>Submit</Button>
         ) : (
           invoice && (
-            <Row className="justify-content-end align-items-center">
-              <Col md={2} className="text-end">
-                <Button disabled={department !== "admin"} className="w-100" variant="success" onClick={changeStatusHandler}>Clear</Button>
-              </Col>
-              <Col md={2} className="text-end">
-                <Button disabled={department !== "admin"} className="w-100" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
-              </Col>
-            </Row>
+            <div className="d-flex justify-content-between align-items-center">
+                <Button disabled={department !== "admin"} className="button-size" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
+                <Button disabled={department !== "admin"} className="button-size" variant="success" onClick={changeStatusHandler}>Clear</Button>
+            </div>
           )
         )}
       </Row>

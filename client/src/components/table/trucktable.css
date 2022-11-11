@@ -5,6 +5,7 @@
 }
 .table__row__edit {
   margin-top: -10px;
+  /* padding-left: 20px; */
   text-align: center;
   font-size: 25px;
   color: var(--txt-color);
@@ -22,12 +23,16 @@
 
 .edit__class {
   display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 50px;
+  align-items: flex-start;
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
+  /* height: 50px; */
 }
 
 .truck-detail {
-  margin: 0 30px 0 60px;
+  margin: 0 30px 0 30px;
+}
+.actionbuttonWrapper{
+  display: flex;
+  align-items: flex-start;
 }

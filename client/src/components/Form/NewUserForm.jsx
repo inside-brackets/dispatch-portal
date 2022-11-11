@@ -228,12 +228,11 @@ const NewUserForm = ({
               onChange={(e) => setDesignation(e.target.value)}
               required
             >
-              <option value={null}>Select Department</option>
-              <option value="Company">Company</option>
-              <option value="Manager">Manager</option>
-              <option value="Senior Employee">Senior Employee</option>
-              <option value="Junior Employee">Junior Employee</option>
-              <option value="Team Lead">Team Lead</option>
+              <option value={null}>Select Designation</option>
+              <option value="company">Company</option>
+              <option value="manager">Manager</option>
+              <option value="team_lead">Team Lead</option>
+              <option value="employee">Employee</option>
             </Form.Control>
             <Form.Control.Feedback type="invalid">
               Please provide a valid Designation.

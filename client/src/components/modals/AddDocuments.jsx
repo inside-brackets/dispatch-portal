@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { userActions } from "../../store/user";
 import { getRefreshToken } from "../../utils/utils";
 
-const AddDocuments = ({ showModal,user,profile,callBack }) => {
+const AddDocuments = ({ showModal, user, profile, callBack }) => {
   const [type, setType] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [name, setName] = useState(null);
@@ -43,29 +43,34 @@ const AddDocuments = ({ showModal,user,profile,callBack }) => {
           file_type: type.value,
           file: url.split("?")[0],
         },
-        updateFiles:true
+        updateFiles: true,
       }
     );
-    if(profile){
+    if (profile) {
       dispatch(
         userActions.login({
           user: res.data,
           company:
             res.data.company === "alpha"
               ? {
-                  label:process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
+                  label:
+                    process.env.REACT_APP_FALCON === "true"
+                      ? "Alpha Dispatch Service"
+                      : "Company A",
                   value: "alpha",
                 }
               : {
-                  label:process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
+                  label:
+                    process.env.REACT_APP_FALCON === "true"
+                      ? "Elite Dispatch Service"
+                      : "Company B",
                   value: "elite",
                 },
         })
       );
       getRefreshToken(res.data._id);
-  
     } else {
-callBack()
+      callBack();
     }
     showModal();
   };
@@ -73,7 +78,7 @@ callBack()
     <Row>
       <Col>
         <Form onSubmit={handleSubmit}>
-          <Row className='justify-content-center'>
+          <Row className="justify-content-center">
             <Form.Group as={Col} md={10} controlId="validationCustom01">
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -85,8 +90,8 @@ callBack()
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Row>
-          <Row  className='justify-content-center'>
-            <Form.Group as={Col} md={10} >
+          <Row className="justify-content-center">
+            <Form.Group as={Col} md={10}>
               <Form.Label>Type</Form.Label>
               <Select
                 value={type}
@@ -111,7 +116,7 @@ callBack()
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
-          <Row  className='justify-content-center'>
+          <Row className="justify-content-center">
             <Form.Group as={Col} md={10} className="position-relative my-5">
               <Form.Label>Attachments</Form.Label>
               <Form.Control

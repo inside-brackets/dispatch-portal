@@ -15,9 +15,14 @@ const adminRoutes = require("./routes/admin");
 const dispatchRoutes = require("./routes/dispatch");
 const notificationsRoutes = require("./routes/notification");
 const interviewRoutes = require("./routes/interview");
+const dbOperationsRoutes = require("./routes/dbOperations");
+
+const settingsRoutes = require("./routes/settings");
 
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
+
+process.env.TZ = "Asia/Karachi";
 
 const app = express();
 const httpServer = createServer(app);
@@ -112,11 +117,14 @@ io.on("connection", (socket) => {
 //     }
 //   }
 // });
+
 app.use("/sales", salesRoutes);
 app.use("/admin", adminRoutes);
 app.use("/dispatch", dispatchRoutes);
 app.use("/notification", notificationsRoutes);
 app.use("/interviews", interviewRoutes);
+app.use("/settings", settingsRoutes);
+app.use("/dbop", dbOperationsRoutes);
 app.use("/", rootRoutes);
 
 app.get("/hello", (req, res) => {

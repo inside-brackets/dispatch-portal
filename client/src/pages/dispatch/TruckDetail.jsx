@@ -10,6 +10,7 @@ import MySelect from "../../components/UI/MySelect";
 import BackButton from "../../components/UI/BackButton";
 import Loader from "react-loader-spinner";
 import { toast } from "react-toastify";
+import "../../assets/css/dispatch/truckDetail.css"
 
 const transformToSelectValue = (value) => {
   if (value.constructor === Array) {
@@ -56,6 +57,7 @@ const TruckDetail = ({ match }) => {
   const [factAgentEmail, setfactAgentEmail] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [t_status, setT_status] = useState(``);
+  const [confirmModal, setconfirmModal] = useState({value:false,index:0})
   const [drivers, setDrivers] = useState([
     {
       name: "",
@@ -226,10 +228,19 @@ const TruckDetail = ({ match }) => {
     ]);
   };
   let removeFormFields = (i) => {
+    setconfirmModal(confirmModal.value)
+    if(confirmModal.value){
     let newFormValues = [...drivers];
-    newFormValues.splice(i, 1);
+    newFormValues.splice(confirmModal.index, 1);
     setDrivers(newFormValues);
+      setconfirmModal(false)
+  }
+    
   };
+
+  const onmClose=()=>{
+    setconfirmModal({value:false})
+  }
 
   return (
     <>
@@ -311,7 +322,7 @@ const TruckDetail = ({ match }) => {
                       <Col md={9}>
                         <Form.Control
                           type="text"
-                          placeholder="Payment Method"
+                          placeholder="Phone Number"
                           required
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
@@ -330,6 +341,7 @@ const TruckDetail = ({ match }) => {
                       </Col>
                       <Col md={9}>
                         <Form.Control
+                          placeholder="Email"
                           type="text"
                           required
                           value={email}
@@ -671,7 +683,7 @@ const TruckDetail = ({ match }) => {
                       />
                     </Form.Group>
                   </Row>
-                  <Row>
+                  <Row className="mt-3">
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Temperature Restrictions:</Form.Label>
                       <Form.Control
@@ -694,8 +706,8 @@ const TruckDetail = ({ match }) => {
                       />
                     </Form.Group>
                   </Row>
-                  <Row>
-                    <Col>
+                  <Row className="mt-3">
+                    <Col md="4">
                       <MySelect
                         label="Region"
                         isMulti={true}
@@ -712,8 +724,10 @@ const TruckDetail = ({ match }) => {
                     </Col>
                     <Col
                       style={{
-                        marginLeft: "-300px",
+                        // marginLeft: "-300px",
+                        padding:'0px'
                       }}
+                      md="4"
                     >
                       <MySelect
                         label="Trailer Type:"
@@ -735,7 +749,7 @@ const TruckDetail = ({ match }) => {
                     <Col
                       md={4}
                       style={{
-                        marginLeft: "-300px",
+                        // marginLeft: "-300px",
                       }}
                     >
                       <MySelect
@@ -754,12 +768,12 @@ const TruckDetail = ({ match }) => {
                     </Col>
                   </Row>
                 </Row>
-                <Row className="mt-3">
-                  <hr />
-                  <h3>Drivers:</h3>
+                <hr />
+                <h3>Drivers:</h3>
+                <Row className="m-3">
                   {drivers.map((element, index) => (
                     <div className="form-inline" key={index}>
-                      <Row className="justify-content-end">
+                      {/* <Row className="justify-content-end " >
                         <Col md={3}>
                           {drivers.length === 2 && (
                             <i
@@ -768,7 +782,7 @@ const TruckDetail = ({ match }) => {
                             ></i>
                           )}
                         </Col>
-                      </Row>
+                      </Row> */}
                       <Row>
                         <Form.Group
                           as={Col}
@@ -793,7 +807,7 @@ const TruckDetail = ({ match }) => {
                           <Form.Label>Driver Email</Form.Label>
                           <Form.Control
                             type="email"
-                            placeholder="Driver Name"
+                            placeholder="Driver Email"
                             required
                             onChange={(e) => handleChange(index, e)}
                             name="email_address"
@@ -802,7 +816,7 @@ const TruckDetail = ({ match }) => {
                         </Form.Group>
                         <Form.Group
                           as={Col}
-                          md="4"
+                          md="3"
                           controlId="validationCustom03"
                         >
                           <Form.Label>Driver Phone</Form.Label>
@@ -815,6 +829,15 @@ const TruckDetail = ({ match }) => {
                             value={element.phone_number}
                           />
                         </Form.Group>
+                        
+                      <Col md={1} className='bx-trashh'>
+                          {/* {drivers.length === 2 && ( */}
+                            <i
+                              className="bx bx-x"
+                              onClick={() => setconfirmModal({value:true,index:index})}
+                            ></i>
+                          {/* // )} */}
+                      </Col>
                       </Row>
                     </div>
                   ))}
@@ -826,6 +849,20 @@ const TruckDetail = ({ match }) => {
                     </div>
                   ) : null}
                 </Row>
+
+                <Modal
+            show={confirmModal.value}
+            heading="Remove Driver"
+            // onConfirm={rejectHandler}
+            onClose={onmClose}
+          >
+            <div className="confirmText">Are You Sure!</div>
+            <div className="proceedText">If you proceed, You will lose all driver data. Are You sure do you want to delete your driver information?</div>
+            <div className="buttonWrapper">
+            <Button variant="secondary"  onClick={()=>setconfirmModal({value:false})}>Cancel</Button>
+            <Button variant='danger' onClick={() => removeFormFields(confirmModal)} disabled={drivers.length === 2 ?false:true}>Confirm</Button>
+            </div>
+          </Modal>
                 <hr />
                 <h3>Carrier Documents:</h3>
                 <Row xs="auto" className="m-3">

@@ -5,13 +5,22 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import TruckCard from "../../components/cards/TruckCard";
 import { Row } from "react-bootstrap";
+import Select from "react-select";
 
 const MyTrucks = () => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const [carriersList, setCarriersList] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [httpError, setHttpError] = useState(false);
-  const history = useHistory()
+  const [statusFilter, setStatusFilter] = useState([
+    { label: "Active", value: "active" },
+    { label: "Inactive", value: "inactive" },
+    { label: "New", value: "new" },
+    { label: "Pending", value: "pending" },
+  ]);
+  const history = useHistory();
+  const searchRef = useRef();
+  const [searchedCarrier, setSearchedCarrier] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -78,18 +87,18 @@ const MyTrucks = () => {
       .post(`${process.env.REACT_APP_BACKEND_URL}/getcarriers`, {
         "trucks.dispatcher": currUserId,
         c_status: "registered",
+        "trucks.t_status": {
+          $in: statusFilter.map((item) => item.value),
+        },
       })
       .then(transformData)
       .catch((err) => {
         setHttpError(true);
         console.log(err);
       });
-  }, [currUserId]);
+  }, [currUserId, statusFilter]);
 
   //search
-  const searchRef = useRef();
-
-  const [searchedCarrier, setSearchedCarrier] = useState([]);
   const search = (e) => {
     if (e.key === "Enter") {
       const searched = carriersList.filter((c) => {
@@ -103,25 +112,18 @@ const MyTrucks = () => {
     }
   };
 
-  if (isLoading && !httpError) {
-    return (
-      <div className="spreadsheet__loader">
-        <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
-      </div>
-    );
-  } else if (!isLoading && httpError) {
+  if (!isLoading && httpError) {
     return (
       <div className="spreadsheet__loader">
         <h2 style={{ color: "red" }}>ERROR: SERVER MIGHT BE DOWN</h2>
       </div>
     );
-  } else if (carriersList === null)
+  } else if (carriersList === null && !isLoading)
     return (
       <div className="spreadsheet__loader">
         <h2 style={{ color: "orange" }}>No trucks assigned yet.</h2>
       </div>
     );
-  console.log("carrier ", carriersList);
   return (
     <div className="row">
       <div className="row align-items-center mb-3">
@@ -136,19 +138,52 @@ const MyTrucks = () => {
             onKeyDown={search}
           />
         </div>
-      </div>
-      <Row>
-
-
-      {searchedCarrier.filter(truck=> truck.truck_status !== "inactive").map((item, index) => (
-        <div className="col-3 d-flex align-items-stretch" style={{
-          cursor:'pointer'
-        }} onClick={()=> history.push(`/trucks/${item.mc_number}/${item.truck_number}`)} key={index}>
-    
-            {<TruckCard item={item} />}
+        {/* form-select */}
+        <div className="col-md-4">
+          <label>Status</label>
+          <Select
+            // className=""
+            isMulti
+            value={statusFilter}
+            onChange={setStatusFilter}
+            options={[
+              { label: "Active", value: "active" },
+              { label: "Inactive", value: "inactive" },
+              { label: "New", value: "new" },
+              { label: "Pending", value: "pending" },
+            ]}
+          />
         </div>
-      ))}
-      </Row>
+      </div>
+      {isLoading && !httpError ? (
+        <div className="spreadsheet__loader">
+          <Loader
+            type="MutatingDots"
+            color="#349eff"
+            height={100}
+            width={100}
+          />
+        </div>
+      ) : (
+        <Row>
+          {searchedCarrier
+            .filter((truck) => truck.truck_status !== "inactive")
+            .map((item, index) => (
+              <div
+                className="col-3 d-flex align-items-stretch"
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() =>
+                  history.push(`/trucks/${item.mc_number}/${item.truck_number}`)
+                }
+                key={index}
+              >
+                {<TruckCard item={item} />}
+              </div>
+            ))}
+        </Row>
+      )}
     </div>
   );
 };

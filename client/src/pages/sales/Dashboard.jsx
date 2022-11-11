@@ -1,29 +1,31 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import usMap from "../../assets/images/us-map.jpg";
 import UsClock from "../../components/usClock/UsClock";
-// import { socket } from "../../index";
+import TargetDisplay from "../../components/targetDisplay/TargetDisplay";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const Dashboard = () => {
-  // const notify = () => {
-  //   socket.emit("notify", "test");
-  // };
+  const { user } = useSelector((state) => state.user);
 
   return (
     <div>
-      {/* <Timer/> */}
-      <h2 className="page-header">Dashboard</h2>
-      <div className="row">
+      <div className="row" style={{ marginTop: "30px" }}>
         <div className="col-8">
           <div className="row">
             <img className="main__img" src={usMap} alt="couldn't find" />
           </div>
         </div>
         <div className="col-4">
-          {/* <UsClock /> */}
           <UsClock />
         </div>
       </div>
+      <Row>
+        <Col xl={4} lg={6} md={8} sm={12}>
+          <TargetDisplay designation={user.designation} />
+        </Col>
+      </Row>
     </div>
   );
 };

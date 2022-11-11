@@ -1,7 +1,7 @@
 import React from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { Button } from "react-bootstrap";
+import { Button, Row } from "react-bootstrap";
 import { useRef } from "react";
 import moment from "moment";
 import "./pdf.css";
@@ -51,33 +51,33 @@ const PdfTest = ({ load, invoice }) => {
           >
             Customer Report
           </h1>
-          <h5 className="div text-center">
+          <h5 className="div text-start">
               <span className="header">MC Number</span>
               <span className="name me-5">{invoice?.carrier?.mc_number}</span>
             </h5>
           
-          <p className="d-flex">
-            <h5 className="div">
+          <div className="row">
+            <h5 className="div col-5">
+              <span className="header">Owner Name </span>
+              <span className="name me-5">{invoice?.carrier?.owner_name}</span>
+            </h5>
+            <h5 className="col-7">
               <span className="header">Carrier Name</span>
               <span className="name me-5">
                 {invoice?.carrier?.company_name}
               </span>
             </h5>
-            <h5 className="div">
+          </div>
+          <div className="row" style={{marginTop: "0px"}}>
+          <h5 className="col-5">
               <span className="header">Agent Name </span>
               <span className="name me-5">{invoice?.dispatcher.user_name}</span>
             </h5>
-          </p>{" "}
-          <p className="d-flex justify-content-between">
-            <h5 className="div">
-              <span className="header">Owner Name </span>
-              <span className="name me-5">{invoice?.carrier?.owner_name}</span>
-            </h5>
-            <h5 className="div">
+            <h5 className="div col-7">
               <span className="header">Email </span>
               <span className="name me-5">{invoice?.carrier?.email}</span>
             </h5>
-          </p>
+          </div>
           <table className="table invoice">
             <thead
               style={{
@@ -128,7 +128,7 @@ const PdfTest = ({ load, invoice }) => {
               </tr>
             </tbody>
           </table>
-          <p className="d-flex justify-content-around">
+          <p className="d-flex justify-content-around" style={{marginTop:"8%"}}>
             <p className="d-flex flex-column justify-content-center align-items-center">
               <span className="box"></span> <p>Issuance Sign and Stamp</p>
             </p>

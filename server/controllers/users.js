@@ -55,6 +55,14 @@ const getUser = (req, res) => {
 };
 const getTableUsers = (req, res, next) => {
   filter = {};
+  let exclude = "";
+  console.log("req.body.department",req.body.department)
+  if (req.body.department !== "admin") {
+    filter.department = {
+      $nin: ["admin"],
+    };
+    exclude = "-salary";
+  }
   filter.u_status = {
     $nin: ["fired"],
   };
@@ -70,7 +78,16 @@ const getTableUsers = (req, res, next) => {
       $in: req.body.filter.status.map((item) => item.value),
     };
   }
-  console.log(filter);
+  if (req.body.joining_date) {
+    req.body.joining_date === "upcoming"
+      ? (filter.joining_date = { $gte: new Date() })
+      : (filter.joining_date = {
+          $gte: moment().startOf("month"),
+          $lte: moment().endOf("month"),
+        });
+  }
+  
+
   User.find(filter, null, {
     // skip: 0, // Starting Row
     // limit: 1, // Ending Row
@@ -78,6 +95,7 @@ const getTableUsers = (req, res, next) => {
       joining_date: -1, //Sort by Date Added DESC
     },
   })
+    .select(exclude)
     .then((users) => {
       if (search !== "") {
         search = search.trim().toLowerCase();
@@ -96,12 +114,16 @@ const getTableUsers = (req, res, next) => {
       res.send({ data: fResult, length: users.length });
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       res.send(err);
     });
 };
 
-const getUsers = (req, res, next) => {
+const getUsers = (req, res, next) => 
+
+
+
+{
   let filter = {};
   filter.u_status = {
     $nin: ["fired"],
@@ -125,7 +147,6 @@ const getUsers = (req, res, next) => {
     },
   })
     .then((users) => {
-      console.log(users);
       res.send(users);
     })
     .catch((err) => {
@@ -146,6 +167,22 @@ const updateUser = async (req, res) => {
         { new: true }
       );
     } else {
+      let userName = req.body.user_name;
+
+      if (req.body.u_status === "fired") {
+        const date = new Date();
+        userName =
+          userName +
+          "_" +
+          date.getDate() +
+          "-" +
+          date.getMonth() +
+          "-" +
+          date.getFullYear();
+      }
+
+      req.body.user_name = userName;
+
       updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
@@ -273,6 +310,7 @@ const countUsers = async (req, res, next) => {
       },
       { $group: { _id: { department: "$status" }, count: { $sum: 1 } } },
     ]);
+    
     result.push(
       {
         _id: { department: "Joined this month" },
@@ -291,6 +329,50 @@ const countUsers = async (req, res, next) => {
   }
 };
 
+const getSalesCount = async (req, res) => {
+  console.log("getSalesCount");
+  try {
+    let filter = {
+      u_status: {
+        $in: ["probation", "active"],
+      },
+      department: {
+        $in: ["sales"],
+      },
+      designation: {
+        $nin: ["manager"],
+      },
+    };
+    let result = await User.countDocuments(filter);
+    res.status(200).send(result.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const getUpcomingSalesCount = async (req, res) => {
+  console.log("getUpcomingSalesCount");
+  try {
+    let filter = {
+      u_status: {
+        $in: ["pending"],
+      },
+      department: {
+        $in: ["sales"],
+      },
+      designation: {
+        $nin: ["manager"],
+      },
+    };
+    let result = await User.countDocuments(filter);
+    res.status(200).send(result.toString());
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
 module.exports = {
   addNewUser,
   getUser,
@@ -301,4 +383,6 @@ module.exports = {
   login,
   refreshToken,
   countUsers,
+  getSalesCount,
+  getUpcomingSalesCount,
 };

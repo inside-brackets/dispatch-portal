@@ -6,7 +6,7 @@ import { themeActions } from "../store/theme";
 import { Col, Row, Form, Image, Button, Spinner } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import logo from "../assets/images/logo_login.png";
-import logo2 from "../assets/images/White Christmas2.png";
+import logo2 from "../assets/images/White-Christmas.png";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwtDecode from "jwt-decode";
@@ -63,11 +63,17 @@ const Login = () => {
                 company:
                   user.company === "alpha"
                     ? {
-                        label: process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
+                        label:
+                          process.env.REACT_APP_FALCON === "true"
+                            ? "Alpha Dispatch Service"
+                            : "Company A",
                         value: "alpha",
                       }
                     : {
-                        label:process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
+                        label:
+                          process.env.REACT_APP_FALCON === "true"
+                            ? "Elite Dispatch Service"
+                            : "Company B",
                         value: "elite",
                       },
               })
@@ -115,7 +121,7 @@ const Login = () => {
                 <Form.Label>Username:</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="username..."
+                  placeholder="Your Username"
                   ref={usernameRef}
                 />
               </Row>
@@ -124,7 +130,7 @@ const Login = () => {
                 <Form.Label>Password:</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="password"
+                  placeholder="Your Password"
                   ref={passwordRef}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
@@ -148,17 +154,17 @@ const Login = () => {
                       role="status"
                       aria-hidden="true"
                     />
-                  )}{" "}
-                  Login{" "}
+                  )}
+                  Login
                 </Button>
               </Row>
             </Form>
           </FormContainer>
         </Col>
-        <Col md={6}>
+        <Col md={6} className={`${process.env.REACT_APP_FALCON === "true" ? "":"logo-inside"}`}>
           <Image
-            className="justify-content-start align-items-center vh-100 vw-100"
-            src={ process.env.REACT_APP_FALCON === "TRUE" ? logo : logo2}
+            className={`justify-content-start align-items-center ${process.env.REACT_APP_FALCON === "true" ? "vh-100 vw-100":"logo-inside-ml"}`}
+            src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
             fluid
           />
         </Col>

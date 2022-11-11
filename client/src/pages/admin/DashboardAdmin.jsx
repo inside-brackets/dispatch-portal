@@ -11,59 +11,101 @@ import { themeActions } from "../../store/theme";
 const DashboardAdmin = () => {
   const themeReducer = useSelector((state) => state.theme.mode);
 
-  const [carriers, setCarriers] = useState(0);
-  const [appointment, setAppointment] = useState(0);
-  const [active, setActive] = useState(0);
-  const [pending, setPending] = useState(0);
+  const [carriers, setCarriers] = useState({
+    active: null,
+    pending: null,
+    appointment: null,
+    carrier: null,
+  });
   const [data, setData] = useState(null);
   const [topDispatcher, setTopDispatcher] = useState(null);
+  const [lineChart, setLineChart] = useState([]);
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
-  const chartOptions = {
-    series: [
-      {
-        name: "Online Customers",
-        data: [40, 70, 20, 90, 36, 80, 30, 91, 60],
-      },
-      {
-        name: "Store Customers",
-        data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10],
-      },
-    ],
-    options: {
-      color: ["#6ab04c", "#2980b9"],
-      chart: {
-        background: "transparent",
-      },
-      dataLabels: {
+  const lineChartOptions = {
+    chart: {
+      width: "100%",
+      type: "line",
+      zoom: {
         enabled: false,
       },
-      stroke: {
-        curve: "smooth",
-      },
-      xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-        ],
-      },
-      legend: {
-        position: "top",
-      },
-      grid: {
+      toolbar: {
         show: false,
       },
     },
+    colors: ["rgb(248, 248, 0)", "var(--main-color-green)"],
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "smooth",
+    },
+    title: {
+      text: "Growth",
+      align: "left",
+    },
+    grid: {
+      borderColor: "#ececec",
+      row: {
+        colors: ["#f1f1f1", "transparent"],
+        opacity: 0.5,
+      },
+    },
+    xaxis: {
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sept",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      title: {
+        text: "Month",
+      },
+    },
+    yaxis: {
+      title: {
+        text: "Carriers",
+      },
+    },
+    legend: {
+      position: "top",
+      horizontalAlign: "right",
+      floating: true,
+      offsetY: -25,
+      offsetX: -5,
+    },
+  };
+
+  useEffect(() => {
+    fetchChart();
+  }, []);
+
+  const fetchChart = () => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/chart`)
+      .then(({ data }) => {
+        setLineChart([
+          {
+            name: "Appointment",
+            data: data.appointment,
+          },
+          {
+            name: "Registered",
+            data: data.registered,
+          },
+        ]);
+      });
   };
 
   useEffect(() => {
@@ -72,12 +114,14 @@ const DashboardAdmin = () => {
       .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`, {
         company: selectedCompany.value,
       })
-      .then((res) => {
-        let data = res.data;
-        setCarriers(data.total);
-        setAppointment(data.appointments);
-        setActive(data.activeTrucks);
-        setPending(data.pendingTrucks);
+      .then(({ data }) => {
+        console.log(data);
+        setCarriers({
+          carrier: data.total,
+          appointment: data.appointments,
+          active: data.activeTrucks,
+          pending: data.pendingTrucks,
+        });
       });
 
     axios
@@ -85,9 +129,8 @@ const DashboardAdmin = () => {
         company: selectedCompany.value,
       })
       .then((res) => {
-        console.log("top sales",res.data)
+        console.log("top sales", res.data);
         setData(res.data);
-
       })
       .catch((err) => console.log(err));
 
@@ -103,56 +146,50 @@ const DashboardAdmin = () => {
 
   return (
     <div>
-      <Row className='my-4'>
+      <Row className="my-4">
         <Col md={4}>
-        <MySelect
-          isMulti={false}
-          value={selectedCompany}
-          onChange={(option) => {
-            dispatch(userActions.changeCompany(option));
-            var color =
-              option.value === "elite" ? "theme-color-blue" : "theme-color-red";
-            dispatch(themeActions.setColor(color));
-            localStorage.setItem("selectedCompany", JSON.stringify(option));
-          }}
-          options={[
-            {
-              label:process.env.REACT_APP_FALCON === "TRUE" ? "Elite Dispatch Service" : "Company B",
-              value: "elite",
-            },
-            {
-              label:process.env.REACT_APP_FALCON === "TRUE" ? "Alpha Dispatch Service" : "Company A",
-              value: "alpha",
-            },
-          ]}
-        />
+          <MySelect
+            isMulti={false}
+            value={selectedCompany}
+            onChange={(option) => {
+              dispatch(userActions.changeCompany(option));
+              var color =
+                option.value === "elite"
+                  ? "theme-color-blue"
+                  : "theme-color-red";
+              dispatch(themeActions.setColor(color));
+              localStorage.setItem("selectedCompany", JSON.stringify(option));
+            }}
+            options={[
+              {
+                label:
+                  process.env.REACT_APP_FALCON === "true"
+                    ? "Elite Dispatch Service"
+                    : "Company B",
+                value: "elite",
+              },
+              {
+                label:
+                  process.env.REACT_APP_FALCON === "true"
+                    ? "Alpha Dispatch Service"
+                    : "Company A",
+                value: "alpha",
+              },
+            ]}
+          />
         </Col>
       </Row>
       <Row>
         <Col>
           <Card>
-            <Chart
-              // className="my-card"
-              style={{
-                width: "auto",
-                height: "250px",
-                border: "light",
-              }}
-              options={
-                themeReducer === "theme-mode-dark"
-                  ? {
-                      ...chartOptions.options,
-                      theme: { mode: "dark" },
-                    }
-                  : {
-                      ...chartOptions.options,
-                      theme: { mode: "light" },
-                    }
-              }
-              series={chartOptions.series}
-              type="line"
-              height="100%"
-            />
+            <Card.Body style={{ padding: "0" }}>
+              <Chart
+                options={lineChartOptions}
+                series={lineChart}
+                type="line"
+                height={250}
+              />
+            </Card.Body>
           </Card>
         </Col>
         <Col>
@@ -161,14 +198,14 @@ const DashboardAdmin = () => {
               <StatusCard
                 title="Active Trucks"
                 icon="bx bx-line-chart"
-                count={active}
+                count={carriers.active}
               />
             </Col>
             <Col>
               <StatusCard
                 title=" Appointments"
                 icon="bx bx-calendar-check"
-                count={appointment}
+                count={carriers.appointment}
               />
             </Col>
           </Row>
@@ -177,14 +214,14 @@ const DashboardAdmin = () => {
               <StatusCard
                 title="Pendings Trucks"
                 icon="bx bx-time-five"
-                count={pending}
+                count={carriers.pending}
               />
             </Col>
             <Col>
               <StatusCard
                 title="Total Carriers"
                 icon="bx bxs-truck"
-                count={carriers}
+                count={carriers.carrier}
               />
             </Col>
           </Row>
@@ -246,7 +283,7 @@ const DashboardAdmin = () => {
             <Card.Body>
               <Card.Title>Sales Stats</Card.Title>
               <hr />
-              {!data||  data.length === 0 ?  (
+              {!data || data.length === 0 ? (
                 <>Not Enough Data to show</>
               ) : (
                 <div className="tableFixHead">
