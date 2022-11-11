@@ -188,7 +188,7 @@ const AppointmentDetail = () => {
                     <Col md={9}>
                       <Form.Control
                         type="text"
-                        placeholder="Payment Method"
+                        placeholder="Phone Number"
                         name="phone_number"
                         required
                         defaultValue={carrier ? carrier.phone_number : ""}
@@ -207,6 +207,7 @@ const AppointmentDetail = () => {
                     </Col>
                     <Col md={9}>
                       <Form.Control
+                        placeholder="Email"
                         type="text"
                         required
                         name="email"
