@@ -32,6 +32,7 @@ jobs:
       - name: Build client
         run: |
           cd ~/dispatch-portal/client
+          npm i
           CI=false npm run build
       - name: Copy & paste build files
         run: |
