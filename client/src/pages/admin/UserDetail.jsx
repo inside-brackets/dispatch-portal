@@ -35,6 +35,7 @@ import user_image from "../../assets/images/taut.png";
 import { socket } from "../../index";
 import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
 import DetailsModal from "../../components/DetailsModal/DetailsModal";
+import DispatchSlots from "./DispatchSlots";
 import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
 
@@ -665,6 +666,11 @@ function UserDetail() {
       <Tab eventKey="documents" title="Documents">
         <Documents callBack={() => setReCall(Math.random())} user={user} />
       </Tab>
+      {user.department === "dispatch" && (
+        <Tab eventKey="slots" title="Salary Slots">
+          <DispatchSlots user={user} />
+        </Tab>
+      )}
     </Tabs>
   );
 }
