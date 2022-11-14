@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Salary = require("../models/salary");
 
 const updateSlots = async (req, res) => {
   try {
@@ -14,6 +15,18 @@ const updateSlots = async (req, res) => {
     }
     res.status(200);
     res.send(updatedSlots);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const createSalary = async (req, res) => {
+  console.log(req.body);
+  try {
+    let createdSalary = await Salary.create(req.body);
+    res.status(200);
+    res.send(createdSalary);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -73,4 +86,4 @@ const getSalaries = async (req, res) => {
   }
 };
 
-module.exports = { updateSlots, getSalaries };
+module.exports = { updateSlots, createSalary, getSalaries };
