@@ -138,6 +138,12 @@ const CarrierDetail = () => {
         upObj["factoring"]["phone_no"] = event.target.f_phone.value;
       } else {
         upObj["payment_method"] = selectedPayment.value
+        upObj["factoring"] = {};
+        upObj["factoring"]["name"] = "";
+        upObj["factoring"]["address"] = "";
+        upObj["factoring"]["agent_name"] = "";
+        upObj["factoring"]["agent_email"] = "";
+        upObj["factoring"]["phone_no"] = "";
       }
       await axios
         .put(
@@ -593,7 +599,7 @@ const CarrierDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>*Dispatch Fee:</Form.Label>
                     <Form.Control
-                      type="Number"
+                      type="number"
                       placeholder="*Dispatch Fee:"
                       name="dispatch_fee"
                       defaultValue={carrier.dispatcher_fee ? carrier.dispatcher_fee : 0}
@@ -733,7 +739,7 @@ const CarrierDetail = () => {
                       >
                         <Form.Label>Phone Number:</Form.Label>
                         <Form.Control
-                          type="text"
+                          type="number"
                           placeholder="Phone Number"
                           name="f_phone"
                           defaultValue={
@@ -812,7 +818,7 @@ const CarrierDetail = () => {
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Agent's Email:</Form.Label>
                   <Form.Control
-                    type="text"
+                    type="email"
                     placeholder="Agent's Email"
                     name="i_agent_email"
                     defaultValue={
@@ -829,7 +835,7 @@ const CarrierDetail = () => {
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Phone Number:</Form.Label>
                   <Form.Control
-                    type="text"
+                    type="number"
                     placeholder="Phone Number"
                     name="i_phone_number"
                     defaultValue={
