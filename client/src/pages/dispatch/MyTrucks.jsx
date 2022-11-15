@@ -139,7 +139,7 @@ const MyTrucks = () => {
           />
         </div>
         {/* form-select */}
-        <div className="col-md-4">
+        <div className="col-md-5">
           <label>Status</label>
           <Select
             // className=""
