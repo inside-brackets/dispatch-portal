@@ -246,16 +246,19 @@ const Dialer = () => {
               buttonText: "Rejected",
               color: "red",
               onClick: buttonrClickHandler,
+              className:"btn-size-lead-page"
             },
             {
               buttonText: "Didn't Pick",
               onClick: didnotPickHandler,
               disabled: loading,
+              className:"btn-size-lead-page"
             },
             {
               buttonText: "Appointment",
               onClick: buttonClickHandler,
               color: "green",
+              className:"btn-size-lead-page"
             },
           ]}
         >
@@ -324,11 +327,11 @@ const Dialer = () => {
         justify-content-center align-items-center mt-5"
         >
           <div className="col-6">
-            <div className="card" style={{ width: "160px" }}>
-              <h2 className="justify-content-center align-items-center">
-                <i className="bx bxs-phone-outgoing"> :</i>{" "}
+            <div className="card" style={{ width: "140px" }}>
+              <h3 className="">
+                <i className="bx bxs-phone-outgoing icon" style={{marginTop:'2px'}}> :</i>{" "}
                 <span>{counter}</span>{" "}
-              </h2>
+              </h3>
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ const DialerCard = (props) => {
               onClick={item.onClick}
               buttonText={item.buttonText}
               disabled={item.disabled}
+              className={item.className}
             />
           ))}
         </div>

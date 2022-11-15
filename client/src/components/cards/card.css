@@ -3,12 +3,15 @@
   justify-content: flex-start !important;
   align-items: flex-start;
   flex-direction: column;
-  width: 500px;
+  width: 418px;
   height: auto;
   border-radius: var(--border-radius);
   background-color: var(--main-bg);
   box-shadow: var(--box-shadow);
 }
+/* .card-w-lead{
+  width
+} */
 
 .dialer__body {
   display: flex;
@@ -17,7 +20,7 @@
   width: auto;
   height: auto;
   position: relative;
-  padding: 0 25px 0 25px;
+  padding: 0 25px 5px 25px;
 }
 .dialer__header {
   box-sizing: border-box;

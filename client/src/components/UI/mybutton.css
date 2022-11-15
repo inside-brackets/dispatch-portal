@@ -9,6 +9,11 @@
   height: 40px;
   min-width: 150px;
 }
+.btn-size-lead-page{
+  border: none;
+  height: 40px;
+  min-width: 110px;
+}
 
 .mybutton:hover {
   transform: scale(1.02) !important;
