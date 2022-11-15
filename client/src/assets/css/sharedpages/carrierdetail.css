@@ -9,7 +9,6 @@
 }
 
 .file__input {
-
     background-color: white;
     border-radius: var(--border-radius);
     font-size: large;
@@ -79,4 +78,17 @@
 }
 .miscWrapper{
     padding-bottom:3px;
+}
+.basic_file_hr{
+    width: 42.9rem;
+    margin-left: 54px;
+}
+.carrier_badge_status{
+    display: flex;
+    justify-content: flex-end;
+}
+.invalid_files{
+    margin-left: -25px;
+    display: flex;
+    justify-content: flex-end;
 }
