@@ -269,16 +269,19 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           }
           onChange={handleDriverChange}
         >
+          <span>
           <FormControlLabel
             value="teamDriver"
             control={<Radio />}
             label="Team Driver"
+            
           />
           <FormControlLabel
             value="singledriver"
             control={<Radio />}
             label="Single Driver"
           />
+          </span>
         </RadioGroup>
       </FormControl>
       <Row className="align-items-center mt-2 py-2">
@@ -362,7 +365,7 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
         </>
       )}
 
-      <div className="d-flex justify-content-end mt-5">
+      <div className="d-flex justify-content-end mt-4">
         <Button
           variant="primary"
           type="submit"

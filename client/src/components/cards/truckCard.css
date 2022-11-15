@@ -2,19 +2,31 @@
     display:'flex';
     justify-content:'center'; 
     align-items:'center';
-    height:'63px '!important;
+    height:'63px ';
 }
-/* display: flex;
-width: auto;
-height: auto;
-height: 89px;
-justify-content: center;
-align-items: center; */
+
 .cardBody{
         display: "flex";
         height: "100%";
+        padding: 0 !important;
         flex-direction: "column";
         justify-content: "space-between"; 
 }
 .newCarrierBackground{ background-color:#abd7ff !important;}
+
+.card-title{
+    font-size: 17px;
+   text-align: center;
+}
+
+.card-footer{
+    padding: 0.5rem 0.5rem !important;
+    height: auto !important;
+}
+
+.mytrucks-cards-badge{
+    padding: 3.5px 9px !important;
+    font-weight: 500 !important;
+
+}
 
