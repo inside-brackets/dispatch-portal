@@ -140,7 +140,7 @@ const MyTrucks = () => {
         </div>
         {/* form-select */}
         <div className="col-md-4">
-          <label>Search</label>
+          <label>Status</label>
           <Select
             // className=""
             isMulti

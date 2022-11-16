@@ -45,7 +45,7 @@
   margin: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 i {
@@ -407,11 +407,11 @@ th {
   z-index: 99;
   font-size: x-large;
 }
-.logo-inside{
+.logo-inside {
   display: flex;
   align-items: center !important;
   justify-content: center !important;
 }
-.logo-inside-ml{
+.logo-inside-ml {
   margin-left: -7rem;
 }

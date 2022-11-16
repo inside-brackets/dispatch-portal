@@ -7,7 +7,7 @@ const randomBytes = promisify(crypto.randomBytes);
 dotenv.config();
 
 const region = "us-east-1";
-const bucketName = "falcon-portal-s3";
+const bucketName = process.env.AWS_BUCKET_NAME;
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
@@ -47,17 +47,14 @@ const generateUploadURL = async (folder, fileName, del) => {
 const deleteUploadedURL = async (folder, fileName) => {
   // export async function generateUploadURL() {
   try {
-    console.log("I m reubn")
-      let params1 = { Bucket: `${bucketName}`, Key: `${folder}/${fileName}` };
 
-       await s3.deleteObject(params1, function (err, data) {
-        if (err) return err; // error
-        else {
-          console.log("fil deleted ")
-          data; // deleted
-        }
-      });
+    console.log("I m reubn");
+    let params1 = { Bucket: `${bucketName}`, Key: `${folder}/${fileName}` };
 
+    await s3.deleteObject(params1, function (err, data) {
+      if (err) return err; // error
+      else return data; // deleted
+    });
   } catch (error) {
     return error;
   }

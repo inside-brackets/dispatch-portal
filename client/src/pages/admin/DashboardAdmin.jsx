@@ -19,53 +19,93 @@ const DashboardAdmin = () => {
   });
   const [data, setData] = useState(null);
   const [topDispatcher, setTopDispatcher] = useState(null);
+  const [lineChart, setLineChart] = useState([]);
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
-  const chartOptions = {
-    series: [
-      {
-        name: "Online Customers",
-        data: [40, 70, 20, 90, 36, 80, 30, 91, 60],
-      },
-      {
-        name: "Store Customers",
-        data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10],
-      },
-    ],
-    options: {
-      color: ["#6ab04c", "#2980b9"],
-      chart: {
-        background: "transparent",
-      },
-      dataLabels: {
+  const lineChartOptions = {
+    chart: {
+      width: "100%",
+      type: "line",
+      zoom: {
         enabled: false,
       },
-      stroke: {
-        curve: "smooth",
-      },
-      xaxis: {
-        categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-        ],
-      },
-      legend: {
-        position: "top",
-      },
-      grid: {
+      toolbar: {
         show: false,
       },
     },
+    colors: ["rgb(248, 248, 0)", "var(--main-color-green)"],
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "smooth",
+    },
+    title: {
+      text: "Growth",
+      align: "left",
+    },
+    grid: {
+      borderColor: "#ececec",
+      row: {
+        colors: ["#f1f1f1", "transparent"],
+        opacity: 0.5,
+      },
+    },
+    xaxis: {
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sept",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      title: {
+        text: "Month",
+      },
+    },
+    yaxis: {
+      title: {
+        text: "Carriers",
+      },
+    },
+    legend: {
+      position: "top",
+      horizontalAlign: "right",
+      floating: true,
+      offsetY: -25,
+      offsetX: -5,
+    },
+  };
+
+  useEffect(() => {
+    fetchChart();
+  }, []);
+
+  const fetchChart = () => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/chart`)
+      .then(({ data }) => {
+        setLineChart([
+          {
+            name: "Appointment",
+            data: data.appointment,
+          },
+          {
+            name: "Registered",
+            data: data.registered,
+          },
+        ]);
+      });
   };
 
   useEffect(() => {
@@ -142,28 +182,14 @@ const DashboardAdmin = () => {
       <Row>
         <Col>
           <Card>
-            <Chart
-              // className="my-card"
-              style={{
-                width: "auto",
-                height: "250px",
-                border: "light",
-              }}
-              options={
-                themeReducer === "theme-mode-dark"
-                  ? {
-                      ...chartOptions.options,
-                      theme: { mode: "dark" },
-                    }
-                  : {
-                      ...chartOptions.options,
-                      theme: { mode: "light" },
-                    }
-              }
-              series={chartOptions.series}
-              type="line"
-              height="100%"
-            />
+            <Card.Body style={{ padding: "0" }}>
+              <Chart
+                options={lineChartOptions}
+                series={lineChart}
+                type="line"
+                height={250}
+              />
+            </Card.Body>
           </Card>
         </Col>
         <Col>

@@ -322,7 +322,7 @@ const TruckDetail = ({ match }) => {
                       <Col md={9}>
                         <Form.Control
                           type="text"
-                          placeholder="Payment Method"
+                          placeholder="Phone Number"
                           required
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
@@ -341,6 +341,7 @@ const TruckDetail = ({ match }) => {
                       </Col>
                       <Col md={9}>
                         <Form.Control
+                          placeholder="Email"
                           type="text"
                           required
                           value={email}
@@ -806,7 +807,7 @@ const TruckDetail = ({ match }) => {
                           <Form.Label>Driver Email</Form.Label>
                           <Form.Control
                             type="email"
-                            placeholder="Driver Name"
+                            placeholder="Driver Email"
                             required
                             onChange={(e) => handleChange(index, e)}
                             name="email_address"

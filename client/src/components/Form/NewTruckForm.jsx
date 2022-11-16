@@ -160,9 +160,7 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           <Form.Control
             required
             type="number"
-            placeholder="Enter 17 digit code.."
-            min="17"
-            max="17"
+            placeholder="Enter code.."
             name="vin_number"
             defaultValue={defaultValue ? defaultValue.vin_number : ""}
           />
