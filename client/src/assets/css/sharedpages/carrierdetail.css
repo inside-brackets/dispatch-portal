@@ -11,15 +11,15 @@
 .file__input {
     background-color: white;
     border-radius: var(--border-radius);
-    font-size: large;
-    width: 136px;
+    font-size: 15px;
+    width: 119px;
     border: 1px solid #999;
-    padding: 4px;
+    padding: 5px;
     white-space: nowrap;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 500;
     box-shadow: var(--box-shadow-dark);
-    margin-left: 68px;
+    margin-left: -6px;
 }
 .file__input:hover {
     border-color: black;
@@ -47,12 +47,13 @@
 .actions_button_wrapper {
     display: flex;
     justify-content: space-between;
-    padding: 0px 6px;
+    padding: 0px 2px;
 }
 .actions_button_misc_wrapper{
     display: flex;
     justify-content: space-between;
-    padding-right: 13px;
+    padding-right: 16px;
+    margin-left: -0.9rem;
 }
 .action_button {
     padding: 0;
@@ -80,7 +81,7 @@
     padding-bottom:3px;
 }
 .basic_file_hr{
-    width: 42.9rem;
+    width: 35.9rem;
     margin-left: 54px;
 }
 .carrier_badge_status{
@@ -91,4 +92,22 @@
     margin-left: -25px;
     display: flex;
     justify-content: flex-end;
+}
+.card_body{
+    padding: 0px 1rem 1rem 1rem;
+}
+.form_control{
+    padding: 0.275rem 0.75rem;
+}
+.label_form{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.relative{
+    position: relative;
+}
+.section_heading{
+    font-size: 1.9rem; 
+    font-weight: 500;
 }

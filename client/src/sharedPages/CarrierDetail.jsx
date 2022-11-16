@@ -410,8 +410,8 @@ const CarrierDetail = () => {
 
   return (
     <div className="row">
-      <div className="col">
-        <BackButton onClick={() => history.push("/searchcarrier")} />
+      <div className="col relative">
+        <BackButton onClick={() => history.push("/searchcarrier")} className="btn_back" />
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Card
             className="truck-detail-card"
@@ -420,19 +420,19 @@ const CarrierDetail = () => {
               marginRight: "30px",
             }}
           >
-            <Card.Body>
+            <Card.Body className="card_body">
               <div className="carrier_badge_status"><Badge
                 type={CStatus[carrier.c_status]}
                 content={carrier.c_status}
               /></div>
-              <h1 className="text-center">{carrier.company_name}  </h1>
+              <h2 className="text-center">{carrier.company_name}  </h2>
               <hr />
               <Row>
                 <Form.Group as={Col} md="6" controlId="validationCustom03">
                   <Row>
                     <Col>
                       {" "}
-                      <h3>MC:</h3>{" "}
+                      <span className="label_form">MC:</span>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
@@ -441,6 +441,7 @@ const CarrierDetail = () => {
                         required
                         defaultValue={carrier ? carrier.mc_number : ""}
                         disabled
+                        className="form_control"
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid MC.
@@ -452,7 +453,7 @@ const CarrierDetail = () => {
                   <Row>
                     <Col>
                       {" "}
-                      <h3>Address:</h3>{" "}
+                      <span className="label_form">Address:</span>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
@@ -461,6 +462,7 @@ const CarrierDetail = () => {
                         required
                         defaultValue={carrier ? carrier.address : ""}
                         disabled
+                        className="form_control"
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid entity.
@@ -474,11 +476,11 @@ const CarrierDetail = () => {
                   <Row>
                     <Col>
                       {" "}
-                      <h3>Phone #:</h3>{" "}
+                      <span className="label_form">Phone #:</span>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
-
+className="form_control"
                         type="text"
                         placeholder="Phone #"
                         name="phone_number"
@@ -495,10 +497,11 @@ const CarrierDetail = () => {
                   <Row>
                     <Col>
                       {" "}
-                      <h3>Email:</h3>{" "}
+                      <span className="label_form">Email:</span>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
+                      className="form_control"
                         placeholder="Email"
                         type="text"
                         required
@@ -578,13 +581,14 @@ const CarrierDetail = () => {
                 </Col>
               </Row>
               </>)}
-              <h2>Carrier Details :</h2>
+              <h2 className="section_heading">Carrier Details :</h2>
 
               <Row className="m-3">
                 <Row>
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>Owner Name:</Form.Label>
                     <Form.Control
+                    className="form_control"
                       type="text"
                       placeholder="Owner Name"
                       name="owner_name"
@@ -599,6 +603,7 @@ const CarrierDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>*Dispatch Fee:</Form.Label>
                     <Form.Control
+                    className="form_control"
                       type="number"
                       placeholder="*Dispatch Fee:"
                       name="dispatch_fee"
@@ -612,6 +617,7 @@ const CarrierDetail = () => {
                   <Form.Group as={Col} md="4" controlId="validationCustom03">
                     <Form.Label>Tax Id:</Form.Label>
                     <Form.Control
+                    className="form_control"
                       type="number"
                       placeholder="Tax Id"
                       defaultValue={carrier ? carrier.tax_id_number : ""}
@@ -627,6 +633,7 @@ const CarrierDetail = () => {
 
                   <Col md={4}>
                     <MySelect
+                    style={{padding:"0px"}}
                       isMulti={false}
                       value={selectedPayment}
                       onChange={setSelectedPayment}
@@ -642,7 +649,7 @@ const CarrierDetail = () => {
 
                 {selectedPayment.value === "factoring" ? (
                   <div>
-                    <h2>Factoring Details:</h2>
+                    <h2 className="section_heading">Factoring Details:</h2>
                     <Row className="my-3">
                       <Form.Group
                         as={Col}
@@ -651,6 +658,7 @@ const CarrierDetail = () => {
                       >
                         <Form.Label>Company's Name:</Form.Label>
                         <Form.Control
+                        className="form_control"
                           type="text"
                           placeholder="Company's Name"
                           name="f_name"
@@ -672,6 +680,7 @@ const CarrierDetail = () => {
                       >
                         <Form.Label>Address:</Form.Label>
                         <Form.Control
+                        className="form_control"
                           type="text"
                           name="f_address"
                           defaultValue={
@@ -696,6 +705,7 @@ const CarrierDetail = () => {
                       >
                         <Form.Label>Agent's Name:</Form.Label>
                         <Form.Control
+                        className="form_control"
                           type="text"
                           placeholder="Agent's Name"
                           name="f_agent_name"
@@ -718,6 +728,7 @@ const CarrierDetail = () => {
                       >
                         <Form.Label>Agent's Email:</Form.Label>
                         <Form.Control
+                        className="form_control"
                           type="email"
                           placeholder="Agent's Email"
                           name="f_agent_email"
@@ -739,6 +750,7 @@ const CarrierDetail = () => {
                       >
                         <Form.Label>Phone Number:</Form.Label>
                         <Form.Control
+                        className="form_control"
                           type="number"
                           placeholder="Phone Number"
                           name="f_phone"
@@ -759,11 +771,12 @@ const CarrierDetail = () => {
                 ) : null}
               </Row>
 
-              <h2>Insurance Details:</h2>
+              <h2 className="section_heading">Insurance Details:</h2>
               <Row className="my-3">
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Company's Name:</Form.Label>
                   <Form.Control
+                  className="form_control"
                     type="text"
                     placeholder="Company's Name"
                     name="i_company_name"
@@ -781,6 +794,7 @@ const CarrierDetail = () => {
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Address:</Form.Label>
                   <Form.Control
+                  className="form_control"
                     type="text"
                     name="i_address"
                     defaultValue={
@@ -800,6 +814,7 @@ const CarrierDetail = () => {
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Agent's Name:</Form.Label>
                   <Form.Control
+                  className="form_control"
                     type="text"
                     placeholder="Agent's Name"
                     name="i_agent_name"
@@ -818,6 +833,7 @@ const CarrierDetail = () => {
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Agent's Email:</Form.Label>
                   <Form.Control
+                  className="form_control"
                     type="email"
                     placeholder="Agent's Email"
                     name="i_agent_email"
@@ -835,6 +851,7 @@ const CarrierDetail = () => {
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Phone Number:</Form.Label>
                   <Form.Control
+                  className="form_control"
                     type="number"
                     placeholder="Phone Number"
                     name="i_phone_number"
@@ -859,6 +876,7 @@ const CarrierDetail = () => {
                     <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Salesman:</Form.Label>
                       <Form.Control
+                      className="form_control"
                         type="text"
                         readOnly
                         defaultValue={

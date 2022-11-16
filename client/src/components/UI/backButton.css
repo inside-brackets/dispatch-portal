@@ -10,7 +10,11 @@
   font-size: 20px;
   z-index: 10;
 }
-
+.btn_back{
+  position: absolute !important;
+  top: 12px !important;
+  left: 83px !important;
+}
 .back-button:hover {
   transform: scale(1.1) !important;
   transition: transform 0.3s ease 0s !important;
