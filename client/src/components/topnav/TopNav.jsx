@@ -76,17 +76,23 @@ const Topnav = () => {
       </div>
       <div className="topnav__right">
         <div className="bd-brand-item">
-          <span className="h3">
+          <span className="company_label">
             {user.department === "admin" || user.department === "HR" ? (
-              <Badge
-                type={company_status_map[company.value]}
-                content={company.label}
-              />
+              // <Badge
+              //   type={company_status_map[company.value]}
+              //   content={}
+              // />
+              <>
+              
+             { company.label}
+             </>
             ) : (
               ""
             )}
           </span>
         </div>
+        </div>
+        <div className="topnav__right">
         <div className="topnav__right-item">
           {/* dropdown here */}
           <Dropdown

@@ -10,12 +10,26 @@
   height: 54px;
   background-color: var(--main-color);
   /* background-color: #20232A; */
+ 
   z-index: 999;
   position: fixed;
+  top:0px !important;
 
   box-shadow: rgba(149, 157, 165, 0.4) 8px 8px 10px;
 };
+.bd-brand-item > span {
+    color: var(--txt-white);
+    font-size: 21px;
+    font-weight: 500;
+    margin-left: 1vw;
+}
+.company_label{
+  color: var(--txt-white); 
+  font-size: 21px;
+  font-weight: 500;
+  margin-left: 1vw;
   
+}
 
 .topnav__search > input {
   height: 100%;
