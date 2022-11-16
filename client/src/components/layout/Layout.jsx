@@ -29,11 +29,11 @@ const Layout = () => {
           <TopNav />
           <div className="layout__content">
             <Sidebar {...props} />
-            <div className="layout__content-main ">
+           <div className="layout__content-main">
               <Routes />
+              </div>
             </div>
-          </div>
-        </div>
+           </div>
       )}
     />
   );
