@@ -8,7 +8,7 @@
   top: 0;
   background-color: var(--main-bg);
   box-shadow: var(--box-shadow);
-  padding-top: 80px;
+  padding-top: 3px;
   z-index: 1;
 }
 
@@ -81,6 +81,6 @@
 }
 
 .sidebar-items {
-  max-height: 62vh;
+  /* max-height: 62vh; */
   overflow-y: scroll;
 }
