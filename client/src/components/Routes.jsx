@@ -9,7 +9,8 @@ import Loader from "react-loader-spinner";
 // admin routes
 const Invoice = lazy(() => import("../pages/admin/Invoice"));
 const AddCarrier = lazy(() => import("../pages/admin/AddCarrier"));
-const CarrierView = lazy(() => import("../pages/admin/CarrierView"));
+// const CarrierView = lazy(() => import("../pages/admin/CarrierView"));
+const CarrierView = lazy(() => import("../sharedPages/CarrierDetail"));
 const DashboardAdmin = lazy(() => import("../pages/admin/DashboardAdmin"));
 const AssignSales = lazy(() => import("../pages/admin/AssignSales"));
 const Carriers = lazy(() => import("../pages/admin/Carriers"));
@@ -145,7 +146,8 @@ const Routes = () => {
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/spread_sheet" component={SpreadSheet} />
           <Route path="/appointments" exact component={Appointments} />
-          <Route path="/appointments/:mc" component={AppointmentDetail} />
+          <Route path="/appointments_old/:mc" component={AppointmentDetail} />
+          <Route path="/appointments/:mc" component={CarrierView} />
           <Route path="/dialer" component={Dialer} />
           <Route path="/profile" component={Profile} />
           <Route path="*">

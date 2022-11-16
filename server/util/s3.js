@@ -47,6 +47,7 @@ const generateUploadURL = async (folder, fileName, del) => {
 const deleteUploadedURL = async (folder, fileName) => {
   // export async function generateUploadURL() {
   try {
+
     console.log("I m reubn");
     let params1 = { Bucket: `${bucketName}`, Key: `${folder}/${fileName}` };
 
