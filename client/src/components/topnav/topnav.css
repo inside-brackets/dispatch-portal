@@ -1,10 +1,21 @@
 .topnav {
-  padding: 30px;
+  /* padding: 30px; */
+  padding: 0px 16px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: var(--topnav-height);
-}
+  /* height: var(--topnav-height); */
+  /* height: 80px; */
+  height: 54px;
+  background-color: var(--main-color);
+  /* background-color: #20232A; */
+  z-index: 999;
+  position: fixed;
+
+  box-shadow: rgba(149, 157, 165, 0.4) 8px 8px 10px;
+};
+  
 
 .topnav__search > input {
   height: 100%;
@@ -68,6 +79,7 @@
 .topnav__right-user__name {
   font-size: 1rem;
   font-weight: 600;
+  color: #fff;
 }
 
 .bd-brand-item {

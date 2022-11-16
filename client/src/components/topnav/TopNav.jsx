@@ -5,7 +5,9 @@ import Dropdown from "../dropdown/Dropdown";
 import ThemeMenu from "../thememenu/ThemeMenu";
 import user_image from "../../assets/images/taut.png";
 import user_menu from "../../assets/JsonData/user_menus.json";
-import SearchBar from "../UI/SearchBar";
+// import SearchBar from "../UI/SearchBar";
+import logo from "../../assets/images/logo.png";
+import logo2 from "../../assets/images/White-Christmas.png";
 import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import Badge from "../badge/Badge";
@@ -58,7 +60,20 @@ const Topnav = () => {
   );
   return (
     <div className="topnav">
-      <SearchBar className="topnav__search" placeholder="Search here..." />
+      {/* <SearchBar className="topnav__search" placeholder="Search here..." /> */}
+      <div
+        className={
+          process.env.REACT_APP_FALCON === "true"
+            ? `sidebar__logo_falcon`
+            : "sidebar__logo"
+        }
+      >
+        <img
+          className="logo img-fluid"
+          src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
+          alt="company logo"
+        />
+      </div>
       <div className="topnav__right">
         <div className="bd-brand-item">
           <span className="h3">
