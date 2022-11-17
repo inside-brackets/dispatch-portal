@@ -138,8 +138,17 @@
   text-decoration: underline;
 }
 .custom-lbl {
-  padding: 11px 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
 }
 .no-input {
   cursor: not-allowed;
+}
+.num-input {
+  -moz-appearance: textfield;
+}
+.num-input::-webkit-outer-spin-button,
+.num-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import moment from "moment";
 
-function UserCard() {
+import dummy_img from "../../assets/images/taut.png";
+
+function UserCard({ user }) {
+  const [month, setMonth] = useState(
+    new Date().toLocaleString("default", { month: "long" })
+  );
   return (
     <>
       <Row>
@@ -9,12 +15,17 @@ function UserCard() {
           <h1 className="txt-2 fon-bold mar-b-1">User Details</h1>
           <div className="w-100 h-96 p-0-2 mar-b-2 dis-flex dis-row dis-center dis-between bg-smoke border border-r-1">
             <div className="dis-flex dis-row dis-center">
-              <img className="salary-user-img" src="./temp.png" />
+              <img
+                className="salary-user-img"
+                src={user.profile_image ?? dummy_img}
+              />
               <div className="dis-flex dis-col dis-start">
                 <span className="txt-1 line-1 fon-med mar-b-025 txt-black">
-                  Username
+                  {user.user_name}
                 </span>
-                <span className="txt-1 line-1 fon-reg txt-grey">Full Name</span>
+                <span className="txt-1 line-1 fon-reg txt-grey">
+                  {user.first_name + " " + user.last_name}
+                </span>
               </div>
             </div>
             <div className="dis-flex dis-col">
@@ -23,14 +34,16 @@ function UserCard() {
                   Department:
                 </span>
                 <span className="txt-1 line-1 fon-reg mar-b-025 txt-grey">
-                  Dispatch
+                  {user.department}
                 </span>
               </div>
               <div>
                 <span className="txt-1 line-1 fon-med mar-r-075 txt-black">
                   Designation:
                 </span>
-                <span className="txt-1 line-1 fon-reg txt-grey">Employee</span>
+                <span className="txt-1 line-1 fon-reg txt-grey">
+                  {user.designation}
+                </span>
               </div>
             </div>
             <div className="dis-flex dis-col">
@@ -39,7 +52,7 @@ function UserCard() {
                   Status:
                 </span>
                 <span className="txt-1 line-1 fon-reg mar-b-025 txt-grey">
-                  Active
+                  {user.u_status}
                 </span>
               </div>
               <div>
@@ -47,7 +60,7 @@ function UserCard() {
                   Joined Date:
                 </span>
                 <span className="txt-1 line-1 fon-reg txt-grey">
-                  18 Dec, 2021
+                  {moment(user.joining_date).format("ll")}
                 </span>
               </div>
             </div>
@@ -57,7 +70,7 @@ function UserCard() {
                   Month:
                 </span>
                 <span className="txt-1 line-1 fon-reg mar-b-025 txt-grey">
-                  November
+                  {month ?? "-"}
                 </span>
               </div>
               <div>

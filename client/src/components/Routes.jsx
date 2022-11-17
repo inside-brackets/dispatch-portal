@@ -22,6 +22,7 @@ const PdfTest = lazy(() => import("../components/PdfTest"));
 const UserDetail = lazy(() => import("../pages/admin/UserDetail"));
 const AdminReport = lazy(() => import("../pages/admin/Report"));
 const Salaries = lazy(() => import("../pages/admin/Salaries"));
+const SalaryDetails = lazy(() => import("../pages/admin/SalaryDetails"));
 
 // sales routes
 const Dashboard = lazy(() => import("../pages/sales/Dashboard"));
@@ -189,6 +190,7 @@ const Routes = () => {
         <Route path="/reports" exact component={AdminReport} />
         <Route path="/reports/:id" component={Report} />
         <Route path="/salaries" component={Salaries} />
+        <Route path="/salary/:id" component={SalaryDetails} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>

@@ -2,16 +2,31 @@ import React, { useEffect, useRef } from "react";
 
 function Adjustments({ adjustments, setAdjustments, error, setError }) {
   const lastDesc = useRef(null);
+  const lastAmount = useRef(null);
 
   useEffect(() => {
     if (error) {
-      lastDesc.current.classList.remove("border");
-      lastDesc.current.classList.add("border-2");
-      lastDesc.current.focus();
+      if (lastDesc.current.value == "") {
+        lastDesc.current.classList.remove("border");
+        lastDesc.current.classList.add("border-2");
+        lastDesc.current.focus();
+      } else {
+        lastAmount.current.focus();
+      }
+      if (lastAmount.current.value == "") {
+        lastAmount.current.classList.remove("border");
+        lastAmount.current.classList.add("border-2");
+      }
     } else {
       if (lastDesc.current) {
-        lastDesc.current.classList.remove("border-2");
-        lastDesc.current.classList.add("border");
+        if (lastDesc.current.value != "") {
+          lastDesc.current.classList.remove("border-2");
+          lastDesc.current.classList.add("border");
+        }
+        if (lastAmount.current.value != "") {
+          lastAmount.current.classList.remove("border-2");
+          lastAmount.current.classList.add("border");
+        }
       }
     }
   }, [error]);
@@ -58,9 +73,10 @@ function Adjustments({ adjustments, setAdjustments, error, setError }) {
                 </label>
                 <input
                   type="number"
-                  className="w-200 h-36 p-l-4 border border-r-025"
+                  className="w-200 h-36 p-l-4 border border-r-025 num-input"
                   name="amount"
                   value={x.amount}
+                  ref={lastAmount}
                   onChange={(e) => handleChange(e, i)}
                 />
               </div>
