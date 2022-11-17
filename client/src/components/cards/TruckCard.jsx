@@ -11,57 +11,59 @@ const body = (carrier) => (
   <div>
     <Row>
       <Col>
-        <h5>MC: </h5>
+        <span className="b">MC: </span>
       </Col>
       <Col>
-        <h6> {carrier.mc_number}</h6>
+        <span className=""> {carrier.mc_number}</span>
       </Col>
     </Row>
 
     <Row>
       <Col>
-        <h5>Truck #:</h5>
+        <span className="b ">Truck #:</span>
       </Col>
       <Col>
-        <h6>{carrier.truck_number}</h6>
-      </Col>
-    </Row>
-    <Row>
-      <Col>
-        <h5>Trailer Type</h5>
-      </Col>
-      <Col>
-        <h6>{carrier.trailer_type}</h6>
+        <span className="">{carrier.truck_number}</span>
       </Col>
     </Row>
     <Row>
       <Col>
-        <h5>Driver:</h5>
+        <span className="b ">Trailer Type</span>
       </Col>
       <Col>
-        <h6>{carrier.driver}</h6>
+        <span className="">{carrier.trailer_type}</span>
       </Col>
     </Row>
     <Row>
       <Col>
-        <h5>Truck Status:</h5>
+        <span className="b ">Driver:</span>
       </Col>
       <Col>
-        <h6>
+        <span className="">{carrier.driver}</span>
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <span className="b ">Tr. Status:</span>
+      </Col>
+      <Col>
+        <span className="">
           <Badge
+            className="mytrucks-cards-badge"
             type={truck_status_map[carrier.truck_status]}
             content={carrier.truck_status}
           />
-        </h6>
+        </span>
       </Col>
     </Row>
     <Row>
       <Col>
-        <h5>Load Status:</h5>
+        <span className="b ">Load Status:</span>
       </Col>
       <Col>
-        <h6>
+        <span className="">
           <Badge
+            className="mytrucks-cards-badge"
             type={
               load_status_map[
                 carrier.load_status ? carrier.load_status : "empty"
@@ -69,7 +71,7 @@ const body = (carrier) => (
             }
             content={carrier.load_status ? carrier.load_status : "empty"}
           />
-        </h6>
+        </span>
       </Col>
     </Row>
   </div>
@@ -79,19 +81,19 @@ const TruckCard = ({ item }) => {
   return (
     <Card
       style={{
-        minWidth: "368px",
+        minWidth: "290px",
       }}
       className={`${item.out_of ? "" : "newCarrierBackground"}`}
     >
       <Card.Body className="cardBody">
-        <Card.Title>{item.company_name}</Card.Title>
+        <Card.Title className="card-title">{item.company_name}</Card.Title>
 
         <hr />
-        <Card.Text className="">{body(item)}</Card.Text>
+        <Card.Text>{body(item)}</Card.Text>
         <Card.Footer
           style={{
             width: "auto",
-            height: "auto",
+            height: "45px",
           }}
         >
           {item.out_of ? (
@@ -105,8 +107,8 @@ const TruckCard = ({ item }) => {
               {`Out of:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0  ${item.out_of}`}
             </div>
           ) : (
-            <div className="newCarrierContainer" style={{ height: "69px" }}>
-              <h3 className="text-center ">New Carrier!</h3>
+            <div className="newCarrierContainer" style={{ height: "30px" }}>
+              <h4 className="text-center ">New Carrier!</h4>
             </div>
           )}
         </Card.Footer>

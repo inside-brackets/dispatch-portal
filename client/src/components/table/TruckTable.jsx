@@ -210,6 +210,7 @@ const TruckTable = (props) => {
         size="lg"
         heading="Add New Truck"
         onClose={closeTruckModal}
+        scroll="add-truck-scroll"
       >
         <TruckForm
           admin={user.department === "admin"}

@@ -17,10 +17,10 @@ const MyModal = (props) => {
           onHide={props.onClose}
           
         >
-          <Modal.Header closeButton>
+          <Modal.Header className="modal-header-scroll" closeButton>
             <Modal.Title>{props.heading}</Modal.Title>
           </Modal.Header>
-          <Modal.Body className="modalBody">{props.children}</Modal.Body>
+          <Modal.Body className={`${props.scroll ? props.scroll : 'modalBody'}`}>{props.children}</Modal.Body>
           {props.onConfirm && (
             <Modal.Footer>
               {" "}

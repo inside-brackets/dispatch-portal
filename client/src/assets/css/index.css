@@ -46,7 +46,6 @@
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   font-size: .9rem;
-  /* font-size: 1rem; */
 }
 
 i {
@@ -415,4 +414,8 @@ th {
 }
 .logo-inside-ml {
   margin-left: -7rem;
+}
+
+.b{
+  font-weight: bold;
 }

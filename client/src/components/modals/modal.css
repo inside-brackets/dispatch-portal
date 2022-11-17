@@ -27,11 +27,12 @@ span[aria-hidden="true"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0px !important;
   font-size: 25px;
   border-bottom: 2px solid rgba(119, 119, 119, 0.2);
   margin-bottom: 20px;
 }
-*/ @media (min-width: 768px) {
+ @media (min-width: 768px) {
   .modal {
     width: 40rem;
     left: calc(50% - 20rem);
@@ -47,4 +48,8 @@ span[aria-hidden="true"] {
     opacity: 10;
     transform: translateY(00rem);
   }
+}
+
+.modal-header-scroll{
+  padding: 0.5rem 1rem !important;
 }
