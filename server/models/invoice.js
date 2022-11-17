@@ -11,7 +11,7 @@ const invoiceSchema = new mongoose.Schema(
     },
     truckNumber: { type: Number, require: true },
     trailerType: { type: String, require: true },
-    carrier:{
+    carrier: {
       type: mongoose.Types.ObjectId,
       ref: "Carrier",
     },
@@ -67,7 +67,6 @@ const invoiceSchema = new mongoose.Schema(
       phone_number: String,
     },
   },
-
   {
     timestamps: true,
   }
