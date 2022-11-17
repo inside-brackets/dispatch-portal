@@ -76,7 +76,7 @@ const Topnav = () => {
       </div>
       <div className="topnav__right">
         <div className="bd-brand-item">
-          <span className="company_label">
+          <span className="company_label falcon_label">
             {user.department === "admin" || user.department === "HR" ? (
               // <Badge
               //   type={company_status_map[company.value]}

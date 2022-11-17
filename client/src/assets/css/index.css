@@ -10,7 +10,7 @@
   --box-shadow: rgba(149, 157, 165, 0.4) 8px 8px 10px;
 
   --main-bg-light: #ffffff;
-  --second-bg-light: #ebebeb;
+  --second-bg-light: #e7e7ea;
   --txt-color-light: #455560;
   --box-shadow-light: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
@@ -19,10 +19,10 @@
   --txt-color-dark: #bbbbbb;
   --box-shadow-dark: rgba(0, 0, 0, 0.2) 0px 5px 10px;
 
-  --main-color-blue: #349eff;
-  --second-color-blue: #62b4ff;
+  --main-color-blue: #3a67c8;
+  --second-color-blue: #59a4e9;
 
-  --main-color-red: #fa1b23;
+  --main-color-red: #c0353a ;
   --second-color-red: #ff4a6b;
 
   --main-color-cyan: #10d4d2;
