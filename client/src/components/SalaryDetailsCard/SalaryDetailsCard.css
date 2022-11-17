@@ -22,6 +22,9 @@
 .p-0-1 {
   padding: 0 1rem;
 }
+.p-l-1 {
+  padding-left: 1rem;
+}
 .p-l-4 {
   padding-left: 3rem;
 }
@@ -130,9 +133,11 @@
   width: 4rem;
   margin-right: 1.5rem;
 }
+.cur-pointer {
+  cursor: pointer;
+}
 .custom-btn {
   color: #2563eb;
-  cursor: pointer;
 }
 .custom-btn:hover {
   text-decoration: underline;

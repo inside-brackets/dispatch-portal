@@ -8,6 +8,7 @@ function UserCard({ user }) {
   const [month, setMonth] = useState(
     new Date().toLocaleString("default", { month: "long" })
   );
+
   return (
     <>
       <Row>
@@ -24,7 +25,9 @@ function UserCard({ user }) {
                   {user.user_name}
                 </span>
                 <span className="txt-1 line-1 fon-reg txt-grey">
-                  {user.first_name + " " + user.last_name}
+                  {(user.first_name ?? "Someone") +
+                    " " +
+                    (user.last_name ?? "Lazy")}
                 </span>
               </div>
             </div>

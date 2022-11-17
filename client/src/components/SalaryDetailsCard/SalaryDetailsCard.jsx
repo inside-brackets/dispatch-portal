@@ -94,7 +94,10 @@ function SalaryDetailsCard({ user }) {
         </div>
         <div className="mar-b-1 dis-flex dis-row dis-bottom">
           <h1 className="mar-b-0 mar-r-15 txt-2 fon-bold">Adjustment</h1>
-          <span className="txt-875 fon-med custom-btn" onClick={handleClick}>
+          <span
+            className="txt-875 fon-med custom-btn cur-pointer"
+            onClick={handleClick}
+          >
             Add+
           </span>
         </div>
