@@ -20,7 +20,7 @@ const MySelect = (props) => {
     </div>
   ) : (
     <div className="__input">
-      {props.label && <label htmlFor={props.label}>{props.label}</label>}
+      {props.label && <label htmlFor={props.label} style={{padding:"3px"}}>{props.label}</label>}
       {props.icon && <i className={`icon ${props.icon}`}></i>}
       <Select
         options={props.options}

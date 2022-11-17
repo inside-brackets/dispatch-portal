@@ -24,6 +24,7 @@ textarea {
 .input__icon {
   position: absolute;
   margin: 15px 0 0 260px;
+  margin: 15px 0 0 0px;
   font-size: 20px;
   z-index: 1;
 }

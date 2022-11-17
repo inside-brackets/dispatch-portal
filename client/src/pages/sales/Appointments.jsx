@@ -10,6 +10,7 @@ import { Card } from "react-bootstrap";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import moment from "moment";
+import "../../assets/css/sales/appointmentCards.css";
 
 
 const Appointments = (props) => {
@@ -148,9 +149,9 @@ const Appointments = (props) => {
             }}
           >
             <h6 className="text-muted">
-              {carrier.comment?.length >= 62
+              {carrier.comment?.length >= 40
                 ? `${carrier.comment
-                    .substring(0, Math.min(carrier.comment.length, 62))
+                    .substring(0, Math.min(carrier.comment.length, 40))
                     .trim()}...`
                 : carrier.comment}
             </h6>
@@ -189,21 +190,21 @@ const Appointments = (props) => {
               <Card
                 className=""
                 style={{
-                  height: "455px",
+                  height: "360px",
                   border: "light",
                 }}
               >
                 <Card.Body>
                   <Card.Title
                     style={{
-                      height: "40px",
+                      height: "15px",
                     }}
                   >
                     {item.company_name}
                   </Card.Title>
                   <hr />
                   <Card.Text className="">{body(item)}</Card.Text>
-                  <Card.Footer className="card-title ">
+                  <Card.Footer className="card-title">
                     {
                       <h5>{`Time: ${moment(new Date(item.appointment)).format(
                         "llll"
@@ -213,6 +214,7 @@ const Appointments = (props) => {
                   <div class="d-flex justify-content-between">
 
                   <MyButton 
+                  style={{marginTop:'5px'}}
                   color="red"
                   buttonText={'Reject'}
                   onClick={() => {onConfirm(item.mc_number)}}
@@ -221,6 +223,7 @@ const Appointments = (props) => {
                   />
          
                   <MyButton
+                  style={{marginTop:'5px'}}
                   color="primary"
                   buttonText={'Details'}
                   onClick={() => {history.push(`/appointments/${item.mc_number}`)}}

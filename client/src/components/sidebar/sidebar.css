@@ -1,11 +1,15 @@
 .sidebar {
   width: var(--sidebar-width);
-  height: 100vh;
+  /* height: 100vh; */
+  margin-top: 54px;
+  height: calc(100vh - 54px);
   position: fixed;
   left: 0;
   top: 0;
   background-color: var(--main-bg);
   box-shadow: var(--box-shadow);
+  padding-top: 3px;
+  z-index: 1;
 }
 
 .sidebar__logo {
@@ -17,10 +21,13 @@
 }
 
 .sidebar__logo > img {
-  height: 60px;
+  height: 40px;
+  /* height: 60px; */
 }
 .sidebar__logo_falcon > img {
-  height: 200px;
+  /* height: 200px; */
+  height: 51px;
+      margin-bottom: 6px;
 }
 
 .sidebar__item {
@@ -74,6 +81,6 @@
 }
 
 .sidebar-items {
-  max-height: 62vh;
+  /* max-height: 62vh; */
   overflow-y: scroll;
 }

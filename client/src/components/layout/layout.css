@@ -3,6 +3,9 @@
 }
 
 .layout__content {
+    /* padding-left: var(--sidebar-width);
+    background-color: var(--second-bg);
+    min-height: 100vh; */
     padding-left: var(--sidebar-width);
     background-color: var(--second-bg);
     min-height: 100vh;
@@ -10,4 +13,8 @@
 
 .layout__content-main {
     padding: 30px;
+    margin-top: 54px;
+    padding-top:5px;
 }
+
+

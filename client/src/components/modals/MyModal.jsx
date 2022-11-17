@@ -25,7 +25,7 @@ const MyModal = (props) => {
             <Modal.Footer>
               {" "}
               <Button
-                buttonText="Submit"
+                buttonText={props.btnText?props.btnText:"Submit"}
                 color="inherit"
                 mc={props.mc}
                 disabled={props.disabled}
