@@ -147,7 +147,12 @@ const DashboardAdmin = () => {
   return (
     <div>
       <Row className="my-4">
-        <Col md={4}>
+        
+      <Col>
+          <h2>Admin Dashboard</h2>
+        </Col>
+        <Col md={8} lg={6} xl={4} style={{ zIndex: 2 }}>
+        {/* <Col md={4}> */}
           <MySelect
             isMulti={false}
             value={selectedCompany}
