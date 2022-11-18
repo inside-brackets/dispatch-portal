@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import { useParams, useHistory } from "react-router-dom";
 import TruckTable from "../components/table/TruckTable";
 import TooltipCustom from "../components/tooltip/TooltipCustom";
