@@ -34,7 +34,7 @@ span[aria-hidden="true"] {
 }
  @media (min-width: 768px) {
   .modal {
-    width: 40rem;
+    width: 50rem;
     left: calc(50% - 20rem);
   }
 }
@@ -49,7 +49,24 @@ span[aria-hidden="true"] {
     transform: translateY(00rem);
   }
 }
-
-.modal-header-scroll{
-  padding: 0.5rem 1rem !important;
+.scroll{
+  padding-right: 20px;
+  height:70vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
+.scrollBody{
+  height:80vh;
+  overflow-y: hidden;
+}
+.scrollInvoice{
+  padding-right: 20px;
+  height:75vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.scrollInvoiceBody{
+  height:80vh;
+  overflow-y: hidden;
+}
+
