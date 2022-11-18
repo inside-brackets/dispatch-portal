@@ -39,6 +39,11 @@ span[aria-hidden="true"] {
   }
 }
 
+.printInvoice {
+  width: 73rem;
+  left: calc(50% - 35rem);
+}
+
 @keyframes slide-down {
   from {
     opacity: 10;
@@ -69,4 +74,3 @@ span[aria-hidden="true"] {
   height:80vh;
   overflow-y: hidden;
 }
-

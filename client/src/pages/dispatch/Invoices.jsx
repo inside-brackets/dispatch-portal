@@ -135,6 +135,7 @@ const Invoice = () => {
         show={modalHandler}
         heading="Invoice"
         size="lg"
+        scroll="scroll"
         onClose={() => {
           setModalHandler(false);
         }}
@@ -151,11 +152,14 @@ const Invoice = () => {
         />
       </MyModal>
       <MyModal
+      printInvoice="printInvoice"
         show={PdfmodalHandler}
-        size="xl"
+        scrollInvoice="scrollInvoice"
+        // size="xl"
         onClose={() => {
           setPdfModalHandler(false);
         }}
+        // scrollInvoice="scrollInvoice"
       >
         <PdfTest load={loads} invoice={invoice} />
       </MyModal>
