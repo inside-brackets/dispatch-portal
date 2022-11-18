@@ -8,6 +8,7 @@ import { Row, Col, Button as BButton } from "react-bootstrap";
 import moment from "moment";
 import GenerateInvoice from "../GenerateInvoice";
 import Badge from "../../components/badge/Badge";
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
 import status_map from "../../assets/JsonData/load_status_map.json";
 
 const customerTableHead = [
@@ -88,12 +89,17 @@ const LoadTable = ({ truck_number, carrier,className }) => {
 
       <td>
         <div className="edit__class"     >
+        <TooltipCustom text='Edit load' id='editLoad' ></TooltipCustom>
+        <div data-tip data-for="editLoad">
           <EditButton
             type="edit"
             onClick={() => {
               editModalHnadler(item);
             }}
           />
+          </div>
+          <TooltipCustom text='view file' id='viewLoad' ></TooltipCustom>
+          <div data-tip data-for="viewLoad">
           <EditButton
             type="view"
             onClick={() => {
@@ -101,6 +107,7 @@ const LoadTable = ({ truck_number, carrier,className }) => {
               pdfWindow.location.href = `${item.ratecon}`;
             }}
           />
+          </div>
         </div>
       </td>
     </tr>
