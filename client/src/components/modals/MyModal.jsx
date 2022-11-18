@@ -13,18 +13,17 @@ const MyModal = (props) => {
         <Modal
           size={props.size ? props.size : ""}
           show={props.show}
-          className="rounded-lg"
+          className={`rounded-lg `}
           onHide={props.onClose}
-          
         >
           {/* <Modal.Header className="modal-header-scroll" closeButton> */}
           <Modal.Header  closeButton>
             <Modal.Title>{props.heading}</Modal.Title>
           </Modal.Header>
           {/* <Modal.Body className={`${props.scroll ? props.scroll : 'modalBody'}`}>{props.children}</Modal.Body> */}
-          <Modal.Body className={`${props.scroll}Body ${props.scrollInvoice}Body`}><div className={`${props.scroll} ${props.scrollInvoice}`}>{props.children}</div></Modal.Body>
+          <Modal.Body className={`${props.scroll}Body ${props.scrollInvoice}Body `}><div className={`${props.scroll} ${props.scrollInvoice}`}>{props.children}</div></Modal.Body>
           {props.onConfirm && (
-            <Modal.Footer>
+            <Modal.Footer >
               {" "}
               <Button
                 buttonText={props.btnText?props.btnText:"Submit"}
