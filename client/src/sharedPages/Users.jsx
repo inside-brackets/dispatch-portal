@@ -114,9 +114,10 @@ const Users = () => {
   );}
   return (
     <>
+      <h2>Users</h2>
       <Row className="my-3 mx-1">
         <Col md={3} className="p-0">
-          <label>Users</label>
+        
           <Select
             label="Users"
             value={filter}
@@ -141,7 +142,7 @@ const Users = () => {
           />
         </Col>
         <Col md={5}></Col>
-        <Col md={4}>
+        <Col md={4} >
           <Button onClick={addUserHandler} style={{ float: "right" }}>
             Add User
           </Button>

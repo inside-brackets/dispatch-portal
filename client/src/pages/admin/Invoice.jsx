@@ -138,6 +138,8 @@ const Invoice = () => {
   const [invoices, setInvoices] = useState([]);
   return (
     <>
+      <h2> Invoices </h2>
+      <br />
       <Row>
         <div className="card">
           <div className="card__body">
