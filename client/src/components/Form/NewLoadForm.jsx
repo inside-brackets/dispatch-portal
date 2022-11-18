@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { loadsActions } from "../../store/loads";
 import MySelect from "../UI/MySelect";
 import moment from "moment";
+import "./newTruckForm.css"
 
 const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const [validated, setValidated] = useState("");
@@ -370,18 +371,21 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         )}
         <Row>
           <Col
-            style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
+            style={{ display: "flex", alignItems: "center", marginTop: "20px",position:"absolute",bottom: "26px",right:"0px" }}
           >
             {!defaultValue ? (
               <Button
                 disabled={buttonLoader}
                 type="submit"
                 onSubmit={handleSubmit}
+              className="btn-add-load"
               >
                 Add Load
               </Button>
             ) : (
-              <Button disabled={buttonLoader} onClick={handleEditSubmit}>
+              <Button disabled={buttonLoader} onClick={handleEditSubmit}
+              className="btn-edit-load"
+              >
                 Edit Load
               </Button>
             )}
