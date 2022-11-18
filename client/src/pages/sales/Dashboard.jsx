@@ -8,7 +8,6 @@ import Col from "react-bootstrap/Col";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.user);
-
   return (
     <div>
       <div className="row" style={{ marginTop: "30px" }}>
@@ -23,7 +22,7 @@ const Dashboard = () => {
       </div>
       <Row>
         <Col xl={4} lg={6} md={8} sm={12}>
-          <TargetDisplay designation={user.designation} />
+        {user.department==="sales"? <TargetDisplay designation={user.designation} />:null}
         </Col>
       </Row>
     </div>
