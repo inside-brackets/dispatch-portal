@@ -43,6 +43,7 @@ const Users = () => {
 
   return (
     <>
+      <h2>Report</h2>
       <Row className="m-3">
         {/* <Col md={3}></Col>
         <Col md={5}></Col>
