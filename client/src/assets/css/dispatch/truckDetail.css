@@ -41,16 +41,17 @@
 .file__input {
     background-color: white;
     border-radius: var(--border-radius);
-    font-size: large;
-    width: 136px;
+    font-size: larger;
+    width: 114px;
     border: 1px solid #999;
-    padding: 4px;
+    padding: 3px;
     white-space: nowrap;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 600;
     box-shadow: var(--box-shadow-dark);
-    margin-left: 68px;
+    margin-left: 13px;
 }
+
 .file__input:hover {
     border-color: black;
     cursor: pointer;
@@ -121,4 +122,8 @@
     margin-left: -25px;
     display: flex;
     justify-content: flex-end;
+}
+.load_table{
+    width: 98.5% !important;
+    margin-left:11px !important
 }

@@ -476,8 +476,6 @@ const TruckDetail = ({ match }) => {
               style={{
                 width: "auto",
                 height: "auto",
-                // marginLeft: "60px",
-                // marginRight: "30px",
               }}
             >
               <Card.Body>
@@ -1338,75 +1336,8 @@ const TruckDetail = ({ match }) => {
                 </MyModal>
 
               </Row>
-
-
               {/* Mise Files END*/}
                 {/* File Handling END*/}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                {/* <Row xs="auto" className="m-3">
-                  <Col>
-                    {data.insurance_file && data.insurance_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.insurance_file}`;
-                        }}
-                      >
-                        Insurance
-                      </Button>
-                    )}
-                  </Col>
-                  <Col>
-                    {data.noa_file && data.noa_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.noa_file}`;
-                        }}
-                      >
-                        NOA/Void Check
-                      </Button>
-                    )}
-                  </Col>
-                  <Col>
-                    {data.mc_file && data.mc_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.mc_file}`;
-                        }}
-                      >
-                        MC Authority
-                      </Button>
-                    )}
-                  </Col>
-                  <Col>
-                    {data.w9_file && data.w9_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.w9_file}`;
-                        }}
-                      >
-                        W9
-                      </Button>
-                    )}
-                  </Col>
-                </Row> */}
                 <Row
                   className="justify-content-between"
                   style={{ marginTop: "10px" }}
@@ -1453,7 +1384,7 @@ const TruckDetail = ({ match }) => {
             </form>
           </Modal>
           <LoadTable
-
+            className="load_table"
           // style={{width: "98.5%",marginLeft:'11px'}}
             setModal={setrModal}
             truck_number={match.params.truck}

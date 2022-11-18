@@ -886,7 +886,7 @@ const CarrierDetail = () => {
                     type="warning"
                     content="Not uploaded"
                   />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectMcFile} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectMcFile} />
                   <Form.Control.Feedback type="invalid">{!carrier.mc_file ? "Please Upload MC File." : null}</Form.Control.Feedback>
                 </Form.Group>
                 <Col md={1} className="actions_wrapper">
@@ -922,7 +922,7 @@ const CarrierDetail = () => {
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier" >
                   <Form.Label className="file_input_label">{carrier.noa_file ? <Badge type="success" content="Uploaded" /> : <Badge type="warning" content="Not uploaded" />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectNoaFile} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectNoaFile} />
                   <Form.Control.Feedback type="invalid">{!carrier.noa_file ? "Please Upload Noa File." : null}</Form.Control.Feedback>
                 </Form.Group>
                 <Col md={1} className="actions_wrapper">
@@ -965,7 +965,7 @@ const CarrierDetail = () => {
                     type="warning"
                     content="Not uploaded"
                   />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectW9File} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectW9File} />
                   <Form.Control.Feedback type="valid"></Form.Control.Feedback>
                 </Form.Group>
                 <Col md={1} className="actions_wrapper">
@@ -1006,7 +1006,7 @@ const CarrierDetail = () => {
                     type="warning"
                     content="Not uploaded"
                   />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectInsuranceFile} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectInsuranceFile} />
                   <Form.Control.Feedback type="invalid" >{!carrier.insurance_file ? "Please Upload Insurance File." : null}</Form.Control.Feedback>
                 </Form.Group>
                 <Col md={1} className="actions_wrapper">
