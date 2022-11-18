@@ -21,7 +21,7 @@ const MyModal = (props) => {
             <Modal.Title>{props.heading}</Modal.Title>
           </Modal.Header>
           {/* <Modal.Body className={`${props.scroll ? props.scroll : 'modalBody'}`}>{props.children}</Modal.Body> */}
-          <Modal.Body className={`${props.scroll}Body ${props.scrollInvoice}Body `}><div className={`${props.scroll} ${props.scrollInvoice}`}>{props.children}</div></Modal.Body>
+          <Modal.Body className={`${props.scroll}Body ${props.scrollInvoice}Body ${props.scrollInvoicePrint}Body `}><div className={`${props.scroll} ${props.scrollInvoice} ${props.scrollInvoicePrint}`}>{props.children}</div></Modal.Body>
           {props.onConfirm && (
             <Modal.Footer >
               {" "}
