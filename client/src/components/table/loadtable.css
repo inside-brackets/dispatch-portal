@@ -26,3 +26,8 @@
 .tooltips{
   background-color: #fa1b23 !important;
 }
+
+.load_table{
+  width: 98.5% !important;
+  margin-left:11px !important
+}
