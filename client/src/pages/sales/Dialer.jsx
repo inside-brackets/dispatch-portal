@@ -324,7 +324,7 @@ const Dialer = () => {
         justify-content-center align-items-center mt-5"
         >
           <div className="col-6">
-            <div className="card" style={{ width: "160px" }}>
+            <div className="card" style={{ width: "160px", marginLeft: "2.7vw"}}>
               <h2 className="justify-content-center align-items-center">
                 <i className="bx bxs-phone-outgoing"> :</i>{" "}
                 <span>{counter}</span>{" "}

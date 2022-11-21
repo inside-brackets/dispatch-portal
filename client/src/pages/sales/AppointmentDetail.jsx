@@ -386,13 +386,13 @@ const AppointmentDetail = () => {
               }}
             >
               <div className="col-1">
-                <h4>MC:</h4>
+                <span>MC:</span>
               </div>
               <div className="col-5">
-                <h4>{carrier.mc_number}</h4>
+                <span>{carrier.mc_number}</span>
               </div>
               <div className="col-2">
-                <h4>Phone no:</h4>
+                <span>Phone no:</span>
               </div>
               <div className="col-4">
                 <h5>{carrier.phone_number}</h5>
@@ -406,7 +406,7 @@ const AppointmentDetail = () => {
               }}
             >
               <div className="col-1">
-                <h4>Email:</h4>
+                <span>Email:</span>
               </div>
               <div className="col-5">
                 <Input
@@ -417,7 +417,7 @@ const AppointmentDetail = () => {
                 />
               </div>
               <div className="col-2">
-                <h4>Address:</h4>
+                <span>Address:</span>
               </div>
 
               <div className="col-4">
@@ -426,7 +426,7 @@ const AppointmentDetail = () => {
             </div>
             <div className="row">
               <div className="col-4">
-                <h4>Appointment:</h4>
+                <span>Appointment:</span>
                 <Input
                   type="datetime-local"
                   defaultValue={moment(new Date(carrier.appointment)).format(

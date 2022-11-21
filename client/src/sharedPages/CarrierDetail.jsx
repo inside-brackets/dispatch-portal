@@ -200,7 +200,7 @@ const CarrierDetail = () => {
   } else if (!isLoading && error) {
     return (
       <div className="spreadsheet__loader">
-        <h2 style={{ color: "red" }}>ERROR: SERVER MIGHT BE DOWN</h2>
+        <h4 style={{ color: "red" }}>ERROR: SERVER MIGHT BE DOWN</h4>
       </div>
     );
   }
@@ -416,7 +416,7 @@ const CarrierDetail = () => {
           <Card
             className="truck-detail-card"
             style={{
-              marginLeft: "60px",
+              marginLeft: "30px",
               marginRight: "30px",
             }}
           >
@@ -432,7 +432,7 @@ const CarrierDetail = () => {
                   <Row>
                     <Col>
                       {" "}
-                      <h3>MC:</h3>{" "}
+                      <h4>MC:</h4>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
@@ -452,7 +452,7 @@ const CarrierDetail = () => {
                   <Row>
                     <Col>
                       {" "}
-                      <h3>Address:</h3>{" "}
+                      <h4>Address:</h4>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
@@ -474,7 +474,7 @@ const CarrierDetail = () => {
                   <Row>
                     <Col>
                       {" "}
-                      <h3>Phone #:</h3>{" "}
+                      <h4>Phone #:</h4>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
@@ -495,7 +495,7 @@ const CarrierDetail = () => {
                   <Row>
                     <Col>
                       {" "}
-                      <h3>Email:</h3>{" "}
+                      <h4>Email:</h4>{" "}
                     </Col>
                     <Col md={9}>
                       <Form.Control
@@ -578,7 +578,7 @@ const CarrierDetail = () => {
                 </Col>
               </Row>
               </>)}
-              <h2>Carrier Details :</h2>
+              <h4>Carrier Details :</h4>
 
               <Row className="m-3">
                 <Row>
@@ -642,7 +642,7 @@ const CarrierDetail = () => {
 
                 {selectedPayment.value === "factoring" ? (
                   <div>
-                    <h2>Factoring Details:</h2>
+                    <h4>Factoring Details:</h4>
                     <Row className="my-3">
                       <Form.Group
                         as={Col}
@@ -759,8 +759,8 @@ const CarrierDetail = () => {
                 ) : null}
               </Row>
 
-              <h2>Insurance Details:</h2>
-              <Row className="my-3">
+              <h4>Insurance Details:</h4>
+              <Row className="my-3 insurance-width">
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Company's Name:</Form.Label>
                   <Form.Control
@@ -796,7 +796,7 @@ const CarrierDetail = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </Row>
-              <Row className="my-3">
+              <Row className="my-3 insurance-width">
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Agent's Name:</Form.Label>
                   <Form.Control
@@ -871,12 +871,12 @@ const CarrierDetail = () => {
                   <hr />
                 </>
               )}
-              <h3>Carrier Documents:</h3>
+              <h4>Carrier Documents:</h4>
               {/* MC FILE START */}
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
                 <Col md={2} >
-                  <h3 className="fileHeading"> MC </h3>
+                  <h4 className="fileHeading"> MC </h4>
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier">
                   <Form.Label className="file_input_label">{carrier.mc_file ? <Badge
@@ -917,7 +917,7 @@ const CarrierDetail = () => {
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
                 <Col md={2} >
-                  <h3 className="fileHeading"> Noa </h3>
+                  <h4 className="fileHeading"> Noa </h4>
                   {/* <hr/> */}
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier" >
@@ -955,7 +955,7 @@ const CarrierDetail = () => {
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
                 <Col md={2} >
-                  <h3 className="fileHeading"> W9 </h3>
+                  <h4 className="fileHeading"> W9 </h4>
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier">
                   <Form.Label className="file_input_label">{carrier.w9_file ? <Badge
@@ -995,7 +995,7 @@ const CarrierDetail = () => {
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
                 <Col md={2} >
-                  <h3 className="fileHeading"> Insurance </h3>
+                  <h4 className="fileHeading"> Insurance </h4>
                 </Col>
 
                 <Form.Group as={Col} md={4} className="file__input__contaier">
@@ -1035,7 +1035,7 @@ const CarrierDetail = () => {
               {/* insurance_file FILE END */}
 
               {/* Misc Files */}
-              <h3>Miscellaneous Documents:</h3>
+              <h4>Miscellaneous Documents:</h4>
               <Row>
                 {carrier.files?.map((file) => {
                   return (
@@ -1074,7 +1074,7 @@ const CarrierDetail = () => {
                 message={"Are you Sure to want to delete File?"}
                 title="Delete Confirmation"
               />
-              <Row>
+              <Row className="add-misc-btn">
                 <Col md={2}><Button onClick={() => { setShowMicsModal(true) }}>Add Misc</Button></Col>
               </Row>
               <Row>
