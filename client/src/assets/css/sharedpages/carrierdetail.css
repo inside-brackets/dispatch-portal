@@ -11,10 +11,10 @@
 .file__input {
     background-color: white;
     border-radius: var(--border-radius);
-    font-size: large;
+    font-size: small;
     width: 136px;
     border: 1px solid #999;
-    padding: 4px;
+    padding: 4px 25px;
     white-space: nowrap;
     cursor: pointer;
     font-weight: 700;
@@ -68,7 +68,7 @@
 
 .fileHeading{
     padding-left: 45px;
-    font-size: 1.35rem !important;
+    font-size: 1.20rem !important;
 }
 /* .fileHeading{
     font-size: 1.35rem !important;
@@ -91,4 +91,8 @@
     margin-left: -25px;
     display: flex;
     justify-content: flex-end;
+}
+.insurance-width{
+padding-left: 2%;
+padding-right: 2%;
 }

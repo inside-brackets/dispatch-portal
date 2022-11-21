@@ -149,9 +149,9 @@ const Appointments = (props) => {
             }}
           >
             <h6 className="text-muted">
-              {carrier.comment?.length >= 40
+              {carrier.comment?.length >= 35
                 ? `${carrier.comment
-                    .substring(0, Math.min(carrier.comment.length, 40))
+                    .substring(0, Math.min(carrier.comment.length, 35))
                     .trim()}...`
                 : carrier.comment}
             </h6>
@@ -187,13 +187,7 @@ const Appointments = (props) => {
       appointmentList =     (<div className="row"> {carriersList.map((item, index) => (
         <div className="col-4" key={index}>
             
-              <Card
-                className=""
-                style={{
-                  height: "360px",
-                  border: "light",
-                }}
-              >
+              <Card className="card-height">
                 <Card.Body>
                   <Card.Title
                     style={{
@@ -211,19 +205,20 @@ const Appointments = (props) => {
                       )}`}</h5>
                     }
                   </Card.Footer>
-                  <div class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-between" style={{marginTop:'10px'}}>
 
                   <MyButton 
-                  style={{marginTop:'5px'}}
+                  className="appCard-btn"
                   color="red"
                   buttonText={'Reject'}
                   onClick={() => {onConfirm(item.mc_number)}}
                   onClose={onrClose}
                   mc={item.mc_number}
+                  
                   />
          
                   <MyButton
-                  style={{marginTop:'5px'}}
+                  className="appCard-btn"
                   color="primary"
                   buttonText={'Details'}
                   onClick={() => {history.push(`/appointments/${item.mc_number}`)}}
