@@ -440,7 +440,7 @@ const UserDetailPage = ({ user, callBack }) => {
                     <option value="company">Company</option>
                     <option value="manager">Manager</option>
                     <option value="team_lead">Team Lead</option>
-                    <option value="senior_employee">Employee</option>
+                    <option value="employee">Employee</option>
                   </Form.Control>
                 </Form.Group>
 
