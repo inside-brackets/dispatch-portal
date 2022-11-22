@@ -97,7 +97,7 @@ const TruckDetail = ({ match }) => {
           mc_number: match.params.mc,
         }
       );
-      console.log(response.data,"respons data===========")
+
       setData(response.data);
       setCompanyName(response.data.company_name);
       setPhoneNumber(response.data.phone_number);
@@ -170,6 +170,7 @@ const TruckDetail = ({ match }) => {
         )
         .then((response) => {
           console.log(response.data);
+
           toast.success("Carrier Saved", {
             position: "top-right",
             autoClose: 5000,
@@ -437,23 +438,49 @@ const TruckDetail = ({ match }) => {
     toast.success("File Uploaded");
   };
   const submitDeleteMisc = async () => {
+  
+    const del = await axios(
+      `${process.env.REACT_APP_BACKEND_URL
+      }/s3url-delete/carrier_documents/${deleteModal.file?.substring(
+        deleteModal.file?.lastIndexOf("/") + 1
+      )}`
+    );
+   if(del){
+    try{
     const updatedCarrier = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${data.mc_number}`,
       {
         files: data.files.filter((item) => item._id !== deleteModal._id),
       }
     );
-    await axios(
     setData(updatedCarrier.data)
-      `${process.env.REACT_APP_BACKEND_URL
-      }/s3url-delete/carrier_documents/${deleteModal.file?.substring(
-        deleteModal.file?.lastIndexOf("/") + 1
-      )}`
-    );
     setDeleteModal(false);
     toast.success("File Deleted");
+  }catch(err){
+    console.log(err)
+    setDeleteModal(false);
+    toast.error("File Not Deleted");
+  }
+  }
+    else{
+      setDeleteModal(false);
+      toast.error("File Not Deleted");
+    }
   };
   //file end
+  // Misc Files array reverse
+  // if (response.data.files){
+  //   function reverseArr(input) {
+  //   let ret = new Array;
+  //   for(let i = input.length-1; i >= 0; i--) {
+  //   ret.push(input[i]);
+  //   }
+  //   return ret;
+  // }
+  // // let a = data.files
+  // var files = reverseArr(response.data.files);
+  // setReverseArr(files)
+  // }
 
   return (
     <>
@@ -468,7 +495,8 @@ const TruckDetail = ({ match }) => {
         </div>
       ) : (
         <div>
-          <BackButton onClick={() => history.push("/mytrucks")} />
+          <BackButton onClick={() => history.goBack()} />
+          {/* <BackButton onClick={() => history.push("/mytrucks")} /> */}
 
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Card
@@ -1276,14 +1304,16 @@ const TruckDetail = ({ match }) => {
                 title="Delete Confirmation"
               />
               <Row>
-                <Col md={2}><Button onClick={() => { setShowMicsModal(true) }}>Add Misc</Button></Col>
+                <Col md={2}><Button onClick={() => { setShowMicsModal(true)  }}>Add Misc</Button></Col>
               </Row>
               <Row>
                 <MyModal
                   size="lg"
                   show={showMicsModal}
                   heading="Add Document"
-                  onClose={() => setShowMicsModal(false)}
+                  onClose={() => {setShowMicsModal(false)
+                    setMiscLoader(false)
+                  }}
                   style={{ width: "auto" }}
                 >
 

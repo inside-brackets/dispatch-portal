@@ -377,21 +377,35 @@ const CarrierDetail = () => {
     toast.success("File Uploaded");
   };
   const submitDeleteMisc = async () => {
+
+
+    const del = await axios(
+      `${process.env.REACT_APP_BACKEND_URL
+      }/s3url-delete/carrier_documents/${deleteModal.file?.substring(
+        deleteModal.file?.lastIndexOf("/") + 1
+      )}`
+    );
+   if(del){
+    try{
     const updatedCarrier = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
       {
         files: carrier.files.filter((item) => item._id !== deleteModal._id),
       }
     );
-    await axios(
     setCarrier(updatedCarrier.data)
-      `${process.env.REACT_APP_BACKEND_URL
-      }/s3url-delete/carrier_documents/${deleteModal.file?.substring(
-        deleteModal.file?.lastIndexOf("/") + 1
-      )}`
-    );
     setDeleteModal(false);
     toast.success("File Deleted");
+  }catch(err){
+    console.log(err)
+    setDeleteModal(false);
+    toast.error("File Not Deleted");
+  }
+  }
+    else{
+      setDeleteModal(false);
+      toast.error("File Not Deleted");
+    }
   };
 
   const closeHandler = () => {
@@ -411,7 +425,7 @@ const CarrierDetail = () => {
   return (
     <div className="row">
       <div className="col">
-        <BackButton onClick={() => history.push("/searchcarrier")} />
+      <BackButton onClick={() => history.goBack()} />
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Card
             className="truck-detail-card"
@@ -1082,7 +1096,9 @@ const CarrierDetail = () => {
                   size="lg"
                   show={showMicsModal}
                   heading="Add Document"
-                  onClose={() => setShowMicsModal(false)}
+                  onClose={() => {setShowMicsModal(false);
+                    setMiscLoader(false)
+                  }}
                   style={{ width: "auto" }}
                 >
 

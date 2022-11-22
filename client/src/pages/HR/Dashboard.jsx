@@ -86,7 +86,7 @@ const Dashboard = () => {
               (item) =>
                 item._id.department === "sales" &&
                 item._id.company === selectedCompany.value
-            ).count,
+            )?.count,
           },
           {
             department: "Dispatch",
@@ -95,7 +95,7 @@ const Dashboard = () => {
               (item) =>
                 item._id.department === "dispatch" &&
                 item._id.company === selectedCompany.value
-            ).count,
+            )?.count,
           },
         ];
         const interviewIns = [
@@ -104,27 +104,26 @@ const Dashboard = () => {
             icon: "bx bx-user-check",
             count: res.data.find(
               (item) => item._id.department === "Joined this month"
-            ).count,
+            )?.count,
           },
           {
             department: "Upcoming resource",
             icon: "bx bx-user-plus",
             count: res.data.find(
               (item) => item._id.department === "Upcoming Resource"
-            ).count,
+            )?.count,
           },
           {
             department: "Pending Decision",
             icon: "bx bxs-hourglass",
             count: res.data.find(
               (item) => item._id.department === "pending-decision"
-            ).count,
+            )?.count,
           },
           {
             department: "Scheduled",
             icon: "bx bx-calendar-plus",
-            count: res.data.find((item) => item._id.department === "scheduled")
-              .count,
+            count: res.data.find((item) => item._id.department === "scheduled")?.count,
           },
         ];
         setDepartmentalDistribution(departmentalDistribution);
