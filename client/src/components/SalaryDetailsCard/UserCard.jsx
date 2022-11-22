@@ -6,7 +6,13 @@ import dummy_img from "../../assets/images/taut.png";
 
 function UserCard({ user }) {
   const [month, setMonth] = useState(
-    new Date().toLocaleString("default", { month: "long" })
+    new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() - 1,
+      new Date().getDate()
+    ).toLocaleString("default", {
+      month: "long",
+    })
   );
 
   return (

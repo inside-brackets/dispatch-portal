@@ -19,14 +19,10 @@ function Adjustments({ adjustments, setAdjustments, error, setError }) {
       }
     } else {
       if (lastDesc.current) {
-        if (lastDesc.current.value != "") {
-          lastDesc.current.classList.remove("border-2");
-          lastDesc.current.classList.add("border");
-        }
-        if (lastAmount.current.value != "") {
-          lastAmount.current.classList.remove("border-2");
-          lastAmount.current.classList.add("border");
-        }
+        lastDesc.current.classList.remove("border-2");
+        lastDesc.current.classList.add("border");
+        lastAmount.current.classList.remove("border-2");
+        lastAmount.current.classList.add("border");
       }
     }
   }, [error]);
@@ -59,7 +55,7 @@ function Adjustments({ adjustments, setAdjustments, error, setError }) {
         return (
           <div className="mar-b-2 dis-flex dis-row" key={i}>
             <div className="w-100 dis-flex dis-row dis-center mar-r-075">
-              <span className="mar-r-075 txt-125 line-1 fon-med txt-black">
+              <span className="mar-r-075 txt-1 line-1 fon-med txt-black">
                 Description:
               </span>
               <input
@@ -71,7 +67,7 @@ function Adjustments({ adjustments, setAdjustments, error, setError }) {
               />
             </div>
             <div className="dis-flex dis-row dis-center">
-              <span className="mar-r-075 txt-125 line-1 fon-med txt-black">
+              <span className="mar-r-075 txt-1 line-1 fon-med txt-black">
                 Amount:
               </span>
               <div>

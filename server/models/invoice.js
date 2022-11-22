@@ -15,7 +15,6 @@ const invoiceSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "Carrier",
     },
-
     dispatcher: {
       type: mongoose.Types.ObjectId,
       ref: "User",
@@ -32,7 +31,6 @@ const invoiceSchema = new mongoose.Schema(
       type: Date,
       require: true,
     },
-
     loads: [
       {
         type: mongoose.Types.ObjectId,
@@ -51,6 +49,9 @@ const invoiceSchema = new mongoose.Schema(
       type: Number,
       require: true,
     },
+    paymentDate: {
+      type: Date,
+    },
     invoiceStatus: {
       type: String,
       require: true,
@@ -60,7 +61,6 @@ const invoiceSchema = new mongoose.Schema(
       type: Number,
       require: true,
     },
-
     driver: {
       name: String,
       email_address: String,

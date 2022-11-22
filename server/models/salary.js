@@ -14,7 +14,13 @@ const salarySchema = new mongoose.Schema(
     adjustment: {
       type: Array,
     },
-    incentive: {
+    incentivePKR: {
+      type: Number,
+    },
+    incentiveDollars: {
+      type: Number,
+    },
+    exchangeRate: {
       type: Number,
     },
     base: {
