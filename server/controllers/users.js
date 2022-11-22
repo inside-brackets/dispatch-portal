@@ -56,7 +56,7 @@ const getUser = (req, res) => {
 const getTableUsers = (req, res, next) => {
   filter = {};
   let exclude = "";
-  console.log("req.body.department",req.body.department)
+  console.log("req.body.department", req.body.department);
   if (req.body.department !== "admin") {
     filter.department = {
       $nin: ["admin"],
@@ -86,7 +86,6 @@ const getTableUsers = (req, res, next) => {
           $lte: moment().endOf("month"),
         });
   }
-  
 
   User.find(filter, null, {
     // skip: 0, // Starting Row
@@ -119,11 +118,7 @@ const getTableUsers = (req, res, next) => {
     });
 };
 
-const getUsers = (req, res, next) => 
-
-
-
-{
+const getUsers = (req, res, next) => {
   let filter = {};
   filter.u_status = {
     $nin: ["fired"],
@@ -158,21 +153,20 @@ const updateUser = async (req, res) => {
   console.log("updateUser", req.body);
   try {
     let updatedUser;
-    if (req.body.updateFiles) {
+    let body = req.body;
+    if (body.updateFiles) {
       updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
-          $push: { files: req.body.files },
+          $push: { files: body.files },
         },
         { new: true }
       );
     } else {
-      let userName = req.body.user_name;
-
-      if (req.body.u_status === "fired") {
+      if (body.u_status === "fired") {
         const date = new Date();
-        userName =
-          userName +
+        body.user_name =
+          body.user_name +
           "_" +
           date.getDate() +
           "-" +
@@ -181,12 +175,10 @@ const updateUser = async (req, res) => {
           date.getFullYear();
       }
 
-      req.body.user_name = userName;
-
       updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
-          $set: req.body,
+          $set: body,
         },
         { new: true }
       );
@@ -310,7 +302,7 @@ const countUsers = async (req, res, next) => {
       },
       { $group: { _id: { department: "$status" }, count: { $sum: 1 } } },
     ]);
-    
+
     result.push(
       {
         _id: { department: "Joined this month" },
