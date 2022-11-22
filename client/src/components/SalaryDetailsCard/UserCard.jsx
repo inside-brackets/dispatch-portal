@@ -4,7 +4,7 @@ import moment from "moment";
 
 import dummy_img from "../../assets/images/taut.png";
 
-function UserCard({ user }) {
+function UserCard({ user, readOnly }) {
   const [month, setMonth] = useState(
     new Date(
       new Date().getFullYear(),
@@ -86,7 +86,9 @@ function UserCard({ user }) {
                 <span className="txt-1 line-1 fon-med mar-r-075 txt-black">
                   Salary:
                 </span>
-                <span className="txt-1 line-1 fon-reg txt-grey">Unpaid</span>
+                <span className="txt-1 line-1 fon-reg txt-grey">
+                  {readOnly ? "Paid" : "Unpaid"}
+                </span>
               </div>
             </div>
           </div>

@@ -5,11 +5,11 @@ import axios from "axios";
 import "./SalaryDetailsCard.css";
 import UserCard from "./UserCard";
 import Adjustments from "./Adjustments";
-import IncentiveDispatch from "./Incentives";
+import DispatchIncentive from "./Incentives";
 import IncentiveDispatchSlots from "./Slots";
 import IncentiveDispatchInvoices from "./Invoices";
 
-function SalaryDetailsCard({ user }) {
+function SalaryDetailsCard({ user, readOnly }) {
   const [error, setError] = useState(false);
   const [base, setBase] = useState(0);
   const [adjustments, setAdjustments] = useState([]);
@@ -145,7 +145,7 @@ function SalaryDetailsCard({ user }) {
   return (
     <Card className="p-32 border">
       <Card.Body className="p-0">
-        {user && <UserCard user={user} />}
+        {user && <UserCard user={user} readOnly={readOnly} />}
         <h1 className="txt-2 fon-bold mar-b-1">Overview</h1>
         <div className="mar-b-2 dis-flex dis-row dis-between">
           <div className="dis-flex dis-col">
@@ -183,12 +183,16 @@ function SalaryDetailsCard({ user }) {
         </div>
         <div className="mar-b-1 dis-flex dis-row dis-bottom">
           <h1 className="mar-b-0 mar-r-15 txt-2 fon-bold">Adjustment</h1>
-          <span
-            className="txt-875 fon-med custom-btn cur-pointer"
-            onClick={handleClick}
-          >
-            Add+
-          </span>
+          {readOnly ? (
+            <></>
+          ) : (
+            <span
+              className="txt-875 fon-med custom-btn cur-pointer"
+              onClick={handleClick}
+            >
+              Add+
+            </span>
+          )}
         </div>
         <Adjustments
           adjustments={adjustments}
@@ -199,11 +203,12 @@ function SalaryDetailsCard({ user }) {
         <h1 className="txt-2 fon-bold mar-b-1">Incentive</h1>
         {user && user.department == "dispatch" ? (
           <>
-            <IncentiveDispatch
+            <DispatchIncentive
               gross={gross}
               incentive={incentive}
               excRate={excRate}
               setExcRate={setExcRate}
+              readOnly={readOnly}
             />
             <hr />
             <h1 className="txt-2 fon-bold mar-b-1">Breakdown</h1>

@@ -1,6 +1,12 @@
 import React from "react";
 
-function IncentiveDispatch({ gross, incentive, excRate, setExcRate }) {
+function DispatchIncentive({
+  gross,
+  incentive,
+  excRate,
+  setExcRate,
+  readOnly,
+}) {
   const changeRate = (e) => {
     setExcRate(Number(e.target.value));
   };
@@ -27,12 +33,19 @@ function IncentiveDispatch({ gross, incentive, excRate, setExcRate }) {
           />
         </div>
         <div className="dis-flex dis-col">
-          <span className="txt-1 line-1 fon-med txt-black mar-b-1">
+          <span
+            className={`txt-1 line-1 fon-med mar-b-1 ${
+              readOnly ? "" : "txt-black"
+            }`}
+          >
             Exchange Rate
           </span>
           <input
             type="number"
-            className="w-200 h-36 p-0-1 border border-r-025 num-input"
+            className={`w-200 h-36 p-0-1 border border-r-025 num-input ${
+              readOnly ? "bg-smoke no-input" : ""
+            }`}
+            readOnly={readOnly}
             value={excRate.toString() ?? 0}
             onChange={changeRate}
           />
@@ -52,4 +65,4 @@ function IncentiveDispatch({ gross, incentive, excRate, setExcRate }) {
   );
 }
 
-export default IncentiveDispatch;
+export default DispatchIncentive;

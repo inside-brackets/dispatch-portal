@@ -20,7 +20,7 @@ function SalaryDetails() {
 
   return (
     <Row>
-      <Col>{user && <SalaryDetailsCard user={user} />}</Col>
+      <Col>{user && <SalaryDetailsCard user={user} readOnly={false} />}</Col>
     </Row>
   );
 }
