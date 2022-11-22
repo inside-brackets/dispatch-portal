@@ -5,7 +5,8 @@ const cookies = new Cookies();
 const httpIntercept = (props) => {
   axios.interceptors.request.use(
     (request) => {
-      request.headers.common["x-auth-token"] = cookies.get("user");
+      if (request.url.includes(process.env.REACT_APP_BACKEND_URL))
+        request.headers.common["x-auth-token"] = cookies.get("user");
       return request;
     },
     (error) => {
