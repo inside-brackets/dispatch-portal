@@ -71,8 +71,7 @@
 }
 
 .actions_wrapper {
-    padding-top: 7px;
-    margin-left: -6rem
+    margin-left: -8rem
 }
 
 .actions_button_wrapper {
@@ -83,18 +82,9 @@
 .actions_button_misc_wrapper{
     display: flex;
     justify-content: space-between;
-    padding-right: 13px;
-}
-.action_button {
-    padding: 0;
-    background-color: transparent;
-    border: none
-}
-.action_button:hover,.action_button:focus,.action_button:disabled,.action_button:active {
-    padding: 0;
-    background-color: transparent;
-    border: none;
-    outline:none
+    padding-right: 53px;
+    margin-left: -33px;
+    padding-bottom: 5px;
 }
 
 .fileHeading{
@@ -106,12 +96,13 @@
 } */
 .misc_file_name{
     padding-left: 3rem;
+    padding-top: 6px;
 }
 .miscWrapper{
     padding-bottom:3px;
 }
 .basic_file_hr{
-    width: 42.9rem;
+    width: 46.9rem;
     margin-left: 54px;
 }
 .carrier_badge_status{

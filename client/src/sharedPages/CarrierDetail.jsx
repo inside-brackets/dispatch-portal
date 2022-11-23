@@ -50,6 +50,8 @@ const CarrierDetail = () => {
   const [noaLoader, setNoaLoader] = useState(false);
   const [insuranceLoader, setInsuranceLoader] = useState(false);
 
+  const [selectedSalesperson, setSelectedSalesperson] = useState()
+
   useEffect(() => {
     setIsLoading(true);
     setError(false);
@@ -62,7 +64,11 @@ const CarrierDetail = () => {
         if (data) {
           setCarrier(data);
           setTrucks(data.trucks);
-          setSalePerson(data.salesman.user_name);
+          // setSalePerson(data.salesman?.user_name);
+          // setSelectedSalesperson(
+          //   label:data.c_status.charAt(0).toUpperCase() + data.c_status.slice(1),
+          // value: data.c_status
+          // )
           setSelectedPayment({
             label:
               data.payment_method.charAt(0).toUpperCase() +
@@ -911,7 +917,7 @@ const CarrierDetail = () => {
               {currUser.department === "admin" && (
                 <>
                   <Row>
-                    <Form.Group as={Col} md="4" controlId="validationCustom03">
+                    {/* <Form.Group as={Col} md="4" controlId="validationCustom03">
                       <Form.Label>Salesman:</Form.Label>
                       <Form.Control
                         type="text"
@@ -919,7 +925,17 @@ const CarrierDetail = () => {
                         defaultValue={salePerson ? salePerson : ""}
                         required
                       />
-                    </Form.Group>
+                    </Form.Group> */}
+                  {/* <MySelect
+                  value={selectedSalesperson}
+                  onChange={setSelectedSalesperson}
+                  options={salesperson && salesperson.map((item) => {
+                    return {
+                      label: item.user_name, // change later
+                      value: item._id,
+                    };
+                  })}
+                /> */}
                   </Row>
                   <hr />
                 </>
@@ -942,49 +958,27 @@ const CarrierDetail = () => {
                   <Form.Control className="file__input" type="file" name="file" onChange={onSelectMcFile} />
                   <Form.Control.Feedback type="invalid">{!carrier.mc_file ? "Please Upload MC File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
-                  <TooltipCustom
-                    text={
-                      onSelectedMcFile && carrier.mc_file
-                        ? "update file"
-                        : carrier.mc_file
-                        ? "select file to update"
-                        : onSelectedMcFile
-                        ? "upload file"
-                        : "select file to upload"
-                    }
-                    id="mcfile"
-                  ></TooltipCustom>
+                <Col md={2} className="actions_wrapper">
+                  <TooltipCustom text={onSelectedMcFile && carrier.mc_file ? "update file" : carrier.mc_file ? "select file to update" : onSelectedMcFile ? "upload file" : "select file to upload"} id='mcfile' ></TooltipCustom>
 
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="mcfile">
-                      <Button
-                        disabled={!onSelectedMcFile || mcLoader}
-                        className="action_button"
-                      >
-                        <i
-                          className={`bx ${
-                            carrier.mc_file ? "bx-edit" : "bxs-file-plus"
-                          } action-button`}
-                          onClick={handleUploadMcFile}
-                        ></i>
+                      <Button disabled={!onSelectedMcFile|| mcLoader} className="" onClick={handleUploadMcFile}>
+                        {carrier.mc_file?"Change File":"Add File"}
+                        {/* <i className={`bx ${data.mc_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadMcFile}></i> */}
                       </Button>
                     </div>
-                    {carrier.mc_file ? (
-                      <>
-                        <TooltipCustom
-                          text="view file"
-                          id="mcfileview"
-                        ></TooltipCustom>
-                        <div data-tip data-for="mcfileview">
-                          <Button disabled={mcLoader} className="action_button">
-                            <a href={carrier.mc_file}>
-                              <i className="bx bx-show-alt action-button"></i>
-                            </a>
-                          </Button>
-                        </div>
-                      </>
-                    ) : null}
+                    {carrier.mc_file ?
+                    <>
+                    <TooltipCustom text='view file' id='mcfileview' ></TooltipCustom>
+                      <div data-tip data-for="mcfileview">
+                      <Button disabled={mcLoader} >
+                        <a href={carrier.mc_file}>
+                          View
+                          {/* <i className="bx bx-show-alt action-button" ></i> */}
+                        </a>
+                        </Button>
+                      </div></> : null}
                   </div>
                 </Col>
                 <hr className="basic_file_hr" />
@@ -1002,7 +996,7 @@ const CarrierDetail = () => {
                   <Form.Control className="file__input" type="file" name="file" onChange={onSelectNoaFile} />
                   <Form.Control.Feedback type="invalid">{!carrier.noa_file ? "Please Upload Noa File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom
                     text={
                       onSelectedNoaFile && carrier.noa_file
@@ -1021,13 +1015,9 @@ const CarrierDetail = () => {
                       <Button
                         disabled={!onSelectedNoaFile || noaLoader}
                         className="action_button"
+                        onClick={handleUploadNoaFile}
                       >
-                        <i
-                          className={`bx ${
-                            carrier.noa_file ? "bx-edit" : "bxs-file-plus"
-                          } action-button`}
-                          onClick={handleUploadNoaFile}
-                        ></i>
+                       {carrier.noa_file?"Change File":"Add File"}
                       </Button>
                     </div>
                     {carrier.noa_file ? (
@@ -1039,7 +1029,7 @@ const CarrierDetail = () => {
                         <Button disabled={noaLoader} className="action_button">
                           <div data-tip data-for="noafileview">
                             <a href={carrier.noa_file}>
-                              <i className="bx bx-show-alt action-button"></i>
+                            View
                             </a>
                           </div>
                         </Button>{" "}
@@ -1069,7 +1059,7 @@ const CarrierDetail = () => {
                   <Form.Control className="file__input" type="file" name="file" onChange={onSelectW9File} />
                   <Form.Control.Feedback type="valid"></Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom
                     text={
                       onSelectedW9File && carrier.w9_file
@@ -1088,13 +1078,9 @@ const CarrierDetail = () => {
                       <Button
                         disabled={!onSelectedW9File || w9Loader}
                         className="action_button"
+                        onClick={handleUploadW9File}
                       >
-                        <i
-                          className={`bx ${
-                            carrier.w9_file ? "bx-edit" : "bxs-file-plus"
-                          } action-button`}
-                          onClick={handleUploadW9File}
-                        ></i>
+                       {carrier.w9_file?"Change File":"Add File"}
                       </Button>
                     </div>
                     {carrier.w9_file ? (
@@ -1106,7 +1092,7 @@ const CarrierDetail = () => {
                         <Button disabled={w9Loader} className="action_button">
                           <div data-tip data-for="w9fileview">
                             <a href={carrier.w9_file}>
-                              <i className="bx bx-show-alt action-button"></i>
+                             View
                             </a>
                           </div>
                         </Button>{" "}
@@ -1135,7 +1121,7 @@ const CarrierDetail = () => {
                   <Form.Control className="file__input" type="file" name="file" onChange={onSelectInsuranceFile} />
                   <Form.Control.Feedback type="invalid" >{!carrier.insurance_file ? "Please Upload Insurance File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom
                     text={
                       onSelectedInsuranceFile && carrier.insurance_file
@@ -1154,13 +1140,9 @@ const CarrierDetail = () => {
                       <Button
                         disabled={!onSelectedInsuranceFile || insuranceLoader}
                         className="action_button"
+                        onClick={handleUploadInsuranceFile}
                       >
-                        <i
-                          className={`bx ${
-                            carrier.insurance_file ? "bx-edit" : "bxs-file-plus"
-                          } action-button`}
-                          onClick={handleUploadInsuranceFile}
-                        ></i>
+                        {carrier.insurance_file?"Change File":"Add File"}
                       </Button>
                     </div>
                     {carrier.insurance_file ? (
@@ -1175,7 +1157,7 @@ const CarrierDetail = () => {
                         >
                           <div data-tip data-for="insurancefileview">
                             <a href={carrier.insurance_file}>
-                              <i className="bx bx-show-alt action-button"></i>
+                              View
                             </a>
                           </div>
                         </Button>
@@ -1201,7 +1183,7 @@ const CarrierDetail = () => {
                               : file.name}{" "}
                           </h5>
                         </Col>
-                        <Col md={1}>
+                        <Col md={2}>
                           <TooltipCustom
                             text="view file"
                             id={file.name}
@@ -1212,14 +1194,16 @@ const CarrierDetail = () => {
                           ></TooltipCustom>
                           <div className="actions_button_misc_wrapper">
                             <div data-tip data-for={file.file}>
-                              <span onClick={() => setDeleteModal(file)}>
-                                <i className="bx bx-trash-alt action-button"></i>
-                              </span>
+                             <Button variant="danger" onClick={() => setDeleteModal(file)}>
+                                Delete File
+                              </Button>
                             </div>
                             <div data-tip data-for={file.name}>
-                              <a href={file.file}>
-                                <i className="bx bx-show-alt action-button"></i>
+                            <Button>  
+                            <a href={file.file}>
+                                View
                               </a>
+                              </Button>
                             </div>
                           </div>
                         </Col>

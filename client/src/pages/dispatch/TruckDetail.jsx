@@ -477,7 +477,7 @@ const TruckDetail = ({ match }) => {
   //   }
   //   return ret;
   // }
-  // // let a = data.files
+   // let a = data.files
   // var files = reverseArr(response.data.files);
   // setReverseArr(files)
   // }
@@ -1122,22 +1122,22 @@ const TruckDetail = ({ match }) => {
                   <Form.Control className="file__input" type="file" name="file" onChange={onSelectMcFile} />
                   <Form.Control.Feedback type="invalid">{!data.mc_file ? "Please Upload MC File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom text={onSelectedMcFile && data.mc_file ? "update file" : data.mc_file ? "select file to update" : onSelectedMcFile ? "upload file" : "select file to upload"} id='mcfile' ></TooltipCustom>
 
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="mcfile">
-                      <Button disabled={!onSelectedMcFile|| mcLoader} className="action_button">
-                        <i className={`bx ${data.mc_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadMcFile}></i>
+                      <Button disabled={!onSelectedMcFile|| mcLoader} className="" onClick={handleUploadMcFile}>
+                        {data.mc_file?"Change File":"Add File"}
                       </Button>
                     </div>
                     {data.mc_file ?
                     <>
                     <TooltipCustom text='view file' id='mcfileview' ></TooltipCustom>
                       <div data-tip data-for="mcfileview">
-                      <Button disabled={mcLoader} className="action_button">
+                      <Button disabled={mcLoader} >
                         <a href={data.mc_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
+                          View
                         </a>
                         </Button>
                       </div></> : null}
@@ -1156,13 +1156,13 @@ const TruckDetail = ({ match }) => {
                   <Form.Control className="file__input" type="file" name="file" onChange={onSelectNoaFile} />
                   <Form.Control.Feedback type="invalid">{!data.noa_file ? "Please Upload Noa File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom text={onSelectedNoaFile && data.noa_file ? "update file" : data.noa_file ? "select file to update" : onSelectedNoaFile ? "upload file" : "select file to upload"} id='noafile' ></TooltipCustom>
                   
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="noafile">
-                      <Button disabled={!onSelectedNoaFile || noaLoader} className="action_button">
-                        <i className={`bx ${data.noa_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadNoaFile}></i>
+                      <Button disabled={!onSelectedNoaFile || noaLoader} onClick={handleUploadNoaFile} className="action_button">
+                        {data.noa_file?"Change File":"Add File"}
                       </Button>
                     </div>
                     {data.noa_file ?
@@ -1171,7 +1171,7 @@ const TruckDetail = ({ match }) => {
                     <Button disabled={noaLoader} className="action_button">
                       <div data-tip data-for="noafileview">
                         <a href={data.noa_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
+                        View
                         </a>
                       </div></Button> </>: null}
                   </div>
@@ -1198,13 +1198,13 @@ const TruckDetail = ({ match }) => {
                   <Form.Control className="file__input" type="file" name="file"  onChange={onSelectW9File} />
                   <Form.Control.Feedback type="valid"></Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom text={onSelectedW9File && data.w9_file ? "update file" : data.w9_file ? "select file to update" : onSelectedW9File ? "upload file" : "select file to upload"} id='w9file' ></TooltipCustom>
 
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="w9file">
-                      <Button disabled={!onSelectedW9File || w9Loader} className="action_button">
-                        <i className={`bx ${data.w9_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadW9File}></i>
+                      <Button disabled={!onSelectedW9File || w9Loader} onClick={handleUploadW9File} className="action_button">
+                        {data.noa_file?"Change File":"Add File"}
                       </Button>
                     </div>
                     {data.w9_file ?
@@ -1213,7 +1213,7 @@ const TruckDetail = ({ match }) => {
                     <Button disabled={w9Loader} className="action_button">
                       <div data-tip data-for="w9fileview">
                         <a href={data.w9_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
+                        View
                         </a>
                       </div></Button> </>: null}
                   </div>
@@ -1238,14 +1238,13 @@ const TruckDetail = ({ match }) => {
                   <Form.Control className="file__input" type="file" name="file" onChange={onSelectInsuranceFile} />
                   <Form.Control.Feedback type="invalid" >{!data.insurance_file ? "Please Upload Insurance File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom text={onSelectedInsuranceFile && data.insurance_file ? "update file" : data.insurance_file ? "select file to update" : onSelectedInsuranceFile ? "upload file" : "select file to upload"} id='insurancefile' ></TooltipCustom>
                   
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="insurancefile">
-                      <Button disabled={!onSelectedInsuranceFile || insuranceLoader} className="action_button">
-                        <i className={`bx ${data.insurance_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadInsuranceFile}></i>
-
+                      <Button disabled={!onSelectedInsuranceFile || insuranceLoader} onClick={handleUploadInsuranceFile} className="action_button">
+                        {data.insurance_file?"Change File":"Add File"}
                       </Button>
                     </div>
                     {data.insurance_file ?
@@ -1254,8 +1253,8 @@ const TruckDetail = ({ match }) => {
                     <Button disabled={insuranceLoader} className="action_button">
                       <div data-tip data-for="insurancefileview">
                         <a href={data.insurance_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
-                        </a>
+                          View
+                          </a>
                       </div>
                       </Button></> : null}
                   </div>
@@ -1273,19 +1272,21 @@ const TruckDetail = ({ match }) => {
                         <Col md={6}>
                           <h5 className="misc_file_name"> {file.name.length > 10 ? file.name.substring(0, 11) + "..." : file.name} </h5>
                         </Col>
-                        <Col md={1}>
+                        <Col md={2}>
                           <TooltipCustom text='view file' id={file.name} ></TooltipCustom>
                           <TooltipCustom text='delete file' id={file.file} ></TooltipCustom>
                           <div className="actions_button_misc_wrapper">
                             <div data-tip data-for={file.file}>
-                              <span onClick={() => setDeleteModal(file)}>
-                                <i className="bx bx-trash-alt action-button"></i>
-                              </span>
+                              <Button variant="danger" onClick={() => setDeleteModal(file)}>
+                                Delete File
+                              </Button>
                             </div>
                             <div data-tip data-for={file.name}>
+                              <Button>
                               <a href={file.file}>
-                                <i className="bx bx-show-alt action-button"></i>
+                        View
                               </a>
+                              </Button>
                             </div>
                           </div>
                         </Col>

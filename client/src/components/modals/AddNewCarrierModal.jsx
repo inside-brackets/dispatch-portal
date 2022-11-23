@@ -29,7 +29,8 @@ const AddNewCarrierModal = ({ mc, closeModal }) => {
         .post(`${process.env.REACT_APP_BACKEND_URL}/add-new-carrier`, obj)
         .then((response) => {
           console.log("response", response);
-          history.push(`/addCarrier/${event.target.mc_number.value}`);
+          // history.push(`/addCarrier/${event.target.mc_number.value}`);
+          history.push(`/carrierview/${event.target.mc_number.value}`);
           closeModal();
         });
     }
