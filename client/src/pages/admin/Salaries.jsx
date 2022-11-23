@@ -28,6 +28,10 @@ const Salaries = () => {
     fetchUsers();
   }, [refresh, selectedCompany]);
 
+  const generateSalary = (id) => {
+    history.push("/salary/" + id);
+  };
+
   const customerTableHead = [
     "#",
     "User Name",
@@ -52,10 +56,11 @@ const Salaries = () => {
       <td>{item.department}</td>
       <td>{moment(item.joining_date).format("ll")}</td>
       <td>{item.salary}</td>
-      {/* add salary */}
       <td>{item.lastPaid ? moment(item.date).format("MMMM") : "N/A"}</td>
       <td>
-        <Button type="view">Generate</Button>
+        <Button type="view" onClick={() => generateSalary(item._id)}>
+          Generate
+        </Button>
       </td>
     </tr>
   );

@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Salary = require("../models/salary");
 
 const updateSlots = async (req, res) => {
   try {
@@ -14,6 +15,18 @@ const updateSlots = async (req, res) => {
     }
     res.status(200);
     res.send(updatedSlots);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+};
+
+const createSalary = async (req, res) => {
+  console.log(req.body);
+  try {
+    let createdSalary = await Salary.create(req.body);
+    res.status(200);
+    res.send(createdSalary);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -43,22 +56,35 @@ const getSalaries = async (req, res) => {
   });
   try {
     const userSalaries = users.map(async (user) => {
-      return {
-        _id: user._id,
-        user_name: user.user_name,
-        phone: user.phone_number,
-        email: user.email_address,
-        designation: user.designation,
-        department: user.department,
-        dispatch_salary_slots: user.dispatch_salary_slots,
-        joining_date: user.joining_date,
-        salary: user.salary,
-        assigned_trucks: user.assigned_trucks,
-        date: false,
-        lastPaid: false,
-      };
+      const salary = await Salary.find({ user: user._id }).sort({ month: -1 });
+      if (salary.length === 0) {
+        return {
+          _id: user._id,
+          user_name: user.user_name,
+          phone: user.phone_number,
+          email: user.email_address,
+          designation: user.designation,
+          department: user.department,
+          joining_date: user.joining_date,
+          salary: user.salary,
+          date: false,
+          lastPaid: false,
+        };
+      } else {
+        return {
+          _id: user._id,
+          user_name: user.user_name,
+          phone: user.phone_number,
+          email: user.email_address,
+          designation: user.designation,
+          department: user.department,
+          joining_date: user.joining_date,
+          salary: user.salary,
+          date: salary[0].month,
+          lastPaid: true,
+        };
+      }
     });
-
     const result = await Promise.all(userSalaries);
     const fResult = result.slice(req.body.skip, req.body.limit + req.body.skip);
     fResult.sort(function compare(a, b) {
@@ -73,4 +99,4 @@ const getSalaries = async (req, res) => {
   }
 };
 
-module.exports = { updateSlots, getSalaries };
+module.exports = { updateSlots, createSalary, getSalaries };
