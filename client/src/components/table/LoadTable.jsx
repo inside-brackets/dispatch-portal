@@ -8,6 +8,7 @@ import { Row, Col, Button as BButton } from "react-bootstrap";
 import moment from "moment";
 import GenerateInvoice from "../GenerateInvoice";
 import Badge from "../../components/badge/Badge";
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
 import status_map from "../../assets/JsonData/load_status_map.json";
 
 const customerTableHead = [
@@ -25,7 +26,7 @@ const customerTableHead = [
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-const LoadTable = ({ truck_number, carrier }) => {
+const LoadTable = ({ truck_number, carrier,className }) => {
   const [rerenderTable, setRerenderTable] = useState(null);
   const [loadModal, setLoadModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -88,12 +89,17 @@ const LoadTable = ({ truck_number, carrier }) => {
 
       <td>
         <div className="edit__class"     >
+        <TooltipCustom text='Edit load' id='editLoad' ></TooltipCustom>
+        <div data-tip data-for="editLoad">
           <EditButton
             type="edit"
             onClick={() => {
               editModalHnadler(item);
             }}
           />
+          </div>
+          <TooltipCustom text='view file' id='viewLoad' ></TooltipCustom>
+          <div data-tip data-for="viewLoad">
           <EditButton
             type="view"
             onClick={() => {
@@ -101,6 +107,7 @@ const LoadTable = ({ truck_number, carrier }) => {
               pdfWindow.location.href = `${item.ratecon}`;
             }}
           />
+          </div>
         </div>
       </td>
     </tr>
@@ -129,7 +136,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         </Col> */}
       </Row>
       <Row>
-        <div className="card">
+        <div className={`card ${className}`}>
           <div className="card__body">
             <Table
               key={rerenderTable}
@@ -162,11 +169,13 @@ const LoadTable = ({ truck_number, carrier }) => {
         show={invoiceModal}
         heading="Generate Invoice"
         onClose={closeLoadModal}
+        scrollInvoice="scrollInvoice"
       >
         <GenerateInvoice
           truck_number={truck_number}
           carrier={carrier}
           closeModal={() => setInvoiceModal(false)}
+          scroll="scroll"
         />
       </Modal>
 
@@ -175,6 +184,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         show={loadModal}
         heading="Add New Load"
         onClose={closeLoadModal}
+        scroll="scroll"
       >
         <LoadForm
           truck_number={truck_number}
@@ -191,6 +201,7 @@ const LoadTable = ({ truck_number, carrier }) => {
         heading="Edit Load"
         onClose={closeEditModel}
         style={{ width: "auto" }}
+        scroll="scroll"
       >
         <LoadForm
           setEditModal={(data) => {

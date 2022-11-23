@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import { useParams, useHistory } from "react-router-dom";
 import TruckTable from "../components/table/TruckTable";
 import TooltipCustom from "../components/tooltip/TooltipCustom";
 import TextArea from "../components/UI/TextArea";
 import Loader from "react-loader-spinner";
 import BackButton from "../components/UI/BackButton";
-import DeleteConfirmation from "../components/modals/DeleteConfirmation"
+import DeleteConfirmation from "../components/modals/DeleteConfirmation";
 import Modal from "../components/modals/MyModal";
 import MyModal from "../components/modals/MyModal";
 import axios from "axios";
@@ -15,11 +15,13 @@ import MySelect from "../components/UI/MySelect";
 import Badge from "../components/badge/Badge";
 import { socket } from "../index";
 import { useSelector } from "react-redux";
-import CStatus from "../assets/JsonData/status_map.json"
-import "../assets/css/sharedpages/carrierdetail.css"
+import CStatus from "../assets/JsonData/status_map.json";
+import "../assets/css/sharedpages/carrierdetail.css";
+import moment from "moment";
 
 const CarrierDetail = () => {
-  const currUser = useSelector((state) => state.user.user)
+  const currUser = useSelector((state) => state.user.user);
+  const { company } = useSelector((state) => state.user);
   const [trucks, setTrucks] = useState([]);
   const history = useHistory();
   const params = useParams();
@@ -29,68 +31,101 @@ const CarrierDetail = () => {
   const [error, setError] = useState(false);
   const [validated, setValidated] = useState(false);
   const [loaderButton, setLoaderButton] = useState(false);
-  const [onSelectedMcFile, setOnSelectedMcFile] = useState()
-  const [onSelectedInsuranceFile, setOnSelectedInsuranceFile] = useState()
-  const [onSelectedNoaFile, setOnSelectedNoaFile] = useState()
-  const [onSelectedW9File, setOnSelectedW9File] = useState()
+  const [onSelectedMcFile, setOnSelectedMcFile] = useState();
+  const [onSelectedInsuranceFile, setOnSelectedInsuranceFile] = useState();
+  const [onSelectedNoaFile, setOnSelectedNoaFile] = useState();
+  const [onSelectedW9File, setOnSelectedW9File] = useState();
   const [selectedMiscFile, setSelectedMiscFile] = useState(null);
   const [nameMisc, setNameMisc] = useState(null);
-  const [showMicsModal, setShowMicsModal] = useState(false)
+  const [showMicsModal, setShowMicsModal] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("");
   const [deleteModal, setDeleteModal] = useState(false);
-  const [closeCheck, setCloseCheck] = useState(false)
-  const [changeStatus, setChangeStatus] = useState(false)
-  const [statusChanged, setStatusChanged] = useState()
-  const [salePerson, setSalePerson] = useState("")
-  const [selectedCarrierStatus, setSelectedCarrierStatus] = useState("")
-  const [miscLoader, setMiscLoader] = useState(false)
-  
-  const [mcLoader, setMcLoader] = useState(false)
-  const [w9Loader, setW9Loader] = useState(false)
-  const [noaLoader, setNoaLoader] = useState(false)
-  const [insuranceLoader, setInsuranceLoader] = useState(false)
+  const [closeCheck, setCloseCheck] = useState(false);
+  const [changeStatus, setChangeStatus] = useState(false);
+  const [statusChanged, setStatusChanged] = useState();
+  const [salePerson, setSalePerson] = useState("");
+  const [salesperson, setSalesperson] = useState()
+  const [selectedCarrierStatus, setSelectedCarrierStatus] = useState("");
+  const [miscLoader, setMiscLoader] = useState(false);
+
+  const [mcLoader, setMcLoader] = useState(false);
+  const [w9Loader, setW9Loader] = useState(false);
+  const [noaLoader, setNoaLoader] = useState(false);
+  const [insuranceLoader, setInsuranceLoader] = useState(false);
+
+  const [selectedSalesperson, setSelectedSalesperson] = useState()
 
   useEffect(() => {
     setIsLoading(true);
     setError(false);
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}/getcarrier`, {
-      mc_number: params.mc,
-    })
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/getcarrier`, {
+        mc_number: params.mc,
+      })
       .then(({ data }) => {
         setIsLoading(false);
         if (data) {
           setCarrier(data);
           setTrucks(data.trucks);
-          setSalePerson(data.salesman.user_name)
-          setSelectedPayment({ label: data.payment_method.charAt(0).toUpperCase() + data.payment_method.slice(1), value: data.payment_method });
-          setSelectedCarrierStatus({ label: data.c_status.charAt(0).toUpperCase() + data.c_status.slice(1), value: data.c_status })
-          
+          setSelectedPayment({
+            label:
+              data.payment_method.charAt(0).toUpperCase() +
+              data.payment_method.slice(1),
+            value: data.payment_method,
+          });
+          setSelectedCarrierStatus({
+            label:
+              data.c_status.charAt(0).toUpperCase() + data.c_status.slice(1),
+            value: data.c_status,
+          });
+          setSelectedSalesperson({
+            label:data.salesman?data.salesman.user_name:"Select Salesperson:",
+            value: data.salesman?._id,
+            
+          })
         } else {
           setError(true);
         }
-        
       });
   }, [params.mc]);
+
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
+        company: company.value,
+        department: "sales",
+      })
+      .then(({ data }) => {
+        setSalesperson(data);
+      });
+  }, [company.value]);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!(currUser.department === "admin")) {
       if (closeCheck && form.checkValidity()) {
-        setSelectedCarrierStatus({ label: "Registered", value: "registered" })
+        setSelectedCarrierStatus({ label: "Registered", value: "registered" });
       } else {
-        setSelectedCarrierStatus({ label: carrier.c_status.charAt(0).toUpperCase() + carrier.c_status.slice(1), value: carrier.c_status })
+        setSelectedCarrierStatus({
+          label:
+            carrier.c_status.charAt(0).toUpperCase() +
+            carrier.c_status.slice(1),
+          value: carrier.c_status,
+        });
       }
     }
-    const bypass = selectedCarrierStatus.value !== "registered"
+    const bypass = selectedCarrierStatus.value !== "registered";
     if (bypass || form.checkValidity() === true) {
-      setLoaderButton(true)
+      setLoaderButton(true);
       const upObj = {
         owner_name: event.target.owner_name.value,
         phone_number: event.target.phone_number.value,
         email: event.target.email.value,
         tax_id_number: event.target.tax_id.value,
         dispatcher_fee: event.target.dispatch_fee.value,
+        appointment: new Date(event.target.appointment.value),
         insurance: {
           name: event.target.i_company_name.value,
           address: event.target.i_address.value,
@@ -99,12 +134,20 @@ const CarrierDetail = () => {
           agent_email: event.target.i_agent_email.value,
         },
       };
+      if ((currUser.department === "admin")) {
+        upObj["salesman"] = selectedSalesperson?.value
+      }
       if (selectedCarrierStatus.value === "registered") {
-        if (!carrier.mc_file || !carrier.noa_file || !carrier.w9_file || !carrier.insurance_file) {
+        if (
+          !carrier.mc_file ||
+          !carrier.noa_file ||
+          !carrier.w9_file ||
+          !carrier.insurance_file
+        ) {
           toast.warn("Upload Files");
           setLoaderButton(false);
-          setCloseCheck(false)
-          return
+          setCloseCheck(false);
+          return;
         }
         axios
           .post(`${process.env.REACT_APP_BACKEND_URL}/getcarrier`, {
@@ -112,24 +155,24 @@ const CarrierDetail = () => {
           })
           .then(({ data }) => {
             if (data) {
-              setTrucks(data.trucks)
+              setTrucks(data.trucks);
             }
-          })
+          });
         if (!(trucks.length >= 1)) {
           toast.warn("Add Truck");
           setLoaderButton(false);
-          return
+          return;
         }
       }
       if (closeCheck) {
-        upObj["c_status"] = "registered"
+        upObj["c_status"] = "registered";
       }
       if (statusChanged) {
-        upObj["c_status"] = selectedCarrierStatus.value
+        upObj["c_status"] = selectedCarrierStatus.value;
       }
 
       if (selectedPayment.value === "factoring") {
-        upObj["payment_method"] = selectedPayment.value
+        upObj["payment_method"] = selectedPayment.value;
         upObj["factoring"] = {};
         upObj["factoring"]["name"] = event.target.f_name.value;
         upObj["factoring"]["address"] = event.target.f_address.value;
@@ -137,7 +180,7 @@ const CarrierDetail = () => {
         upObj["factoring"]["agent_email"] = event.target.f_agent_email.value;
         upObj["factoring"]["phone_no"] = event.target.f_phone.value;
       } else {
-        upObj["payment_method"] = selectedPayment.value
+        upObj["payment_method"] = selectedPayment.value;
         upObj["factoring"] = {};
         upObj["factoring"]["name"] = "";
         upObj["factoring"]["address"] = "";
@@ -160,27 +203,26 @@ const CarrierDetail = () => {
         });
       if (closeCheck) {
         setTimeout(() => {
-          setCloseCheck(false)
+          setCloseCheck(false);
           history.push("/appointments");
         }, 2000);
       }
     } else {
-      setValidated(true)
+      setValidated(true);
     }
   };
-
 
   const openModal = () => {
     setdModal(true);
   };
 
   const deactivateHandler = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
       {
         c_status: "deactivated",
-        comment: event.target.deactivate.value
+        comment: event.target.deactivate.value,
       }
     );
     socket.emit("deactivate-carrier", `${params.mc}`);
@@ -213,31 +255,35 @@ const CarrierDetail = () => {
     setOnSelectedMcFile(e.target.files[0]);
   };
   const handleUploadMcFile = async (e) => {
-    setMcLoader(true)
+    setMcLoader(true);
     if (carrier.mc_file) {
-          await axios(
-        `${process.env.REACT_APP_BACKEND_URL
+      await axios(
+        `${
+          process.env.REACT_APP_BACKEND_URL
         }/s3url-delete/carrier_documents/${carrier.mc_file?.substring(
           carrier.mc_file?.lastIndexOf("/") + 1
         )}`
       );
     }
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}.${onSelectedMcFile.type.split("/")[1]}`
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${
+        carrier.mc_number
+      }.${onSelectedMcFile.type.split("/")[1]}`
     );
-    axios.put(url, onSelectedMcFile).then(()=>{setMcLoader(false)});
-    
+    axios.put(url, onSelectedMcFile).then(() => {
+      setMcLoader(false);
+    });
+
     const updatedCarrier = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
       {
         mc_file: url.split("?")[0],
         updateFiles: true,
-      },
+      }
     );
-    setCarrier(updatedCarrier.data)
+    setCarrier(updatedCarrier.data);
     toast.success(carrier.mc_file ? "File Updated" : "File Uploaded");
-
-  }
+  };
   const onSelectInsuranceFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
       setOnSelectedInsuranceFile(undefined);
@@ -246,33 +292,34 @@ const CarrierDetail = () => {
     setOnSelectedInsuranceFile(e.target.files[0]);
   };
   const handleUploadInsuranceFile = async (e) => {
-
     if (carrier.insurance_file) {
       await axios(
-        `${process.env.REACT_APP_BACKEND_URL
+        `${
+          process.env.REACT_APP_BACKEND_URL
         }/s3url-delete/carrier_documents/${carrier.insurance_file?.substring(
           carrier.insurance_file?.lastIndexOf("/") + 1
         )}`
       );
     }
-    setInsuranceLoader(true)
+    setInsuranceLoader(true);
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}.${onSelectedInsuranceFile.type.split("/")[1]}`
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${
+        carrier.mc_number
+      }.${onSelectedInsuranceFile.type.split("/")[1]}`
     );
-    axios.put(url, onSelectedInsuranceFile).then(() =>{
-      setInsuranceLoader(false)
+    axios.put(url, onSelectedInsuranceFile).then(() => {
+      setInsuranceLoader(false);
     });
     const updatedCarrier = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
       {
         insurance_file: url.split("?")[0],
         updateFiles: true,
-      },
+      }
     );
-    setCarrier(updatedCarrier.data)
+    setCarrier(updatedCarrier.data);
     toast.success(carrier.insurance_file ? "File Updated" : "File Uploaded");
-
-  }
+  };
   const onSelectNoaFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
       setOnSelectedNoaFile(undefined);
@@ -281,21 +328,23 @@ const CarrierDetail = () => {
     setOnSelectedNoaFile(e.target.files[0]);
   };
   const handleUploadNoaFile = async (e) => {
-
     if (carrier.noa_file) {
       await axios(
-        `${process.env.REACT_APP_BACKEND_URL
+        `${
+          process.env.REACT_APP_BACKEND_URL
         }/s3url-delete/carrier_documents/${carrier.noa_file?.substring(
           carrier.noa_file?.lastIndexOf("/") + 1
         )}`
       );
     }
-    setNoaLoader(true)
+    setNoaLoader(true);
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}.${onSelectedNoaFile.type.split("/")[1]}`
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${
+        carrier.mc_number
+      }.${onSelectedNoaFile.type.split("/")[1]}`
     );
-    axios.put(url, onSelectedNoaFile).then(() =>{
-      setNoaLoader(false)
+    axios.put(url, onSelectedNoaFile).then(() => {
+      setNoaLoader(false);
     });
 
     const updatedCarrier = await axios.put(
@@ -303,12 +352,11 @@ const CarrierDetail = () => {
       {
         noa_file: url.split("?")[0],
         updateFiles: true,
-      },
+      }
     );
-    setCarrier(updatedCarrier.data)
+    setCarrier(updatedCarrier.data);
     toast.success(carrier.noa_file ? "File Updated" : "File Uploaded");
-
-  }
+  };
   const onSelectW9File = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
       setOnSelectedW9File(undefined);
@@ -319,18 +367,21 @@ const CarrierDetail = () => {
   const handleUploadW9File = async (e) => {
     if (carrier.w9_file) {
       await axios(
-        `${process.env.REACT_APP_BACKEND_URL
+        `${
+          process.env.REACT_APP_BACKEND_URL
         }/s3url-delete/carrier_documents/${carrier.w9_file?.substring(
           carrier.w9_file?.lastIndexOf("/") + 1
         )}`
       );
     }
-    setW9Loader(true)
+    setW9Loader(true);
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}.${onSelectedW9File.type.split("/")[1]}`
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${
+        carrier.mc_number
+      }.${onSelectedW9File.type.split("/")[1]}`
     );
-    axios.put(url, onSelectedW9File).then(()=>{
-      setW9Loader(false)
+    axios.put(url, onSelectedW9File).then(() => {
+      setW9Loader(false);
     });
 
     const updatedCarrier = await axios.put(
@@ -338,12 +389,12 @@ const CarrierDetail = () => {
       {
         w9_file: url.split("?")[0],
         updateFiles: true,
-      },
+      }
     );
-    setCarrier(updatedCarrier.data)
-    
+    setCarrier(updatedCarrier.data);
+
     toast.success(carrier.w9_file ? "File Updated" : "File Uploaded");
-  }
+  };
 
   const onSelectFile = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -354,9 +405,11 @@ const CarrierDetail = () => {
   };
 
   const handleSubmitMisc = async (e) => {
-    setMiscLoader(true)
+    setMiscLoader(true);
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}.${selectedMiscFile.type.split("/")[1]}`
+      `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${
+        carrier.mc_number
+      }.${selectedMiscFile.type.split("/")[1]}`
     );
     await axios.put(url, selectedMiscFile);
     const updatedCarrier = await axios.post(
@@ -369,49 +422,62 @@ const CarrierDetail = () => {
         updateFiles: true,
       }
     );
-    setCarrier(updatedCarrier.data)
-    setMiscLoader(false)
-    setShowMicsModal(false)
-    setNameMisc("")
+    setCarrier(updatedCarrier.data);
+    setMiscLoader(false);
+    setShowMicsModal(false);
+    setNameMisc("");
 
     toast.success("File Uploaded");
   };
   const submitDeleteMisc = async () => {
+
+
+    const del = await axios(
+      `${process.env.REACT_APP_BACKEND_URL
+      }/s3url-delete/carrier_documents/${deleteModal.file?.substring(
+        deleteModal.file?.lastIndexOf("/") + 1
+      )}`
+    );
+   if(del){
+    try{
     const updatedCarrier = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
       {
         files: carrier.files.filter((item) => item._id !== deleteModal._id),
       }
     );
-    await axios(
     setCarrier(updatedCarrier.data)
-      `${process.env.REACT_APP_BACKEND_URL
-      }/s3url-delete/carrier_documents/${deleteModal.file?.substring(
-        deleteModal.file?.lastIndexOf("/") + 1
-      )}`
-    );
     setDeleteModal(false);
     toast.success("File Deleted");
+  }catch(err){
+    console.log(err)
+    setDeleteModal(false);
+    toast.error("File Not Deleted");
+  }
+  }
+    else{
+      setDeleteModal(false);
+      toast.error("File Not Deleted");
+    }
   };
 
   const closeHandler = () => {
-    setSelectedCarrierStatus({ label: "Registered ", value: "registered" })
-    setCloseCheck(true)
-  }
+    setSelectedCarrierStatus({ label: "Registered ", value: "registered" });
+    setCloseCheck(true);
+  };
   const changestatusHandler = () => {
-    setChangeStatus(true)
-  }
+    setChangeStatus(true);
+  };
 
   const cschandler = async () => {
-    setStatusChanged(true)
-    setChangeStatus(false)
-
-  }
+    setStatusChanged(true);
+    setChangeStatus(false);
+  };
 
   return (
     <div className="row">
       <div className="col">
-        <BackButton onClick={() => history.push("/searchcarrier")} />
+      <BackButton onClick={() => history.goBack()} />
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Card
             className="truck-detail-card"
@@ -421,11 +487,13 @@ const CarrierDetail = () => {
             }}
           >
             <Card.Body>
-              <div className="carrier_badge_status"><Badge
-                type={CStatus[carrier.c_status]}
-                content={carrier.c_status}
-              /></div>
-              <h1 className="text-center">{carrier.company_name}  </h1>
+              <div className="carrier_badge_status">
+                <Badge
+                  type={CStatus[carrier.c_status]}
+                  content={carrier.c_status}
+                />
+              </div>
+              <h1 className="text-center">{carrier.company_name} </h1>
               <hr />
               <Row>
                 <Form.Group as={Col} md="6" controlId="validationCustom03">
@@ -478,7 +546,6 @@ const CarrierDetail = () => {
                     </Col>
                     <Col md={9}>
                       <Form.Control
-
                         type="text"
                         placeholder="Phone #"
                         name="phone_number"
@@ -515,7 +582,6 @@ const CarrierDetail = () => {
               <Row
                 style={{
                   marginTop: "40px",
-                  height: "100px",
                 }}
               >
                 <Col
@@ -526,58 +592,69 @@ const CarrierDetail = () => {
                 >
                   <h4> Sales Comments:</h4>
                 </Col>
-                <Col
-                  md={6}
-                  style={{
-                    zIndex: 2,
-                  }}
-                >
-                  <Form.Group
+                <Form.Group
                     className="mb-3"
                     controlId="exampleForm.ControlTextarea1"
+                    as={Col} md="6"
                   >
                     <TextArea
                       style={{ width: "500px" }}
                       placeholder="Comment.."
                       defaultValue={carrier ? carrier.comment : ""}
+                      name="Comment:"
                       readOnly
                     />
                   </Form.Group>
-                </Col>
-              </Row>
-              {currUser.department === "admin" && (<>   <Row
-                style={{
-                  marginTop: "40px",
-                  height: "100px",
-                }}
-              >
-                <Col
-                  md={3}
-                  style={{
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <h4>Dispatcher Comments:</h4>
-                </Col>
-                <Col
-                  md={6}
-                  style={{
-                    zIndex: 1,
-                  }}
-                >
-                  <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlTextarea1"
-                  >
-                    <TextArea
-                      style={{ width: "500px" }}
-                      placeholder="Dispatcher's Comments"
-                      defaultValue={carrier ? carrier.dispatcher_comment : ""}
+                  <Form.Group as={Col} md="3" controlId="validationCustom03">
+                    <Form.Label>Call back time:</Form.Label>
+                    <Form.Control
+                      type="datetime-local"
+                      defaultValue={carrier.appointment?moment(new Date(carrier.appointment)).format("YYYY-MM-DDTHH:mm"):""}
+                      name="appointment"
                     />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid Owner name.
+                    </Form.Control.Feedback>
                   </Form.Group>
-                </Col>
               </Row>
-              </>)}
+              {currUser.department === "admin" && (
+                <>
+                  {" "}
+                  <Row
+                    style={{
+                      marginTop: "40px",
+                    }}
+                  >
+                    <Col
+                      md={3}
+                      style={{
+                        justifyContent: "flex-start",
+                      }}
+                    >
+                      <h4>Dispatcher Comments:</h4>
+                    </Col>
+                    <Col
+                      md={6}
+                      style={{
+                        zIndex: 1,
+                      }}
+                    >
+                      <Form.Group
+                        className="mb-3"
+                        controlId="exampleForm.ControlTextarea1"
+                      >
+                        <TextArea
+                          style={{ width: "500px" }}
+                          placeholder="Dispatcher's Comments"
+                          defaultValue={
+                            carrier ? carrier.dispatcher_comment : ""
+                          }
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </>
+              )}
               <h4>Carrier Details :</h4>
 
               <Row className="m-3">
@@ -602,7 +679,9 @@ const CarrierDetail = () => {
                       type="number"
                       placeholder="*Dispatch Fee:"
                       name="dispatch_fee"
-                      defaultValue={carrier.dispatcher_fee ? carrier.dispatcher_fee : 0}
+                      defaultValue={
+                        carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
+                      }
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid entity.
@@ -624,7 +703,6 @@ const CarrierDetail = () => {
                   </Form.Group>
                 </Row>
                 <Row className="my-3">
-
                   <Col md={4}>
                     <MySelect
                       isMulti={false}
@@ -659,7 +737,9 @@ const CarrierDetail = () => {
                               ? carrier.factoring.name
                               : ""
                           }
-                          required={selectedPayment.value === "factoring" ? true : false}
+                          required={
+                            selectedPayment.value === "factoring" ? true : false
+                          }
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Company's Name.
@@ -680,7 +760,9 @@ const CarrierDetail = () => {
                               : ""
                           }
                           placeholder="Address"
-                          required={selectedPayment.value === "factoring" ? true : false}
+                          required={
+                            selectedPayment.value === "factoring" ? true : false
+                          }
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Address.
@@ -704,7 +786,9 @@ const CarrierDetail = () => {
                               ? carrier.factoring.agent_name
                               : ""
                           }
-                          required={selectedPayment.value === "factoring" ? true : false}
+                          required={
+                            selectedPayment.value === "factoring" ? true : false
+                          }
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Agent's Name.
@@ -726,7 +810,9 @@ const CarrierDetail = () => {
                               ? carrier.factoring.agent_email
                               : ""
                           }
-                          required={selectedPayment.value === "factoring" ? true : false}
+                          required={
+                            selectedPayment.value === "factoring" ? true : false
+                          }
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Agent's Email.
@@ -747,13 +833,14 @@ const CarrierDetail = () => {
                               ? carrier.factoring.phone_no
                               : ""
                           }
-                          required={selectedPayment.value === "factoring" ? true : false}
+                          required={
+                            selectedPayment.value === "factoring" ? true : false
+                          }
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Phone Number.
                         </Form.Control.Feedback>
                       </Form.Group>
-
                     </Row>
                   </div>
                 ) : null}
@@ -768,9 +855,7 @@ const CarrierDetail = () => {
                     placeholder="Company's Name"
                     name="i_company_name"
                     defaultValue={
-                      carrier && carrier.insurance
-                        ? carrier.insurance.name
-                        : ""
+                      carrier && carrier.insurance ? carrier.insurance.name : ""
                     }
                     required
                   />
@@ -851,22 +936,24 @@ const CarrierDetail = () => {
                 </Form.Group>
               </Row>
 
-
               <hr />
               {currUser.department === "admin" && (
                 <>
                   <Row>
-                    <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Salesman:</Form.Label>
-                      <Form.Control
-                        type="text"
-                        readOnly
-                        defaultValue={
-                          salePerson ? salePerson : ""
-                        }
-                        required
-                      />
-                    </Form.Group>
+                <Form.Label>Salesman:</Form.Label>
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <MySelect
+                  isMulti={false}
+                  value={selectedSalesperson}
+                  onChange={setSelectedSalesperson}
+                  options={salesperson && salesperson.map((item) => {
+                    return {
+                      label: item.user_name,
+                      value: item._id,
+                    };
+                  })}
+                />
+                </Form.Group>
                   </Row>
                   <hr />
                 </>
@@ -875,7 +962,7 @@ const CarrierDetail = () => {
               {/* MC FILE START */}
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} >
+                <Col md={2}>
                   <h4 className="fileHeading"> MC </h4>
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier">
@@ -886,25 +973,27 @@ const CarrierDetail = () => {
                     type="warning"
                     content="Not uploaded"
                   />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectMcFile} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectMcFile} />
                   <Form.Control.Feedback type="invalid">{!carrier.mc_file ? "Please Upload MC File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
+                <Col md={2} className="actions_wrapper">
                   <TooltipCustom text={onSelectedMcFile && carrier.mc_file ? "update file" : carrier.mc_file ? "select file to update" : onSelectedMcFile ? "upload file" : "select file to upload"} id='mcfile' ></TooltipCustom>
 
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="mcfile">
-                      <Button disabled={!onSelectedMcFile|| mcLoader} className="action_button">
-                        <i className={`bx ${carrier.mc_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadMcFile}></i>
+                      <Button disabled={!onSelectedMcFile|| mcLoader} className="" onClick={handleUploadMcFile}>
+                        {carrier.mc_file?"Change File":"Add File"}
+                        {/* <i className={`bx ${data.mc_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadMcFile}></i> */}
                       </Button>
                     </div>
                     {carrier.mc_file ?
                     <>
                     <TooltipCustom text='view file' id='mcfileview' ></TooltipCustom>
                       <div data-tip data-for="mcfileview">
-                      <Button disabled={mcLoader} className="action_button">
+                      <Button disabled={mcLoader} >
                         <a href={carrier.mc_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
+                          View
+                          {/* <i className="bx bx-show-alt action-button" ></i> */}
                         </a>
                         </Button>
                       </div></> : null}
@@ -916,45 +1005,65 @@ const CarrierDetail = () => {
               {/* noa FILE START */}
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} >
+                <Col md={2}>
                   <h4 className="fileHeading"> Noa </h4>
                   {/* <hr/> */}
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier" >
                   <Form.Label className="file_input_label">{carrier.noa_file ? <Badge type="success" content="Uploaded" /> : <Badge type="warning" content="Not uploaded" />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectNoaFile} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectNoaFile} />
                   <Form.Control.Feedback type="invalid">{!carrier.noa_file ? "Please Upload Noa File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
-                  <TooltipCustom text={onSelectedNoaFile && carrier.noa_file ? "update file" : carrier.noa_file ? "select file to update" : onSelectedNoaFile ? "upload file" : "select file to upload"} id='noafile' ></TooltipCustom>
-                  
+                <Col md={2} className="actions_wrapper">
+                  <TooltipCustom
+                    text={
+                      onSelectedNoaFile && carrier.noa_file
+                        ? "update file"
+                        : carrier.noa_file
+                        ? "select file to update"
+                        : onSelectedNoaFile
+                        ? "upload file"
+                        : "select file to upload"
+                    }
+                    id="noafile"
+                  ></TooltipCustom>
+
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="noafile">
-                      <Button disabled={!onSelectedNoaFile || noaLoader} className="action_button">
-                        <i className={`bx ${carrier.noa_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadNoaFile}></i>
+                      <Button
+                        disabled={!onSelectedNoaFile || noaLoader}
+                        className="action_button"
+                        onClick={handleUploadNoaFile}
+                      >
+                       {carrier.noa_file?"Change File":"Add File"}
                       </Button>
                     </div>
-                    {carrier.noa_file ?
-                    <>
-                    <TooltipCustom text='view file' id='noafileview' ></TooltipCustom>
-                    <Button disabled={noaLoader} className="action_button">
-                      <div data-tip data-for="noafileview">
-                        <a href={carrier.noa_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
-                        </a>
-                      </div></Button> </>: null}
+                    {carrier.noa_file ? (
+                      <>
+                        <TooltipCustom
+                          text="view file"
+                          id="noafileview"
+                        ></TooltipCustom>
+                        <Button disabled={noaLoader} className="action_button">
+                          <div data-tip data-for="noafileview">
+                            <a href={carrier.noa_file}>
+                            View
+                            </a>
+                          </div>
+                        </Button>{" "}
+                      </>
+                    ) : null}
                   </div>
                 </Col>
 
                 <hr className="basic_file_hr" />
-
               </Row>
 
               {/* noa FILE END */}
               {/* w9 FILE START */}
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} >
+                <Col md={2}>
                   <h4 className="fileHeading"> W9 </h4>
                 </Col>
                 <Form.Group as={Col} md={4} className="file__input__contaier">
@@ -965,27 +1074,48 @@ const CarrierDetail = () => {
                     type="warning"
                     content="Not uploaded"
                   />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectW9File} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectW9File} />
                   <Form.Control.Feedback type="valid"></Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
-                  <TooltipCustom text={onSelectedW9File && carrier.w9_file ? "update file" : carrier.w9_file ? "select file to update" : onSelectedW9File ? "upload file" : "select file to upload"} id='w9file' ></TooltipCustom>
+                <Col md={2} className="actions_wrapper">
+                  <TooltipCustom
+                    text={
+                      onSelectedW9File && carrier.w9_file
+                        ? "update file"
+                        : carrier.w9_file
+                        ? "select file to update"
+                        : onSelectedW9File
+                        ? "upload file"
+                        : "select file to upload"
+                    }
+                    id="w9file"
+                  ></TooltipCustom>
 
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="w9file">
-                      <Button disabled={!onSelectedW9File || w9Loader} className="action_button">
-                        <i className={`bx ${carrier.w9_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadW9File}></i>
+                      <Button
+                        disabled={!onSelectedW9File || w9Loader}
+                        className="action_button"
+                        onClick={handleUploadW9File}
+                      >
+                       {carrier.w9_file?"Change File":"Add File"}
                       </Button>
                     </div>
-                    {carrier.w9_file ?
-                    <>
-                    <TooltipCustom text='view file' id='w9fileview' ></TooltipCustom>
-                    <Button disabled={w9Loader} className="action_button">
-                      <div data-tip data-for="w9fileview">
-                        <a href={carrier.w9_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
-                        </a>
-                      </div></Button> </>: null}
+                    {carrier.w9_file ? (
+                      <>
+                        <TooltipCustom
+                          text="view file"
+                          id="w9fileview"
+                        ></TooltipCustom>
+                        <Button disabled={w9Loader} className="action_button">
+                          <div data-tip data-for="w9fileview">
+                            <a href={carrier.w9_file}>
+                             View
+                            </a>
+                          </div>
+                        </Button>{" "}
+                      </>
+                    ) : null}
                   </div>
                 </Col>
                 <hr className="basic_file_hr" />
@@ -994,7 +1124,7 @@ const CarrierDetail = () => {
               {/* insurance_file FILE START */}
               <Row className="justify-content-start">
                 {/* <Col md={1}></Col> */}
-                <Col md={2} >
+                <Col md={2}>
                   <h4 className="fileHeading"> Insurance </h4>
                 </Col>
 
@@ -1006,29 +1136,51 @@ const CarrierDetail = () => {
                     type="warning"
                     content="Not uploaded"
                   />}</Form.Label>
-                  <Form.Control className="file__input" type="file" name="file" defaultValue={carrier.w9_file ? carrier.w9_file : ""} onChange={onSelectInsuranceFile} />
+                  <Form.Control className="file__input" type="file" name="file" onChange={onSelectInsuranceFile} />
                   <Form.Control.Feedback type="invalid" >{!carrier.insurance_file ? "Please Upload Insurance File." : null}</Form.Control.Feedback>
                 </Form.Group>
-                <Col md={1} className="actions_wrapper">
-                  <TooltipCustom text={onSelectedInsuranceFile && carrier.insurance_file ? "update file" : carrier.insurance_file ? "select file to update" : onSelectedInsuranceFile ? "upload file" : "select file to upload"} id='insurancefile' ></TooltipCustom>
-                  
+                <Col md={2} className="actions_wrapper">
+                  <TooltipCustom
+                    text={
+                      onSelectedInsuranceFile && carrier.insurance_file
+                        ? "update file"
+                        : carrier.insurance_file
+                        ? "select file to update"
+                        : onSelectedInsuranceFile
+                        ? "upload file"
+                        : "select file to upload"
+                    }
+                    id="insurancefile"
+                  ></TooltipCustom>
+
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="insurancefile">
-                      <Button disabled={!onSelectedInsuranceFile || insuranceLoader} className="action_button">
-                        <i className={`bx ${carrier.insurance_file ? "bx-edit" : "bxs-file-plus"} action-button`} onClick={handleUploadInsuranceFile}></i>
-
+                      <Button
+                        disabled={!onSelectedInsuranceFile || insuranceLoader}
+                        className="action_button"
+                        onClick={handleUploadInsuranceFile}
+                      >
+                        {carrier.insurance_file?"Change File":"Add File"}
                       </Button>
                     </div>
-                    {carrier.insurance_file ?
-                    <>
-                    <TooltipCustom text='view file' id='insurancefileview' ></TooltipCustom>
-                    <Button disabled={insuranceLoader} className="action_button">
-                      <div data-tip data-for="insurancefileview">
-                        <a href={carrier.insurance_file}>
-                          <i className="bx bx-show-alt action-button" ></i>
-                        </a>
-                      </div>
-                      </Button></> : null}
+                    {carrier.insurance_file ? (
+                      <>
+                        <TooltipCustom
+                          text="view file"
+                          id="insurancefileview"
+                        ></TooltipCustom>
+                        <Button
+                          disabled={insuranceLoader}
+                          className="action_button"
+                        >
+                          <div data-tip data-for="insurancefileview">
+                            <a href={carrier.insurance_file}>
+                              View
+                            </a>
+                          </div>
+                        </Button>
+                      </>
+                    ) : null}
                   </div>
                 </Col>
               </Row>
@@ -1040,23 +1192,36 @@ const CarrierDetail = () => {
                 {carrier.files?.map((file) => {
                   return (
                     <div key={file.file} className="miscWrapper">
-                      <Row className="justify-content-start" >
+                      <Row className="justify-content-start">
                         <Col md={6}>
-                          <h5 className="misc_file_name"> {file.name.length > 10 ? file.name.substring(0, 11) + "..." : file.name} </h5>
+                          <h5 className="misc_file_name">
+                            {" "}
+                            {file.name.length > 10
+                              ? file.name.substring(0, 11) + "..."
+                              : file.name}{" "}
+                          </h5>
                         </Col>
-                        <Col md={1}>
-                          <TooltipCustom text='view file' id={file.name} ></TooltipCustom>
-                          <TooltipCustom text='delete file' id={file.file} ></TooltipCustom>
+                        <Col md={2}>
+                          <TooltipCustom
+                            text="view file"
+                            id={file.name}
+                          ></TooltipCustom>
+                          <TooltipCustom
+                            text="delete file"
+                            id={file.file}
+                          ></TooltipCustom>
                           <div className="actions_button_misc_wrapper">
                             <div data-tip data-for={file.file}>
-                              <span onClick={() => setDeleteModal(file)}>
-                                <i className="bx bx-trash-alt action-button"></i>
-                              </span>
+                             <Button variant="danger" onClick={() => setDeleteModal(file)}>
+                                Delete File
+                              </Button>
                             </div>
                             <div data-tip data-for={file.name}>
-                              <a href={file.file}>
-                                <i className="bx bx-show-alt action-button"></i>
+                            <Button>  
+                            <a href={file.file}>
+                                View
                               </a>
+                              </Button>
                             </div>
                           </div>
                         </Col>
@@ -1075,17 +1240,26 @@ const CarrierDetail = () => {
                 title="Delete Confirmation"
               />
               <Row className="add-misc-btn">
-                <Col md={2}><Button onClick={() => { setShowMicsModal(true) }}>Add Misc</Button></Col>
+                <Col md={2}>
+                  <Button
+                    onClick={() => {
+                      setShowMicsModal(true);
+                    }}
+                  >
+                    Add Misc
+                  </Button>
+                </Col>
               </Row>
               <Row>
                 <MyModal
                   size="lg"
                   show={showMicsModal}
                   heading="Add Document"
-                  onClose={() => setShowMicsModal(false)}
+                  onClose={() => {setShowMicsModal(false);
+                    setMiscLoader(false)
+                  }}
                   style={{ width: "auto" }}
                 >
-
                   <Row className="justify-content-center">
                     <Form.Group as={Col} md={10} controlId="validationCustom01">
                       <Form.Label>Name</Form.Label>
@@ -1099,7 +1273,11 @@ const CarrierDetail = () => {
                     </Form.Group>
                   </Row>
                   <Row className="justify-content-center">
-                    <Form.Group as={Col} md={10} className="position-relative my-5">
+                    <Form.Group
+                      as={Col}
+                      md={10}
+                      className="position-relative my-5"
+                    >
                       <Form.Label>Attachments</Form.Label>
                       <Form.Control
                         type="file"
@@ -1133,9 +1311,7 @@ const CarrierDetail = () => {
                     Add
                   </Button>
                 </MyModal>
-
               </Row>
-
 
               {/* Mise Files END*/}
 
@@ -1147,64 +1323,79 @@ const CarrierDetail = () => {
                 <Col md={9}>
                   <Button
                     disabled={!closeCheck ? loaderButton : false}
-                    onClick={currUser.department === "sales" ? () => { setCloseCheck(false) } : ""}
+                    onClick={
+                      currUser.department === "sales"
+                        ? () => {
+                            setCloseCheck(false);
+                          }
+                        : ""
+                    }
                     variant="success"
                     size="lg"
                     type="submit"
                   >
-                    {!closeCheck ? loaderButton && (
-                      <Spinner
-                        as="span"
-                        animation="grow"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    {currUser.department === "sales" ? "Save" : "Update Carrier"}
+                    {!closeCheck
+                      ? loaderButton && (
+                          <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                        )
+                      : null}
+                    {currUser.department === "sales"
+                      ? "Save"
+                      : "Update Carrier"}
                   </Button>
                 </Col>
                 <Col md={3} className="d-flex justify-content-end">
-
-                  {currUser.department === "sales" && (<><Button
-                    style={{ float: "right", marginRight: '5px' }}
-                    size="lg"
-                    variant="danger"
-                    onClick={openModal}
-                  >
-                    Reject
-                  </Button>
-                    <Button size="lg" type="submit"
-                      onClick={closeHandler}
-                      disabled={closeCheck ? loaderButton : false}
-                    >
-                      {closeCheck ? loaderButton && (
-                        <Spinner
-                          as="span"
-                          animation="grow"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      ) : null}
-                      Close Sale
-                    </Button>
-                  </>
+                  {currUser.department === "sales" && (
+                    <>
+                      <Button
+                        style={{ float: "right", marginRight: "5px" }}
+                        size="lg"
+                        variant="danger"
+                        onClick={openModal}
+                      >
+                        Reject
+                      </Button>
+                      <Button
+                        size="lg"
+                        type="submit"
+                        onClick={closeHandler}
+                        disabled={closeCheck ? loaderButton : false}
+                      >
+                        {closeCheck
+                          ? loaderButton && (
+                              <Spinner
+                                as="span"
+                                animation="grow"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                              />
+                            )
+                          : null}
+                        Close Sale
+                      </Button>
+                    </>
                   )}
-                  {currUser.department === "admin" && (<> <Button
-                    style={{ float: "right" }}
-                    size="lg"
-                    onClick={changestatusHandler}
-                  >
-                    Change Status
-                  </Button>
-                  </>
+                  {currUser.department === "admin" && (
+                    <>
+                      {" "}
+                      <Button
+                        style={{ float: "right" }}
+                        size="lg"
+                        onClick={changestatusHandler}
+                      >
+                        Change Status
+                      </Button>
+                    </>
                   )}
-
                 </Col>
-                <Col>
-
-                </Col>
+                <Col></Col>
               </Row>
             </Card.Body>
           </Card>
@@ -1212,7 +1403,9 @@ const CarrierDetail = () => {
         <Modal
           show={changeStatus}
           heading="Change Carrier Status"
-          onClose={() => { setChangeStatus(false) }}
+          onClose={() => {
+            setChangeStatus(false);
+          }}
           onConfirm={cschandler}
           btnText="Update"
         >
@@ -1227,10 +1420,9 @@ const CarrierDetail = () => {
                 { label: "Deactivated ", value: "deactivated" },
                 { label: "Unassigned ", value: "unassigned" },
                 { label: "Didnotpick ", value: "didnotpick" },
-                { label: "Rejected ", value: "rejected" }
+                { label: "Rejected ", value: "rejected" },
               ]}
             />
-
           </Form>
         </Modal>
 
@@ -1243,7 +1435,17 @@ const CarrierDetail = () => {
         >
           <Form onSubmit={deactivateHandler}>
             <Form.Group className="mb-3" controlId="deactivate_carrier">
-              <Form.Control placeholder="Comment here" as="textarea" name="deactivate" rows={5} style={{ borderRadius: "15px", height: "99px", padding: "10px" }} />
+              <Form.Control
+                placeholder="Comment here"
+                as="textarea"
+                name="deactivate"
+                rows={5}
+                style={{
+                  borderRadius: "15px",
+                  height: "99px",
+                  padding: "10px",
+                }}
+              />
             </Form.Group>
             <Button type="submit">Submit</Button>
           </Form>

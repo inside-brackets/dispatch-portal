@@ -144,10 +144,9 @@ const SearchCarrier = () => {
                 {carrier.c_status === "unassigned" ||
                 carrier.c_status === "inprogress" ||
                 carrier.c_status === "rejected" ||
-                carrier.c_status === "appointment" ||
                 carrier.c_status === "didnotpick" ? (
                   <Button
-                    onClick={() => clickHandler("addcarrier")}
+                    onClick={() => clickHandler("carrierview")}
                     variant="primary"
                   >
                     Assign
@@ -158,7 +157,7 @@ const SearchCarrier = () => {
                       onClick={() => clickHandler("carrierview")}
                       variant="primary"
                     >
-                      View
+                      View Carrier Details
                     </Button>
                   )
                 )}

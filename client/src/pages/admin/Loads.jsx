@@ -76,6 +76,8 @@ const Loads = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
   return (
     <>
+    <h2> Loads </h2>
+      <br />
       <div>
         <Row>
           <Col md={3}></Col>

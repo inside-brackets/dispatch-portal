@@ -138,6 +138,8 @@ const Invoice = () => {
   const [invoices, setInvoices] = useState([]);
   return (
     <>
+      <h2> Invoices </h2>
+      <br />
       <Row>
         <div className="card">
           <div className="card__body">
@@ -174,6 +176,7 @@ const Invoice = () => {
       <MyModal
         show={modalHandler}
         heading="Invoice"
+        scroll="scroll"
         size="lg"
         onClose={() => {
           setModalHandler(false);
@@ -192,6 +195,7 @@ const Invoice = () => {
       </MyModal>
       <MyModal
         show={PdfmodalHandler}
+        scrollInvoicePrint="scrollInvoicePrint"  
         size="xl"
         onClose={() => {
           setPdfModalHandler(false);

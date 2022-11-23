@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import TextArea from "../../components/UI/TextArea";
+import "./invoiceModal.css"
 
 const customerTableHead = [
   "#",
@@ -294,7 +295,7 @@ const InvoiceModal = ({
           <Button onClick={submitHandler}>Submit</Button>
         ) : (
           invoice && (
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-center btnWrapper">
                 <Button disabled={department !== "admin"} className="button-size" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
                 <Button disabled={department !== "admin"} className="button-size" variant="success" onClick={changeStatusHandler}>Clear</Button>
             </div>
