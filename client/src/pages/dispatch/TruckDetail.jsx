@@ -599,7 +599,6 @@ const TruckDetail = ({ match }) => {
                   style={{
                     // justifyContent: "center",
                     marginTop: "40px",
-                    height: "100px",
                   }}
                 >
                   <Col
@@ -634,7 +633,6 @@ const TruckDetail = ({ match }) => {
                   style={{
                     // justifyContent: "center",
                     marginTop: "40px",
-                    height: "100px",
                   }}
                 >
                   <Col

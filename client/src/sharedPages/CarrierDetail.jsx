@@ -563,7 +563,6 @@ const CarrierDetail = () => {
               <Row
                 style={{
                   marginTop: "40px",
-                  height: "100px",
                 }}
               >
                 <Col
@@ -574,32 +573,27 @@ const CarrierDetail = () => {
                 >
                   <h4> Sales Comments:</h4>
                 </Col>
-                <Col
-                  md={6}
-                  style={{
-                    zIndex: 2,
-                  }}
-                >
-                  <Form.Group
+                <Form.Group
                     className="mb-3"
                     controlId="exampleForm.ControlTextarea1"
+                    as={Col} md="6"
                   >
                     <TextArea
                       style={{ width: "500px" }}
                       placeholder="Comment.."
                       defaultValue={carrier ? carrier.comment : ""}
+                      name="Comment:"
                       readOnly
                     />
                   </Form.Group>
-                </Col>
               </Row>
+
               {currUser.department === "admin" && (
                 <>
                   {" "}
                   <Row
                     style={{
                       marginTop: "40px",
-                      height: "100px",
                     }}
                   >
                     <Col
