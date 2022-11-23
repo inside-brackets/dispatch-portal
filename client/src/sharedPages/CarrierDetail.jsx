@@ -21,6 +21,7 @@ import moment from "moment";
 
 const CarrierDetail = () => {
   const currUser = useSelector((state) => state.user.user);
+  const { company } = useSelector((state) => state.user);
   const [trucks, setTrucks] = useState([]);
   const history = useHistory();
   const params = useParams();
@@ -43,6 +44,7 @@ const CarrierDetail = () => {
   const [changeStatus, setChangeStatus] = useState(false);
   const [statusChanged, setStatusChanged] = useState();
   const [salePerson, setSalePerson] = useState("");
+  const [salesperson, setSalesperson] = useState()
   const [selectedCarrierStatus, setSelectedCarrierStatus] = useState("");
   const [miscLoader, setMiscLoader] = useState(false);
 
@@ -81,11 +83,28 @@ const CarrierDetail = () => {
               data.c_status.charAt(0).toUpperCase() + data.c_status.slice(1),
             value: data.c_status,
           });
+          setSelectedSalesperson({
+            label:data.salesman?data.salesman.user_name:"Select Salesperson:",
+            value: data.salesman?._id,
+            
+          })
         } else {
           setError(true);
         }
       });
   }, [params.mc]);
+
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
+        company: company.value,
+        department: "sales",
+      })
+      .then(({ data }) => {
+        setSalesperson(data);
+      });
+  }, [company.value]);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -120,6 +139,9 @@ const CarrierDetail = () => {
           agent_email: event.target.i_agent_email.value,
         },
       };
+      if ((currUser.department === "admin")) {
+        upObj["salesman"] = selectedSalesperson?.value
+      }
       if (selectedCarrierStatus.value === "registered") {
         if (
           !carrier.mc_file ||
@@ -457,14 +479,6 @@ const CarrierDetail = () => {
     setChangeStatus(false);
   };
 
-
-  console.log(carrier.appointment,"carrier.appointment")
-
-  console.log(
-    "appointment",
-    moment(carrier.appointment).format("YYYY-MM-DDTH:m"),
-  );
-
   return (
     <div className="row">
       <div className="col">
@@ -600,8 +614,7 @@ const CarrierDetail = () => {
                     <Form.Label>Call back time:</Form.Label>
                     <Form.Control
                       type="datetime-local"
-                      label="Call back time:"
-                      defaultValue={moment(carrier.appointment?carrier.appointment:new Date()).format("YYYY-MM-DDTHH:mm")}
+                      defaultValue={carrier.appointment?moment(new Date(carrier.appointment)).format("YYYY-MM-DDTHH:mm"):""}
                       name="appointment"
                     />
                     <Form.Control.Feedback type="invalid">
@@ -609,14 +622,6 @@ const CarrierDetail = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
               </Row>
-              {/* <Input
-              type="datetime-local"
-              label="Call back time:"
-              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
-              name="appointment"
-/> */}
-
-
               {currUser.department === "admin" && (
                 <>
                   {" "}
@@ -940,8 +945,8 @@ const CarrierDetail = () => {
               {currUser.department === "admin" && (
                 <>
                   <Row>
-                    {/* <Form.Group as={Col} md="4" controlId="validationCustom03">
-                      <Form.Label>Salesman:</Form.Label>
+                    {/* 
+                      
                       <Form.Control
                         type="text"
                         readOnly
@@ -949,7 +954,10 @@ const CarrierDetail = () => {
                         required
                       />
                     </Form.Group> */}
-                  {/* <MySelect
+                <Form.Label>Salesman:</Form.Label>
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
+                  <MySelect
+                  isMulti={false}
                   value={selectedSalesperson}
                   onChange={setSelectedSalesperson}
                   options={salesperson && salesperson.map((item) => {
@@ -958,7 +966,22 @@ const CarrierDetail = () => {
                       value: item._id,
                     };
                   })}
-                /> */}
+                />
+                </Form.Group>
+            {/* <MySelect
+              isMulti={false}
+              value={selectedCarrierStatus}
+              onChange={setSelectedCarrierStatus}
+              options={[
+                { label: "Registered ", value: "registered" },
+                { label: "Appointment ", value: "appointment" },
+                { label: "Deactivated ", value: "deactivated" },
+                { label: "Unassigned ", value: "unassigned" },
+                { label: "Didnotpick ", value: "didnotpick" },
+                { label: "Rejected ", value: "rejected" },
+              ]}
+            /> */}
+
                   </Row>
                   <hr />
                 </>

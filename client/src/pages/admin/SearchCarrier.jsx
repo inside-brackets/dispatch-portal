@@ -144,7 +144,6 @@ const SearchCarrier = () => {
                 {carrier.c_status === "unassigned" ||
                 carrier.c_status === "inprogress" ||
                 carrier.c_status === "rejected" ||
-                carrier.c_status === "appointment" ||
                 carrier.c_status === "didnotpick" ? (
                   <Button
                     // onClick={() => clickHandler("addcarrier")}
