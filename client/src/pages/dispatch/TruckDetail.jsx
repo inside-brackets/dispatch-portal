@@ -631,7 +631,6 @@ const TruckDetail = ({ match }) => {
                 </Row>
                 <Row
                   style={{
-                    // justifyContent: "center",
                     marginTop: "40px",
                   }}
                 >

@@ -17,6 +17,7 @@ import { socket } from "../index";
 import { useSelector } from "react-redux";
 import CStatus from "../assets/JsonData/status_map.json";
 import "../assets/css/sharedpages/carrierdetail.css";
+import moment from "moment";
 
 const CarrierDetail = () => {
   const currUser = useSelector((state) => state.user.user);
@@ -110,6 +111,7 @@ const CarrierDetail = () => {
         email: event.target.email.value,
         tax_id_number: event.target.tax_id.value,
         dispatcher_fee: event.target.dispatch_fee.value,
+        appointment: new Date(event.target.appointment.value),
         insurance: {
           name: event.target.i_company_name.value,
           address: event.target.i_address.value,
@@ -455,6 +457,14 @@ const CarrierDetail = () => {
     setChangeStatus(false);
   };
 
+
+  console.log(carrier.appointment,"carrier.appointment")
+
+  console.log(
+    "appointment",
+    moment(carrier.appointment).format("YYYY-MM-DDTH:m"),
+  );
+
   return (
     <div className="row">
       <div className="col">
@@ -586,7 +596,26 @@ const CarrierDetail = () => {
                       readOnly
                     />
                   </Form.Group>
+                  <Form.Group as={Col} md="3" controlId="validationCustom03">
+                    <Form.Label>Call back time:</Form.Label>
+                    <Form.Control
+                      type="datetime-local"
+                      label="Call back time:"
+                      defaultValue={moment(carrier.appointment?carrier.appointment:new Date()).format("YYYY-MM-DDTHH:mm")}
+                      name="appointment"
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid Owner name.
+                    </Form.Control.Feedback>
+                  </Form.Group>
               </Row>
+              {/* <Input
+              type="datetime-local"
+              label="Call back time:"
+              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
+              name="appointment"
+/> */}
+
 
               {currUser.department === "admin" && (
                 <>
