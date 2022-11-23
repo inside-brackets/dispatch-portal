@@ -67,11 +67,6 @@ const CarrierDetail = () => {
         if (data) {
           setCarrier(data);
           setTrucks(data.trucks);
-          // setSalePerson(data.salesman?.user_name);
-          // setSelectedSalesperson(
-          //   label:data.c_status.charAt(0).toUpperCase() + data.c_status.slice(1),
-          // value: data.c_status
-          // )
           setSelectedPayment({
             label:
               data.payment_method.charAt(0).toUpperCase() +
@@ -945,15 +940,6 @@ const CarrierDetail = () => {
               {currUser.department === "admin" && (
                 <>
                   <Row>
-                    {/* 
-                      
-                      <Form.Control
-                        type="text"
-                        readOnly
-                        defaultValue={salePerson ? salePerson : ""}
-                        required
-                      />
-                    </Form.Group> */}
                 <Form.Label>Salesman:</Form.Label>
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <MySelect
@@ -962,26 +948,12 @@ const CarrierDetail = () => {
                   onChange={setSelectedSalesperson}
                   options={salesperson && salesperson.map((item) => {
                     return {
-                      label: item.user_name, // change later
+                      label: item.user_name,
                       value: item._id,
                     };
                   })}
                 />
                 </Form.Group>
-            {/* <MySelect
-              isMulti={false}
-              value={selectedCarrierStatus}
-              onChange={setSelectedCarrierStatus}
-              options={[
-                { label: "Registered ", value: "registered" },
-                { label: "Appointment ", value: "appointment" },
-                { label: "Deactivated ", value: "deactivated" },
-                { label: "Unassigned ", value: "unassigned" },
-                { label: "Didnotpick ", value: "didnotpick" },
-                { label: "Rejected ", value: "rejected" },
-              ]}
-            /> */}
-
                   </Row>
                   <hr />
                 </>

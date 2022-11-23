@@ -146,7 +146,6 @@ const SearchCarrier = () => {
                 carrier.c_status === "rejected" ||
                 carrier.c_status === "didnotpick" ? (
                   <Button
-                    // onClick={() => clickHandler("addcarrier")}
                     onClick={() => clickHandler("carrierview")}
                     variant="primary"
                   >
