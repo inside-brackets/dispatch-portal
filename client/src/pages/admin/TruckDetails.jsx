@@ -36,7 +36,7 @@ const TruckDetails = () => {
   const [validated, setValidated] = useState(false);
   const [selectedDispatcher, setSelectedDispatcher] = useState(null);
   const [dispatchers, setDispatchers] = useState([]);
-  const [t_status, setT_status] = useState('')
+  const [t_status, setT_status] = useState("");
   const [drivers, setDrivers] = useState([
     {
       name: "",
@@ -48,10 +48,9 @@ const TruckDetails = () => {
 
   const reassign = async () => {
     axios
-      .put(
-        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
-        { "trucks.$.dispatcher": selectedDispatcher.value }
-      )
+      .put(`/updatetruck/${params.mc}/${params.truck}`, {
+        "trucks.$.dispatcher": selectedDispatcher.value,
+      })
       .then((result) => {
         console.log("reassing", result.data.trucks);
       });
@@ -68,7 +67,7 @@ const TruckDetails = () => {
   //   }
   //   axios
   //     .put(
-  //       `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
+  //       `/updatetruck/${params.mc}/${params.truck}`,
   //       { "trucks.$.t_status": status }
   //     )
   //     .then((result) => {
@@ -80,7 +79,7 @@ const TruckDetails = () => {
   //     });
   // };
 
-  console.log('status',t_status)
+  console.log("status", t_status);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -100,10 +99,7 @@ const TruckDetails = () => {
         "trucks.$.t_status": t_status.value,
         "trucks.$.drivers": drivers,
       };
-      await axios.put(
-        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${params.mc}/${params.truck}`,
-        truckObj
-      );
+      await axios.put(`/updatetruck/${params.mc}/${params.truck}`, truckObj);
 
       setLoadButton(false);
     }
@@ -113,7 +109,7 @@ const TruckDetails = () => {
     setIsLoading(true);
     setError(false);
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getcarrier`, {
+      .post(`/getcarrier`, {
         mc_number: params.mc,
       })
       .then(({ data }) => {
@@ -146,7 +142,7 @@ const TruckDetails = () => {
   useEffect(() => {
     axios
       .post(
-        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+        `/getusers`,
 
         {
           department: "dispatch",
@@ -309,20 +305,20 @@ const TruckDetails = () => {
                 </Form.Group>
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Truck Status:</Form.Label>
-                <Select
-                        label="Truck Status:"
-                        isMulti={false}
-                        value={t_status}
-                        onChange={setT_status}
-                        isDisabled={t_status.value === "new"}
-                        options={[
-                          // { label: "New", value: "new" },
-                          { label: "Pending", value: "pending" },
-                          { label: "Active", value: "active" },
-                          { label: "Inactive ", value: "inactive" },
-                        ]}
-                      />
-                      </Form.Group>
+                  <Select
+                    label="Truck Status:"
+                    isMulti={false}
+                    value={t_status}
+                    onChange={setT_status}
+                    isDisabled={t_status.value === "new"}
+                    options={[
+                      // { label: "New", value: "new" },
+                      { label: "Pending", value: "pending" },
+                      { label: "Active", value: "active" },
+                      { label: "Inactive ", value: "inactive" },
+                    ]}
+                  />
+                </Form.Group>
               </Row>
               <Row>
                 <Form.Group as={Col} md="4" controlId="validationCustom03">
@@ -342,7 +338,6 @@ const TruckDetails = () => {
                     ]}
                   />
                 </Form.Group>
-
               </Row>
               <Row className="mt-3">
                 <hr />

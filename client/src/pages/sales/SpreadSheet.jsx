@@ -16,9 +16,9 @@ const customerTableHead = [
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-const renderBody = (item, index,currPage) => (
+const renderBody = (item, index, currPage) => (
   <tr key={index}>
-    <td>{(index + 1) + (currPage*10)}</td>
+    <td>{index + 1 + currPage * 10}</td>
     <td>{item.mc_number}</td>
     <td>{item.company_name}</td>
     <td>{item.address}</td>
@@ -45,7 +45,7 @@ const Customers = () => {
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `${process.env.REACT_APP_BACKEND_URL}/get-table-carriers`,
+                  url: `/get-table-carriers`,
                   body: {
                     salesman: currUserId,
                   },
@@ -58,7 +58,9 @@ const Customers = () => {
                     { label: "Deactivated ", value: "deactivated" },
                   ],
                 }}
-                renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
+                renderBody={(item, index, currPage) =>
+                  renderBody(item, index, currPage)
+                }
               />
             </div>
           </div>

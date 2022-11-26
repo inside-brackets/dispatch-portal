@@ -49,37 +49,35 @@ export default function DetailsModal(props) {
   const fetchDetails = () => {
     for (let i = 0; i < data.length; i++) {
       if (data[i]) {
-        axios
-          .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${data[i]}`)
-          .then((res) => {
-            const didnotpick = props.users[today.getMonth()].filter(
-              (carrier) =>
-                carrier.change === "didnotpick" && carrier.user == data[i]
-            );
-            const rejected = props.users[today.getMonth()].filter(
-              (carrier) =>
-                carrier.change === "rejected" && carrier.user == data[i]
-            );
-            const registered = props.users[today.getMonth()].filter(
-              (carrier) =>
-                carrier.change === "registered" && carrier.user == data[i]
-            );
-            const appointment = props.users[today.getMonth()].filter(
-              (carrier) =>
-                carrier.change === "appointment" && carrier.user == data[i]
-            );
+        axios.get(`/getuser/${data[i]}`).then((res) => {
+          const didnotpick = props.users[today.getMonth()].filter(
+            (carrier) =>
+              carrier.change === "didnotpick" && carrier.user == data[i]
+          );
+          const rejected = props.users[today.getMonth()].filter(
+            (carrier) =>
+              carrier.change === "rejected" && carrier.user == data[i]
+          );
+          const registered = props.users[today.getMonth()].filter(
+            (carrier) =>
+              carrier.change === "registered" && carrier.user == data[i]
+          );
+          const appointment = props.users[today.getMonth()].filter(
+            (carrier) =>
+              carrier.change === "appointment" && carrier.user == data[i]
+          );
 
-            setUsers((prevState) => [
-              ...prevState,
-              {
-                user_name: res.data.user_name,
-                registered: registered.length ?? 0,
-                appointment: appointment.length ?? 0,
-                rejected: rejected.length ?? 0,
-                didnotpick: didnotpick.length ?? 0,
-              },
-            ]);
-          });
+          setUsers((prevState) => [
+            ...prevState,
+            {
+              user_name: res.data.user_name,
+              registered: registered.length ?? 0,
+              appointment: appointment.length ?? 0,
+              rejected: rejected.length ?? 0,
+              didnotpick: didnotpick.length ?? 0,
+            },
+          ]);
+        });
       }
     }
   };

@@ -3,13 +3,13 @@ import Table from "../../components/table/Table";
 import useHttp from "../../hooks/use-https";
 import MySelect from "../../components/UI/MySelect";
 import Loader from "react-loader-spinner";
-import { Button, Spinner,Row, Col } from "react-bootstrap";
+import { Button, Spinner, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../../store/sales";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
-import moment from 'moment';
+import moment from "moment";
 
 const carrierTableHead = [
   "#",
@@ -37,18 +37,16 @@ const AssignSales = () => {
 
   const { company: selectedCompany } = useSelector((state) => state.user);
 
-  const onAssign = async (mc, truckNumber,index) => {
-   
-
+  const onAssign = async (mc, truckNumber, index) => {
     if (selectedDispatcher.length === 0) {
-      return toast.warn("Please select any dispacther")
-    };
+      return toast.warn("Please select any dispacther");
+    }
     setButtonLoader(index);
     const assignedDispatcher = dispatchers.find((item) => {
       return item.user_name === selectedDispatcher.value;
     });
     await axios({
-      url: `${process.env.REACT_APP_BACKEND_URL}/admin/assigndispatcher/${mc}/${truckNumber}`,
+      url: `/admin/assigndispatcher/${mc}/${truckNumber}`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
 
@@ -59,7 +57,7 @@ const AssignSales = () => {
     const newCarriers = carriers.filter((item) => {
       return !(item.truck_number === truckNumber && item.mc_number === mc);
     });
-    setButtonLoader(null)
+    setButtonLoader(null);
     dispatch(salesActions.set(newCarriers));
   };
   useEffect(() => {
@@ -69,7 +67,7 @@ const AssignSales = () => {
 
     fetchCarriers(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
+        url: `/getcarriers`,
         method: "POST",
         headers: { "Content-Type": "application/json" },
 
@@ -86,7 +84,7 @@ const AssignSales = () => {
     };
     fetchDispatchers(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+        url: `/getusers`,
         method: "POST",
         headers: { "Content-Type": "application/json" },
 
@@ -100,21 +98,37 @@ const AssignSales = () => {
   }, [fetchDispatchers, fetchCarriers, dispatch, selectedCompany]);
 
   const renderBody = (item, index) => (
-    <tr key={index} >
-      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{index + 1}</td>
-      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.mc_number}</td>
-      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.company_name}</td>
-      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.truck_number}</td>
-      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.trailer_type}</td>
-      
-      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.salesman ? item.salesman : "N/A"}</td>
+    <tr key={index}>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>
+        {index + 1}
+      </td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>
+        {item.mc_number}
+      </td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>
+        {item.company_name}
+      </td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>
+        {item.truck_number}
+      </td>
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>
+        {item.trailer_type}
+      </td>
+
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>
+        {item.salesman ? item.salesman : "N/A"}
+      </td>
       {/* <td>{item.salesman}</td> */}
-      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>{item.updatedAt !== "N/A" ? moment(new Date(item.updatedAt)).fromNow() : "N/A"}</td>
-      <td >
+      <td onClick={() => history.push(`/carrierview/${item.mc_number}`)}>
+        {item.updatedAt !== "N/A"
+          ? moment(new Date(item.updatedAt)).fromNow()
+          : "N/A"}
+      </td>
+      <td>
         <Button
           style={{ paddingLeft: "40px", paddingRight: "40px" }}
           onClick={() => {
-            onAssign(item.mc_number, item.truck_number,index);
+            onAssign(item.mc_number, item.truck_number, index);
           }}
           disabled={buttonLoader}
         >
@@ -154,20 +168,20 @@ const AssignSales = () => {
   return (
     <div>
       <h2> Carriers: </h2>
-      <Row className='justify-content-end my-2'>
+      <Row className="justify-content-end my-2">
         <Col md={4}>
-        <div className="assign__text"> ADD DISPATCHER:</div>
-        <MySelect
-          isMulti={false}
-          value={selectedDispatcher}
-          onChange={setSelectedDispatcher}
-          options={dispatchers.map((item) => {
-            return {
-              label: item.user_name, // change later
-              value: item.user_name,
-            };
-          })}
-        />
+          <div className="assign__text"> ADD DISPATCHER:</div>
+          <MySelect
+            isMulti={false}
+            value={selectedDispatcher}
+            onChange={setSelectedDispatcher}
+            options={dispatchers.map((item) => {
+              return {
+                label: item.user_name, // change later
+                value: item.user_name,
+              };
+            })}
+          />
         </Col>
       </Row>
       <div className="row">

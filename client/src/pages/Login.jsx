@@ -37,7 +37,7 @@ const Login = () => {
 
     try {
       const loginResponse = await axios({
-        url: `${process.env.REACT_APP_BACKEND_URL}/login`,
+        url: `/login`,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         data: {
@@ -161,9 +161,18 @@ const Login = () => {
             </Form>
           </FormContainer>
         </Col>
-        <Col md={6} className={`${process.env.REACT_APP_FALCON === "true" ? "":"logo-inside"}`}>
+        <Col
+          md={6}
+          className={`${
+            process.env.REACT_APP_FALCON === "true" ? "" : "logo-inside"
+          }`}
+        >
           <Image
-            className={`justify-content-start align-items-center ${process.env.REACT_APP_FALCON === "true" ? "vh-100 vw-100":"logo-inside-ml"}`}
+            className={`justify-content-start align-items-center ${
+              process.env.REACT_APP_FALCON === "true"
+                ? "vh-100 vw-100"
+                : "logo-inside-ml"
+            }`}
             src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
             fluid
           />

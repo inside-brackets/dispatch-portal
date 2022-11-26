@@ -14,16 +14,11 @@ const Documents = ({ user, profile, callBack }) => {
   const { department } = useSelector((state) => state.user.user);
 
   const submitDelete = async () => {
-    await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
-      {
-        files: user.files.filter((item) => item._id !== deleteModal._id),
-      }
-    );
+    await axios.post(`/updateuser/${user._id}`, {
+      files: user.files.filter((item) => item._id !== deleteModal._id),
+    });
     await axios(
-      `${
-        process.env.REACT_APP_BACKEND_URL
-      }/s3url-delete/user_documents/${deleteModal.file?.substring(
+      `/s3url-delete/user_documents/${deleteModal.file?.substring(
         deleteModal.file?.lastIndexOf("/") + 1
       )}`
     );
@@ -37,20 +32,20 @@ const Documents = ({ user, profile, callBack }) => {
           <Col>
             <h4>Documents</h4>
           </Col>
-            <Col className="mb-4" md={2}>
-              <p
-                style={{
-                  color: "blue",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                  textDecorationLine: "underline",
-                }}
-                onClick={() => setShowModal(true)}
-              >
-                {" "}
-                + Add Document
-              </p>
-            </Col>
+          <Col className="mb-4" md={2}>
+            <p
+              style={{
+                color: "blue",
+                textDecoration: "underline",
+                cursor: "pointer",
+                textDecorationLine: "underline",
+              }}
+              onClick={() => setShowModal(true)}
+            >
+              {" "}
+              + Add Document
+            </p>
+          </Col>
           <hr />
         </Row>
 

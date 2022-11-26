@@ -58,7 +58,7 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
       };
       postTruck(
         {
-          url: `${process.env.REACT_APP_BACKEND_URL}/addnewtruck/${params.mc}`,
+          url: `/addnewtruck/${params.mc}`,
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: newTruck,
@@ -114,10 +114,10 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
 
     const indentifier = setTimeout(async () => {
       if (e.target.value) {
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-          { mc_number: params.mc, "trucks.truck_number": e.target.value }
-        );
+        const response = await axios.post(`/getcarrier`, {
+          mc_number: params.mc,
+          "trucks.truck_number": e.target.value,
+        });
         setTruckNumberIsAvailable(response.data.length === 0);
       }
     }, 250);
@@ -166,7 +166,7 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           />
         </Form.Group>
       </Row>
-      <Row className='mt-2'>
+      <Row className="mt-2">
         <Form.Group as={Col} controlId="validationCustom01">
           <Form.Label>Carry limit(lbs):</Form.Label>
           <Form.Control
@@ -270,17 +270,16 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           onChange={handleDriverChange}
         >
           <span>
-          <FormControlLabel
-            value="teamDriver"
-            control={<Radio />}
-            label="Team Driver"
-            
-          />
-          <FormControlLabel
-            value="singledriver"
-            control={<Radio />}
-            label="Single Driver"
-          />
+            <FormControlLabel
+              value="teamDriver"
+              control={<Radio />}
+              label="Team Driver"
+            />
+            <FormControlLabel
+              value="singledriver"
+              control={<Radio />}
+              label="Single Driver"
+            />
           </span>
         </RadioGroup>
       </FormControl>

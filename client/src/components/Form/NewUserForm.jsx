@@ -51,10 +51,9 @@ const NewUserForm = ({
     if (userName) {
       const indentifier = setTimeout(async () => {
         if (userName !== defaultValue?.user_name) {
-          const response = await axios.post(
-            `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-            { user_name: userName.replace(/\s+/g, " ").trim().toLowerCase() }
-          );
+          const response = await axios.post(`/getusers`, {
+            user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
+          });
           console.log("checking username", response.data);
           setUsernameIsValid(response.data.length === 0);
         } else {
@@ -72,12 +71,9 @@ const NewUserForm = ({
     const reHash = await bcrypt.hash(pass, 8);
 
     await axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
-        {
-          password: reHash,
-        }
-      )
+      .post(`/updateuser/${defaultValue._id}`, {
+        password: reHash,
+      })
       .then((response) => {
         setRefresh(Math.random());
       });
@@ -94,17 +90,14 @@ const NewUserForm = ({
       if (defaultValue && !interview) {
         setButtonLoader(true);
         await axios
-          .post(
-            `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
-            {
-              user_name: userName.replace(/\s+/g, " ").trim(),
-              joining_date: new Date(joiningDate),
-              salary,
-              designation,
-              department,
-              u_status: userStatus.value,
-            }
-          )
+          .post(`/updateuser/${defaultValue._id}`, {
+            user_name: userName.replace(/\s+/g, " ").trim(),
+            joining_date: new Date(joiningDate),
+            salary,
+            designation,
+            department,
+            u_status: userStatus.value,
+          })
           .then((response) => {
             if (response.data.u_status === "fired") {
               socket.emit("user-fired", `${defaultValue._id}`);
@@ -115,7 +108,7 @@ const NewUserForm = ({
       } else if (usernameIsValid) {
         setButtonLoader(true);
         await axios
-          .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
+          .post(`/admin/createuser`, {
             user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
             password: hash,
             joining_date: new Date(joiningDate),

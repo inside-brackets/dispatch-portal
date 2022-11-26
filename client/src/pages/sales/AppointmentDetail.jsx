@@ -59,13 +59,10 @@ const AppointmentDetail = () => {
   const [rmodal, setrModal] = useState();
 
   const rejectHandler = async () => {
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
-      {
-        c_status: "rejected",
-        comment: commentRef.current.value,
-      }
-    );
+    await axios.put(`/updatecarrier/${carrier.mc_number}`, {
+      c_status: "rejected",
+      comment: commentRef.current.value,
+    });
     setrModal(false);
     history.push("/appointments");
   };
@@ -201,7 +198,7 @@ const AppointmentDetail = () => {
     };
     fetchCarrier(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
+        url: `/getcarrier`,
         method: "POST",
         headers: { "Content-Type": "application/json" },
 
@@ -288,7 +285,7 @@ const AppointmentDetail = () => {
     };
     updateCarrier(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+        url: `/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: upObj,
@@ -315,24 +312,21 @@ const AppointmentDetail = () => {
 
     for (const property in files) {
       if (files[property]) {
-        console.log("files[property] " ,files[property])
-        console.log(files[property].name)
+        console.log("files[property] ", files[property]);
+        console.log(files[property].name);
         const { data: url } = await axios(
-          `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
+          `/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
         );
         axios.put(url, files[property]);
         files[property] = url.split("?")[0];
-        console.log("files[property]split(?) " ,files[property])
+        console.log("files[property]split(?) ", files[property]);
       }
     }
-    const response = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
-      {
-        c_status: "registered",
-        ...files,
-      }
-    );
-    console.log(files," files in response")
+    const response = await axios.put(`/updatecarrier/${carrier.mc_number}`, {
+      c_status: "registered",
+      ...files,
+    });
+    console.log(files, " files in response");
     console.log(response);
     setShowCloseModal(false);
     history.push("/appointments");

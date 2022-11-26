@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import TextArea from "../../components/UI/TextArea";
-import "./invoiceModal.css"
+import "./invoiceModal.css";
 
 const customerTableHead = [
   "#",
@@ -38,9 +38,11 @@ const InvoiceModal = ({
   );
   const commentRef = useRef();
 
-  const { _id: currUserId, user_name: currUserName,department } = useSelector(
-    (state) => state.user.user
-  );
+  const {
+    _id: currUserId,
+    user_name: currUserName,
+    department,
+  } = useSelector((state) => state.user.user);
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
@@ -79,7 +81,7 @@ const InvoiceModal = ({
       totalLoadedMiles: totalLoadedMiles,
       totalGross: totalGross,
       invoiceStatus: "pending",
-      carrier:carrier._id,
+      carrier: carrier._id,
       mc_number: carrier.mc_number,
 
       driver: {
@@ -90,7 +92,7 @@ const InvoiceModal = ({
     };
 
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/createinvoice`, obj)
+      .post(`/createinvoice`, obj)
       .then((res) => {
         console.log(res);
         closeModal();
@@ -100,28 +102,22 @@ const InvoiceModal = ({
 
   const changeStatusHandler = async () => {
     console.log("fee", dispatchFee);
-    let res = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/admin/clearinvoice`,
-      {
-        _id: invoice._id,
-        dispatcherFee: dispatchFee,
-        mc_number: invoice.mc_number,
-        truck_number: invoice.truckNumber,
-      }
-    );
+    let res = await axios.put(`/admin/clearinvoice`, {
+      _id: invoice._id,
+      dispatcherFee: dispatchFee,
+      mc_number: invoice.mc_number,
+      truck_number: invoice.truckNumber,
+    });
     setInvoices((prev) => {
       return prev.map((item) => (item._id === res.data._id ? res.data : item));
     });
     setModalHandler(false);
   };
   const cancelledStatusHandler = async () => {
-    let res = await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updateinvoice`,
-      {
-        _id: invoice._id,
-        invoiceStatus: "cancelled",
-      }
-    );
+    let res = await axios.put(`/updateinvoice`, {
+      _id: invoice._id,
+      invoiceStatus: "cancelled",
+    });
     setModalHandler(false);
     setInvoices((prev) => {
       return prev.map((item) => (item._id === res.data._id ? res.data : item));
@@ -150,7 +146,9 @@ const InvoiceModal = ({
                 type="text"
                 placeholder="Readonly input here..."
                 readOnly
-                value={invoice ? invoice.carrier?.company_name : carrier.company_name}
+                value={
+                  invoice ? invoice.carrier?.company_name : carrier.company_name
+                }
               />
             </Col>
           </Row>
@@ -290,14 +288,28 @@ const InvoiceModal = ({
           )}
         </Col>
 
-        <hr style={{marginTop: "2%"}}></hr>
+        <hr style={{ marginTop: "2%" }}></hr>
         {load.length > 0 && !invoice ? (
           <Button onClick={submitHandler}>Submit</Button>
         ) : (
           invoice && (
             <div className="d-flex justify-content-between align-items-center btnWrapper">
-                <Button disabled={department !== "admin"} className="button-size" variant="danger" onClick={cancelledStatusHandler}>Cancel</Button>
-                <Button disabled={department !== "admin"} className="button-size" variant="success" onClick={changeStatusHandler}>Clear</Button>
+              <Button
+                disabled={department !== "admin"}
+                className="button-size"
+                variant="danger"
+                onClick={cancelledStatusHandler}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={department !== "admin"}
+                className="button-size"
+                variant="success"
+                onClick={changeStatusHandler}
+              >
+                Clear
+              </Button>
             </div>
           )
         )}

@@ -11,7 +11,7 @@
 //     };
 //     fetchCarriers(
 //       {
-//         url: `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+//         url: `/getusers`,
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
 

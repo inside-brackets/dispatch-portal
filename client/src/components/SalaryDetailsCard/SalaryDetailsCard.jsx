@@ -26,7 +26,7 @@ function SalaryDetailsCard({ user, readOnly }) {
     setBase(user.salary);
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACKEND_URL}/salary/get/invoices`,
+      url: `/salary/get/invoices`,
       headers: { "Content-Type": "application/json" },
       data: {
         dispatcher: user._id,

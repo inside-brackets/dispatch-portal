@@ -72,7 +72,7 @@ const Routes = () => {
 
       fetchCarriers(
         {
-          url: `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
+          url: `/getcarriers`,
           method: "POST",
           headers: { "Content-Type": "application/json" },
 

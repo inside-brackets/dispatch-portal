@@ -16,9 +16,7 @@ const Users = () => {
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
   const handleDelete = async (id) => {
-    await axios.delete(
-      `${process.env.REACT_APP_BACKEND_URL}/dispatch/delete-carrier-report/${id}`
-    );
+    await axios.delete(`/dispatch/delete-carrier-report/${id}`);
     setRerenderTable(Math.random());
   };
 
@@ -65,7 +63,7 @@ const Users = () => {
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `${process.env.REACT_APP_BACKEND_URL}/dispatch/getcarrierreport`,
+                  url: `/dispatch/getcarrierreport`,
                   body: { dispatcher: user._id },
                 }}
                 filter={{}}

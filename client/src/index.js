@@ -11,7 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import { io } from "socket.io-client";
 
-const socket = io(`${process.env.REACT_APP_BACKEND_URL}`);
+const socket = io(``);
 
 document.title = "Dispatch Portal";
 

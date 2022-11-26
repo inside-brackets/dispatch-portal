@@ -90,21 +90,18 @@ const CarrierReport = ({
       return alert("Please add working days and dispatcher comments");
     }
     if (!defaultValue) {
-      await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/dispatch/addcarrierreport`,
-        {
-          carrier: carrier._id,
-          truck: truck.value,
-          from: startDate,
-          to: endDate,
-          working_days: workingDays,
-          dispatcher_comment: dispatcherComments,
-          loads: load.map((l) => l._id),
-          deadHead: deadHead,
-          dispatcher: dispatcher._id,
-          manager_comment: managerComments,
-        }
-      );
+      await axios.post(`/dispatch/addcarrierreport`, {
+        carrier: carrier._id,
+        truck: truck.value,
+        from: startDate,
+        to: endDate,
+        working_days: workingDays,
+        dispatcher_comment: dispatcherComments,
+        loads: load.map((l) => l._id),
+        deadHead: deadHead,
+        dispatcher: dispatcher._id,
+        manager_comment: managerComments,
+      });
     }
     history.push("/reports");
   };

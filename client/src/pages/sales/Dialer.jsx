@@ -60,7 +60,7 @@ const Dialer = () => {
     };
     await postCarriers(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+        url: `/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
         body: {
           c_status: "appointment",
@@ -84,7 +84,7 @@ const Dialer = () => {
     };
     await postdidnotPickCarriers(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+        url: `/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
         body: {
           c_status: "didnotpick",
@@ -118,7 +118,7 @@ const Dialer = () => {
     };
     await postrejectCarriers(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+        url: `/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
         body: {
           c_status: "rejected",
@@ -140,7 +140,7 @@ const Dialer = () => {
   useEffect(() => {
     fetchCarriers(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/sales/fetchlead`,
+        url: `/sales/fetchlead`,
         method: "POST",
         body: {
           _id: user._id,
@@ -180,9 +180,7 @@ const Dialer = () => {
       return () => clearTimeout(timer);
     } else {
       axios
-        .get(
-          `${process.env.REACT_APP_BACKEND_URL}/sales/fetch-counter/${user._id}`
-        )
+        .get(`/sales/fetch-counter/${user._id}`)
         .then((res) => {
           let temp = new Date();
           let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(
@@ -324,7 +322,10 @@ const Dialer = () => {
         justify-content-center align-items-center mt-5"
         >
           <div className="col-6">
-            <div className="card" style={{ width: "160px", marginLeft: "2.7vw"}}>
+            <div
+              className="card"
+              style={{ width: "160px", marginLeft: "2.7vw" }}
+            >
               <h2 className="justify-content-center align-items-center">
                 <i className="bx bxs-phone-outgoing"> :</i>{" "}
                 <span>{counter}</span>{" "}

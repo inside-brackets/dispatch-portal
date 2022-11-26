@@ -10,12 +10,10 @@ function SalaryDetails() {
   const { id } = useParams();
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/` + id)
-      .then(({ data }) => {
-        console.log(data);
-        setUser(data);
-      });
+    axios.get(`/getuser/` + id).then(({ data }) => {
+      console.log(data);
+      setUser(data);
+    });
   }, [id]);
 
   return (

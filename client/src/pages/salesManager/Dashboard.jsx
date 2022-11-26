@@ -36,28 +36,26 @@ const Dashboard = () => {
   }, []);
 
   const fetchChart = () => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/chart`)
-      .then(({ data }) => {
-        setLineChart([
-          {
-            name: "Appointment",
-            data: data.appointment,
-          },
-          {
-            name: "Registered",
-            data: data.registered,
-          },
-        ]);
-        setPieChart(data.pieChart);
-        setTopUsers(data.users);
-      });
+    axios.get(`/settings/chart`).then(({ data }) => {
+      setLineChart([
+        {
+          name: "Appointment",
+          data: data.appointment,
+        },
+        {
+          name: "Registered",
+          data: data.registered,
+        },
+      ]);
+      setPieChart(data.pieChart);
+      setTopUsers(data.users);
+    });
   };
 
   const fetchStats = () => {
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACKEND_URL}/count/leads`,
+      url: `/count/leads`,
       headers: { "Content-Type": "application/json" },
       data: {
         series: {
@@ -71,7 +69,7 @@ const Dashboard = () => {
       }));
     });
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`, {
+      .post(`/countcarriers`, {
         company: selectedCompany.value,
       })
       .then(({ data }) => {
@@ -80,22 +78,18 @@ const Dashboard = () => {
           activeTrucks: data.activeTrucks,
         }));
       });
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/count/active/sales`)
-      .then(({ data }) => {
-        setStats((prevState) => ({
-          ...prevState,
-          activeSalePersons: data,
-        }));
-      });
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/count/pending/sales`)
-      .then(({ data }) => {
-        setStats((prevState) => ({
-          ...prevState,
-          pendingSalePersons: data,
-        }));
-      });
+    axios.get(`/count/active/sales`).then(({ data }) => {
+      setStats((prevState) => ({
+        ...prevState,
+        activeSalePersons: data,
+      }));
+    });
+    axios.get(`/count/pending/sales`).then(({ data }) => {
+      setStats((prevState) => ({
+        ...prevState,
+        pendingSalePersons: data,
+      }));
+    });
   };
 
   const lineChartOptions = {

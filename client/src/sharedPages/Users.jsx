@@ -12,7 +12,7 @@ import status_map from "../assets/JsonData/status_map.json";
 import Badge from "../components/badge/Badge";
 import user_image from "../assets/images/taut.png";
 import Select from "react-select";
-import TooltipCustom from "../components/tooltip/TooltipCustom"
+import TooltipCustom from "../components/tooltip/TooltipCustom";
 
 const Users = () => {
   const [users, setUsers] = useState("");
@@ -29,12 +29,9 @@ const Users = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-        {
-          company: selectedCompany.value,
-        }
-      );
+      const { data } = await axios.post(`/getusers`, {
+        company: selectedCompany.value,
+      });
       setUsers(data);
     };
     fetchUsers();
@@ -60,64 +57,63 @@ const Users = () => {
     setShowModal(true);
   };
 
-  const renderBody = (item, index) =>{
-
-    return(
-    
-    <tr key={index}>
-      <td>{index + 1}</td>
-      <td>
-        <Row>
-          <Col md={3} className="p-0">
-            <div className="container p-0">
-              <div className="circle mt-0">
-                <img src={item.profile_image ?? user_image} alt="." />
+  const renderBody = (item, index) => {
+    return (
+      <tr key={index}>
+        <td>{index + 1}</td>
+        <td>
+          <Row>
+            <Col md={3} className="p-0">
+              <div className="container p-0">
+                <div className="circle mt-0">
+                  <img src={item.profile_image ?? user_image} alt="." />
+                </div>
               </div>
-            </div>
-          </Col>
-          <Col md={9}>
-            <Row>
-              <Col>{`${item.user_name}`} </Col>
-            </Row>
-            <Row>
-              <Col>
-                {`${
-                  item.first_name
-                    ? `${item.first_name} ${item.last_name}`
-                    : "Not Added"
-                } `}
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </td>
-      <td>{item.phone_number ? item.phone_number : "N/A"}</td>
-      <td>{item.email_address ? item.email_address : "N/A"}</td>
-      <td>{item.designation}</td>
-      <td>{item.department}</td>
-      <td>{moment(item.joining_date).format("ll")}</td>
-      <td>
-
-        <Badge type={status_map[item.u_status]} content={item.u_status} />
- 
-      </td>
-      <td key={index} style={{position:'relative'}}>
-        <div className="edit__classUser" data-tip data-for="registerTipUser" >
-          <EditButton
-            type="open"
-            onClick={() => history.push(`/users/${item._id}`)}
+            </Col>
+            <Col md={9}>
+              <Row>
+                <Col>{`${item.user_name}`} </Col>
+              </Row>
+              <Row>
+                <Col>
+                  {`${
+                    item.first_name
+                      ? `${item.first_name} ${item.last_name}`
+                      : "Not Added"
+                  } `}
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </td>
+        <td>{item.phone_number ? item.phone_number : "N/A"}</td>
+        <td>{item.email_address ? item.email_address : "N/A"}</td>
+        <td>{item.designation}</td>
+        <td>{item.department}</td>
+        <td>{moment(item.joining_date).format("ll")}</td>
+        <td>
+          <Badge type={status_map[item.u_status]} content={item.u_status} />
+        </td>
+        <td key={index} style={{ position: "relative" }}>
+          <div className="edit__classUser" data-tip data-for="registerTipUser">
+            <EditButton
+              type="open"
+              onClick={() => history.push(`/users/${item._id}`)}
             />
-        </div>
-        <TooltipCustom text='View Detail Page' id='registerTipUser'></TooltipCustom>
-      </td>
-    </tr>
-  );}
+          </div>
+          <TooltipCustom
+            text="View Detail Page"
+            id="registerTipUser"
+          ></TooltipCustom>
+        </td>
+      </tr>
+    );
+  };
   return (
     <>
       <h2>Users</h2>
       <Row className="my-3 mx-1">
         <Col md={3} className="p-0">
-        
           <Select
             label="Users"
             value={filter}
@@ -142,7 +138,7 @@ const Users = () => {
           />
         </Col>
         <Col md={5}></Col>
-        <Col md={4} >
+        <Col md={4}>
           <Button onClick={addUserHandler} style={{ float: "right" }}>
             Add User
           </Button>
@@ -158,7 +154,7 @@ const Users = () => {
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `${process.env.REACT_APP_BACKEND_URL}/get-table-users`,
+                  url: `/get-table-users`,
                   body: {
                     company: selectedCompany.value,
                     department: departments.user.department,
