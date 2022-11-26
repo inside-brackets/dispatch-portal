@@ -17,14 +17,12 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="col-4">
+          {user.department === "sales" ? (
+            <TargetDisplay designation={user.designation} />
+          ) : null}
           <UsClock />
         </div>
       </div>
-      <Row>
-        <Col xl={4} lg={6} md={8} sm={12}>
-        {user.department==="sales"? <TargetDisplay designation={user.designation} />:null}
-        </Col>
-      </Row>
     </div>
   );
 };
