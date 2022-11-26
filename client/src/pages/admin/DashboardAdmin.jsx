@@ -92,26 +92,24 @@ const DashboardAdmin = () => {
   }, []);
 
   const fetchChart = () => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/chart`)
-      .then(({ data }) => {
-        setLineChart([
-          {
-            name: "Appointment",
-            data: data.appointment,
-          },
-          {
-            name: "Registered",
-            data: data.registered,
-          },
-        ]);
-      });
+    axios.get(`/settings/chart`).then(({ data }) => {
+      setLineChart([
+        {
+          name: "Appointment",
+          data: data.appointment,
+        },
+        {
+          name: "Registered",
+          data: data.registered,
+        },
+      ]);
+    });
   };
 
   useEffect(() => {
     console.log("counting carriers");
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/countcarriers`, {
+      .post(`/countcarriers`, {
         company: selectedCompany.value,
       })
       .then(({ data }) => {
@@ -125,7 +123,7 @@ const DashboardAdmin = () => {
       });
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/top-sales`, {
+      .post(`/admin/top-sales`, {
         company: selectedCompany.value,
       })
       .then((res) => {
@@ -135,7 +133,7 @@ const DashboardAdmin = () => {
       .catch((err) => console.log(err));
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/admin/top-dispatcher`, {
+      .post(`/admin/top-dispatcher`, {
         company: selectedCompany.value,
       })
       .then((res) => {
@@ -147,12 +145,11 @@ const DashboardAdmin = () => {
   return (
     <div>
       <Row className="my-4">
-        
-      <Col>
+        <Col>
           <h2>Admin Dashboard</h2>
         </Col>
         <Col md={8} lg={6} xl={4} style={{ zIndex: 2 }}>
-        {/* <Col md={4}> */}
+          {/* <Col md={4}> */}
           <MySelect
             isMulti={false}
             value={selectedCompany}

@@ -27,7 +27,7 @@ const AddDocuments = ({ showModal, user, profile, callBack }) => {
     e.preventDefault();
     e.stopPropagation();
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/user_documents/${user._id}.${
+      `/s3url/user_documents/${user._id}.${
         selectedFile.type.split("/")[1]
       }/${user.profile_image?.substring(
         user.profile_image?.lastIndexOf("/") + 1
@@ -35,17 +35,14 @@ const AddDocuments = ({ showModal, user, profile, callBack }) => {
     );
     console.log("url imaeg", url, "user._id", user._id);
     await axios.put(url, selectedFile);
-    const res = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
-      {
-        files: {
-          name: name,
-          file_type: type.value,
-          file: url.split("?")[0],
-        },
-        updateFiles: true,
-      }
-    );
+    const res = await axios.post(`/updateuser/${user._id}`, {
+      files: {
+        name: name,
+        file_type: type.value,
+        file: url.split("?")[0],
+      },
+      updateFiles: true,
+    });
     if (profile) {
       dispatch(
         userActions.login({

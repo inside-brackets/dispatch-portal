@@ -33,13 +33,10 @@ const Report = () => {
 
   const handleSubmit = async (mc, truck_num, start_date, end_date) => {
     setLoading(true);
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/getloads`,
-      {
-        "carrier.mc_number": mc,
-        "carrier.truck_number": truck_num,
-      }
-    );
+    const { data } = await axios.post(`/getloads`, {
+      "carrier.mc_number": mc,
+      "carrier.truck_number": truck_num,
+    });
     const filteredLoads = searchLoads(
       start_date ? start_date : startDate,
       end_date ? end_date : endDate,
@@ -71,7 +68,7 @@ const Report = () => {
       });
     if (deadHead.length > 0) {
       axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/distance-matrix`, {
+        .post(`/dispatch/distance-matrix`, {
           dh: deadHead,
         })
         .then((res) => setDeadHead(res.data.data))
@@ -87,7 +84,7 @@ const Report = () => {
       ]);
     }
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`, {
+      .post(`/dispatch/line-graph`, {
         mc,
         truck,
       })
@@ -108,7 +105,7 @@ const Report = () => {
       .catch((err) => console.log("api error", err));
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {
+      .post(`/dispatch/bar-graph`, {
         mc,
         truck,
       })
@@ -139,17 +136,12 @@ const Report = () => {
         body = { ...body, "trucks.dispatcher": user._id };
       }
 
-      const carriers = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
-        body
-      );
+      const carriers = await axios.post(`/getcarriers`, body);
       setCarrier(carriers.data);
 
       if (params.id) {
         axios
-          .get(
-            `${process.env.REACT_APP_BACKEND_URL}/dispatch/get-carrier-report/${params.id}`
-          )
+          .get(`/dispatch/get-carrier-report/${params.id}`)
           .then((res) => {
             const { data } = res.data;
             console.log("report", data);
@@ -164,13 +156,10 @@ const Report = () => {
             setLoad(data.loads);
             setDeadHead(data.deadHead);
             axios
-              .post(
-                `${process.env.REACT_APP_BACKEND_URL}/dispatch/line-graph`,
-                {
-                  mc: data.carrier.mc_number,
-                  truck: data.truck,
-                }
-              )
+              .post(`/dispatch/line-graph`, {
+                mc: data.carrier.mc_number,
+                truck: data.truck,
+              })
               .then((res) => {
                 const data = res.data.map((item) => {
                   const date = new Date();
@@ -188,7 +177,7 @@ const Report = () => {
               .catch((err) => console.log("api error", err));
 
             axios
-              .post(`${process.env.REACT_APP_BACKEND_URL}/dispatch/bar-graph`, {
+              .post(`/dispatch/bar-graph`, {
                 mc: data.carrier.mc_number,
                 truck: data.truck,
               })
@@ -214,7 +203,7 @@ const Report = () => {
       }
     };
     fetchData();
-  }, [params.id, user._id,user.department]);
+  }, [params.id, user._id, user.department]);
 
   const handleSelection = (ranges) => {
     setStartDate(ranges.Selection.startDate);

@@ -36,20 +36,17 @@ const UploadProfilePicture = ({ user, setModal }) => {
     setLoading(true);
     if (preview) {
       const { data: url } = await axios(
-        `${process.env.REACT_APP_BACKEND_URL}/s3url/user_profile_images/${
-          user._id
-        }.${selectedFile.type.split("/")[1]}/${user.profile_image?.substring(
+        `/s3url/user_profile_images/${user._id}.${
+          selectedFile.type.split("/")[1]
+        }/${user.profile_image?.substring(
           user.profile_image?.lastIndexOf("/") + 1
         )}`
       );
       console.log("url imaeg", url, "user._id", user._id);
       await axios.put(url, selectedFile);
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
-        {
-          profile_image: url.split("?")[0],
-        }
-      );
+      const res = await axios.post(`/updateuser/${user._id}`, {
+        profile_image: url.split("?")[0],
+      });
 
       dispatch(
         userActions.login({

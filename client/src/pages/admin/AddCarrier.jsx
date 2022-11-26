@@ -28,7 +28,7 @@ const AppointmentDetail = () => {
   const commentedRef = useRef();
   const [buttonLoader, setButtonLoader] = useState(false);
   const { company } = useSelector((state) => state.user);
-  const [salesperson, setSalesperson] = useState()
+  const [salesperson, setSalesperson] = useState();
   const commentRef = useRef();
   const ownerNameRef = useRef();
   const mcRef = useRef();
@@ -138,10 +138,10 @@ const AppointmentDetail = () => {
     valueChangeHandler: w9ChangeHandler,
     inputBlurHandler: w9BlurHandler,
   } = useInput(isNotEmpty);
-  
+
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getusers`, {
+      .post(`/getusers`, {
         company: company.value,
         department: "sales",
       })
@@ -151,52 +151,51 @@ const AppointmentDetail = () => {
   }, [company.value]);
 
   useEffect(() => {
-    axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
-      {
+    axios
+      .put(`/updatecarrier/${params.mc}`, {
         c_status: "inprogress",
-      }
-    ).then(({ data }) => {
-      setCarrier(data);
-      setTrucks(data.trucks);
-      if (data.tax_id_number) {
-        taxIdChangeHandler({
-          target: { value: `${data.tax_id_number}` },
+      })
+      .then(({ data }) => {
+        setCarrier(data);
+        setTrucks(data.trucks);
+        if (data.tax_id_number) {
+          taxIdChangeHandler({
+            target: { value: `${data.tax_id_number}` },
+          });
+        }
+        if (data.dispatcher_fee) {
+          feeChangeHandler({
+            target: { value: `${data.dispatcher_fee}` },
+          });
+        }
+        setSelectedPayment({
+          label: data.payment_method,
+          value: data.payment_method,
         });
-      }
-      if (data.dispatcher_fee) {
-        feeChangeHandler({
-          target: { value: `${data.dispatcher_fee}` },
-        });
-      }
-      setSelectedPayment({
-        label: data.payment_method,
-        value: data.payment_method,
-      });
 
-      if (data.insurance) {
-        insPhoneChangeHandler({
-          target: {
-            value: `${data.insurance.phone_number}`,
-          },
-        });
-        feeChangeHandler({
-          target: { value: `${data.dispatcher_fee}` },
-        });
-        insCompNameChangeHandler({
-          target: { value: `${data.insurance.name}` },
-        });
-        insAddressChangeHandler({
-          target: { value: `${data.insurance.address}` },
-        });
-        insAgentNameChangeHandler({
-          target: { value: `${data.insurance.agent_name}` },
-        });
-        insAgentEmailChangeHandler({
-          target: { value: `${data.insurance.agent_email}` },
-        });
-      }
-    })
+        if (data.insurance) {
+          insPhoneChangeHandler({
+            target: {
+              value: `${data.insurance.phone_number}`,
+            },
+          });
+          feeChangeHandler({
+            target: { value: `${data.dispatcher_fee}` },
+          });
+          insCompNameChangeHandler({
+            target: { value: `${data.insurance.name}` },
+          });
+          insAddressChangeHandler({
+            target: { value: `${data.insurance.address}` },
+          });
+          insAgentNameChangeHandler({
+            target: { value: `${data.insurance.agent_name}` },
+          });
+          insAgentEmailChangeHandler({
+            target: { value: `${data.insurance.agent_email}` },
+          });
+        }
+      });
   }, [
     feeChangeHandler,
     fetchCarrier,
@@ -250,11 +249,10 @@ const AppointmentDetail = () => {
     } else {
       upObj["dispatcher_fee"] = 0;
     }
-    const transformData = (data) => {
-    };
+    const transformData = (data) => {};
     updateCarrier(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
+        url: `/updatecarrier/${carrier.mc_number}`,
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: upObj,
@@ -282,21 +280,18 @@ const AppointmentDetail = () => {
     for (const property in files) {
       if (files[property]) {
         const { data: url } = await axios(
-          `${process.env.REACT_APP_BACKEND_URL}/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
+          `/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
         );
         axios.put(url, files[property]);
         files[property] = url.split("?")[0];
       }
     }
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
-      {
-        c_status: "registered",
-        salesman: selectedSalesman.value,
-        ...files,
-      }
-    );
-    
+    await axios.put(`/updatecarrier/${carrier.mc_number}`, {
+      c_status: "registered",
+      salesman: selectedSalesman.value,
+      ...files,
+    });
+
     setShowCloseModal(false);
     history.push("/searchcarrier");
   };
@@ -319,33 +314,30 @@ const AppointmentDetail = () => {
   };
   const onConfirm = async () => {
     setShowCloseModalPoint(false);
-   await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${carrier.mc_number}`,
-      {
-        c_status: "appointment",
-        salesman: selectedSalesperson.value,
-        comment: commentedRef.current.value,
-        appointment: new Date(appointmentRef.current.value),
-      }
-    );
-    return toast.success("Carrier Assigned to Sale Person")
+    await axios.put(`/updatecarrier/${carrier.mc_number}`, {
+      c_status: "appointment",
+      salesman: selectedSalesperson.value,
+      comment: commentedRef.current.value,
+      appointment: new Date(appointmentRef.current.value),
+    });
+    return toast.success("Carrier Assigned to Sale Person");
   };
 
-   // submit
-   let formIsValid = false;
-   if (
-     taxIdIsValid &&
-     feeIsValid &&
-     insAgentNameIsValid &&
-     insPhoneIsValid &&
-     insCompNameIsValid &&
-     insAgentEmailIsValid &&
-     insAddressIsValid &&
-     trucks &&
-     trucks.length !== 0
-   ) {
-     formIsValid = true;
-   }
+  // submit
+  let formIsValid = false;
+  if (
+    taxIdIsValid &&
+    feeIsValid &&
+    insAgentNameIsValid &&
+    insPhoneIsValid &&
+    insCompNameIsValid &&
+    insAgentEmailIsValid &&
+    insAddressIsValid &&
+    trucks &&
+    trucks.length !== 0
+  ) {
+    formIsValid = true;
+  }
   return (
     <>
       <BackButton onClick={() => history.push("/searchcarrier")} />
@@ -625,12 +617,14 @@ const AppointmentDetail = () => {
                 <Form.Label>Select Salesman:</Form.Label>
                 <Select
                   options={
-                    salesperson && salesperson.map((item) => {
+                    salesperson &&
+                    salesperson.map((item) => {
                       return {
                         label: item.user_name, // change later
                         value: item._id,
                       };
-                    })}
+                    })
+                  }
                   value={selectedSalesman}
                   onChange={setSelectedSalesman}
                   isSearchable={true}
@@ -726,18 +720,21 @@ const AppointmentDetail = () => {
           onClose={onClose}
         >
           <form action="">
-            <Row className='justify-content-end my-2'>
+            <Row className="justify-content-end my-2">
               <Col md={12}>
                 <div className="assign__text">SalesPerson:</div>
                 <MySelect
                   value={selectedSalesperson}
                   onChange={setSelectedSalesperson}
-                  options={salesperson && salesperson.map((item) => {
-                    return {
-                      label: item.user_name, // change later
-                      value: item._id,
-                    };
-                  })}
+                  options={
+                    salesperson &&
+                    salesperson.map((item) => {
+                      return {
+                        label: item.user_name, // change later
+                        value: item._id,
+                      };
+                    })
+                  }
                 />
               </Col>
             </Row>

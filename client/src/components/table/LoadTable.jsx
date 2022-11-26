@@ -26,7 +26,7 @@ const customerTableHead = [
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-const LoadTable = ({ truck_number, carrier,className }) => {
+const LoadTable = ({ truck_number, carrier, className }) => {
   const [rerenderTable, setRerenderTable] = useState(null);
   const [loadModal, setLoadModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -53,9 +53,9 @@ const LoadTable = ({ truck_number, carrier,className }) => {
     setLoad(item);
   };
 
-  const renderBody = (item, index,currPage) => (
+  const renderBody = (item, index, currPage) => (
     <tr key={index}>
-      <td>{(index + 1) + (currPage*10)}</td>
+      <td>{index + 1 + currPage * 10}</td>
       <td>{item.load_number ? item.load_number : "NA"}</td>
       <td>{item.weight ? item.weight : "NA"}</td>
       <td>{item.miles ? item.miles : "NA"}</td>
@@ -88,25 +88,25 @@ const LoadTable = ({ truck_number, carrier,className }) => {
       </td>
 
       <td>
-        <div className="edit__class"     >
-        <TooltipCustom text='Edit load' id='editLoad' ></TooltipCustom>
-        <div data-tip data-for="editLoad">
-          <EditButton
-            type="edit"
-            onClick={() => {
-              editModalHnadler(item);
-            }}
-          />
+        <div className="edit__class">
+          <TooltipCustom text="Edit load" id="editLoad"></TooltipCustom>
+          <div data-tip data-for="editLoad">
+            <EditButton
+              type="edit"
+              onClick={() => {
+                editModalHnadler(item);
+              }}
+            />
           </div>
-          <TooltipCustom text='view file' id='viewLoad' ></TooltipCustom>
+          <TooltipCustom text="view file" id="viewLoad"></TooltipCustom>
           <div data-tip data-for="viewLoad">
-          <EditButton
-            type="view"
-            onClick={() => {
-              const pdfWindow = window.open();
-              pdfWindow.location.href = `${item.ratecon}`;
-            }}
-          />
+            <EditButton
+              type="view"
+              onClick={() => {
+                const pdfWindow = window.open();
+                pdfWindow.location.href = `${item.ratecon}`;
+              }}
+            />
           </div>
         </div>
       </td>
@@ -114,16 +114,18 @@ const LoadTable = ({ truck_number, carrier,className }) => {
   );
   return (
     <div>
-      <Row >
-        
-        <Col md="9"><h2>Loads:</h2></Col>
-        <Col md='3' className="text-center mb-4">
+      <Row>
+        <Col md="9">
+          <h2>Loads:</h2>
+        </Col>
+        <Col md="3" className="text-center mb-4">
           <BButton
             variant="success"
             size="lg"
             onClick={invoiceModalHandler}
             className=" "
-          style={{margin:'0px'}}>
+            style={{ margin: "0px" }}
+          >
             Generate Invoice
           </BButton>{" "}
           <BButton size="lg" onClick={loadModalHandler}>
@@ -144,7 +146,7 @@ const LoadTable = ({ truck_number, carrier,className }) => {
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}
               api={{
-                url: `${process.env.REACT_APP_BACKEND_URL}/get-table-loads`,
+                url: `/get-table-loads`,
                 body: {
                   "carrier.mc_number": carrier.mc_number,
                   "carrier.truck_number": truck_number,
@@ -159,7 +161,9 @@ const LoadTable = ({ truck_number, carrier,className }) => {
                   { label: "Canceled ", value: "canceled" },
                 ],
               }}
-              renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
+              renderBody={(item, index, currPage) =>
+                renderBody(item, index, currPage)
+              }
             />
           </div>
         </div>

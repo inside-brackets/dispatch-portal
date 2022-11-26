@@ -50,13 +50,10 @@ const MyTrucks = () => {
 
       for (const index in myTrucks) {
         const truck = myTrucks[index];
-        const { data } = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/getload`,
-          {
-            "carrier.mc_number": truck.mc_number,
-            "carrier.truck_number": truck.truck_number,
-          }
-        );
+        const { data } = await axios.post(`/getload`, {
+          "carrier.mc_number": truck.mc_number,
+          "carrier.truck_number": truck.truck_number,
+        });
         if (data) {
           myTrucks[index]["next"] = data.drop.date;
           myTrucks[index]["out_of"] = data.drop.address;
@@ -84,7 +81,7 @@ const MyTrucks = () => {
       }
     };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getcarriers`, {
+      .post(`/getcarriers`, {
         "trucks.dispatcher": currUserId,
         c_status: "registered",
         "trucks.t_status": {

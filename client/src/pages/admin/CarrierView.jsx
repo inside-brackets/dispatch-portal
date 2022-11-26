@@ -40,7 +40,7 @@ const AppointmentDetail = () => {
     setIsLoading(true);
     setError(false);
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getcarrier`, {
+      .post(`/getcarrier`, {
         mc_number: params.mc,
       })
       .then(({ data }) => {
@@ -83,10 +83,7 @@ const AppointmentDetail = () => {
         upObj["factoring"]["phone_no"] = event.target.f_phone.value;
       }
       await axios
-        .put(
-          `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
-          upObj
-        )
+        .put(`/updatecarrier/${params.mc}`, upObj)
         .then((response) => {
           console.log(response.data);
           toast.success("Carrier Saved");
@@ -106,12 +103,9 @@ const AppointmentDetail = () => {
 
   const rejectHandler = async () => {
     setloaderButton(true);
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
-      {
-        c_status: "deactivated",
-      }
-    );
+    await axios.put(`/updatecarrier/${params.mc}`, {
+      c_status: "deactivated",
+    });
     socket.emit("deactivate-carrier", `${params.mc}`);
     setTimeout(() => {
       setrModal(false);
@@ -133,8 +127,6 @@ const AppointmentDetail = () => {
     );
   }
 
-
-
   return (
     <div className="row">
       <div className="col">
@@ -146,7 +138,7 @@ const AppointmentDetail = () => {
               marginRight: "30px",
             }}
           >
-          <BackButton onClick={() => history.push("/searchcarrier")}/>
+            <BackButton onClick={() => history.push("/searchcarrier")} />
 
             <Card.Body>
               <h1 className="text-center">{carrier.company_name}</h1>
@@ -440,46 +432,45 @@ const AppointmentDetail = () => {
 
                 {currUser.department === "sales" && (
                   <>
-                <Row>
-                 <div
-                className="col-2"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  marginTop: "50px",
-                }}
-              >
-                <MySelect
-                  isMulti={false}
-                  value={selectedPayment}
-                  onChange={setSelectedPayment}
-                  label="Payment Method:"
-                  options={[
-                    { label: "Factoring ", value: "factoring" },
-                    { label: "Quickpay ", value: "quickpay" },
-                    { label: "Standardpay ", value: "standardpay" },
-                  ]}
-                />
-                <Input
-                  type="number"
-                  label="*Dispatch Fee:"
-                  placeholder="Enter Fee"
-                  className={feeHasError ? "invalid" : ""}
-                  value={fee}
-                  onChange={feeChangeHandler}
-                  onBlur={feeBlurHandler}
-                  defaultValue={
-                    carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
-                  }
-                />
-              </div>
-              </Row>
-              </>
+                    <Row>
+                      <div
+                        className="col-2"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          marginTop: "50px",
+                        }}
+                      >
+                        <MySelect
+                          isMulti={false}
+                          value={selectedPayment}
+                          onChange={setSelectedPayment}
+                          label="Payment Method:"
+                          options={[
+                            { label: "Factoring ", value: "factoring" },
+                            { label: "Quickpay ", value: "quickpay" },
+                            { label: "Standardpay ", value: "standardpay" },
+                          ]}
+                        />
+                        <Input
+                          type="number"
+                          label="*Dispatch Fee:"
+                          placeholder="Enter Fee"
+                          className={feeHasError ? "invalid" : ""}
+                          value={fee}
+                          onChange={feeChangeHandler}
+                          onBlur={feeBlurHandler}
+                          defaultValue={
+                            carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
+                          }
+                        />
+                      </div>
+                    </Row>
+                  </>
                 )}
 
                 {carrier.payment_method === "factoring" ? (
-                
                   <div>
                     <h2>Factoring Details:</h2>
                     <Row className="my-3">
@@ -596,7 +587,7 @@ const AppointmentDetail = () => {
                   </div>
                 ) : null}
               </Row>
-             
+
               <hr />
               {currUser.department === "admin" && (
                 <>
@@ -680,7 +671,7 @@ const AppointmentDetail = () => {
               >
                 <hr />
                 <Col md={6}>
-                <Button
+                  <Button
                     style={{ float: "left" }}
                     size="lg"
                     variant="danger"
@@ -691,8 +682,8 @@ const AppointmentDetail = () => {
                   </Button>
                 </Col>
                 <Col md={6}>
-                <Button
-                    style={{float: "right"}}
+                  <Button
+                    style={{ float: "right" }}
                     disabled={loaderButton}
                     variant="success"
                     size="lg"

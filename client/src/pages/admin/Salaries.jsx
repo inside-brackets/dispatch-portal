@@ -17,12 +17,9 @@ const Salaries = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/salary/get/salaries`,
-        {
-          company: selectedCompany.value,
-        }
-      );
+      const { data } = await axios.post(`/salary/get/salaries`, {
+        company: selectedCompany.value,
+      });
       setUsers(data);
     };
     fetchUsers();
@@ -75,7 +72,7 @@ const Salaries = () => {
               headData={customerTableHead}
               renderHead={(item, index) => renderHead(item, index)}
               api={{
-                url: `${process.env.REACT_APP_BACKEND_URL}/salary/get/salaries`,
+                url: `/salary/get/salaries`,
                 body: {
                   company: selectedCompany.value,
                 },

@@ -29,7 +29,7 @@ const InterviewDetail = ({ defaultValue }) => {
   useEffect(() => {
     if (state.candidate.department) {
       axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/get-table-users/?search=`, {
+        .post(`/get-table-users/?search=`, {
           company: selectedCompany.value,
           skip: 0,
           limit: 100,
@@ -54,18 +54,16 @@ const InterviewDetail = ({ defaultValue }) => {
 
   useEffect(() => {
     if (params.id) {
-      axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/interviews/${params.id}`)
-        .then((res) => {
-          setState({
-            ...res.data,
-            time: res.data.time.substr(0, res.data.time.lastIndexOf(":")),
-          });
-          setSelectedInterviewer({
-            label: res.data.interviewer.user_name,
-            value: res.data.interviewer._id,
-          });
+      axios.get(`/interviews/${params.id}`).then((res) => {
+        setState({
+          ...res.data,
+          time: res.data.time.substr(0, res.data.time.lastIndexOf(":")),
         });
+        setSelectedInterviewer({
+          label: res.data.interviewer.user_name,
+          value: res.data.interviewer._id,
+        });
+      });
     } else {
       setEditale(true);
     }
@@ -105,16 +103,10 @@ const InterviewDetail = ({ defaultValue }) => {
     setLoading(true);
     state.interviewer = selectedInterviewer.value;
     if (!params.id) {
-      await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/interviews`,
-        state
-      );
+      await axios.post(`/interviews`, state);
       history.push("/interviews");
     } else {
-      await axios.put(
-        `${process.env.REACT_APP_BACKEND_URL}/interviews/${params.id}`,
-        state
-      );
+      await axios.put(`/interviews/${params.id}`, state);
       setEditale(false);
     }
     setLoading(false);
@@ -125,7 +117,7 @@ const InterviewDetail = ({ defaultValue }) => {
   const handleRejection = async () => {
     setLoading(true);
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/interviews/${params.id}`, {
+      .put(`/interviews/${params.id}`, {
         status: "rejected",
       })
       .then((res) => toast.success("Rejected Sucessfully"));
@@ -136,7 +128,7 @@ const InterviewDetail = ({ defaultValue }) => {
   const handleHire = async () => {
     setLoading(true);
     axios
-      .put(`${process.env.REACT_APP_BACKEND_URL}/interviews/${params.id}`, {
+      .put(`/interviews/${params.id}`, {
         status: "hired",
       })
       .then((res) => toast.success("Hired Sucessfully"))
@@ -275,9 +267,13 @@ const InterviewDetail = ({ defaultValue }) => {
               onChange={handleChange}
               readOnly={!editale}
             >
-              <option value={["hired", "rejected"].includes(state.status)
-                  ? state.status
-                  : ""}>
+              <option
+                value={
+                  ["hired", "rejected"].includes(state.status)
+                    ? state.status
+                    : ""
+                }
+              >
                 {" "}
                 {["hired", "rejected"].includes(state.status)
                   ? state.status

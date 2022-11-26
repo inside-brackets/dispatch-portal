@@ -30,7 +30,7 @@ function DispatchSlots({ user }) {
     setEditable(false);
     await axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACKEND_URL}/salary/update/slots/${user._id}`,
+      url: `/salary/update/slots/${user._id}`,
       headers: { "Content-Type": "application/json" },
       data: {
         dispatch_salary_slots: {

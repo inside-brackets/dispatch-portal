@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { Row } from "react-bootstrap";
 import Table from "../../components/table/SmartTable";
 import EditButton from "../../components/UI/EditButton";
@@ -9,7 +9,7 @@ import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 import PdfTest from "../../components/PdfTest";
-import TooltipCustom from '../../components/tooltip/TooltipCustom'
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
 const invoiceTableHead = [
   "#",
   "MC",
@@ -26,7 +26,7 @@ const invoiceTableHead = [
 const Invoice = () => {
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-  const { company: selectedCompany,user } = useSelector((state) => state.user);
+  const { company: selectedCompany, user } = useSelector((state) => state.user);
 
   const renderBody = (item, index, currPage) => (
     <tr key={index}>
@@ -60,24 +60,24 @@ const Invoice = () => {
       </td>
       <td>
         <div
-             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: '76px'
-            }}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "76px",
+          }}
         >
           <div data-tip data-for="viewInvoice">
-          <EditButton type="eye" onClick={() => viewInvoiceModal(item)} />
+            <EditButton type="eye" onClick={() => viewInvoiceModal(item)} />
           </div>
-          <TooltipCustom text='View Details' id='viewInvoice'></TooltipCustom>
+          <TooltipCustom text="View Details" id="viewInvoice"></TooltipCustom>
           <div data-tip data-for="printinvoice">
-          <i
-            class="bx bx-printer action-button"
-            onClick={() => viewPdfModal(item)}
-          ></i>
+            <i
+              class="bx bx-printer action-button"
+              onClick={() => viewPdfModal(item)}
+            ></i>
           </div>
-          <TooltipCustom text='Print Details' id='printinvoice' ></TooltipCustom>
+          <TooltipCustom text="Print Details" id="printinvoice"></TooltipCustom>
         </div>
       </td>
     </tr>
@@ -109,10 +109,10 @@ const Invoice = () => {
               headData={invoiceTableHead}
               renderHead={(item, index) => renderHead(item, index)}
               api={{
-                url: `${process.env.REACT_APP_BACKEND_URL}/get-table-invoices`,
+                url: `/get-table-invoices`,
                 body: {
                   company: selectedCompany.value,
-                  dispatcher:user._id
+                  dispatcher: user._id,
                 },
               }}
               placeholder={"MC"}
@@ -122,7 +122,7 @@ const Invoice = () => {
                   { label: "cleared ", value: "cleared" },
                   { label: "pending ", value: "pending" },
                 ],
-                date_range:"date-range",
+                date_range: "date-range",
               }}
               renderBody={(item, index, currPage) =>
                 renderBody(item, index, currPage)
@@ -153,7 +153,7 @@ const Invoice = () => {
       </MyModal>
       <MyModal
         show={PdfmodalHandler}
-        scrollInvoicePrint="scrollInvoicePrint"        
+        scrollInvoicePrint="scrollInvoicePrint"
         size="xl"
         onClose={() => {
           setPdfModalHandler(false);

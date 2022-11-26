@@ -43,27 +43,22 @@ const Dashboard = () => {
   ]);
   useEffect(() => {
     axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/interviews/get-table-interviews`,
-        {
-          filter: {
-            status: [{ label: "scheduled", value: "scheduled" }],
-            department: [],
-          },
-          limit: 100,
-          skip: 0,
-          start: moment(),
-          end: moment().add("days", 2).format("YYYY-MM-DD"),
-        }
-      )
+      .post(`/interviews/get-table-interviews`, {
+        filter: {
+          status: [{ label: "scheduled", value: "scheduled" }],
+          department: [],
+        },
+        limit: 100,
+        skip: 0,
+        start: moment(),
+        end: moment().add("days", 2).format("YYYY-MM-DD"),
+      })
       .then((res) => {
         setData(res.data.data);
       })
       .catch((err) => console.error(err));
     axios
-      .get(
-        `${process.env.REACT_APP_BACKEND_URL}/count-user/${selectedCompany.value}`
-      )
+      .get(`/count-user/${selectedCompany.value}`)
       .then((res) => {
         const departmentalDistribution = [
           {
@@ -123,7 +118,8 @@ const Dashboard = () => {
           {
             department: "Scheduled",
             icon: "bx bx-calendar-plus",
-            count: res.data.find((item) => item._id.department === "scheduled")?.count,
+            count: res.data.find((item) => item._id.department === "scheduled")
+              ?.count,
           },
         ];
         setDepartmentalDistribution(departmentalDistribution);
