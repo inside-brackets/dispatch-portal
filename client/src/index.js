@@ -10,8 +10,9 @@ import "./assets/css/index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import { io } from "socket.io-client";
+import ENV from "./constants";
 
-const socket = io(``);
+const socket = io(ENV.backend_base_url);
 
 document.title = "Dispatch Portal";
 

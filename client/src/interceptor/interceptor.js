@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "universal-cookie";
+import ENV from "../constants";
 const cookies = new Cookies();
 
 const httpIntercept = (props) => {
@@ -14,14 +15,7 @@ const httpIntercept = (props) => {
         ) {
           baseURL = process.env.REACT_APP_BACKEND_URL + request.url;
         } else {
-          const backend_host = "api-" + window.location.host;
-
-          const backend_base_url = window.location.origin.replace(
-            window.location.host,
-            backend_host
-          );
-          console.log(window.location.host, backend_host, backend_base_url);
-          baseURL = backend_base_url + request.url;
+          baseURL = ENV.backend_base_url + request.url;
         }
 
         request.url = baseURL;
