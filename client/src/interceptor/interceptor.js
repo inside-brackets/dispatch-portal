@@ -8,7 +8,10 @@ const httpIntercept = (props) => {
       if (!request.url.includes("http")) {
         var baseURL = "";
 
-        if (process.env.REACT_APP_DEV === "true") {
+        if (
+          process.env.REACT_APP_DEV === "true" ||
+          !process.env.REACT_APP_DEV
+        ) {
           baseURL = process.env.REACT_APP_BACKEND_URL + request.url;
         } else {
           baseURL = document.baseURI + "api" + request.url;
