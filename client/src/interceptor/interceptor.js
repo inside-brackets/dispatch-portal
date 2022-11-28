@@ -14,7 +14,14 @@ const httpIntercept = (props) => {
         ) {
           baseURL = process.env.REACT_APP_BACKEND_URL + request.url;
         } else {
-          baseURL = document.baseURI + "api" + request.url;
+          const backend_host = "api." + window.location.host;
+
+          const backend_base_url = window.location.origin.replace(
+            window.location.host,
+            backend_host
+          );
+          console.log(window.location.host, backend_host, backend_base_url);
+          baseURL = backend_base_url + request.url;
         }
 
         request.url = baseURL;
