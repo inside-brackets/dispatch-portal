@@ -1,2 +1,0 @@
-# XMS
- Dispatch Management System
