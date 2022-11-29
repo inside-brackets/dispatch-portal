@@ -4,14 +4,7 @@ An ERP for dispatchers
 
 ### How to Setup
 
-Project has two components: client and server.
-To set up client (front-end fo the app) go to client directory
-
-```
-cd client
-```
-
-and install dependencies
+install dependencies
 
 ```
 npm install
@@ -21,26 +14,6 @@ To start the react app
 
 ```
 npm start
-# make sure you are still in client directory
-```
-
-In a new terminal go to server directory
-
-```
-cd server
-```
-
-Install dependencies as well
-
-```
-npm install
-```
-
-To start the express app
-
-```
-npm start
-# make sure you are still in server directory
 ```
 
 ### Github branch management
