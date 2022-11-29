@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { loadsActions } from "../../store/loads";
 import MySelect from "../UI/MySelect";
 import moment from "moment";
+import "./newTruckForm.css";
 
 const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
   const [validated, setValidated] = useState("");
@@ -51,10 +52,9 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
 
     const indentifier = setTimeout(async () => {
       if (loadNumber.toString() !== defaultValue?.load_number.toString()) {
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/getload`,
-          { load_number: loadNumber }
-        );
+        const response = await axios.post(`/getload`, {
+          load_number: loadNumber,
+        });
         setLoadNumberIsValid(response.data.length === 0);
       } else {
         setLoadNumberIsValid(true);
@@ -74,7 +74,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     const file = e.target.files[0];
 
     const { data: url } = await axios(
-      `${process.env.REACT_APP_BACKEND_URL}/s3url/ratecons/${loadNumber}-${file.name}`
+      `/s3url/ratecons/${loadNumber}-${file.name}`
     );
     axios.put(url, file);
     setImage(url.split("?")[0]);
@@ -118,10 +118,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         },
       };
       await axios
-        .post(
-          `${process.env.REACT_APP_BACKEND_URL}/dispatch/addnewload`,
-          loadObject
-        )
+        .post(`/dispatch/addnewload`, loadObject)
         .then((res) => {
           dispatch(loadsActions.append(res.data));
           setButtonLoader(false);
@@ -171,10 +168,7 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
       };
 
       await axios
-        .put(
-          `${process.env.REACT_APP_BACKEND_URL}/dispatch/updateload`,
-          loadEditObject
-        )
+        .put(`/dispatch/updateload`, loadEditObject)
         .then((res) => {
           dispatch(loadsActions.replace(res.data));
           setButtonLoader(false);
@@ -370,18 +364,30 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
         )}
         <Row>
           <Col
-            style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginTop: "20px",
+              position: "absolute",
+              bottom: "26px",
+              right: "0px",
+            }}
           >
             {!defaultValue ? (
               <Button
                 disabled={buttonLoader}
                 type="submit"
                 onSubmit={handleSubmit}
+                className="btn-add-load"
               >
                 Add Load
               </Button>
             ) : (
-              <Button disabled={buttonLoader} onClick={handleEditSubmit}>
+              <Button
+                disabled={buttonLoader}
+                onClick={handleEditSubmit}
+                className="btn-edit-load"
+              >
                 Edit Load
               </Button>
             )}

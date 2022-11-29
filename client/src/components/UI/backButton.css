@@ -1,8 +1,9 @@
 .back-button {
   background-color: var(--main-color);
+  color: var(--txt-white);
   width: 50px;
-  margin-top: 10px;
-  margin-left: 15px;
+  margin-top: 25px;
+  margin-left: 50px;
   height: 50px;
   position: absolute;
   border-radius: var(--border-radius);

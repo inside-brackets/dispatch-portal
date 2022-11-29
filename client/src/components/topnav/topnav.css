@@ -1,9 +1,34 @@
 .topnav {
-  padding: 30px;
+  /* padding: 30px; */
+  padding: 0px 16px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: var(--topnav-height);
+  /* height: var(--topnav-height); */
+  /* height: 80px; */
+  height: 54px;
+  background-color: var(--main-color);
+  /* background-color: #20232A; */
+ 
+  z-index: 999;
+  position: fixed;
+  top:0px !important;
+
+  box-shadow: rgba(149, 157, 165, 0.4) 8px 8px 10px;
+};
+.bd-brand-item > span {
+    color: var(--txt-white);
+    font-size: 21px;
+    font-weight: 500;
+    margin-left: 1vw;
+}
+.company_label{
+  color: var(--txt-white); 
+  font-size: 21px;
+  font-weight: 500;
+  margin-left: 1vw;
+  
 }
 
 .topnav__search > input {
@@ -68,6 +93,7 @@
 .topnav__right-user__name {
   font-size: 1rem;
   font-weight: 600;
+  color: #fff;
 }
 
 .bd-brand-item {

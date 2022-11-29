@@ -7,14 +7,14 @@ import { str } from "../../data/usStates";
 const AddNewCarrierModal = ({ mc, closeModal }) => {
   const [validated, setValidated] = useState(false);
   const [buttonLoader, setButtonLoader] = useState(false);
-  
+
   const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
-     if (form.checkValidity() === true) {
+    if (form.checkValidity() === true) {
       setButtonLoader(true);
       const obj = {
         mc_number: event.target.mc_number.value,
@@ -25,13 +25,12 @@ const AddNewCarrierModal = ({ mc, closeModal }) => {
         email: event.target.email.value,
         c_status: "inprogress",
       };
-      await axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/add-new-carrier`, obj)
-        .then((response) => {
-          console.log("response", response);
-          history.push(`/addCarrier/${event.target.mc_number.value}`);
-          closeModal();
-        });
+      await axios.post(`/add-new-carrier`, obj).then((response) => {
+        console.log("response", response);
+        // history.push(`/addCarrier/${event.target.mc_number.value}`);
+        history.push(`/carrierview/${event.target.mc_number.value}`);
+        closeModal();
+      });
     }
   };
 
@@ -77,7 +76,8 @@ const AddNewCarrierModal = ({ mc, closeModal }) => {
             ></Form.Control>
 
             <Form.Control.Feedback type="invalid">
-              Please provide a valid Address<br></br> e.g(11 LAKESHORE DR HOLLAND, MA   01521).
+              Please provide a valid Address<br></br> e.g(11 LAKESHORE DR
+              HOLLAND, MA 01521).
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="6">

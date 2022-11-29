@@ -7,8 +7,25 @@ const { getToken } = require("../util/getToken");
 const settings = require("../models/setting");
 
 //fires when salesmen reaches an unreached carrier and makes an appointment
+const updateCarrierMisc = async (req, res) => {
+  console.log("updateCarrierMisc", req.body);
+    let response
+    if (req.body.updateFiles) {
+     response = await Carrier.findOneAndUpdate(
+      { mc_number: parseInt(req.params.mcNumber) },
+      {
+        $push: { files: req.body.files },
+      },
+      { new: true }
+    );
+    res.status(200).send(response);
+  }
+}
+
+
 const updateCarrier = (req, res, next) => {
   console.log("update carrier", req.body);
+
   Carrier.findOneAndUpdate(
     { mc_number: parseInt(req.params.mcNumber) },
     {
@@ -340,8 +357,8 @@ const countCarriers = async (req, res, next) => {
           item.t_status === "pending"
             ? [[...pending, item], active, fail]
             : item.t_status === "active"
-            ? [pending, [...active, item], fail]
-            : [pending, active, [...fail, item]],
+              ? [pending, [...active, item], fail]
+              : [pending, active, [...fail, item]],
         [[], [], []]
       );
       stats.pendingTrucks += pendingTrucks.length;
@@ -510,4 +527,6 @@ module.exports = {
   fetchDialerCounter,
   getLeads,
   freeUpLeads,
+  updateCarrierMisc,
+
 };

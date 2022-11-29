@@ -16,9 +16,7 @@ const Users = () => {
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
   const handleDelete = async (id) => {
-    await axios.delete(
-      `${process.env.REACT_APP_BACKEND_URL}/dispatch/delete-carrier-report/${id}`
-    );
+    await axios.delete(`/dispatch/delete-carrier-report/${id}`);
     setRerenderTable(Math.random());
   };
 
@@ -43,6 +41,7 @@ const Users = () => {
 
   return (
     <>
+      <h2>Report</h2>
       <Row className="m-3">
         {/* <Col md={3}></Col>
         <Col md={5}></Col>
@@ -65,13 +64,10 @@ const Users = () => {
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `${process.env.REACT_APP_BACKEND_URL}/dispatch/getcarrierreport`,
-                  body: {company:company.value},
+                  url: `/dispatch/getcarrierreport`,
+                  body: { company: company.value },
                 }}
-                filter={
-                  {
-                  }
-                }
+                filter={{}}
                 renderBody={(item, index, currPage) =>
                   renderBody(item, index, currPage)
                 }

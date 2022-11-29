@@ -16,7 +16,7 @@ const GenerateInvoice = ({ truck_number, carrier, closeModal }) => {
   const [loads, setLoads] = useState("");
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getloads`, {
+      .post(`/getloads`, {
         "carrier.mc_number": carrier.mc_number,
         "carrier.truck_number": truck_number,
       })

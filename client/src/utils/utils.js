@@ -28,9 +28,7 @@ export const searchLoads = (startDate, endDate, loads) => {
 };
 
 export const getRefreshToken = async (id) => {
-  const res = await axios.get(
-    `${process.env.REACT_APP_BACKEND_URL}/refreshToken/${id}`
-  );
+  const res = await axios.get(`/refreshToken/${id}`);
   console.log("getRefreshToken ", res);
   localStorage.setItem("user", res.data);
 };

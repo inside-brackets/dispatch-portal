@@ -71,7 +71,7 @@ const Interviews = () => {
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `${process.env.REACT_APP_BACKEND_URL}/interviews/get-table-interviews`,
+                  url: `/interviews/get-table-interviews`,
                   body: {
                     company: selectedCompany.value,
                   },

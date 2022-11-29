@@ -35,6 +35,7 @@ import user_image from "../../assets/images/taut.png";
 import { socket } from "../../index";
 import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
 import DetailsModal from "../../components/DetailsModal/DetailsModal";
+import DispatchSlots from "./DispatchSlots";
 import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
 
@@ -66,7 +67,7 @@ const UserDetailPage = ({ user, callBack }) => {
     const reHash = await bcrypt.hash(pass, 8);
 
     await axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`, {
+      .post(`/updateuser/${user._id}`, {
         password: reHash,
       })
       .then((response) => {
@@ -83,7 +84,7 @@ const UserDetailPage = ({ user, callBack }) => {
     if (form.checkValidity() === true) {
       setLoading(true);
       await axios
-        .post(`${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`, {
+        .post(`/updateuser/${user._id}`, {
           user_name: state.user_name.replace(/\s+/g, " ").trim(),
           joining_date: new Date(state.joining_date),
           salary: state.salary,
@@ -106,13 +107,10 @@ const UserDetailPage = ({ user, callBack }) => {
 
   useEffect(() => {
     axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/admin/registered-and-rejected`,
-        {
-          user_id: user._id,
-          change: ["rejected", "registered", "appointment"],
-        }
-      )
+      .post(`/admin/registered-and-rejected`, {
+        user_id: user._id,
+        change: ["rejected", "registered", "appointment"],
+      })
       .then((res) => {
         const rejected = res.data.filter(
           (carrier) => carrier.change === "rejected"
@@ -241,15 +239,9 @@ const UserDetailPage = ({ user, callBack }) => {
       console.log(state.user_name);
       const indentifier = setTimeout(async () => {
         // if (userName !== defaultValue?.user_name) {
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-          {
-            user_name: state.user_name
-              .replace(/\s+/g, " ")
-              .trim()
-              .toLowerCase(),
-          }
-        );
+        const response = await axios.post(`/getusers`, {
+          user_name: state.user_name.replace(/\s+/g, " ").trim().toLowerCase(),
+        });
         console.log("checking username", response.data);
         if (state.user_name !== response.data[0]?.user_name) setShowError(true);
         setUsernameIsValid(response.data.length === 0);
@@ -267,7 +259,7 @@ const UserDetailPage = ({ user, callBack }) => {
   const fetchStats = () => {
     axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACKEND_URL}/settings/stats`,
+      url: `/settings/stats`,
       headers: { "Content-Type": "application/json" },
       data: {
         user_id: user._id,
@@ -439,7 +431,7 @@ const UserDetailPage = ({ user, callBack }) => {
                     <option value="company">Company</option>
                     <option value="manager">Manager</option>
                     <option value="team_lead">Team Lead</option>
-                    <option value="senior_employee">Employee</option>
+                    <option value="employee">Employee</option>
                   </Form.Control>
                 </Form.Group>
 
@@ -642,7 +634,7 @@ function UserDetail() {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${params.id}`)
+      .get(`/getuser/${params.id}`)
       .then((res) => {
         setUser(res.data);
       })
@@ -665,6 +657,11 @@ function UserDetail() {
       <Tab eventKey="documents" title="Documents">
         <Documents callBack={() => setReCall(Math.random())} user={user} />
       </Tab>
+      {user.department === "dispatch" && (
+        <Tab eventKey="slots" title="Salary Slots">
+          <DispatchSlots user={user} />
+        </Tab>
+      )}
     </Tabs>
   );
 }

@@ -58,7 +58,7 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
       };
       postTruck(
         {
-          url: `${process.env.REACT_APP_BACKEND_URL}/addnewtruck/${params.mc}`,
+          url: `/addnewtruck/${params.mc}`,
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: newTruck,
@@ -114,10 +114,10 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
 
     const indentifier = setTimeout(async () => {
       if (e.target.value) {
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-          { mc_number: params.mc, "trucks.truck_number": e.target.value }
-        );
+        const response = await axios.post(`/getcarrier`, {
+          mc_number: params.mc,
+          "trucks.truck_number": e.target.value,
+        });
         setTruckNumberIsAvailable(response.data.length === 0);
       }
     }, 250);
@@ -166,7 +166,7 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           />
         </Form.Group>
       </Row>
-      <Row className='mt-2'>
+      <Row className="mt-2">
         <Form.Group as={Col} controlId="validationCustom01">
           <Form.Label>Carry limit(lbs):</Form.Label>
           <Form.Control
@@ -269,16 +269,18 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
           }
           onChange={handleDriverChange}
         >
-          <FormControlLabel
-            value="teamDriver"
-            control={<Radio />}
-            label="Team Driver"
-          />
-          <FormControlLabel
-            value="singledriver"
-            control={<Radio />}
-            label="Single Driver"
-          />
+          <span>
+            <FormControlLabel
+              value="teamDriver"
+              control={<Radio />}
+              label="Team Driver"
+            />
+            <FormControlLabel
+              value="singledriver"
+              control={<Radio />}
+              label="Single Driver"
+            />
+          </span>
         </RadioGroup>
       </FormControl>
       <Row className="align-items-center mt-2 py-2">
@@ -362,7 +364,7 @@ const NewTruckForm = ({ defaultValue, closeModal, setTrucks }) => {
         </>
       )}
 
-      <div className="d-flex justify-content-end mt-5">
+      <div className="d-flex justify-content-end mt-4">
         <Button
           variant="primary"
           type="submit"

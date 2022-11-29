@@ -22,17 +22,13 @@ const TargetDisplay = ({ designation }) => {
 
   useEffect(() => {
     countDaysLeft();
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/target`)
-      .then(({ data }) => {
-        setTarget(data.curr_target);
-        setNewTarget(data.curr_target);
-      });
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings/target/progress`)
-      .then(({ data }) => {
-        setCurrDials(data);
-      });
+    axios.get(`/settings/target`).then(({ data }) => {
+      setTarget(data.curr_target);
+      setNewTarget(data.curr_target);
+    });
+    axios.get(`/settings/target/progress`).then(({ data }) => {
+      setCurrDials(data);
+    });
   }, []);
 
   useEffect(() => {
@@ -61,7 +57,7 @@ const TargetDisplay = ({ designation }) => {
     setIsSubmitting(true);
     await axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACKEND_URL}/settings/update`,
+      url: `/settings/update`,
       headers: { "Content-Type": "application/json" },
       data: {
         target: {

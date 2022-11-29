@@ -14,7 +14,7 @@ import Documents from "./Documents";
 import UploadProfilePicture from "../components/modals/profilePageModals/UploadProfilePicture";
 import user_image from "../assets/images/taut.png";
 import Badge from "../components/badge/Badge";
-import status_map from '../assets/JsonData/status_map.json'
+import status_map from "../assets/JsonData/status_map.json";
 
 const BasicInformation = ({ user }) => {
   const [dbUser, setDbUser] = useState();
@@ -27,17 +27,15 @@ const BasicInformation = ({ user }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/getuser/${user._id}`)
-      .then(({ data }) => {
-        console.log(data);
-        setDbUser(data);
-      });
+    axios.get(`/getuser/${user._id}`).then(({ data }) => {
+      console.log(data);
+      setDbUser(data);
+    });
   }, [user._id]);
 
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
-    setError("loading...")
+    setError("loading...");
     const passwordCheck = await bcrypt.compare(oldPassword, user.password);
 
     if (!oldPassword && !newPassword && !confirmPassword) {
@@ -50,14 +48,11 @@ const BasicInformation = ({ user }) => {
     } else {
       setShowModal(false);
       const pass = await bcrypt.hash(newPassword, 8);
-      setError("")
-      await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
-        {
-          id: user._id,
-          password: pass,
-        }
-      );
+      setError("");
+      await axios.post(`/updateuser/${user._id}`, {
+        id: user._id,
+        password: pass,
+      });
       toast.success("Password Updated Successfully!", {
         position: "bottom-right",
         autoClose: 5000,
@@ -80,10 +75,7 @@ const BasicInformation = ({ user }) => {
         const userInfo = Object.fromEntries(formData.entries());
         console.log("hello", userInfo.date_of_birth);
 
-        await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/updateuser/${user._id}`,
-          userInfo
-        );
+        await axios.post(`/updateuser/${user._id}`, userInfo);
         toast.success("Profile Updated Successfully!", {
           position: "bottom-right",
           autoClose: 5000,
@@ -101,7 +93,7 @@ const BasicInformation = ({ user }) => {
     setShowModal(false);
   };
   return (
-    <Card style={{ border: "none", minHeight: "100vh", marginBottom:0 }}>
+    <Card style={{ border: "none", minHeight: "100vh", marginBottom: 0 }}>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="m-3">
           <h4 className="mb-5">Personal Info</h4>
@@ -246,7 +238,9 @@ const BasicInformation = ({ user }) => {
           </Row>
         </Row>
         <hr />
-        <Button type="submit" variant="warning">Update Form</Button>
+        <Button type="submit" variant="warning">
+          Update Form
+        </Button>
       </Form>
     </Card>
   );
@@ -261,32 +255,39 @@ function Profile() {
       <Col md={3} className="profile-image-panel">
         <Row>
           <Col md={2}>
-        <Badge className="rounded-0 mt-4" type={status_map[user.u_status]} content={user.u_status} />
-        </Col>
+            <Badge
+              className="rounded-0 mt-4"
+              type={status_map[user.u_status]}
+              content={user.u_status}
+            />
+          </Col>
         </Row>
         <Row className="justify-content-center align-items-center">
           <Col md={10}>
-          <div className="container" >
-            <span className="upload-img-icon" onClick={() => setShowModal(true)}>
-            <i className="bx bx-pencil"></i>
-            </span>
-            <div className="circle">
-              <img
-                src={
-                  preview
-                    ? preview
-                    : user.profile_image
-                    ? user.profile_image
-                    : user_image
-                }
-                alt="profile"
-              />
+            <div className="container">
+              <span
+                className="upload-img-icon"
+                onClick={() => setShowModal(true)}
+              >
+                <i className="bx bx-pencil"></i>
+              </span>
+              <div className="circle">
+                <img
+                  src={
+                    preview
+                      ? preview
+                      : user.profile_image
+                      ? user.profile_image
+                      : user_image
+                  }
+                  alt="profile"
+                />
+              </div>
             </div>
-          </div>
           </Col>
         </Row>
         <Row className="my-5 justify-content-center text-capitalize">
-          <Col className='text-center'>
+          <Col className="text-center">
             <h3>{user.user_name}</h3>
           </Col>
         </Row>
@@ -298,10 +299,12 @@ function Profile() {
           <Col className="text-end">{user.designation}</Col>
         </Row>
         <Row>
-          <Col >
+          <Col>
             <b>Joining Date</b>
           </Col>
-          <Col  className="text-end">{moment(user.joining_date).format("DD MMM YYYY")}</Col>
+          <Col className="text-end">
+            {moment(user.joining_date).format("DD MMM YYYY")}
+          </Col>
         </Row>
       </Col>
       <Col
@@ -310,11 +313,7 @@ function Profile() {
         }}
         md={9}
       >
-        <Tabs
-          defaultActiveKey="home"
-          id="justify-tab-example"
-          justify
-        >
+        <Tabs defaultActiveKey="home" id="justify-tab-example" justify>
           <Tab eventKey="home" title="Basic Information">
             <BasicInformation user={user} />
           </Tab>

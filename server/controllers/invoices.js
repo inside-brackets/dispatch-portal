@@ -204,6 +204,30 @@ const getInvoices = (req, res, next) => {
     });
 };
 
+const getInvoicesByRange = (req, res, next) => {
+  Invoice.find({
+    dispatcher: req.body.dispatcher,
+    invoiceStatus: "cleared",
+    $and: [
+      {
+        paymentDate: { $lt: req.body.endingDate },
+      },
+      {
+        paymentDate: { $gte: req.body.startingDate },
+      },
+    ],
+  })
+    .sort({
+      createdAt: -1,
+    })
+    .then((invoices) => {
+      res.send(invoices);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
 const updateInvoiceStatus = async (req, res) => {
   console.log("updateInvoiceStatus", res.body);
   try {
@@ -267,6 +291,7 @@ const clearInvoice = async (req, res) => {
         $set: {
           invoiceStatus: "cleared",
           dispatcherFee: req.body.dispatcherFee,
+          paymentDate: new Date(),
         },
       },
       { new: true }
@@ -380,6 +405,7 @@ const topDispatcher = async (req, res, next) => {
 module.exports = {
   addNewInvoice,
   getInvoices,
+  getInvoicesByRange,
   getTableInvoices,
   updateInvoiceStatus,
   clearInvoice,

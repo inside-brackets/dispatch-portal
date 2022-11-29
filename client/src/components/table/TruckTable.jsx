@@ -5,7 +5,7 @@ import TruckForm from "../Form/NewTruckForm";
 import Modal from "../modals/MyModal";
 import "./trucktable.css";
 import useHttp from "../../hooks/use-https";
-import TooltipCustom from '../../components/tooltip/TooltipCustom'
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
 import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
@@ -27,6 +27,7 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
+  // console.log(props.trucks);
   const history = useHistory();
 
   // reassign states
@@ -67,7 +68,7 @@ const TruckTable = (props) => {
     };
     deleteTruck(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/deletetruck/${mc}/${truck_number}`,
+        url: `/deletetruck/${mc}/${truck_number}`,
       },
       transformData
     );
@@ -117,28 +118,38 @@ const TruckTable = (props) => {
             user.department === "admin" &&
             item.t_status === "new" && (
               <>
-              <div className="actionbuttonWrapper">
-                <div data-tip data-for="viewTruck">
-                <EditButton
-                  type="open"
-                  onClick={() => {
-                    setTruck(item);
-                    setShowReassingModal(true);
-                    history.push(`/carrierview/${mc}/${item.truck_number}`);
-                  }}
-                />
-                </div>
-                <TooltipCustom text='View Detail Page' id='viewTruck' ></TooltipCustom>
-                <div style={{paddingLeft:'20px'}}  data-tip data-for="truckdelete">
-
-                <EditButton 
-                  type="delete"
-                  onClick={() => {
-                    deleteTruckHandler(item.truck_number);
-                  }}
-                />
-                </div>
-                <TooltipCustom text='Delete Truck' id='truckdelete' right='10' ></TooltipCustom>
+                <div className="actionbuttonWrapper">
+                  <div data-tip data-for="viewTruck">
+                    <EditButton
+                      type="open"
+                      onClick={() => {
+                        setTruck(item);
+                        setShowReassingModal(true);
+                        history.push(`/carrierview/${mc}/${item.truck_number}`);
+                      }}
+                    />
+                  </div>
+                  <TooltipCustom
+                    text="View Detail Page"
+                    id="viewTruck"
+                  ></TooltipCustom>
+                  <div
+                    style={{ paddingLeft: "20px" }}
+                    data-tip
+                    data-for="truckdelete"
+                  >
+                    <EditButton
+                      type="delete"
+                      onClick={() => {
+                        deleteTruckHandler(item.truck_number);
+                      }}
+                    />
+                  </div>
+                  <TooltipCustom
+                    text="Delete Truck"
+                    id="truckdelete"
+                    right="10"
+                  ></TooltipCustom>
                 </div>
               </>
             )
@@ -152,7 +163,7 @@ const TruckTable = (props) => {
   useEffect(() => {
     axios
       .post(
-        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
+        `/getusers`,
 
         {
           department: "dispatch",
@@ -163,10 +174,9 @@ const TruckTable = (props) => {
   }, [company]);
   const reassign = async () => {
     axios
-      .put(
-        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${mc}/${truck.truck_number}`,
-        { "trucks.$.dispatcher": selectedDispatcher.value }
-      )
+      .put(`/updatetruck/${mc}/${truck.truck_number}`, {
+        "trucks.$.dispatcher": selectedDispatcher.value,
+      })
       .then((result) => {
         console.log("reassing", result.data.trucks);
         setTrucks(result.data.trucks);
@@ -209,6 +219,7 @@ const TruckTable = (props) => {
         size="lg"
         heading="Add New Truck"
         onClose={closeTruckModal}
+        scroll="add-truck-scroll"
       >
         <TruckForm
           admin={user.department === "admin"}

@@ -18,7 +18,7 @@ import MyModal from "../../components/modals/MyModal";
 import AddNewCarrierModal from "../../components/modals/AddNewCarrierModal";
 
 const CardRow = ({ field, value, badge }) => {
-  console.log(`value ${status_map[value]}`)
+  console.log(`value ${status_map[value]}`);
   return (
     <Row>
       <Col>
@@ -54,10 +54,7 @@ const SearchCarrier = () => {
   const searchCarrier = async () => {
     setIsLoading(true);
     setError(false);
-    const result = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-      { mc_number: searchedMc }
-    );
+    const result = await axios.post(`/getcarrier`, { mc_number: searchedMc });
     console.log(result);
     if (result.data) {
       setCarrier(result.data);
@@ -144,10 +141,9 @@ const SearchCarrier = () => {
                 {carrier.c_status === "unassigned" ||
                 carrier.c_status === "inprogress" ||
                 carrier.c_status === "rejected" ||
-                carrier.c_status === "appointment" ||
                 carrier.c_status === "didnotpick" ? (
                   <Button
-                    onClick={() => clickHandler("addcarrier")}
+                    onClick={() => clickHandler("carrierview")}
                     variant="primary"
                   >
                     Assign
@@ -158,7 +154,7 @@ const SearchCarrier = () => {
                       onClick={() => clickHandler("carrierview")}
                       variant="primary"
                     >
-                      View
+                      View Carrier Details
                     </Button>
                   )
                 )}

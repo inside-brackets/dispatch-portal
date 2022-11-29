@@ -10,14 +10,14 @@ import { Card } from "react-bootstrap";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import moment from "moment";
-
+import "../../assets/css/sales/appointmentCards.css";
 
 const Appointments = (props) => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
   const [carriersList, setCarriersList] = useState([]);
   const [currentmc, setCurrentMC] = useState();
   const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
-   const history = useHistory()
+  const history = useHistory();
   //changes//
   const onConfirm = (mc) => {
     setCurrentMC(mc);
@@ -26,22 +26,18 @@ const Appointments = (props) => {
   const [rmodal, setrModal] = useState();
   const [carrier, setCarrier] = useState({});
   const commentRef = useRef();
-  
 
   const rejectMC = async () => {
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${currentmc}`,
-      {
-        c_status: "rejected",
-        comment: commentRef.current.value,
-      }
-    );
+    await axios.put(`/updatecarrier/${currentmc}`, {
+      c_status: "rejected",
+      comment: commentRef.current.value,
+    });
     setCurrentMC();
     setrModal(false);
-    setCarriersList(prev=>{
-      const temp_list = prev
-      return temp_list.filter(carrier=>carrier.mc_number!==currentmc)
-    })
+    setCarriersList((prev) => {
+      const temp_list = prev;
+      return temp_list.filter((carrier) => carrier.mc_number !== currentmc);
+    });
   };
   const onrClose = () => {
     setrModal(false);
@@ -61,7 +57,7 @@ const Appointments = (props) => {
     };
     fetchCarrier(
       {
-        url: `${process.env.REACT_APP_BACKEND_URL}/getcarriers`,
+        url: `/getcarriers`,
         method: "POST",
         body: {
           salesman: currUserId,
@@ -96,10 +92,10 @@ const Appointments = (props) => {
       });
       if (searched.length !== 0) {
         setSavedCarries(carriersList);
-        setCarriersList(searched)
+        setCarriersList(searched);
       } else {
         setCarriersList(savedCarriers);
-        setSavedCarries([])
+        setSavedCarries([]);
       }
     }
   };
@@ -148,9 +144,9 @@ const Appointments = (props) => {
             }}
           >
             <h6 className="text-muted">
-              {carrier.comment?.length >= 62
+              {carrier.comment?.length >= 35
                 ? `${carrier.comment
-                    .substring(0, Math.min(carrier.comment.length, 62))
+                    .substring(0, Math.min(carrier.comment.length, 35))
                     .trim()}...`
                 : carrier.comment}
             </h6>
@@ -177,66 +173,68 @@ const Appointments = (props) => {
       </div>
     );
   } else if (carriersList.length === 0)
-  appointmentList = (
+    appointmentList = (
       <div className="spreadsheet__loader">
         <h2 style={{ color: "green" }}>No Appointments yet.</h2>
       </div>
     );
-    else{
-      appointmentList =     (<div className="row"> {carriersList.map((item, index) => (
-        <div className="col-4" key={index}>
-            
-              <Card
-                className=""
-                style={{
-                  height: "455px",
-                  border: "light",
-                }}
-              >
-                <Card.Body>
-                  <Card.Title
-                    style={{
-                      height: "40px",
-                    }}
-                  >
-                    {item.company_name}
-                  </Card.Title>
-                  <hr />
-                  <Card.Text className="">{body(item)}</Card.Text>
-                  <Card.Footer className="card-title ">
-                    {
-                      <h5>{`Time: ${moment(new Date(item.appointment)).format(
-                        "llll"
-                      )}`}</h5>
-                    }
-                  </Card.Footer>
-                  <div class="d-flex justify-content-between">
-
-                  <MyButton 
-                  color="red"
-                  buttonText={'Reject'}
-                  onClick={() => {onConfirm(item.mc_number)}}
-                  onClose={onrClose}
-                  mc={item.mc_number}
-                  />
-         
+  else {
+    appointmentList = (
+      <div className="row">
+        {" "}
+        {carriersList.map((item, index) => (
+          <div className="col-4" key={index}>
+            <Card className="card-height">
+              <Card.Body>
+                <Card.Title
+                  style={{
+                    height: "15px",
+                  }}
+                >
+                  {item.company_name}
+                </Card.Title>
+                <hr />
+                <Card.Text className="">{body(item)}</Card.Text>
+                <Card.Footer className="card-title">
+                  {
+                    <h5>{`Time: ${moment(new Date(item.appointment)).format(
+                      "llll"
+                    )}`}</h5>
+                  }
+                </Card.Footer>
+                <div
+                  class="d-flex justify-content-between"
+                  style={{ marginTop: "10px" }}
+                >
                   <MyButton
-                  color="primary"
-                  buttonText={'Details'}
-                  onClick={() => {history.push(`/appointments/${item.mc_number}`)}}
-
+                    className="appCard-btn"
+                    color="red"
+                    buttonText={"Reject"}
+                    onClick={() => {
+                      onConfirm(item.mc_number);
+                    }}
+                    onClose={onrClose}
+                    mc={item.mc_number}
                   />
-                  </div>
-           
-                </Card.Body>
-              </Card>
-            
-        </div>
-      ))}</div>)
-    }
+
+                  <MyButton
+                    className="appCard-btn"
+                    color="primary"
+                    buttonText={"Details"}
+                    onClick={() => {
+                      history.push(`/appointments/${item.mc_number}`);
+                    }}
+                  />
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        ))}
+      </div>
+    );
+  }
   return (
     <div className="row">
-      
       <div className="row align-items-center mb-3">
         <div className="col-md-3">
           <label className="mb-2">Search:</label>
@@ -250,32 +248,32 @@ const Appointments = (props) => {
           />
         </div>
       </div>
-{appointmentList}
-       <Modal
-            show={rmodal}
-            heading="Reject Carrier"
-            onConfirm={rejectMC}
-            onClose={onrClose}
-            >
-            <form>
-              <TextArea
-                name="Comment:"
-                placeholder="Comment here..."
-                // value={commentRef.current.value}
-                defaultValue={commentRef.current && commentRef.current.value}
-                // onChange={(e) => setComment(e.target.value)}
-                ref={commentRef}
-              />
+      {appointmentList}
+      <Modal
+        show={rmodal}
+        heading="Reject Carrier"
+        onConfirm={rejectMC}
+        onClose={onrClose}
+      >
+        <form>
+          <TextArea
+            name="Comment:"
+            placeholder="Comment here..."
+            // value={commentRef.current.value}
+            defaultValue={commentRef.current && commentRef.current.value}
+            // onChange={(e) => setComment(e.target.value)}
+            ref={commentRef}
+          />
 
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              ></div>
-            </form>
-          </Modal>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          ></div>
+        </form>
+      </Modal>
     </div>
   );
 };

@@ -5,13 +5,17 @@ import TextArea from "../../components/UI/TextArea";
 import Loader from "react-loader-spinner";
 import BackButton from "../../components/UI/BackButton";
 import Modal from "../../components/modals/MyModal";
+import MySelect from "../../components/UI/MySelect";
 import axios from "axios";
 import { Form, Card, Row, Col, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { socket } from "../../index";
+import Input from "../../components/UI/MyInput";
 import { useSelector } from "react-redux";
+import useInput from "../../hooks/use-input";
 
 const AppointmentDetail = () => {
+  const isNotEmpty = (value) => value.trim() !== "";
   const currUser = useSelector((state) => state.user.user);
   const [trucks, setTrucks] = useState([]);
   const history = useHistory();
@@ -23,11 +27,20 @@ const AppointmentDetail = () => {
   const [validated, setValidated] = useState(false);
   const [loaderButton, setloaderButton] = useState(false);
 
+  const [selectedPayment, setSelectedPayment] = useState("");
+  const {
+    value: fee,
+    isValid: feeIsValid,
+    hasError: feeHasError,
+    valueChangeHandler: feeChangeHandler,
+    inputBlurHandler: feeBlurHandler,
+  } = useInput(isNotEmpty);
+
   useEffect(() => {
     setIsLoading(true);
     setError(false);
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/getcarrier`, {
+      .post(`/getcarrier`, {
         mc_number: params.mc,
       })
       .then(({ data }) => {
@@ -70,10 +83,7 @@ const AppointmentDetail = () => {
         upObj["factoring"]["phone_no"] = event.target.f_phone.value;
       }
       await axios
-        .put(
-          `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
-          upObj
-        )
+        .put(`/updatecarrier/${params.mc}`, upObj)
         .then((response) => {
           console.log(response.data);
           toast.success("Carrier Saved");
@@ -93,12 +103,9 @@ const AppointmentDetail = () => {
 
   const rejectHandler = async () => {
     setloaderButton(true);
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${params.mc}`,
-      {
-        c_status: "deactivated",
-      }
-    );
+    await axios.put(`/updatecarrier/${params.mc}`, {
+      c_status: "deactivated",
+    });
     socket.emit("deactivate-carrier", `${params.mc}`);
     setTimeout(() => {
       setrModal(false);
@@ -131,7 +138,7 @@ const AppointmentDetail = () => {
               marginRight: "30px",
             }}
           >
-          <BackButton onClick={() => history.push("/searchcarrier")}/>
+            <BackButton onClick={() => history.push("/searchcarrier")} />
 
             <Card.Body>
               <h1 className="text-center">{carrier.company_name}</h1>
@@ -423,6 +430,46 @@ const AppointmentDetail = () => {
                   </Form.Group>
                 </Row>
 
+                {currUser.department === "sales" && (
+                  <>
+                    <Row>
+                      <div
+                        className="col-2"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          marginTop: "50px",
+                        }}
+                      >
+                        <MySelect
+                          isMulti={false}
+                          value={selectedPayment}
+                          onChange={setSelectedPayment}
+                          label="Payment Method:"
+                          options={[
+                            { label: "Factoring ", value: "factoring" },
+                            { label: "Quickpay ", value: "quickpay" },
+                            { label: "Standardpay ", value: "standardpay" },
+                          ]}
+                        />
+                        <Input
+                          type="number"
+                          label="*Dispatch Fee:"
+                          placeholder="Enter Fee"
+                          className={feeHasError ? "invalid" : ""}
+                          value={fee}
+                          onChange={feeChangeHandler}
+                          onBlur={feeBlurHandler}
+                          defaultValue={
+                            carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
+                          }
+                        />
+                      </div>
+                    </Row>
+                  </>
+                )}
+
                 {carrier.payment_method === "factoring" ? (
                   <div>
                     <h2>Factoring Details:</h2>
@@ -540,6 +587,7 @@ const AppointmentDetail = () => {
                   </div>
                 ) : null}
               </Row>
+
               <hr />
               {currUser.department === "admin" && (
                 <>
@@ -623,7 +671,7 @@ const AppointmentDetail = () => {
               >
                 <hr />
                 <Col md={6}>
-                <Button
+                  <Button
                     style={{ float: "left" }}
                     size="lg"
                     variant="danger"
@@ -634,8 +682,8 @@ const AppointmentDetail = () => {
                   </Button>
                 </Col>
                 <Col md={6}>
-                <Button
-                    style={{float: "right"}}
+                  <Button
+                    style={{ float: "right" }}
                     disabled={loaderButton}
                     variant="success"
                     size="lg"

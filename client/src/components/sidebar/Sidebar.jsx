@@ -44,7 +44,7 @@ const Sidebar = (props) => {
 
   return (
     <div className="sidebar">
-      <div
+      {/* <div
         className={
           process.env.REACT_APP_FALCON === "true"
             ? `sidebar__logo_falcon`
@@ -56,7 +56,7 @@ const Sidebar = (props) => {
           src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
           alt="company logo"
         />
-      </div>
+      </div> */}
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>

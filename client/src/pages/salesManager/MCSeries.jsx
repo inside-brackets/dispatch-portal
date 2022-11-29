@@ -67,7 +67,7 @@ function MCSeries() {
     setIsSubmitting(true);
     await axios({
       method: "POST",
-      url: `${process.env.REACT_APP_BACKEND_URL}/settings/update`,
+      url: `/settings/update`,
       headers: { "Content-Type": "application/json" },
       data: {
         mcSeries: series,
@@ -80,21 +80,19 @@ function MCSeries() {
 
   const handleRefresh = async (e) => {
     setAnimate(true);
-    await axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/settings`)
-      .then(({ data }) => {
-        setSeries(data);
-        axios({
-          method: "POST",
-          url: `${process.env.REACT_APP_BACKEND_URL}/count/leads`,
-          headers: { "Content-Type": "application/json" },
-          data: {
-            series: data,
-          },
-        }).then(({ data }) => {
-          setLeads(data);
-        });
+    await axios.get(`/settings`).then(({ data }) => {
+      setSeries(data);
+      axios({
+        method: "POST",
+        url: `/count/leads`,
+        headers: { "Content-Type": "application/json" },
+        data: {
+          series: data,
+        },
+      }).then(({ data }) => {
+        setLeads(data);
       });
+    });
     setAnimate(false);
     setIsDirty(false);
     setRefTime(
@@ -104,13 +102,11 @@ function MCSeries() {
 
   const handleFreeResource = async (e) => {
     setRefresh(true);
-    await axios
-      .get(`${process.env.REACT_APP_BACKEND_URL}/free/leads`)
-      .catch((error) => {
-        if (error.response) {
-          console.log(error.response.data);
-        }
-      });
+    await axios.get(`/free/leads`).catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+      }
+    });
     toast.success("Resources freed up!");
     handleRefresh();
     setRefresh(false);

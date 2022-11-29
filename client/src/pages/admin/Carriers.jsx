@@ -24,7 +24,7 @@ const Carriers = () => {
   const history = useHistory();
   let color;
 
-  const renderBody = (item, index,currPage) => {
+  const renderBody = (item, index, currPage) => {
     if (item.c_status === "deactivated") {
       color = "red";
     } else if (
@@ -40,12 +40,20 @@ const Carriers = () => {
         key={index}
         onClick={() => history.push(`/carrierview/${item.mc_number}`)}
       >
-        <td>{(index + 1) + (currPage*10)}</td>
+        <td>{index + 1 + currPage * 10}</td>
         <td>{item.mc_number}</td>
         <td>{item.company_name}</td>
         <td style={{ width: "200px" }}>{item.phone_number}</td>
         <td>{item.email}</td>
-        <td>{item.salesman ? `${item.salesman.user_name} ${item.salesman.first_name ? `( ${item.salesman.first_name} ${item.salesman.last_name} )` : ""} ` : "N/A"}</td>
+        <td>
+          {item.salesman
+            ? `${item.salesman.user_name} ${
+                item.salesman.first_name
+                  ? `( ${item.salesman.first_name} ${item.salesman.last_name} )`
+                  : ""
+              } `
+            : "N/A"}
+        </td>
         <td style={{ color: color }}>{item.trucks.length}</td>
         <td>
           {<Badge type={status_map[item.c_status]} content={item.c_status} />}
@@ -70,7 +78,7 @@ const Carriers = () => {
                 headData={carrierTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `${process.env.REACT_APP_BACKEND_URL}/get-table-carriers`,
+                  url: `/get-table-carriers`,
                   body: {
                     company: selectedCompany.value,
                   },
@@ -91,7 +99,9 @@ const Carriers = () => {
                     // { label: "inactive", value: "inactive" },
                   ],
                 }}
-                renderBody={(item, index,currPage) => renderBody(item, index,currPage)}
+                renderBody={(item, index, currPage) =>
+                  renderBody(item, index, currPage)
+                }
               />
             </div>
           </div>

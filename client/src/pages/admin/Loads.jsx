@@ -4,7 +4,7 @@ import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 import EditButton from "../../components/UI/EditButton";
 import Badge from "../../components/badge/Badge";
-import TooltipCustom from '../../components/tooltip/TooltipCustom'
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
 import { useSelector } from "react-redux";
 import status_map from "../../assets/JsonData/load_status_map.json";
 
@@ -67,7 +67,12 @@ const renderBody = (item, index, currPage) => (
           }}
         />
       </div>
-      <TooltipCustom text='Print Details' id='loadtips' left='25' top="8"></TooltipCustom>
+      <TooltipCustom
+        text="Print Details"
+        id="loadtips"
+        left="25"
+        top="8"
+      ></TooltipCustom>
     </td>
   </tr>
 );
@@ -76,6 +81,8 @@ const Loads = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
   return (
     <>
+      <h2> Loads </h2>
+      <br />
       <div>
         <Row>
           <Col md={3}></Col>
@@ -88,7 +95,7 @@ const Loads = () => {
                 headData={loadTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `${process.env.REACT_APP_BACKEND_URL}/get-table-loads`,
+                  url: `/get-table-loads`,
                   body: {
                     company: selectedCompany.value,
                   },

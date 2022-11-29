@@ -10,7 +10,11 @@ import MySelect from "../../components/UI/MySelect";
 import BackButton from "../../components/UI/BackButton";
 import Loader from "react-loader-spinner";
 import { toast } from "react-toastify";
-import "../../assets/css/dispatch/truckDetail.css"
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
+import Badge from "../../components/badge/Badge";
+import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
+import "../../assets/css/dispatch/truckDetail.css";
+import MyModal from "../../components/modals/MyModal";
 
 const transformToSelectValue = (value) => {
   if (value.constructor === Array) {
@@ -57,7 +61,7 @@ const TruckDetail = ({ match }) => {
   const [factAgentEmail, setfactAgentEmail] = useState("");
   const [buttonLoader, setButtonLoader] = useState("");
   const [t_status, setT_status] = useState(``);
-  const [confirmModal, setconfirmModal] = useState({value:false,index:0})
+  const [confirmModal, setconfirmModal] = useState({ value: false, index: 0 });
   const [drivers, setDrivers] = useState([
     {
       name: "",
@@ -66,17 +70,31 @@ const TruckDetail = ({ match }) => {
     },
   ]);
 
+  const [miscLoader, setMiscLoader] = useState(false);
+
+  const [mcLoader, setMcLoader] = useState(false);
+  const [w9Loader, setW9Loader] = useState(false);
+  const [noaLoader, setNoaLoader] = useState(false);
+  const [insuranceLoader, setInsuranceLoader] = useState(false);
+  const [onSelectedMcFile, setOnSelectedMcFile] = useState();
+  const [onSelectedInsuranceFile, setOnSelectedInsuranceFile] = useState();
+  const [onSelectedNoaFile, setOnSelectedNoaFile] = useState();
+  const [onSelectedW9File, setOnSelectedW9File] = useState();
+  const [selectedMiscFile, setSelectedMiscFile] = useState(null);
+  const [nameMisc, setNameMisc] = useState(null);
+
+  const [showMicsModal, setShowMicsModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+
   const history = useHistory();
 
   useEffect(() => {
     const fetch = async () => {
-      let response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getcarrier`,
-        {
-          "trucks.dispatcher": currUserId,
-          mc_number: match.params.mc,
-        }
-      );
+      let response = await axios.post(`/getcarrier`, {
+        "trucks.dispatcher": currUserId,
+        mc_number: match.params.mc,
+      });
+
       setData(response.data);
       setCompanyName(response.data.company_name);
       setPhoneNumber(response.data.phone_number);
@@ -143,12 +161,10 @@ const TruckDetail = ({ match }) => {
       }
 
       await axios
-        .put(
-          `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${data.mc_number}`,
-          upObj
-        )
+        .put(`/updatecarrier/${data.mc_number}`, upObj)
         .then((response) => {
           console.log(response.data);
+
           toast.success("Carrier Saved", {
             position: "top-right",
             autoClose: 5000,
@@ -186,7 +202,7 @@ const TruckDetail = ({ match }) => {
       };
 
       const res = await axios.put(
-        `${process.env.REACT_APP_BACKEND_URL}/updatetruck/${data.mc_number}/${match.params.truck}`,
+        `/updatetruck/${data.mc_number}/${match.params.truck}`,
         truckObj
       );
       console.log("truck aupdated", res);
@@ -197,14 +213,11 @@ const TruckDetail = ({ match }) => {
   console.log("trucks", truck);
 
   const rejectHandler = async () => {
-    await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}/updatecarrier/${data.mc_number}`,
-      {
-        c_status: "deactivated",
-        comment: commentRef.current.value,
-        dispatcher_comment: dispatcherCommentRef.current.value,
-      }
-    );
+    await axios.put(`/updatecarrier/${data.mc_number}`, {
+      c_status: "deactivated",
+      comment: commentRef.current.value,
+      dispatcher_comment: dispatcherCommentRef.current.value,
+    });
     setrModal(false);
     console.log(commentRef.current.value);
     history.push("/mytrucks");
@@ -228,19 +241,224 @@ const TruckDetail = ({ match }) => {
     ]);
   };
   let removeFormFields = (i) => {
-    setconfirmModal(confirmModal.value)
-    if(confirmModal.value){
-    let newFormValues = [...drivers];
-    newFormValues.splice(confirmModal.index, 1);
-    setDrivers(newFormValues);
-      setconfirmModal(false)
-  }
-    
+    setconfirmModal(confirmModal.value);
+    if (confirmModal.value) {
+      let newFormValues = [...drivers];
+      newFormValues.splice(confirmModal.index, 1);
+      setDrivers(newFormValues);
+      setconfirmModal(false);
+    }
   };
 
-  const onmClose=()=>{
-    setconfirmModal({value:false})
-  }
+  const onmClose = () => {
+    setconfirmModal({ value: false });
+  };
+
+  // FIle start
+  const onSelectMcFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setOnSelectedMcFile(undefined);
+      return;
+    }
+    setOnSelectedMcFile(e.target.files[0]);
+  };
+  const handleUploadMcFile = async (e) => {
+    setMcLoader(true);
+    if (data.mc_file) {
+      await axios(
+        `/s3url-delete/carrier_documents/${data.mc_file?.substring(
+          data.mc_file?.lastIndexOf("/") + 1
+        )}`
+      );
+    }
+    const { data: url } = await axios(
+      `/s3url/carrier_documents/${data.mc_number}.${
+        onSelectedMcFile.type.split("/")[1]
+      }`
+    );
+    console.log(url, "url==========>");
+    axios.put(url, onSelectedMcFile).then(() => {
+      setMcLoader(false);
+    });
+
+    const updatedCarrier = await axios.put(`/updatecarrier/${data.mc_number}`, {
+      mc_file: url.split("?")[0],
+      updateFiles: true,
+    });
+    setData(updatedCarrier.data);
+    toast.success(data.mc_file ? "File Updated" : "File Uploaded");
+  };
+  const onSelectInsuranceFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setOnSelectedInsuranceFile(undefined);
+      return;
+    }
+    setOnSelectedInsuranceFile(e.target.files[0]);
+  };
+  const handleUploadInsuranceFile = async (e) => {
+    if (data.insurance_file) {
+      await axios(
+        `/s3url-delete/carrier_documents/${data.insurance_file?.substring(
+          data.insurance_file?.lastIndexOf("/") + 1
+        )}`
+      );
+    }
+    setInsuranceLoader(true);
+    const { data: url } = await axios(
+      `/s3url/carrier_documents/${data.mc_number}.${
+        onSelectedInsuranceFile.type.split("/")[1]
+      }`
+    );
+    axios.put(url, onSelectedInsuranceFile).then(() => {
+      setInsuranceLoader(false);
+    });
+    const updatedCarrier = await axios.put(`/updatecarrier/${data.mc_number}`, {
+      insurance_file: url.split("?")[0],
+      updateFiles: true,
+    });
+    setData(updatedCarrier.data);
+    toast.success(data.insurance_file ? "File Updated" : "File Uploaded");
+  };
+  const onSelectNoaFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setOnSelectedNoaFile(undefined);
+      return;
+    }
+    setOnSelectedNoaFile(e.target.files[0]);
+  };
+  const handleUploadNoaFile = async (e) => {
+    if (data.noa_file) {
+      await axios(
+        `/s3url-delete/carrier_documents/${data.noa_file?.substring(
+          data.noa_file?.lastIndexOf("/") + 1
+        )}`
+      );
+    }
+    setNoaLoader(true);
+    const { data: url } = await axios(
+      `/s3url/carrier_documents/${data.mc_number}.${
+        onSelectedNoaFile.type.split("/")[1]
+      }`
+    );
+    axios.put(url, onSelectedNoaFile).then(() => {
+      setNoaLoader(false);
+    });
+
+    const updatedCarrier = await axios.put(`/updatecarrier/${data.mc_number}`, {
+      noa_file: url.split("?")[0],
+      updateFiles: true,
+    });
+    setData(updatedCarrier.data);
+    toast.success(data.noa_file ? "File Updated" : "File Uploaded");
+  };
+  const onSelectW9File = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setOnSelectedW9File(undefined);
+      return;
+    }
+    setOnSelectedW9File(e.target.files[0]);
+  };
+  const handleUploadW9File = async (e) => {
+    if (data.w9_file) {
+      await axios(
+        `/s3url-delete/carrier_documents/${data.w9_file?.substring(
+          data.w9_file?.lastIndexOf("/") + 1
+        )}`
+      );
+    }
+    setW9Loader(true);
+    const { data: url } = await axios(
+      `/s3url/carrier_documents/${data.mc_number}.${
+        onSelectedW9File.type.split("/")[1]
+      }`
+    );
+    axios.put(url, onSelectedW9File).then(() => {
+      setW9Loader(false);
+    });
+
+    const updatedCarrier = await axios.put(`/updatecarrier/${data.mc_number}`, {
+      w9_file: url.split("?")[0],
+      updateFiles: true,
+    });
+    setData(updatedCarrier.data);
+
+    toast.success(data.w9_file ? "File Updated" : "File Uploaded");
+  };
+
+  const onSelectFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedMiscFile(undefined);
+      return;
+    }
+    setSelectedMiscFile(e.target.files[0]);
+  };
+
+  const handleSubmitMisc = async (e) => {
+    setMiscLoader(true);
+    const { data: url } = await axios(
+      `/s3url/carrier_documents/${data.mc_number}.${
+        selectedMiscFile.type.split("/")[1]
+      }`
+    );
+    await axios.put(url, selectedMiscFile);
+    const updatedCarrier = await axios.post(
+      `/updatecarriermisc/${data.mc_number}`,
+      {
+        files: {
+          name: nameMisc,
+          file: url.split("?")[0],
+        },
+        updateFiles: true,
+      }
+    );
+    setData(updatedCarrier.data);
+    setMiscLoader(false);
+    setShowMicsModal(false);
+    setNameMisc("");
+
+    toast.success("File Uploaded");
+  };
+  const submitDeleteMisc = async () => {
+    const del = await axios(
+      `/s3url-delete/carrier_documents/${deleteModal.file?.substring(
+        deleteModal.file?.lastIndexOf("/") + 1
+      )}`
+    );
+    if (del) {
+      try {
+        const updatedCarrier = await axios.put(
+          `/updatecarrier/${data.mc_number}`,
+          {
+            files: data.files.filter((item) => item._id !== deleteModal._id),
+          }
+        );
+        setData(updatedCarrier.data);
+        setDeleteModal(false);
+        toast.success("File Deleted");
+      } catch (err) {
+        console.log(err);
+        setDeleteModal(false);
+        toast.error("File Not Deleted");
+      }
+    } else {
+      setDeleteModal(false);
+      toast.error("File Not Deleted");
+    }
+  };
+  //file end
+  // Misc Files array reverse
+  // if (response.data.files){
+  //   function reverseArr(input) {
+  //   let ret = new Array;
+  //   for(let i = input.length-1; i >= 0; i--) {
+  //   ret.push(input[i]);
+  //   }
+  //   return ret;
+  // }
+  // let a = data.files
+  // var files = reverseArr(response.data.files);
+  // setReverseArr(files)
+  // }
 
   return (
     <>
@@ -255,7 +473,8 @@ const TruckDetail = ({ match }) => {
         </div>
       ) : (
         <div>
-          <BackButton onClick={() => history.push("/mytrucks")} />
+          <BackButton onClick={() => history.goBack()} />
+          {/* <BackButton onClick={() => history.push("/mytrucks")} /> */}
 
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Card
@@ -263,8 +482,6 @@ const TruckDetail = ({ match }) => {
               style={{
                 width: "auto",
                 height: "auto",
-                marginLeft: "60px",
-                marginRight: "30px",
               }}
             >
               <Card.Body>
@@ -360,7 +577,6 @@ const TruckDetail = ({ match }) => {
                   style={{
                     // justifyContent: "center",
                     marginTop: "40px",
-                    height: "100px",
                   }}
                 >
                   <Col
@@ -393,9 +609,7 @@ const TruckDetail = ({ match }) => {
                 </Row>
                 <Row
                   style={{
-                    // justifyContent: "center",
                     marginTop: "40px",
-                    height: "100px",
                   }}
                 >
                   <Col
@@ -725,7 +939,7 @@ const TruckDetail = ({ match }) => {
                     <Col
                       style={{
                         // marginLeft: "-300px",
-                        padding:'0px'
+                        padding: "0px",
                       }}
                       md="4"
                     >
@@ -748,9 +962,11 @@ const TruckDetail = ({ match }) => {
                     </Col>
                     <Col
                       md={4}
-                      style={{
-                        // marginLeft: "-300px",
-                      }}
+                      style={
+                        {
+                          // marginLeft: "-300px",
+                        }
+                      }
                     >
                       <MySelect
                         label="Truck Status:"
@@ -829,15 +1045,17 @@ const TruckDetail = ({ match }) => {
                             value={element.phone_number}
                           />
                         </Form.Group>
-                        
-                      <Col md={1} className='bx-trashh'>
+
+                        <Col md={1} className="bx-trashh">
                           {/* {drivers.length === 2 && ( */}
-                            <i
-                              className="bx bx-x"
-                              onClick={() => setconfirmModal({value:true,index:index})}
-                            ></i>
+                          <i
+                            className="bx bx-x"
+                            onClick={() =>
+                              setconfirmModal({ value: true, index: index })
+                            }
+                          ></i>
                           {/* // )} */}
-                      </Col>
+                        </Col>
                       </Row>
                     </div>
                   ))}
@@ -851,70 +1069,441 @@ const TruckDetail = ({ match }) => {
                 </Row>
 
                 <Modal
-            show={confirmModal.value}
-            heading="Remove Driver"
-            // onConfirm={rejectHandler}
-            onClose={onmClose}
-          >
-            <div className="confirmText">Are You Sure!</div>
-            <div className="proceedText">If you proceed, You will lose all driver data. Are You sure do you want to delete your driver information?</div>
-            <div className="buttonWrapper">
-            <Button variant="secondary"  onClick={()=>setconfirmModal({value:false})}>Cancel</Button>
-            <Button variant='danger' onClick={() => removeFormFields(confirmModal)} disabled={drivers.length === 2 ?false:true}>Confirm</Button>
-            </div>
-          </Modal>
+                  show={confirmModal.value}
+                  heading="Remove Driver"
+                  // onConfirm={rejectHandler}
+                  onClose={onmClose}
+                >
+                  <div className="confirmText">Are You Sure!</div>
+                  <div className="proceedText">
+                    If you proceed, You will lose all driver data. Are You sure
+                    do you want to delete your driver information?
+                  </div>
+                  <div className="buttonWrapper">
+                    <Button
+                      variant="secondary"
+                      onClick={() => setconfirmModal({ value: false })}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => removeFormFields(confirmModal)}
+                      disabled={drivers.length === 2 ? false : true}
+                    >
+                      Confirm
+                    </Button>
+                  </div>
+                </Modal>
                 <hr />
+                {/* <h3>Carrier Documents:</h3> */}
+                {/* File Handling */}
                 <h3>Carrier Documents:</h3>
-                <Row xs="auto" className="m-3">
-                  <Col>
-                    {data.insurance_file && data.insurance_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.insurance_file}`;
-                        }}
-                      >
-                        Insurance
-                      </Button>
-                    )}
+                {/* MC FILE START */}
+                <Row className="justify-content-start">
+                  <Col md={2}>
+                    <h3 className="fileHeading"> MC </h3>
                   </Col>
-                  <Col>
-                    {data.noa_file && data.noa_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.noa_file}`;
-                        }}
-                      >
-                        NOA/Void Check
-                      </Button>
-                    )}
+                  <Form.Group as={Col} md={4} className="file__input__contaier">
+                    <Form.Label className="file_input_label">
+                      {data.mc_file ? (
+                        <Badge type="success" content="Uploaded" />
+                      ) : (
+                        <Badge type="warning" content="Not uploaded" />
+                      )}
+                    </Form.Label>
+                    <Form.Control
+                      className="file__input"
+                      type="file"
+                      name="file"
+                      onChange={onSelectMcFile}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {!data.mc_file ? "Please Upload MC File." : null}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Col md={2} className="actions_wrapper">
+                    <TooltipCustom
+                      text={
+                        onSelectedMcFile && data.mc_file
+                          ? "update file"
+                          : data.mc_file
+                          ? "select file to update"
+                          : onSelectedMcFile
+                          ? "upload file"
+                          : "select file to upload"
+                      }
+                      id="mcfile"
+                    ></TooltipCustom>
+
+                    <div className="actions_button_wrapper">
+                      <div data-tip data-for="mcfile">
+                        <Button
+                          disabled={!onSelectedMcFile || mcLoader}
+                          className=""
+                          onClick={handleUploadMcFile}
+                        >
+                          {data.mc_file ? "Change File" : "Add File"}
+                        </Button>
+                      </div>
+                      {data.mc_file ? (
+                        <>
+                          <TooltipCustom
+                            text="view file"
+                            id="mcfileview"
+                          ></TooltipCustom>
+                          <div data-tip data-for="mcfileview">
+                            <Button disabled={mcLoader}>
+                              <a href={data.mc_file}>View</a>
+                            </Button>
+                          </div>
+                        </>
+                      ) : null}
+                    </div>
                   </Col>
-                  <Col>
-                    {data.mc_file && data.mc_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.mc_file}`;
-                        }}
-                      >
-                        MC Authority
-                      </Button>
-                    )}
+                  <hr className="basic_file_hr" />
+                </Row>
+                {/* MC FILE END */}
+                {/* noa FILE START */}
+                <Row className="justify-content-start">
+                  <Col md={2}>
+                    <h3 className="fileHeading"> Noa </h3>
                   </Col>
-                  <Col>
-                    {data.w9_file && data.w9_file !== "" && (
-                      <Button
-                        onClick={() => {
-                          const pdfWindow = window.open();
-                          pdfWindow.location.href = `${data.w9_file}`;
-                        }}
-                      >
-                        W9
-                      </Button>
-                    )}
+                  <Form.Group as={Col} md={4} className="file__input__contaier">
+                    <Form.Label className="file_input_label">
+                      {data.noa_file ? (
+                        <Badge type="success" content="Uploaded" />
+                      ) : (
+                        <Badge type="warning" content="Not uploaded" />
+                      )}
+                    </Form.Label>
+                    <Form.Control
+                      className="file__input"
+                      type="file"
+                      name="file"
+                      onChange={onSelectNoaFile}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {!data.noa_file ? "Please Upload Noa File." : null}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Col md={2} className="actions_wrapper">
+                    <TooltipCustom
+                      text={
+                        onSelectedNoaFile && data.noa_file
+                          ? "update file"
+                          : data.noa_file
+                          ? "select file to update"
+                          : onSelectedNoaFile
+                          ? "upload file"
+                          : "select file to upload"
+                      }
+                      id="noafile"
+                    ></TooltipCustom>
+
+                    <div className="actions_button_wrapper">
+                      <div data-tip data-for="noafile">
+                        <Button
+                          disabled={!onSelectedNoaFile || noaLoader}
+                          onClick={handleUploadNoaFile}
+                          className="action_button"
+                        >
+                          {data.noa_file ? "Change File" : "Add File"}
+                        </Button>
+                      </div>
+                      {data.noa_file ? (
+                        <>
+                          <TooltipCustom
+                            text="view file"
+                            id="noafileview"
+                          ></TooltipCustom>
+                          <Button
+                            disabled={noaLoader}
+                            className="action_button"
+                          >
+                            <div data-tip data-for="noafileview">
+                              <a href={data.noa_file}>View</a>
+                            </div>
+                          </Button>{" "}
+                        </>
+                      ) : null}
+                    </div>
+                  </Col>
+
+                  <hr className="basic_file_hr" />
+                </Row>
+
+                {/* noa FILE END */}
+                {/* w9 FILE START */}
+                <Row className="justify-content-start">
+                  <Col md={2}>
+                    <h3 className="fileHeading"> W9 </h3>
+                  </Col>
+                  <Form.Group as={Col} md={4} className="file__input__contaier">
+                    <Form.Label className="file_input_label">
+                      {data.w9_file ? (
+                        <Badge type="success" content="Uploaded" />
+                      ) : (
+                        <Badge type="warning" content="Not uploaded" />
+                      )}
+                    </Form.Label>
+                    <Form.Control
+                      className="file__input"
+                      type="file"
+                      name="file"
+                      onChange={onSelectW9File}
+                    />
+                    <Form.Control.Feedback type="valid"></Form.Control.Feedback>
+                  </Form.Group>
+                  <Col md={2} className="actions_wrapper">
+                    <TooltipCustom
+                      text={
+                        onSelectedW9File && data.w9_file
+                          ? "update file"
+                          : data.w9_file
+                          ? "select file to update"
+                          : onSelectedW9File
+                          ? "upload file"
+                          : "select file to upload"
+                      }
+                      id="w9file"
+                    ></TooltipCustom>
+
+                    <div className="actions_button_wrapper">
+                      <div data-tip data-for="w9file">
+                        <Button
+                          disabled={!onSelectedW9File || w9Loader}
+                          onClick={handleUploadW9File}
+                          className="action_button"
+                        >
+                          {data.noa_file ? "Change File" : "Add File"}
+                        </Button>
+                      </div>
+                      {data.w9_file ? (
+                        <>
+                          <TooltipCustom
+                            text="view file"
+                            id="w9fileview"
+                          ></TooltipCustom>
+                          <Button disabled={w9Loader} className="action_button">
+                            <div data-tip data-for="w9fileview">
+                              <a href={data.w9_file}>View</a>
+                            </div>
+                          </Button>{" "}
+                        </>
+                      ) : null}
+                    </div>
+                  </Col>
+                  <hr className="basic_file_hr" />
+                </Row>
+                {/* w9 FILE END */}
+                {/* insurance_file FILE START */}
+                <Row className="justify-content-start">
+                  <Col md={2}>
+                    <h3 className="fileHeading"> Insurance </h3>
+                  </Col>
+
+                  <Form.Group as={Col} md={4} className="file__input__contaier">
+                    <Form.Label className="file_input_label">
+                      {data.insurance_file ? (
+                        <Badge type="success" content="Uploaded" />
+                      ) : (
+                        <Badge type="warning" content="Not uploaded" />
+                      )}
+                    </Form.Label>
+                    <Form.Control
+                      className="file__input"
+                      type="file"
+                      name="file"
+                      onChange={onSelectInsuranceFile}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {!data.insurance_file
+                        ? "Please Upload Insurance File."
+                        : null}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                  <Col md={2} className="actions_wrapper">
+                    <TooltipCustom
+                      text={
+                        onSelectedInsuranceFile && data.insurance_file
+                          ? "update file"
+                          : data.insurance_file
+                          ? "select file to update"
+                          : onSelectedInsuranceFile
+                          ? "upload file"
+                          : "select file to upload"
+                      }
+                      id="insurancefile"
+                    ></TooltipCustom>
+
+                    <div className="actions_button_wrapper">
+                      <div data-tip data-for="insurancefile">
+                        <Button
+                          disabled={!onSelectedInsuranceFile || insuranceLoader}
+                          onClick={handleUploadInsuranceFile}
+                          className="action_button"
+                        >
+                          {data.insurance_file ? "Change File" : "Add File"}
+                        </Button>
+                      </div>
+                      {data.insurance_file ? (
+                        <>
+                          <TooltipCustom
+                            text="view file"
+                            id="insurancefileview"
+                          ></TooltipCustom>
+                          <Button
+                            disabled={insuranceLoader}
+                            className="action_button"
+                          >
+                            <div data-tip data-for="insurancefileview">
+                              <a href={data.insurance_file}>View</a>
+                            </div>
+                          </Button>
+                        </>
+                      ) : null}
+                    </div>
                   </Col>
                 </Row>
+                {/* insurance_file FILE END */}
+
+                {/* Misc Files */}
+                <h3>Miscellaneous Documents:</h3>
+                <Row>
+                  {data.files?.map((file) => {
+                    return (
+                      <div key={file.file} className="miscWrapper">
+                        <Row className="justify-content-start">
+                          <Col md={6}>
+                            <h5 className="misc_file_name">
+                              {" "}
+                              {file.name.length > 10
+                                ? file.name.substring(0, 11) + "..."
+                                : file.name}{" "}
+                            </h5>
+                          </Col>
+                          <Col md={2}>
+                            <TooltipCustom
+                              text="view file"
+                              id={file.name}
+                            ></TooltipCustom>
+                            <TooltipCustom
+                              text="delete file"
+                              id={file.file}
+                            ></TooltipCustom>
+                            <div className="actions_button_misc_wrapper">
+                              <div data-tip data-for={file.file}>
+                                <Button
+                                  variant="danger"
+                                  onClick={() => setDeleteModal(file)}
+                                >
+                                  Delete File
+                                </Button>
+                              </div>
+                              <div data-tip data-for={file.name}>
+                                <Button>
+                                  <a href={file.file}>View</a>
+                                </Button>
+                              </div>
+                            </div>
+                          </Col>
+                          <hr className="basic_file_hr" />
+                        </Row>
+                      </div>
+                    );
+                  })}
+                </Row>
+
+                <DeleteConfirmation
+                  showModal={deleteModal}
+                  confirmModal={submitDeleteMisc}
+                  hideModal={() => setDeleteModal(false)}
+                  message={"Are you Sure to want to delete File?"}
+                  title="Delete Confirmation"
+                />
+                <Row>
+                  <Col md={2}>
+                    <Button
+                      onClick={() => {
+                        setShowMicsModal(true);
+                      }}
+                    >
+                      Add Misc
+                    </Button>
+                  </Col>
+                </Row>
+                <Row>
+                  <MyModal
+                    size="lg"
+                    show={showMicsModal}
+                    heading="Add Document"
+                    onClose={() => {
+                      setShowMicsModal(false);
+                      setMiscLoader(false);
+                    }}
+                    style={{ width: "auto" }}
+                  >
+                    <Row className="justify-content-center">
+                      <Form.Group
+                        as={Col}
+                        md={10}
+                        controlId="validationCustom01"
+                      >
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                          required
+                          type="text"
+                          onChange={(e) => setNameMisc(e.target.value)}
+                          placeholder="First name"
+                        />
+                        <Form.Control.Feedback>
+                          Looks good!
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </Row>
+                    <Row className="justify-content-center">
+                      <Form.Group
+                        as={Col}
+                        md={10}
+                        className="position-relative my-5"
+                      >
+                        <Form.Label>Attachments</Form.Label>
+                        <Form.Control
+                          type="file"
+                          required
+                          name="file"
+                          onChange={onSelectFile}
+                        />
+                        <Form.Control.Feedback
+                          type="invalid"
+                          tooltip
+                        ></Form.Control.Feedback>
+                      </Form.Group>
+                    </Row>{" "}
+                    <Button
+                      style={{
+                        float: "right",
+                      }}
+                      disabled={miscLoader}
+                      onClick={handleSubmitMisc}
+                      type="submit"
+                    >
+                      {miscLoader && (
+                        <Spinner
+                          as="span"
+                          animation="grow"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                      )}
+                      Add
+                    </Button>
+                  </MyModal>
+                </Row>
+                {/* Mise Files END*/}
+                {/* File Handling END*/}
                 <Row
                   className="justify-content-between"
                   style={{ marginTop: "10px" }}
@@ -961,6 +1550,8 @@ const TruckDetail = ({ match }) => {
             </form>
           </Modal>
           <LoadTable
+            className="load_table"
+            // style={{width: "98.5%",marginLeft:'11px'}}
             setModal={setrModal}
             truck_number={match.params.truck}
             carrier={data}

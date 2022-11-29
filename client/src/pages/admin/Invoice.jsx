@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import invoice_status_map from "../../assets/JsonData/invoice_status_map.json";
 import PdfTest from "../../components/PdfTest";
 import axios from "axios";
-import TooltipCustom from '../../components/tooltip/TooltipCustom'
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
 
 const invoiceTableHead = [
   "#",
@@ -34,13 +34,10 @@ const Invoice = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-        {
-          company: selectedCompany.value,
-          department: ["sales", "dispatch"],
-        }
-      );
+      const { data } = await axios.post(`/getusers`, {
+        company: selectedCompany.value,
+        department: ["sales", "dispatch"],
+      });
       setSales(
         data
           .filter((user) => user.department === "sales")
@@ -97,25 +94,24 @@ const Invoice = () => {
       </td>
       <td>
         <div
-
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            width: '76px'
+            width: "76px",
           }}
         >
-
-          <div data-tip data-for="invoiceEye" >
+          <div data-tip data-for="invoiceEye">
             <EditButton type="eye" onClick={() => viewInvoiceModal(item)} />
           </div>
-          <TooltipCustom text='View Details' id='invoiceEye' ></TooltipCustom>
+          <TooltipCustom text="View Details" id="invoiceEye"></TooltipCustom>
           <div data-tip data-for="invoicePrint">
-            <i 
+            <i
               className="bx bx-printer action-button"
               onClick={() => viewPdfModal(item)}
-            ></i></div>
-          <TooltipCustom text='Print Details' id='invoicePrint' ></TooltipCustom>
+            ></i>
+          </div>
+          <TooltipCustom text="Print Details" id="invoicePrint"></TooltipCustom>
         </div>
       </td>
     </tr>
@@ -138,6 +134,8 @@ const Invoice = () => {
   const [invoices, setInvoices] = useState([]);
   return (
     <>
+      <h2> Invoices </h2>
+      <br />
       <Row>
         <div className="card">
           <div className="card__body">
@@ -147,7 +145,7 @@ const Invoice = () => {
               headData={invoiceTableHead}
               renderHead={(item, index) => renderHead(item, index)}
               api={{
-                url: `${process.env.REACT_APP_BACKEND_URL}/get-table-invoices`,
+                url: `/get-table-invoices`,
                 body: {
                   company: selectedCompany.value,
                 },
@@ -174,6 +172,7 @@ const Invoice = () => {
       <MyModal
         show={modalHandler}
         heading="Invoice"
+        scroll="scroll"
         size="lg"
         onClose={() => {
           setModalHandler(false);
@@ -192,6 +191,7 @@ const Invoice = () => {
       </MyModal>
       <MyModal
         show={PdfmodalHandler}
+        scrollInvoicePrint="scrollInvoicePrint"
         size="xl"
         onClose={() => {
           setPdfModalHandler(false);

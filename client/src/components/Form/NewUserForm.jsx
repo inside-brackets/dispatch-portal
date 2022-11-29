@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { socket } from "../../index";
+import Table from "react-bootstrap/Table";
 
 const NewUserForm = ({
   data,
@@ -50,10 +51,9 @@ const NewUserForm = ({
     if (userName) {
       const indentifier = setTimeout(async () => {
         if (userName !== defaultValue?.user_name) {
-          const response = await axios.post(
-            `${process.env.REACT_APP_BACKEND_URL}/getusers`,
-            { user_name: userName.replace(/\s+/g, " ").trim().toLowerCase() }
-          );
+          const response = await axios.post(`/getusers`, {
+            user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
+          });
           console.log("checking username", response.data);
           setUsernameIsValid(response.data.length === 0);
         } else {
@@ -71,12 +71,9 @@ const NewUserForm = ({
     const reHash = await bcrypt.hash(pass, 8);
 
     await axios
-      .post(
-        `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
-        {
-          password: reHash,
-        }
-      )
+      .post(`/updateuser/${defaultValue._id}`, {
+        password: reHash,
+      })
       .then((response) => {
         setRefresh(Math.random());
       });
@@ -93,17 +90,14 @@ const NewUserForm = ({
       if (defaultValue && !interview) {
         setButtonLoader(true);
         await axios
-          .post(
-            `${process.env.REACT_APP_BACKEND_URL}/updateuser/${defaultValue._id}`,
-            {
-              user_name: userName.replace(/\s+/g, " ").trim(),
-              joining_date: new Date(joiningDate),
-              salary,
-              designation,
-              department,
-              u_status: userStatus.value,
-            }
-          )
+          .post(`/updateuser/${defaultValue._id}`, {
+            user_name: userName.replace(/\s+/g, " ").trim(),
+            joining_date: new Date(joiningDate),
+            salary,
+            designation,
+            department,
+            u_status: userStatus.value,
+          })
           .then((response) => {
             if (response.data.u_status === "fired") {
               socket.emit("user-fired", `${defaultValue._id}`);
@@ -114,7 +108,7 @@ const NewUserForm = ({
       } else if (usernameIsValid) {
         setButtonLoader(true);
         await axios
-          .post(`${process.env.REACT_APP_BACKEND_URL}/admin/createuser`, {
+          .post(`/admin/createuser`, {
             user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
             password: hash,
             joining_date: new Date(joiningDate),
@@ -196,10 +190,14 @@ const NewUserForm = ({
           </Form.Group>
         )}
       </Row>
-      <Row className="mb-3 justify-content-center">
+      <Row
+        className={`justify-content-center ${
+          department === "dispatch" ? "" : "mb-3"
+        }`}
+      >
         <Row className="m-3">
           {!defaultValue && <hr />}
-          <h1>Company Info</h1>
+          <h3>Company Info</h3>
           <Form.Group as={Col} md="6">
             <Form.Label>Department</Form.Label>
             <Form.Control
@@ -288,6 +286,48 @@ const NewUserForm = ({
           )}
         </Row>
       </Row>
+      {department === "dispatch" && (
+        <Row className="mb-3 justify-content-center">
+          <Row className="m-3">
+            <hr />
+            <h3 className="mb-3">Default Salary Slots</h3>
+            <Table hover>
+              <thead>
+                <tr>
+                  <th className="text-center">No.</th>
+                  <th>Slot</th>
+                  <th className="text-center">Lower Bound</th>
+                  <th className="text-center">Upper Bound</th>
+                  <th className="text-center">Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="text-center">1</td>
+                  <td>First</td>
+                  <td className="text-center">1500</td>
+                  <td className="text-center">4500</td>
+                  <td className="text-center">8%</td>
+                </tr>
+                <tr>
+                  <td className="text-center">2</td>
+                  <td>Second</td>
+                  <td className="text-center">-</td>
+                  <td className="text-center">7000</td>
+                  <td className="text-center">10%</td>
+                </tr>
+                <tr>
+                  <td className="text-center">3</td>
+                  <td>Third</td>
+                  <td className="text-center">-</td>
+                  <td className="text-center">9999999</td>
+                  <td className="text-center">12%</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Row>
+        </Row>
+      )}
       {defaultValue ? (
         <Button disabled={buttonLoader} type="submit">
           Edit form
