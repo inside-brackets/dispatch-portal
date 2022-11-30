@@ -14,9 +14,7 @@ import { themeActions } from "../../store/theme";
 import "./Dashboard.css";
 
 const Dashboard = () => {
-  const { user } = useSelector((state) => state.user);
   const { company: selectedCompany } = useSelector((state) => state.user);
-
   const [lineChart, setLineChart] = useState([]);
   const [pieChart, setPieChart] = useState([]);
   const [topUsers, setTopUsers] = useState([]);
