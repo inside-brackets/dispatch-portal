@@ -203,7 +203,7 @@ const Appointments = (props) => {
                   }
                 </Card.Footer>
                 <div
-                  class="d-flex justify-content-between"
+                  className="d-flex justify-content-between"
                   style={{ marginTop: "10px" }}
                 >
                   <MyButton

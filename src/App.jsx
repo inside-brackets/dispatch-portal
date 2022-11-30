@@ -202,7 +202,6 @@ const App = () => {
       {currUser?.department === "sales" && <Timer />}
       <Switch>
         <Route path="/login" exact component={Login} />
-
         <PrivateRoute path="/">
           <Layout />
         </PrivateRoute>
