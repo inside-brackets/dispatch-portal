@@ -130,7 +130,7 @@ const CarrierReport = ({
           <tr>
             <td className="major-details">Dollar per Loaded Miles: </td>
             <td className="major-details">
-              {typeof dollarPerLoadedMiles === "NaN"
+              {dollarPerLoadedMiles === "NaN"
                 ? 0
                 : dollarPerLoadedMiles.toFixed(2)}
             </td>
