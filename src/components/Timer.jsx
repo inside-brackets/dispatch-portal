@@ -19,7 +19,6 @@ const Timer = () => {
                 msg: `Your Appointment with ${res.data[0].mc_number} is started now`,
               })
               .then((res) => {
-                console.log("settimeout res", res);
                 toast.success("Your meeting starts now");
               })
               .catch((err) => console.log(err));
@@ -28,7 +27,6 @@ const Timer = () => {
       })
       .catch((err) => console.log(err));
 
-    console.log("im run");
   }, [value]);
 
   return (

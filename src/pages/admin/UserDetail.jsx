@@ -207,42 +207,12 @@ const UserDetailPage = ({ user, callBack }) => {
   ];
 
   const COLORS = ["#00FF00", "#FF0000", "#FFFF00"];
-
-  // const RADIAN = Math.PI / 180;
-  // const renderCustomizedLabel = ({
-  //   cx,
-  //   cy,
-  //   midAngle,
-  //   innerRadius,
-  //   outerRadius,
-  //   percent,
-  //   index,
-  // }) => {
-  //   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  //   const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  //   const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  //   return (
-  //     <text
-  //       x={x}
-  //       y={y}
-  //       fill="white"
-  //       textAnchor={x > cx ? "start" : "end"}
-  //       dominantBaseline="central"
-  //     >
-  //       {`${(percent * 100).toFixed(0)}%`}
-  //     </text>
-  //   );
-  // };
   useEffect(() => {
     if (state.user_name) {
-      console.log(state.user_name);
       const indentifier = setTimeout(async () => {
-        // if (userName !== defaultValue?.user_name) {
         const response = await axios.post(`/getusers`, {
           user_name: state.user_name.replace(/\s+/g, " ").trim().toLowerCase(),
         });
-        console.log("checking username", response.data);
         if (state.user_name !== response.data[0]?.user_name) setShowError(true);
         setUsernameIsValid(response.data.length === 0);
       }, 500);

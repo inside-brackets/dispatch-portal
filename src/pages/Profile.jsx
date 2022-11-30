@@ -28,7 +28,6 @@ const BasicInformation = ({ user }) => {
 
   useEffect(() => {
     axios.get(`/getuser/${user._id}`).then(({ data }) => {
-      console.log(data);
       setDbUser(data);
     });
   }, [user._id]);
@@ -41,7 +40,6 @@ const BasicInformation = ({ user }) => {
     if (!oldPassword && !newPassword && !confirmPassword) {
       setError("Please fill all fields");
     } else if (!passwordCheck) {
-      console.log("user.password", passwordCheck);
       setError("Old password is not Correct");
     } else if (newPassword !== confirmPassword) {
       setError("Confirm password is not same");
@@ -73,8 +71,6 @@ const BasicInformation = ({ user }) => {
       if (user) {
         const formData = new FormData(event.currentTarget);
         const userInfo = Object.fromEntries(formData.entries());
-        console.log("hello", userInfo.date_of_birth);
-
         await axios.post(`/updateuser/${user._id}`, userInfo);
         toast.success("Profile Updated Successfully!", {
           position: "bottom-right",

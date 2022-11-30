@@ -56,7 +56,6 @@ const Login = () => {
           const user = jwtDecode(userToken);
 
           if (user) {
-            console.log("login");
             dispatch(
               userActions.login({
                 user: user,

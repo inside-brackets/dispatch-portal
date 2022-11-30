@@ -7,7 +7,6 @@ import { Row, Col, Form, Alert } from "react-bootstrap";
 
 const Table = (props) => {
   const [bodyData, setBodyData] = useState({});
-  console.log("odydata", bodyData);
   const [filter, setFilter] = useState(
     Object.keys(props.filter).reduce((pre, curr) => ((pre[curr] = []), pre), {})
   );

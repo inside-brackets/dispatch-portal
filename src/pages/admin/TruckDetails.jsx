@@ -52,34 +52,8 @@ const TruckDetails = () => {
         "trucks.$.dispatcher": selectedDispatcher.value,
       })
       .then((result) => {
-        console.log("reassing", result.data.trucks);
       });
   };
-
-  // const changeStatusHandler = () => {
-  //   let status = truck.t_status;
-  //   if (status === "active") {
-  //     status = "inactive";
-  //   } else if (status === "inactive") {
-  //     status = "active";
-  //   } else {
-  //     return;
-  //   }
-  //   axios
-  //     .put(
-  //       `/updatetruck/${params.mc}/${params.truck}`,
-  //       { "trucks.$.t_status": status }
-  //     )
-  //     .then((result) => {
-  //       if (status === "inactive") {
-  //         socket.emit("truck-inactive", `${params.mc}/${truck.truck_number}`);
-  //       }
-  //       setTruck((prev) => ({ ...prev, t_status: status }));
-  //       console.log("status changed");
-  //     });
-  // };
-
-  console.log("status", t_status);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -113,7 +87,6 @@ const TruckDetails = () => {
         mc_number: params.mc,
       })
       .then(({ data }) => {
-        console.log("carrier", data);
         if (data) {
           setCarrier(data);
           const truck = data.trucks.find((item) => {
@@ -131,7 +104,6 @@ const TruckDetails = () => {
               label: truck.dispatcher.user_name,
             });
           }
-          console.log(truck);
         } else {
           setError(true);
         }

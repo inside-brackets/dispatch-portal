@@ -135,7 +135,6 @@ const NewLoadForm = ({ carrier, truck_number, setEditModal, defaultValue }) => {
     setValidated(true);
     if (form.checkValidity() === true && loadNumberIsValid) {
       setButtonLoader(true);
-      console.log("pick up", pickupDate);
       const loadEditObject = {
         id: defaultValue._id,
         load_number: loadNumber.toLowerCase(),

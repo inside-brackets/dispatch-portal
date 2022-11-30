@@ -70,7 +70,6 @@ function SalaryDetailsCard({ user, readOnly }) {
 
   useEffect(() => {
     setIncentive(slotOne + slotTwo + slotThree);
-    console.log(incentive);
   }, [slotOne, slotTwo, slotThree]);
 
   const calculateIncentive = () => {

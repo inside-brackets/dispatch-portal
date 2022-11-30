@@ -26,7 +26,6 @@ const AddNewCarrierModal = ({ mc, closeModal }) => {
         c_status: "inprogress",
       };
       await axios.post(`/add-new-carrier`, obj).then((response) => {
-        console.log("response", response);
         // history.push(`/addCarrier/${event.target.mc_number.value}`);
         history.push(`/carrierview/${event.target.mc_number.value}`);
         closeModal();

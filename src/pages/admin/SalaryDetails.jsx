@@ -11,7 +11,6 @@ function SalaryDetails() {
 
   useEffect(() => {
     axios.get(`/getuser/` + id).then(({ data }) => {
-      console.log(data);
       setUser(data);
     });
   }, [id]);

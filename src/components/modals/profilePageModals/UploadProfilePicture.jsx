@@ -32,7 +32,6 @@ const UploadProfilePicture = ({ user, setModal }) => {
   };
 
   const handleSubmit = async () => {
-    // console.log("preview", selectedFile,{file:})
     setLoading(true);
     if (preview) {
       const { data: url } = await axios(
@@ -42,7 +41,6 @@ const UploadProfilePicture = ({ user, setModal }) => {
           user.profile_image?.lastIndexOf("/") + 1
         )}`
       );
-      console.log("url imaeg", url, "user._id", user._id);
       await axios.put(url, selectedFile);
       const res = await axios.post(`/updateuser/${user._id}`, {
         profile_image: url.split("?")[0],
