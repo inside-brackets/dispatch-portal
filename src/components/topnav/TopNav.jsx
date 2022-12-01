@@ -5,13 +5,10 @@ import Dropdown from "../dropdown/Dropdown";
 import ThemeMenu from "../thememenu/ThemeMenu";
 import user_image from "../../assets/images/taut.png";
 import user_menu from "../../assets/JsonData/user_menus.json";
-// import SearchBar from "../UI/SearchBar";
 import logo from "../../assets/images/logo.png";
 import logo2 from "../../assets/images/White-Christmas.png";
 import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
-import Badge from "../badge/Badge";
-import company_status_map from "../../assets/JsonData/company.json";
 
 const cookies = new Cookies();
 

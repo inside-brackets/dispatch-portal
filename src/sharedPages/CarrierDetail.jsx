@@ -43,7 +43,6 @@ const CarrierDetail = () => {
   const [closeCheck, setCloseCheck] = useState(false);
   const [changeStatus, setChangeStatus] = useState(false);
   const [statusChanged, setStatusChanged] = useState();
-  const [salePerson, setSalePerson] = useState("");
   const [salesperson, setSalesperson] = useState();
   const [selectedCarrierStatus, setSelectedCarrierStatus] = useState("");
   const [miscLoader, setMiscLoader] = useState(false);

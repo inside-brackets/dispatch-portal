@@ -11,8 +11,6 @@ import "./MCSeries.css";
 
 function MCSeries() {
   const { user } = useSelector((state) => state.user);
-  const { company: selectedCompany } = useSelector((state) => state.user);
-
   const [series, setSeries] = useState({
     order: 1,
     isCustom: false,

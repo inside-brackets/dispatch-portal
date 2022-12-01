@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import usMap from "../../assets/images/us-map.jpg";
 import UsClock from "../../components/usClock/UsClock";
 import TargetDisplay from "../../components/targetDisplay/TargetDisplay";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.user);

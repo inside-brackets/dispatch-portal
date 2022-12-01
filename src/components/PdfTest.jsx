@@ -1,7 +1,7 @@
 import React from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { Button, Row } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useRef } from "react";
 import moment from "moment";
 import "./pdf.css";

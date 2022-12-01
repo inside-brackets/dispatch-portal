@@ -9,7 +9,6 @@ import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
 
 const DashboardAdmin = () => {
-  const themeReducer = useSelector((state) => state.theme.mode);
 
   const [carriers, setCarriers] = useState({
     active: null,
