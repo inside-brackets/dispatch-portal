@@ -27,7 +27,6 @@ const CarrierReport = ({
   const [workingDays, setWorkingDays] = useState(
     defaultValue ? defaultValue.working_days : null
   );
-  console.log("hello", department);
   const [dispatcherComments, setDispatcherComments] = useState(
     defaultValue ? defaultValue.dispatcher_comment : null
   );

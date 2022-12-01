@@ -47,14 +47,12 @@ const Dialer = () => {
     });
   };
 
-  console.log("defaultComment", defaultComment);
 
   // make appointment
   const onConfirm = async () => {
     setLoading(true);
     incrementCounter();
     const transformData = (data) => {
-      console.log(data);
       setrefresh(!refresh);
       setModal(false);
     };
@@ -79,7 +77,6 @@ const Dialer = () => {
     setLoading(true);
     incrementCounter();
     const transformData = (data) => {
-      console.log(data);
       setrefresh(!refresh);
     };
     await postdidnotPickCarriers(

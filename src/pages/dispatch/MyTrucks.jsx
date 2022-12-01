@@ -72,8 +72,6 @@ const MyTrucks = () => {
           setCarriersList(newTrucks.concat(oldTrucks));
           setSearchedCarrier(newTrucks.concat(oldTrucks));
           setIsLoading(false);
-
-          console.log("finished");
         }
       }
       if (myTrucks.length === 0) {

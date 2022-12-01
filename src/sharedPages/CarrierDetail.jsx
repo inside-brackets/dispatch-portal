@@ -433,7 +433,6 @@ const CarrierDetail = () => {
         setDeleteModal(false);
         toast.success("File Deleted");
       } catch (err) {
-        console.log(err);
         setDeleteModal(false);
         toast.error("File Not Deleted");
       }

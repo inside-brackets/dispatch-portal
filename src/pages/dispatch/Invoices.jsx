@@ -73,7 +73,7 @@ const Invoice = () => {
           <TooltipCustom text="View Details" id="viewInvoice"></TooltipCustom>
           <div data-tip data-for="printinvoice">
             <i
-              class="bx bx-printer action-button"
+              className="bx bx-printer action-button"
               onClick={() => viewPdfModal(item)}
             ></i>
           </div>

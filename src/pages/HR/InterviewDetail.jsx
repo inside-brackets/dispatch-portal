@@ -18,7 +18,6 @@ const InterviewDetail = ({ defaultValue }) => {
   });
   const history = useHistory();
   const [users, setUsers] = useState([]);
-  console.log("params", params);
   const [validated, setValidated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedInterviewer, setSelectedInterviewer] = useState([]);
@@ -112,7 +111,6 @@ const InterviewDetail = ({ defaultValue }) => {
     setLoading(false);
     toast.success("Interview Schedule Successfully");
   };
-  console.log("state", state);
 
   const handleRejection = async () => {
     setLoading(true);

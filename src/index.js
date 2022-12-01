@@ -11,9 +11,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import { io } from "socket.io-client";
 import ENV from "./constants";
-
-const socket = io(ENV.backend_base_url);
-
+let socket
+if(process.env.REACT_APP_DEV==="true"){
+  socket = io(process.env.REACT_APP_BACKEND_URL);
+}else{
+ socket = io(ENV.backend_base_url);
+}
 document.title = "Dispatch Portal";
 
 ReactDOM.render(
