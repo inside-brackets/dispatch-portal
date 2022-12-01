@@ -585,7 +585,6 @@ const CarrierDetail = () => {
                     placeholder="Comment.."
                     defaultValue={carrier ? carrier.comment : ""}
                     name="Comment:"
-                    readOnly
                   />
                 </Form.Group>
                 <Form.Group as={Col} md="3" controlId="validationCustom03">
