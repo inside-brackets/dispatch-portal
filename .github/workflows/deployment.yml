@@ -30,5 +30,4 @@ jobs:
       - name: Copy & paste build files
         run: |
           rm -rfv /var/www/dispatch-portal/*
-          mkdir /var/www/dispatch-portal
           cp -r ~/dispatch-portal/client/build/* /var/www/dispatch-portal
