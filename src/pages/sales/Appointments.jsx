@@ -93,7 +93,7 @@ const clearHanler=()=>{
       if(searchValue.length!== 0){
       const searched = carriersList.filter((carrier) => {
         if (!isNaN(searchValue)) {
-          return carrier.mc_number === parseInt(inValue .trim());
+          return carrier.mc_number === parseInt(inValue.trim());
         } else {
           searchValue = searchValue.toLowerCase();
           if (
@@ -175,25 +175,25 @@ const clearHanler=()=>{
     </Row>
   );
   var appointmentList = (
-    <div className="spreadsheet__loader">
+    <div className="appointment__loader">
       <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
     </div>
   );
   if (isLoading && !httpError) {
     appointmentList = (
-      <div className="spreadsheet__loader">
+      <div className="appointment__loader">
         <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
       </div>
     );
   } else if (!isLoading && httpError) {
     appointmentList = (
-      <div className="spreadsheet__loader">
+      <div className="appointment__loader">
         <h2 style={{ color: "red" }}>ERROR: SERVER MIGHT BE DOWN</h2>
       </div>
     );
   } else if (carriersList.length === 0)
     appointmentList = (
-      <div className="spreadsheet__loader">
+      <div className="appointment__loader">
         <h2 style={{ color: "green" }}>No Appointments yet.</h2>
       </div>
     );

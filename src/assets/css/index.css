@@ -232,7 +232,11 @@ textarea:focus {
   margin-top: 20%;
   margin-left: 40%;
 }
-
+.appointment__loader{
+  margin-top: 20%;
+  display: flex;
+  justify-content: center;
+}
 .dialer__container {
   display: flex;
   height: 72vh;
