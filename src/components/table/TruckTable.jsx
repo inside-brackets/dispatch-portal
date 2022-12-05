@@ -27,7 +27,6 @@ const customerTableHead = [
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const TruckTable = (props) => {
-  // console.log(props.trucks);
   const history = useHistory();
 
   // reassign states
@@ -178,7 +177,6 @@ const TruckTable = (props) => {
         "trucks.$.dispatcher": selectedDispatcher.value,
       })
       .then((result) => {
-        console.log("reassing", result.data.trucks);
         setTrucks(result.data.trucks);
         setShowReassingModal(false);
       });

@@ -11,8 +11,6 @@ import "./MCSeries.css";
 
 function MCSeries() {
   const { user } = useSelector((state) => state.user);
-  const { company: selectedCompany } = useSelector((state) => state.user);
-
   const [series, setSeries] = useState({
     order: 1,
     isCustom: false,
@@ -34,7 +32,6 @@ function MCSeries() {
 
   const handleChange = (e) => {
     e.persist();
-    console.log(e.currentTarget.id);
     setIsDirty(true);
 
     if (e.currentTarget.id === "seriesOrder") {
@@ -62,7 +59,6 @@ function MCSeries() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(series);
     setIsDirty(false);
     setIsSubmitting(true);
     await axios({
@@ -104,7 +100,6 @@ function MCSeries() {
     setRefresh(true);
     await axios.get(`/free/leads`).catch((error) => {
       if (error.response) {
-        console.log(error.response.data);
       }
     });
     toast.success("Resources freed up!");

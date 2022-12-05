@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import "./table.css";
 
 const Table = (props) => {
@@ -41,7 +40,7 @@ const Table = (props) => {
         <table>
           {props.headData && props.renderHead ? (
             <thead>
-              <tr className="table-head">
+              <tr className="table-head"  >
                 {props.headData.map((item, index) =>
                   props.renderHead(item, index)
                 )}

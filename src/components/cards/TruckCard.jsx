@@ -81,7 +81,7 @@ const TruckCard = ({ item }) => {
   return (
     <Card
       style={{
-        minWidth: "290px",
+        width: "290px",
       }}
       className={`${item.out_of ? "" : "newCarrierBackground"}`}
     >

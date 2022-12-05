@@ -43,7 +43,6 @@ const CarrierDetail = () => {
   const [closeCheck, setCloseCheck] = useState(false);
   const [changeStatus, setChangeStatus] = useState(false);
   const [statusChanged, setStatusChanged] = useState();
-  const [salePerson, setSalePerson] = useState("");
   const [salesperson, setSalesperson] = useState();
   const [selectedCarrierStatus, setSelectedCarrierStatus] = useState("");
   const [miscLoader, setMiscLoader] = useState(false);
@@ -433,7 +432,6 @@ const CarrierDetail = () => {
         setDeleteModal(false);
         toast.success("File Deleted");
       } catch (err) {
-        console.log(err);
         setDeleteModal(false);
         toast.error("File Not Deleted");
       }
@@ -585,7 +583,6 @@ const CarrierDetail = () => {
                     placeholder="Comment.."
                     defaultValue={carrier ? carrier.comment : ""}
                     name="Comment:"
-                    readOnly
                   />
                 </Form.Group>
                 <Form.Group as={Col} md="3" controlId="validationCustom03">

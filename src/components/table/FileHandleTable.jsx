@@ -69,15 +69,11 @@ const FileHandleTable = ({ carrier }) => {
     };
 
     for (const property in files) {
-      // console.log(files[property].name + "  files:property.name")
 
       if (files[property]) {
-        console.log(files[property]);
         const { data: url } = await axios(
           `/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
         );
-        // console.log(data + " axiios")
-        console.log(url + "url");
         axios.put(url, files[property]);
         files[property] = url.split("?")[0];
       }
@@ -86,7 +82,6 @@ const FileHandleTable = ({ carrier }) => {
       c_status: "registered",
       ...files,
     });
-    console.log(response);
     // setShowCloseModal(false);
     // history.push("/appointments");
     socket.emit("sale-closed", `New Sale By ${user_name}`);
@@ -105,8 +100,6 @@ const FileHandleTable = ({ carrier }) => {
 
     for (const property in files) {
       if (files[property]) {
-        console.log(files[property]);
-
         await axios(
           `/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
         );
@@ -114,8 +107,7 @@ const FileHandleTable = ({ carrier }) => {
         const { data: url } = await axios(
           `/s3url/carrier_documents/${carrier.mc_number}-${files[property].name}`
         );
-        // console.log(data + " axiios")
-        console.log(url + "url");
+
         axios.put(url, files[property]);
         files[property] = url.split("?")[0];
       }
@@ -124,13 +116,11 @@ const FileHandleTable = ({ carrier }) => {
       c_status: "registered",
       ...files,
     });
-    console.log(response);
     // setShowCloseModal(false);
     // history.push("/appointments");
     socket.emit("sale-closed", `New Sale By ${user_name}`);
   };
-  console.log(mcRef + " mcref.current");
-  console.log(carrier.mc_file + " mc file");
+
   const addFile = () => {
     mcRef.current.click();
   };

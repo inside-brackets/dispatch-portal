@@ -14,7 +14,6 @@ const salesSlice = createSlice({
       for (var i = 0; i < data.length; i++) {
         for (var j = 0; j < data[i].trucks.length; j++) {
           if (data[i].trucks[j].t_status === "new") {
-            console.log("data updated at", data[i].updatedAt);
             newCarrier.push({
               mc_number: data[i].mc_number,
               trailer_type: data[i].trucks[j].trailer_type,

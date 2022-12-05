@@ -9,7 +9,6 @@ export default function DetailsModal(props) {
   const [users, setUsers] = useState([]);
   const [today, setToday] = useState(new Date());
   const [loading, setLoading] = useState(false);
-
   const modalSwitch = props.mSwitch;
 
   useEffect(() => {
@@ -52,19 +51,19 @@ export default function DetailsModal(props) {
         axios.get(`/getuser/${data[i]}`).then((res) => {
           const didnotpick = props.users[today.getMonth()].filter(
             (carrier) =>
-              carrier.change === "didnotpick" && carrier.user == data[i]
+              carrier.change === "didnotpick" && carrier.user === data[i]
           );
           const rejected = props.users[today.getMonth()].filter(
             (carrier) =>
-              carrier.change === "rejected" && carrier.user == data[i]
+              carrier.change === "rejected" && carrier.user === data[i]
           );
           const registered = props.users[today.getMonth()].filter(
             (carrier) =>
-              carrier.change === "registered" && carrier.user == data[i]
+              carrier.change === "registered" && carrier.user === data[i]
           );
           const appointment = props.users[today.getMonth()].filter(
             (carrier) =>
-              carrier.change === "appointment" && carrier.user == data[i]
+              carrier.change === "appointment" && carrier.user === data[i]
           );
 
           setUsers((prevState) => [

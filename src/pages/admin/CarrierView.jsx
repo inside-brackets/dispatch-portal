@@ -85,7 +85,6 @@ const AppointmentDetail = () => {
       await axios
         .put(`/updatecarrier/${params.mc}`, upObj)
         .then((response) => {
-          console.log(response.data);
           toast.success("Carrier Saved");
           setCarrier(response.data);
           setloaderButton(false);

@@ -7,7 +7,6 @@ imageForm.addEventListener("submit", async (event) => {
 
   // get secure url from our server
   const { url } = await fetch("/s3Url").then((res) => res.json());
-  console.log(url);
 
   // post the image direclty to the s3 bucket
   await fetch(url, {
@@ -19,7 +18,6 @@ imageForm.addEventListener("submit", async (event) => {
   });
 
   const imageUrl = url.split("?")[0];
-  console.log(imageUrl);
 
   // post requst to my server to store any extra data
 

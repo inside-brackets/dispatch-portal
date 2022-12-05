@@ -100,7 +100,6 @@ const Report = () => {
           };
         });
         setLineGraphData(data.reverse());
-        console.log("line graph data", data);
       })
       .catch((err) => console.log("api error", err));
 
@@ -121,10 +120,8 @@ const Report = () => {
           };
         });
         setBarGraphData(data.reverse());
-        console.log("bar graph data", data);
       })
       .catch((err) => console.log("api error", err));
-    console.log("tep", temp);
 
     setLoading(false);
   };
@@ -144,7 +141,6 @@ const Report = () => {
           .get(`/dispatch/get-carrier-report/${params.id}`)
           .then((res) => {
             const { data } = res.data;
-            console.log("report", data);
             setSelectedCarrier({
               label: data.carrier.mc_number,
               value: data.carrier.mc_number,
@@ -172,7 +168,6 @@ const Report = () => {
                   };
                 });
                 setLineGraphData(data.reverse());
-                console.log("line graph data", data);
               })
               .catch((err) => console.log("api error", err));
 
@@ -193,7 +188,6 @@ const Report = () => {
                   };
                 });
                 setBarGraphData(data.reverse());
-                console.log("bar graph data", data);
               })
               .catch((err) => console.log("api error", err));
           })

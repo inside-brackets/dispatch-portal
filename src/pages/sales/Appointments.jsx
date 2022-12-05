@@ -6,7 +6,7 @@ import Modal from "../../components/modals/MyModal";
 import TextArea from "../../components/UI/TextArea";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
-import { Card } from "react-bootstrap";
+import { Card ,Button} from "react-bootstrap";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
 import moment from "moment";
@@ -17,6 +17,9 @@ const Appointments = (props) => {
   const [carriersList, setCarriersList] = useState([]);
   const [currentmc, setCurrentMC] = useState();
   const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
+  const [savedCarriers, setSavedCarries] = useState([]);
+  const [onClear,setOnClear] = useState()
+  const [inValue,setInValue]= useState('')
   const history = useHistory();
   //changes//
   const onConfirm = (mc) => {
@@ -24,7 +27,6 @@ const Appointments = (props) => {
     setrModal(true);
   };
   const [rmodal, setrModal] = useState();
-  const [carrier, setCarrier] = useState({});
   const commentRef = useRef();
 
   const rejectMC = async () => {
@@ -38,6 +40,14 @@ const Appointments = (props) => {
       const temp_list = prev;
       return temp_list.filter((carrier) => carrier.mc_number !== currentmc);
     });
+    setSavedCarries((prev) => {
+      const temp_list = prev;
+      return temp_list.filter((carrier) => carrier.mc_number !== currentmc);
+    });
+    setOnClear((prev) => {
+      const temp_list = prev;
+      return temp_list.filter((carrier) => carrier.mc_number !== currentmc);
+    });
   };
   const onrClose = () => {
     setrModal(false);
@@ -45,8 +55,7 @@ const Appointments = (props) => {
   //changes//
   useEffect(() => {
     const transformData = (data) => {
-      setCarrier(data);
-
+      setOnClear(data)
       if (data === null) {
         return;
       }
@@ -69,15 +78,22 @@ const Appointments = (props) => {
   }, [fetchCarrier, currUserId]);
 
   //search
-  const searchRef = useRef();
+const clearHanler=()=>{
+  setCarriersList(onClear);
+  setSavedCarries((prev) => {
+    const temp_list = prev;
+    return temp_list.filter((carrier) => carrier.mc_number !== currentmc);
+  });
+  setInValue('')
+}
 
-  const [savedCarriers, setSavedCarries] = useState([]);
   const search = (e) => {
     if (e.key === "Enter") {
-      var searchValue = searchRef.current.value.trim();
+      var searchValue = inValue.trim();
+      if(searchValue.length!== 0){
       const searched = carriersList.filter((carrier) => {
         if (!isNaN(searchValue)) {
-          return carrier.mc_number === parseInt(searchRef.current.value.trim());
+          return carrier.mc_number === parseInt(inValue .trim());
         } else {
           searchValue = searchValue.toLowerCase();
           if (
@@ -93,10 +109,13 @@ const Appointments = (props) => {
       if (searched.length !== 0) {
         setSavedCarries(carriersList);
         setCarriersList(searched);
-      } else {
+      } else 
+      // if(savedCarriers.length !== 0)
+      {
         setCarriersList(savedCarriers);
         setSavedCarries([]);
       }
+    }
     }
   };
 
@@ -203,7 +222,7 @@ const Appointments = (props) => {
                   }
                 </Card.Footer>
                 <div
-                  class="d-flex justify-content-between"
+                  className="d-flex justify-content-between"
                   style={{ marginTop: "10px" }}
                 >
                   <MyButton
@@ -243,9 +262,13 @@ const Appointments = (props) => {
             className="form-control"
             placeholder="Company / MC"
             icon="bx bx-search"
-            ref={searchRef}
+            value={inValue}
             onKeyDown={search}
+            onChange={event => setInValue(event.target.value)}
           />
+        </div>
+        <div className="col-md-4 mt-4">
+        <Button onClick={clearHanler} size="lg">Clear</Button>
         </div>
       </div>
       {appointmentList}
@@ -259,9 +282,7 @@ const Appointments = (props) => {
           <TextArea
             name="Comment:"
             placeholder="Comment here..."
-            // value={commentRef.current.value}
             defaultValue={commentRef.current && commentRef.current.value}
-            // onChange={(e) => setComment(e.target.value)}
             ref={commentRef}
           />
 

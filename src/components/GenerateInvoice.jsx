@@ -57,7 +57,6 @@ const GenerateInvoice = ({ truck_number, carrier, closeModal }) => {
       setDispatcherFee(dispatcher_fee);
     }
   };
-  // console.log("Generatew Inovice", loads);
   const handleSelection = (ranges) => {
     setStartDate(ranges.Selection.startDate);
     setEndDate(ranges.Selection.endDate);

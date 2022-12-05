@@ -1,8 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./sidebar.css";
-import logo from "../../assets/images/logo.png";
-import logo2 from "../../assets/images/White-Christmas.png";
 import sidebar_items from "../../assets/JsonData/sidebar_routes.json";
 import { useSelector } from "react-redux";
 
@@ -28,7 +26,6 @@ const SidebarItem = (props) => {
 
 const Sidebar = (props) => {
   const { department, designation } = useSelector((state) => state.user.user);
-  console.log(department, designation);
   const sidebarHeading =
     department.toLowerCase() === "dispatch"
       ? "SERVICES "
@@ -36,7 +33,6 @@ const Sidebar = (props) => {
       ? "MARKETING"
       : department.toUpperCase();
 
-  console.log(sidebarHeading);
   const sidebarItems =
     department === "sales" || department === "dispatch"
       ? sidebar_items[department][designation]
@@ -62,7 +58,6 @@ const Sidebar = (props) => {
       </center>
       <div className="sidebar-items">
         {sidebarItems.map((item, index) => {
-          console.log(item, index);
           return (
             <NavLink
               activeClassName="active__sidebar"

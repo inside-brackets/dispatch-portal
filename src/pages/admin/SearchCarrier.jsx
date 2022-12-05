@@ -18,7 +18,6 @@ import MyModal from "../../components/modals/MyModal";
 import AddNewCarrierModal from "../../components/modals/AddNewCarrierModal";
 
 const CardRow = ({ field, value, badge }) => {
-  console.log(`value ${status_map[value]}`);
   return (
     <Row>
       <Col>
@@ -55,7 +54,6 @@ const SearchCarrier = () => {
     setIsLoading(true);
     setError(false);
     const result = await axios.post(`/getcarrier`, { mc_number: searchedMc });
-    console.log(result);
     if (result.data) {
       setCarrier(result.data);
     } else {

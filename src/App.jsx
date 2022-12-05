@@ -69,7 +69,6 @@ const App = () => {
 
     socket.on("backend-truck-inactive", (msg) => {
       if (currUser?.department === "dispatch") {
-        console.log("currrent location", window.location.pathname);
         if (window.location.pathname === "/mytrucks") {
           window.location.reload();
         } else if (window.location.pathname.includes(`/trucks/${msg}`)) {
@@ -80,7 +79,6 @@ const App = () => {
 
     socket.on("backend-deactivate-carrier", (msg) => {
       if (currUser?.department === "dispatch") {
-        console.log("currrent location", window.location.pathname);
         if (window.location.pathname === "/mytrucks") {
           window.location.reload();
         } else if (window.location.pathname.includes(`/trucks/${msg}`)) {
@@ -146,7 +144,6 @@ const App = () => {
               : "theme-color-red";
           dispatch(themeActions.setColor(color));
         } else {
-          console.log("login admin no local");
           dispatch(
             userActions.login({
               user,
@@ -205,7 +202,6 @@ const App = () => {
       {currUser?.department === "sales" && <Timer />}
       <Switch>
         <Route path="/login" exact component={Login} />
-
         <PrivateRoute path="/">
           <Layout />
         </PrivateRoute>

@@ -19,16 +19,9 @@ jobs:
     steps:
       - name: Pull changes
         run: |
-          cd ~/dispatch-staging
+          cd ~/dispatch-staging/client
           git checkout staging
           git pull
-      - name: Install Server Dependencies
-        run: |
-          cd ~/dispatch-staging/server
-          npm i
-      - name: Reload pm2 test-api
-        run: |
-          pm2 reload test-api
       - name: Build client
         run: |
           cd ~/dispatch-staging/client
@@ -37,5 +30,5 @@ jobs:
       - name: Copy & paste build files
         run: |
           rm -rfv /var/www/dispatch-staging/*
-          mkdir /var/www/dispatch-staging/client
-          cp -r ~/dispatch-staging/client/build/* /var/www/dispatch-staging/client
+          mkdir /var/www/dispatch-staging
+          cp -r ~/dispatch-staging/client/build/* /var/www/dispatch-staging

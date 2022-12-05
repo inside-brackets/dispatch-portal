@@ -1,7 +1,7 @@
 import React from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { Button, Row } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useRef } from "react";
 import moment from "moment";
 import "./pdf.css";
@@ -10,18 +10,14 @@ const PdfTest = ({ load, invoice }) => {
   const ref = useRef();
   const printDocument = () => {
     const input = document.getElementById("div-to-print");
-    console.log(input);
     html2canvas(input).then((canvas) => {
-      console.log("canvas", canvas);
 
       const imgData = canvas.toDataURL("image/png");
-      console.log(imgData);
-      console.log("hello");
+
       var pdf = new jsPDF({ orientation: "landscape" });
       var width = pdf.internal.pageSize.getWidth();
       var height = pdf.internal.pageSize.getHeight();
       pdf.addImage(imgData, "JPEG", 0, 0, width, height);
-      // pdf.output("dataurlnewwindow");
       pdf.save("download.pdf");
     });
   };

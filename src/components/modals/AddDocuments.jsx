@@ -33,7 +33,6 @@ const AddDocuments = ({ showModal, user, profile, callBack }) => {
         user.profile_image?.lastIndexOf("/") + 1
       )}`
     );
-    console.log("url imaeg", url, "user._id", user._id);
     await axios.put(url, selectedFile);
     const res = await axios.post(`/updateuser/${user._id}`, {
       files: {

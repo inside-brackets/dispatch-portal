@@ -163,8 +163,6 @@ const TruckDetail = ({ match }) => {
       await axios
         .put(`/updatecarrier/${data.mc_number}`, upObj)
         .then((response) => {
-          console.log(response.data);
-
           toast.success("Carrier Saved", {
             position: "top-right",
             autoClose: 5000,
@@ -186,8 +184,7 @@ const TruckDetail = ({ match }) => {
           setAgentEmail(response.data.insurance.agent_email);
           setButtonLoader(false);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((err) => {console.log(err);
           setButtonLoader(false);
         });
       const truckObj = {
@@ -205,12 +202,11 @@ const TruckDetail = ({ match }) => {
         `/updatetruck/${data.mc_number}/${match.params.truck}`,
         truckObj
       );
-      console.log("truck aupdated", res);
+      
       setButtonLoader(false);
     }
   };
 
-  console.log("trucks", truck);
 
   const rejectHandler = async () => {
     await axios.put(`/updatecarrier/${data.mc_number}`, {
@@ -219,7 +215,6 @@ const TruckDetail = ({ match }) => {
       dispatcher_comment: dispatcherCommentRef.current.value,
     });
     setrModal(false);
-    console.log(commentRef.current.value);
     history.push("/mytrucks");
   };
 
@@ -276,7 +271,6 @@ const TruckDetail = ({ match }) => {
         onSelectedMcFile.type.split("/")[1]
       }`
     );
-    console.log(url, "url==========>");
     axios.put(url, onSelectedMcFile).then(() => {
       setMcLoader(false);
     });

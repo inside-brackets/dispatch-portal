@@ -54,7 +54,6 @@ const NewUserForm = ({
           const response = await axios.post(`/getusers`, {
             user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
           });
-          console.log("checking username", response.data);
           setUsernameIsValid(response.data.length === 0);
         } else {
           setUsernameIsValid(true);
@@ -119,13 +118,10 @@ const NewUserForm = ({
             ...defaultValue,
           })
           .then((response) => {
-            console.log("response", response);
             setRefresh(Math.random());
             setShowModal(false);
-            console.log(selectedCompany);
           })
-          .catch((err) => {
-            console.log(err);
+          .catch((err) => {console.log(err);
           });
       }
     }

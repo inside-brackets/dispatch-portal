@@ -27,7 +27,6 @@ const CarrierReport = ({
   const [workingDays, setWorkingDays] = useState(
     defaultValue ? defaultValue.working_days : null
   );
-  console.log("hello", department);
   const [dispatcherComments, setDispatcherComments] = useState(
     defaultValue ? defaultValue.dispatcher_comment : null
   );
@@ -130,7 +129,7 @@ const CarrierReport = ({
           <tr>
             <td className="major-details">Dollar per Loaded Miles: </td>
             <td className="major-details">
-              {typeof dollarPerLoadedMiles === "NaN"
+              {dollarPerLoadedMiles === "NaN"
                 ? 0
                 : dollarPerLoadedMiles.toFixed(2)}
             </td>

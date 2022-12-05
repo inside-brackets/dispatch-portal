@@ -9,7 +9,6 @@ import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
 
 const DashboardAdmin = () => {
-  const themeReducer = useSelector((state) => state.theme.mode);
 
   const [carriers, setCarriers] = useState({
     active: null,
@@ -107,13 +106,11 @@ const DashboardAdmin = () => {
   };
 
   useEffect(() => {
-    console.log("counting carriers");
     axios
       .post(`/countcarriers`, {
         company: selectedCompany.value,
       })
       .then(({ data }) => {
-        console.log(data);
         setCarriers({
           carrier: data.total,
           appointment: data.appointments,
@@ -127,7 +124,6 @@ const DashboardAdmin = () => {
         company: selectedCompany.value,
       })
       .then((res) => {
-        console.log("top sales", res.data);
         setData(res.data);
       })
       .catch((err) => console.log(err));

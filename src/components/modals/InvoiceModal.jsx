@@ -94,14 +94,12 @@ const InvoiceModal = ({
     await axios
       .post(`/createinvoice`, obj)
       .then((res) => {
-        console.log(res);
         closeModal();
       })
       .catch((err) => console.log(err));
   };
 
   const changeStatusHandler = async () => {
-    console.log("fee", dispatchFee);
     let res = await axios.put(`/admin/clearinvoice`, {
       _id: invoice._id,
       dispatcherFee: dispatchFee,
