@@ -193,7 +193,7 @@ const Table = (props) => {
                       .replace("/", " ")
                       .replace("/", " ")
                       .replace(/[0-9]/g, "")}
-                    to show
+                    {" "}to show
                   </Alert>
                 </Col>
               </Row>
