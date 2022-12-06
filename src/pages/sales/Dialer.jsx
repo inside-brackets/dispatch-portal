@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { change } from "../../store/appointment";
 import axios from "axios";
-
+import "../../assets/css/sales/dialerCard.css";
 import TextArea from "../../components/UI/TextArea";
 import { Row, Col } from "react-bootstrap";
 
@@ -320,13 +320,16 @@ const Dialer = () => {
         >
           <div className="col-6">
             <div
-              className="card"
+              className="card "
               style={{ width: "160px", marginLeft: "2.7vw" }}
             >
-              <h2 className="justify-content-center align-items-center">
+              <div className="d-flex justify-content-center align-items-center">
+                <div>
                 <i className="bx bxs-phone-outgoing"> :</i>{" "}
-                <span>{counter}</span>{" "}
-              </h2>
+                </div>
+                <div><span className="counter_text">{counter}</span>
+                </div>
+                </div>
             </div>
           </div>
         </div>
