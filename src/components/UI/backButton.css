@@ -11,7 +11,9 @@
   font-size: 20px;
   z-index: 10;
 }
-
+.truck-back-button{
+  margin-left: 2rem !important;
+}
 .back-button:hover {
   transform: scale(1.1) !important;
   transition: transform 0.3s ease 0s !important;
