@@ -5,11 +5,6 @@
     "to": "/profile"
   },
   {
-    "icon": "bx bx-cog",
-    "content": "Settings",
-    "to": "/"
-  },
-  {
     "icon": "bx bx-message-alt-check",
     "content": "Feedback"
   },

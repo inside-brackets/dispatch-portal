@@ -467,9 +467,7 @@ const TruckDetail = ({ match }) => {
         </div>
       ) : (
         <div>
-          <BackButton onClick={() => history.goBack()} />
-          {/* <BackButton onClick={() => history.push("/mytrucks")} /> */}
-
+          <BackButton truckBtn="truck-back-button" onClick={() => history.goBack()} />
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Card
               className="truck-detail-card"
