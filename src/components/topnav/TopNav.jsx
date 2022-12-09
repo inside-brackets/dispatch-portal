@@ -1,38 +1,96 @@
-import React from "react";
+import React, { useState } from "react";
 import "./topnav.css";
 import { Link } from "react-router-dom";
 import Dropdown from "../dropdown/Dropdown";
 import ThemeMenu from "../thememenu/ThemeMenu";
 import user_image from "../../assets/images/taut.png";
 import user_menu from "../../assets/JsonData/user_menus.json";
+import { Form, Button, Spinner } from "react-bootstrap";
+import { toast } from "react-toastify";
+import FeedBackModal from "../modals/MyModal";
 import logo from "../../assets/images/logo.png";
 import logo2 from "../../assets/images/White-Christmas.png";
 import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
+import { useDropzone } from "react-dropzone";
+import { Editor } from "react-draft-wysiwyg";
+import emailjs from 'emailjs-com';
+import axios from 'axios'
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const cookies = new Cookies();
 
 const Topnav = () => {
   const { user, company } = useSelector((state) => state.user);
+  const [modal, setModal] = useState(false)
+  const [loader, setLoader] = useState(false)
+  const [editorState, setEditorState] = useState()
+  const [editorContent, setEditorContent] = useState()
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("selectedCompany");
     localStorage.removeItem("counters");
     cookies.remove("user");
   };
+  const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
+    useDropzone({});
+  const files = acceptedFiles.map((file) => (
+    <li key={file.path}>{file.path}</li>
+  ))
+  const submitHandler = async (e) => {
+    setLoader(true)
+    e.preventDefault();
+    let text = []
+    if (editorContent?.blocks !== undefined) {
+      for (const element of editorContent.blocks) {
+        text.push(`${element.text}`)
+      }
+    }
+    let arr = [];
+    for (let i = 0; i < acceptedFiles.length; i++) {
+      const { data: url } = await axios(
+        `/s3url/email_documents/${user?.user_name
+        }.${acceptedFiles[0].type.split("/")[1]}`
+      );
+      await axios.put(url, acceptedFiles[i]);
+      arr[i] = `${url.split("?")[0]} `;
+    }
+    emailjs.send("service_dlma2nq", "template_sp48kg6",
+      {
+        user_name: user?.user_name,
+        subject: e.target.subject.value,
+        content: text.toString(),
+        files: arr
+      },
+      'WNTAwpy9FWsrLfLN6'
+    )
+      .then((response) => {
+        setEditorState("")
+        setEditorContent("")
+        setLoader(false)
+        setModal(false)
+        toast.success("Feedback Sent")
+      })
+      .catch((err) => {
+        console.log('FAILED...', err);
+      });
 
-  // };
-  const curr_user = {
-    display_name: user.user_name,
-    image: user.profile_image ?? user_image,
-  };
 
+  }
   // const renderNotificationItem = (item, index) => (
   //   <div className="notification-item" key={index}>
   //     <i className={item.icon}></i>
   //     <span>{item.content}</span>
   //   </div>
   // );
+
+  const onClose = () => {
+    setEditorState("");
+    setEditorContent("");
+    setModal(false);
+    setLoader(false);
+  }
+
 
   const renderUserToggle = (user) => (
     <div className="topnav__right-user">
@@ -46,7 +104,7 @@ const Topnav = () => {
     <Link key={index} to={item.to}>
       <div key={index}>
         <div
-          onClick={item.content === "Logout" ? logout : () => {}}
+          onClick={item.content === "Logout" ? logout : item.content === "Feedback" ? feedbackmodal : () => { }}
           className="notification-item"
         >
           <i className={item.icon}></i>
@@ -55,6 +113,15 @@ const Topnav = () => {
       </div>
     </Link>
   );
+
+
+  const curr_user = {
+    display_name: user.user_name,
+    image: user.profile_image ?? user_image,
+  };
+  const feedbackmodal = () => {
+    setModal(true)
+  }
   return (
     <div className="topnav">
       {/* <SearchBar className="topnav__search" placeholder="Search here..." /> */}
@@ -80,16 +147,16 @@ const Topnav = () => {
               //   content={}
               // />
               <>
-              
-             { company.label}
-             </>
+
+                {company.label}
+              </>
             ) : (
               ""
             )}
           </span>
         </div>
-        </div>
-        <div className="topnav__right">
+      </div>
+      <div className="topnav__right">
         <div className="topnav__right-item">
           {/* dropdown here */}
           <Dropdown
@@ -108,6 +175,100 @@ const Topnav = () => {
             renderFooter={() => <Link to="/">View All</Link>}
           />
         </div> */}
+        <FeedBackModal
+          show={modal}
+          onClose={onClose}
+          size="lg"
+          heading="Need help? Found a bug? Have a Suggestion?">
+          <Form
+            onSubmit={submitHandler}
+          >
+            <Form.Group className="mb-3" controlId="deactivate_carrier">
+              <p>If you've encountered a bug, need help regarding something or just have a suggestion for improvement, you've come to the right place.</p>
+            </Form.Group>
+            <Form.Group className="mb-3 subject-group" controlId="deactivate_carrier">
+              <Form.Control
+                className="subject_text"
+                placeholder="Subject *"
+                type="text"
+                name="subject"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3 content_group" controlId="deactivate_carrier">
+              <Form.Label className="content_label">
+                Content *
+              </Form.Label>
+
+              <Editor
+                // toolbarHidden
+                editorState={editorState}
+                initialContentState={editorContent}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editorClassName"
+                toolbar={{
+                  inline: { inDropdown: false },
+                  list: { inDropdown: false },
+                  textAlign: { inDropdown: true },
+                  link: { inDropdown: true },
+                  history: { inDropdown: true },
+                }}
+                // onEditorStateChange={(e) => setEditorState(e.target.value)}
+                onEditorStateChange={setEditorState}
+                onContentStateChange={setEditorContent}
+              // onChange={setEditorState}
+              />
+
+            </Form.Group>
+            <Form.Group className="mb-3 upload_file_group" controlId="deactivate_carrier">
+              <div {...getRootProps({ className: "dropzone" })}>
+                <input
+                  className="input-zone"
+                  {...getInputProps()}
+                  type="file"
+                  name="file"
+                // onChange={drop}
+                />
+                <div className="text-center upload_drap_wrapper">
+
+
+                  <button type="button" className="butn">
+                    UPLOAD
+                  </button>
+                  {isDragActive ? (
+                    <span className="drap_text">
+                      Release to drop the files here
+                    </span>
+                  ) : (<>
+                    <span className="drap_text"> OR drag and drop file here</span>
+                  </>
+                  )}
+
+
+                </div>
+                <aside>
+                  <ul>{files}</ul>
+                </aside>
+              </div>
+            </Form.Group>
+            <div className="btn_feedback">
+              <Button type="submit" disabled={loader}>
+                {loader ? (
+                  <Spinner
+                    as="span"
+                    animation="grow"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                )
+                  : null}
+                Send FeedBack</Button>
+            </div>
+          </Form>
+
+        </FeedBackModal>
         <div className="topnav__right-item">
           <ThemeMenu />
         </div>
