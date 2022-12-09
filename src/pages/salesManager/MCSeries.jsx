@@ -273,10 +273,10 @@ function MCSeries() {
         <Col sm={12} md={8} lg={6} xl={4}>
           <TargetDisplay designation={user.designation} />
         </Col>
+        {user.department==="admin" &&
         <Col sm={12} md={8} lg={6} xl={4}>
           <TimeLogs designation={user.designation} />
-        </Col>
-        
+        </Col>}
 
       </Row>
     </div>
