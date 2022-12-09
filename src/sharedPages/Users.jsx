@@ -40,7 +40,6 @@ const Users = () => {
   const customerTableHead = [
     "#",
     "User",
-    "Phone #",
     "Email",
     "Designation",
     "Department",
@@ -86,7 +85,6 @@ const Users = () => {
             </Col>
           </Row>
         </td>
-        <td>{item.phone_number ? item.phone_number : "N/A"}</td>
         <td>{item.email_address ? item.email_address : "N/A"}</td>
         <td>{item.designation}</td>
         <td>{item.department}</td>
