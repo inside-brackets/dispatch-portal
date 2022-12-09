@@ -26,11 +26,7 @@
         "route": "/appointments",
         "icon": "bx bx-user-pin"
       },
-      {
-        "display_name": "Spread Sheet",
-        "route": "/spread_sheet",
-        "icon": "bx bx-spreadsheet"
-      },
+
       {
         "display_name": "Fetch leads",
         "route": "/dialer",
