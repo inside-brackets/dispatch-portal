@@ -23,7 +23,6 @@ const TimeLogs = () => {
           setDispatchTime({label:time.loginTime,value:time.loginTime})
         }
       })
-      console.log(data,'settings')
 }
 
 )},[])
@@ -50,9 +49,6 @@ const TimeLogs = () => {
     });
     setIsLoading(false)
     toast.success("Login-Time Updated")
-
-
-    console.log("handleSubmit clicked");
   }
 
   
