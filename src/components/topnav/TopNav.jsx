@@ -28,6 +28,7 @@ const Topnav = () => {
     localStorage.removeItem("counters");
     cookies.remove("user");
   };
+  console.log(user,"user================================>")
   const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
     useDropzone({});
   const files = acceptedFiles.map((file) => (
@@ -85,7 +86,12 @@ const Topnav = () => {
       <div className="topnav__right-user__name">{user.display_name}</div>
     </div>
   );
-  const renderUserMenu = (item, index) => (
+  const renderUserMenu = (item, index) => 
+  // {
+  // console.log(!(user.department==="admin") && !(item.content === "Settings"))
+  // return
+  (<>
+    {!(user.department==="admin") && !(item.content === "Settings") ?
     <Link key={index} to={item.to}>
       <div key={index}>
         <div
@@ -97,7 +103,19 @@ const Topnav = () => {
         </div>
       </div>
     </Link>
-  );
+   :  user.department==="admin" ?  <Link key={index} to={item.to}>
+   <div key={index}>
+     <div
+       onClick={item.content === "Logout" ? logout : item.content === "Feedback" ? feedbackmodal : () => { }}
+       className="notification-item"
+     >
+       <i className={item.icon}></i>
+       <span>{item.content}</span>
+     </div>
+   </div>
+ </Link>:null}
+ </> )
+//  };
 
 
   const curr_user = {
