@@ -9,7 +9,6 @@ import TooltipCustom from "../../components/tooltip/TooltipCustom";
 import truck_status_map from "../../assets/JsonData/truck_status_map.json";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
-
 import { Row, Col, Button } from "react-bootstrap";
 import Select from "react-select";
 import axios from "axios";
@@ -89,7 +88,8 @@ const TruckTable = (props) => {
       <td>
         <div className="edit__class">
           {user.department === "sales" ? (
-            <>
+            <div className="action_button_truck_wrapper">
+        <Button className="action_button_truck" disabled={props.disabled}>
               <EditButton
                 type="edit"
                 onClick={() => {
@@ -97,13 +97,16 @@ const TruckTable = (props) => {
                   editModalHnadler();
                 }}
               />
+               </Button>
+              <Button className="action_button_truck" disabled={props.disabled}>
               <EditButton
                 type="delete"
                 onClick={() => {
                   deleteTruckHandler(item.truck_number);
                 }}
               />
-            </>
+              </Button>
+            </div>
           ) : user.department === "admin" && item.t_status !== "new" ? (
             <EditButton
               type="open"

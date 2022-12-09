@@ -42,3 +42,36 @@
   overflow-y: scroll;
   overflow-x: hidden;
 }
+.action_button_truck_wrapper{
+  display: flex;
+}
+
+.action_button_truck:disabled{
+  background-color: transparent;
+  border: none;
+  opacity: .5;
+}
+
+.action_button_truck:hover{
+  background-color: transparent;
+  border: none;
+}
+.action_button_truck:focus{
+  background-color: transparent;
+  border: none;
+}
+.action_button_truck:active{
+  background-color: transparent !important;
+
+  border: none !important;
+}
+.action_button_truck{
+  background-color: transparent;
+  border: none;
+}
+.action_button_truck_wrapper{
+  display: flex;
+  align-items: center;
+  margin-left: 28px;
+  margin-right: -7rem;
+}

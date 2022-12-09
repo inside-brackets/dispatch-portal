@@ -2,6 +2,7 @@ import React from "react";
 import Table from "../../components/table/SmartTable";
 import Badge from "../../components/badge/Badge";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import status_map from "../../assets/JsonData/status_map.json";
 
 const customerTableHead = [
@@ -16,22 +17,26 @@ const customerTableHead = [
 
 const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-const renderBody = (item, index, currPage) => (
-  <tr key={index}>
-    <td>{index + 1 + currPage * 10}</td>
-    <td>{item.mc_number}</td>
-    <td>{item.company_name}</td>
-    <td>{item.address}</td>
-    <td>{item.phone_number}</td>
-    <td>{item.email}</td>
-    <td>
-      {<Badge type={status_map[item.c_status]} content={item.c_status} />}
-    </td>
-  </tr>
-);
+
 
 const Customers = () => {
+  const history = useHistory();
   const { _id: currUserId } = useSelector((state) => state.user.user);
+  const renderBody = (item, index, currPage) => (
+    <tr key={index}
+    onClick={() => history.push(`/carrierview/${item.mc_number}`)}
+    >
+      <td>{index + 1 + currPage * 10}</td>
+      <td>{item.mc_number}</td>
+      <td>{item.company_name}</td>
+      <td>{item.address}</td>
+      <td>{item.phone_number}</td>
+      <td>{item.email}</td>
+      <td>
+        {<Badge type={status_map[item.c_status]} content={item.c_status} />}
+      </td>
+    </tr>
+  );
 
   return (
     <div>

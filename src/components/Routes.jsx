@@ -149,6 +149,7 @@ const Routes = () => {
           <Route path="/appointments" exact component={Appointments} />
           <Route path="/appointments_old/:mc" component={AppointmentDetail} />
           <Route path="/appointments/:mc" component={CarrierView} />
+          <Route path="/carrierview/:mc" component={CarrierView} />
           <Route path="/dialer" component={Dialer} />
           <Route path="/profile" component={Profile} />
           <Route path="*">
