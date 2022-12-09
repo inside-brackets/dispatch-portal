@@ -86,3 +86,15 @@
 padding-left: 2%;
 padding-right: 2%;
 }
+.status_labal{
+    color: var(--txt-color);;
+    font-weight: 600;
+}
+
+.status_wrapper{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+.status_text{
+    color:var(--txt-color);
+}

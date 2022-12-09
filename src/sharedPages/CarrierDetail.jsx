@@ -1463,6 +1463,15 @@ const CarrierDetail = () => {
               ]}
             />
           </Form>
+          <div className="status_wrapper">
+          <p><span className="status_labal">Appointment:</span><span className="status_text"> Contract in progress by salesperson</span></p>
+          <p><span className="status_labal">Registered:</span><span className="status_text"> Active carriers who are in contract with us</span></p>
+          <p><span className="status_labal">Rejected:</span><span className="status_text"> Reached by the salesperson but were not interested.</span></p>
+          <p><span className="status_labal">Didnotpick:</span><span className="status_text"> Reached by salesperson but didn't pick the call.</span></p>
+          <p><span className="status_labal">Unassigned:</span> <span className="status_text">No salesperson assigned yet</span></p>
+          <p><span className="status_labal">Deactivate:</span> <span className="status_text">Were working with us but have left us now.</span></p>
+          </div>
+
         </Modal>
 
         <Modal
