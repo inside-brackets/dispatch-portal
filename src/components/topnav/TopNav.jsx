@@ -13,10 +13,8 @@ import logo2 from "../../assets/images/White-Christmas.png";
 import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import { useDropzone } from "react-dropzone";
-import { Editor } from "react-draft-wysiwyg";
 import emailjs from 'emailjs-com';
 import axios from 'axios'
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const cookies = new Cookies();
 
@@ -24,8 +22,6 @@ const Topnav = () => {
   const { user, company } = useSelector((state) => state.user);
   const [modal, setModal] = useState(false)
   const [loader, setLoader] = useState(false)
-  const [editorState, setEditorState] = useState()
-  const [editorContent, setEditorContent] = useState()
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("selectedCompany");
@@ -40,12 +36,6 @@ const Topnav = () => {
   const submitHandler = async (e) => {
     setLoader(true)
     e.preventDefault();
-    let text = []
-    if (editorContent?.blocks !== undefined) {
-      for (const element of editorContent.blocks) {
-        text.push(`${element.text}`)
-      }
-    }
     let arr = [];
     for (let i = 0; i < acceptedFiles.length; i++) {
       const { data: url } = await axios(
@@ -55,18 +45,15 @@ const Topnav = () => {
       await axios.put(url, acceptedFiles[i]);
       arr[i] = `${url.split("?")[0]} `;
     }
-    emailjs.send("service_dlma2nq", "template_sp48kg6",
+    emailjs.send(process.env.REACT_APP_SERVICE_ID, process.env.REACT_APP_TEMPLATE_ID,
       {
         user_name: user?.user_name,
         subject: e.target.subject.value,
-        content: text.toString(),
+        content: e.target.content.value,
         files: arr
       },
-      'WNTAwpy9FWsrLfLN6'
-    )
-      .then((response) => {
-        setEditorState("")
-        setEditorContent("")
+      process.env.REACT_APP_PUBLIC_MAILID
+    ).then((response) => {
         setLoader(false)
         setModal(false)
         toast.success("Feedback Sent")
@@ -85,8 +72,6 @@ const Topnav = () => {
   // );
 
   const onClose = () => {
-    setEditorState("");
-    setEditorContent("");
     setModal(false);
     setLoader(false);
   }
@@ -195,29 +180,16 @@ const Topnav = () => {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3 content_group" controlId="deactivate_carrier">
+            <Form.Group className="mb-3 content_group" controlId="content">
               <Form.Label className="content_label">
                 Content *
               </Form.Label>
-
-              <Editor
-                // toolbarHidden
-                editorState={editorState}
-                initialContentState={editorContent}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                toolbar={{
-                  inline: { inDropdown: false },
-                  list: { inDropdown: false },
-                  textAlign: { inDropdown: true },
-                  link: { inDropdown: true },
-                  history: { inDropdown: true },
-                }}
-                // onEditorStateChange={(e) => setEditorState(e.target.value)}
-                onEditorStateChange={setEditorState}
-                onContentStateChange={setEditorContent}
-              // onChange={setEditorState}
+              <Form.Control
+                as="textarea"
+                className="content_text"
+                type="text"
+                name="textarea"
+                rows={8}
               />
 
             </Form.Group>
