@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col,Button } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
@@ -8,6 +8,7 @@ import DashboardUserCard from "../../components/DashboardUserCard";
 import axios from "axios";
 import moment from "moment";
 import StatusCard from "../../components/status-card/StatusCard";
+import DetailsLoginModal from "../../components/detailLoginModal/DetailsLoginModal";
 
 const headData = ["#", "User Name", "Time"];
 const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
+  const [show, setShow] = useState(false);
   const [departmentalDistribution, setDepartmentalDistribution] = useState([
     { icon: "bx bxs-group" },
     { icon: "bx bx-id-card" },
@@ -204,6 +206,14 @@ const Dashboard = () => {
           </Row>
         </Col>
       </Row>
+
+      <DetailsLoginModal
+        show={show}
+        onHide={() => setShow(false)}
+        // users={topUsers}
+        mSwitch={true}
+      />
+      <Row><Col md='2'><Button onClick={()=>{setShow(true)}} >Late-Comer</Button></Col></Row>
     </>
   );
 };

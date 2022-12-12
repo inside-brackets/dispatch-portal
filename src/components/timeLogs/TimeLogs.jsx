@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import { Button, Col, Row } from "react-bootstrap";
+import Select from "react-select";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
@@ -51,7 +52,9 @@ const TimeLogs = () => {
     toast.success("Login-Time Updated")
   }
 
-  
+  const on=()=>{
+    console.log("onChange=========")
+  }
   return (
     <>
       <Form onSubmit={handleSubmit}>
@@ -63,29 +66,38 @@ const TimeLogs = () => {
             <Row>
               <Col></Col>
               <Col className="bold mt-2" md="4"> <span className="depart-label">SalesPerson:</span></Col>
-              <Form.Group as={Col} md="5" controlId="validationCustom03">
-
-                                    <MySelect
+              <Form.Group as={Col} md="5" controlId="validationCustom03" onChange={on}>
+                 {/* <MySelect
                       isMulti={false}
                       value={saleTime}
                       onChange={setSaleTime}
                       options={[
-                        { label: "1", value: "1" },
-                        { label: "2", value: "2" },
                         { label: "4", value: "4" },
                         { label: "5", value: "5" },
                         { label: "6", value: "6" },
                         { label: "8", value: "8" },
                         { label: "9", value: "9" },
                         { label: "10", value: "10" },
-                        { label: "11", value: "11" },
-                        { label: "12", value: "12" },
                       ]}
-                    />
+                    /> */}
+                  <Select
+                                        value={saleTime}
+                                        onChange={setSaleTime}
+                                        // onClick={on}
+                                        onInputChange={on}
+                                        options={[
+                                          { label: "4", value: "4" },
+                                          { label: "5", value: "5" },
+                                          { label: "6", value: "6" },
+                                          { label: "8", value: "8" },
+                                          { label: "9", value: "9" },
+                                          { label: "10", value: "10" },
+                                        ]}
+                  />
                 <Form.Control.Feedback type="invalid">
                 </Form.Control.Feedback>
               </Form.Group>
-              <Col md='2'></Col>
+              <Col md='2'>pm</Col>
             </Row>
             <Row>
               <Col></Col>
@@ -97,25 +109,21 @@ const TimeLogs = () => {
                       value={dispatchTime}
                       onChange={setDispatchTime}
                       options={[
-                        { label: "1", value: "1" },
-                        { label: "2", value: "2" },
                         { label: "4", value: "4" },
                         { label: "5", value: "5" },
                         { label: "6", value: "6" },
                         { label: "8", value: "8" },
                         { label: "9", value: "9" },
-                        { label: "10", value: "10" },
-                        { label: "11", value: "11" },
-                        { label: "12", value: "12" },
+                        { label: "10", value: "10" }
                       ]}
                     />
                 <Form.Control.Feedback type="invalid">
                 </Form.Control.Feedback>
               </Form.Group>
-              <Col md='2'></Col>
+              <Col md='2'>pm</Col>
             </Row>
             <Row>
-              <Col><div className="btn-timelog"><Button type="submit" disabled={isLoading}>Update</Button></div></Col>
+              <Col><div className="btn-timelog"><Button type="submit" disabled={isLoading }>Update</Button></div></Col>
             </Row>
           </Card.Body>
         </Card>
