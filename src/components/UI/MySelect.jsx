@@ -27,6 +27,7 @@ const MySelect = (props) => {
         className={`select ${props.className}`}
         value={props.value}
         onChange={props.onChange}
+        onInputChange={props.onInputChange}
         isSearchable={true}
         isDisabled={props.isDisabled}
       />

@@ -6,12 +6,6 @@
   border-top-right-radius: var(--border-radius) !important;
   padding: 1rem 1rem !important;
 }
-.progress-wrapper {
-  margin: 2rem auto;
-  margin-bottom: 40px;
-  width: 210px;
-  height: 210px;
-}
 .label-txt {
   font-size: 32px;
 }
@@ -50,4 +44,11 @@
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+.time-Text{
+  margin-top: 7px;
+  display: flex;
+  font-size: 21px;
+  margin-left: -16px;
+  justify-content: space-between;
 }

@@ -14,6 +14,7 @@ const TimeLogs = () => {
   const [saleTime,setSaleTime]=useState()
   const [dispatchTime,setDispatchTime]=useState()
   const [isLoading,setIsLoading]= useState(false)
+  const [onChangeMenu,setOnChangeMenu]=useState(true)
 
   useEffect(async()=>{
     await axios.get(`/settings/timelogin`).then(({ data }) => {
@@ -49,11 +50,12 @@ const TimeLogs = () => {
       },
     });
     setIsLoading(false)
+    setOnChangeMenu(true)
     toast.success("Login-Time Updated")
   }
 
-  const on=()=>{
-    console.log("onChange=========")
+  const onMenuChange=()=>{
+    setOnChangeMenu(false)
   }
   return (
     <>
@@ -66,7 +68,7 @@ const TimeLogs = () => {
             <Row>
               <Col></Col>
               <Col className="bold mt-2" md="4"> <span className="depart-label">SalesPerson:</span></Col>
-              <Form.Group as={Col} md="5" controlId="validationCustom03" onChange={on}>
+              <Form.Group as={Col} md="5" controlId="validationCustom03">
                  {/* <MySelect
                       isMulti={false}
                       value={saleTime}
@@ -80,11 +82,10 @@ const TimeLogs = () => {
                         { label: "10", value: "10" },
                       ]}
                     /> */}
-                  <Select
+                  <MySelect
                                         value={saleTime}
                                         onChange={setSaleTime}
-                                        // onClick={on}
-                                        onInputChange={on}
+                                        onInputChange={onMenuChange}
                                         options={[
                                           { label: "4", value: "4" },
                                           { label: "5", value: "5" },
@@ -97,7 +98,7 @@ const TimeLogs = () => {
                 <Form.Control.Feedback type="invalid">
                 </Form.Control.Feedback>
               </Form.Group>
-              <Col md='2'>pm</Col>
+              <Col md='2' ><span className="time-Text">PM</span></Col>
             </Row>
             <Row>
               <Col></Col>
@@ -108,6 +109,7 @@ const TimeLogs = () => {
                       isMulti={false}
                       value={dispatchTime}
                       onChange={setDispatchTime}
+                      onInputChange={onMenuChange}
                       options={[
                         { label: "4", value: "4" },
                         { label: "5", value: "5" },
@@ -120,10 +122,10 @@ const TimeLogs = () => {
                 <Form.Control.Feedback type="invalid">
                 </Form.Control.Feedback>
               </Form.Group>
-              <Col md='2'>pm</Col>
+              <Col md='2'><span className="time-Text">PM</span></Col>
             </Row>
             <Row>
-              <Col><div className="btn-timelog"><Button type="submit" disabled={isLoading }>Update</Button></div></Col>
+              <Col><div className="btn-timelog"><Button type="submit" disabled={isLoading || onChangeMenu}>Update</Button></div></Col>
             </Row>
           </Card.Body>
         </Card>
