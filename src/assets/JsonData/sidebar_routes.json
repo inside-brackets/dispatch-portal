@@ -164,5 +164,22 @@
       "route": "/interviews",
       "icon": "bx bx-user"
     }
+  ],
+  "accounts":[
+    {
+      "display_name": "Dashboard",
+      "route": "/dashboard",
+      "icon": "bx bx-category-alt"
+    },
+    {
+      "display_name": "Expenses",
+      "route": "/expenses",
+      "icon": "bx bx-dollar-circle"
+    },
+    {
+      "display_name": "Salary",
+      "route": "/salary",
+      "icon": "bx bx-export"
+    }
   ]
 }

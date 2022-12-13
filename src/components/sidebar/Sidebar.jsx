@@ -31,6 +31,8 @@ const Sidebar = (props) => {
       ? "SERVICES "
       : department.toLowerCase() === "sales"
       ? "MARKETING"
+      :department.toLowerCase() === "accounts"?
+      "Accounts"
       : department.toUpperCase();
 
   const sidebarItems =

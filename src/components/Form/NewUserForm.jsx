@@ -205,7 +205,7 @@ const NewUserForm = ({
               <option value={null}>Select Department</option>
               <option value="sales">Sales</option>
               <option value="dispatch">Dispatch</option>
-              {/* <option value="accounts">Accounts</option> */}
+              <option value="accounts">Accounts</option>
               <option value="HR">HR</option>
               {user.department !== "HR" && <option value="admin">Admin</option>}
             </Form.Control>
