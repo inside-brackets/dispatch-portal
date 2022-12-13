@@ -9,6 +9,7 @@ export default function DetailsLoginModal(props) {
   const [data, setData] = useState([]);
   const [users, setUsers] = useState([]);
   const [today, setToday] = useState(new Date());
+  const [userleave, setUserleave] = useState([])
   const [loading, setLoading] = useState(false);
   const modalSwitch = props.mSwitch
 
@@ -17,7 +18,27 @@ export default function DetailsLoginModal(props) {
      console.log(res.data)
     setUsers(res.data.users)
    })
+   combineData()
+   make_number_of_leaves()
   },[])
+  let arr = []
+  let combineData=()=>{
+  for(let i=1;i<28;i++){
+    console.log(users)
+    for(let j=0;j<users[i]?.length;j++)
+    {
+      arr.push(users[i][j]?._id)
+    }
+    // arr.push(users[i]._id)
+  }
+  console.log(arr,"arr")
+  }
+  let make_number_of_leaves =async()=>{
+  for(let i=0;i<arr.length;i++)
+  await axios.get(`/getuser/${arr[i]}`).then((res) => {
+    console.log(res.data,"res.data")
+  })
+  }
   // console.log(new Date(users[11][1].createdAt).getDate(),"users[11]")
   const months = [
     "January",

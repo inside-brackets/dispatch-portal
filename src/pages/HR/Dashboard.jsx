@@ -9,6 +9,7 @@ import axios from "axios";
 import moment from "moment";
 import StatusCard from "../../components/status-card/StatusCard";
 import DetailsLoginModal from "../../components/detailLoginModal/DetailsLoginModal";
+import LateLoginCard from "../../components/lateLoginCard/LateLoginCard";
 
 const headData = ["#", "User Name", "Time"];
 const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -204,6 +205,17 @@ const Dashboard = () => {
               </Col>
             ))}
           </Row>
+        </Col>
+      </Row>
+      <Row>
+      <Col md={4}>
+          <LateLoginCard
+            title="Late-Comer"
+            headData={headData}
+            renderHead={(item, index) => renderHead(item, index)}
+            data={data}
+            renderBody={(item, index) => renderBody(item, index)}
+          />
         </Col>
       </Row>
 
