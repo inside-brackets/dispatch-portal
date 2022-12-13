@@ -13,7 +13,6 @@ export default function DetailsLoginModal(props) {
   const [dispatchTime,setDispatchTime] = useState();
   const [userleave, setUserleave] = useState([])
   const [loading, setLoading] = useState(false);
-  const modalSwitch = props.mSwitch
   let sales ,dispatcher
   useEffect(async()=>{
     await axios.get(`/settings/timelogin`).then(({ data }) => {
@@ -55,16 +54,8 @@ export default function DetailsLoginModal(props) {
     }).then((res) => {
       // setUsers(res.data)
    })
-    // axios
-    // .post(`/countcarriers`, {
-    //   company: selectedCompany.value,
-    // })
-    
   },[])
 
-  const onChangeMonth =()=> {
-   
-  }
   const months = [
     "January",
     "February",
@@ -118,7 +109,6 @@ export default function DetailsLoginModal(props) {
         )}
       </Modal.Body>
       <Modal.Footer>
-        {modalSwitch && (
           <div>
             <select
               className="form-select"
@@ -139,7 +129,6 @@ export default function DetailsLoginModal(props) {
               <option value="11">December</option>
             </select>
           </div>
-        )}
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>

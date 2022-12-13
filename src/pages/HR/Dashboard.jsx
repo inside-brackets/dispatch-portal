@@ -222,10 +222,7 @@ const Dashboard = () => {
       <DetailsLoginModal
         show={show}
         onHide={() => setShow(false)}
-        // users={topUsers}
-        mSwitch={true}
       />
-      <Row><Col md='2'><Button onClick={()=>{setShow(true)}} >Late-Comer</Button></Col></Row>
     </>
   );
 };
