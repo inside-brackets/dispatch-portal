@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button, Col, Row, Card } from "react-bootstrap";
-import axios from "axios";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -8,22 +7,8 @@ import { useHistory } from "react-router-dom";
 import Table from "../../components/table/SmartTable";
 
 const Salaries = () => {
-  const [users, setUsers] = useState("");
-  const [refresh, setRefresh] = useState(false);
-
   const history = useHistory();
-
   const { company: selectedCompany } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const { data } = await axios.post(`/salary/get/salaries`, {
-        company: selectedCompany.value,
-      });
-      setUsers(data);
-    };
-    fetchUsers();
-  }, [refresh, selectedCompany]);
 
   const generateSalary = (id) => {
     history.push("/salary/" + id);

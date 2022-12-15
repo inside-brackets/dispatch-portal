@@ -103,13 +103,11 @@ const Table = (props) => {
                     onChange={(e) => setStartDate(e.target.value)}
                     type="date"
                     className="form-control"
-                    
                   />
                 </Col>
                 <Col md={3}>
                   <label>To</label>
                   <input
-                    
                     disabled={!startDate}
                     onChange={(e) => {
                       setEndDate(e.target.value);
@@ -195,7 +193,11 @@ const Table = (props) => {
               {bodyData && props.renderBody ? (
                 <tbody>
                   {bodyData[`page${currPage}`]?.map((item, index) =>
-                    props.renderBody(item, index, currPage)
+                    props.renderBody(
+                      item,
+                      index + currPage * props.limit,
+                      currPage
+                    )
                   )}
                 </tbody>
               ) : null}
@@ -212,8 +214,8 @@ const Table = (props) => {
                       .replace("/", " ")
                       .replace("/", " ")
                       .replace("/", " ")
-                      .replace(/[0-9]/g, "")}
-                    {" "}to show
+                      .replace(/[0-9]/g, "")}{" "}
+                    to show
                   </Alert>
                 </Col>
               </Row>

@@ -6,7 +6,6 @@ import { socket } from "..";
 import useHttp from "../hooks/use-https";
 import Loader from "react-loader-spinner";
 
-
 // admin routes
 const Invoice = lazy(() => import("../pages/admin/Invoice"));
 const AddCarrier = lazy(() => import("../pages/admin/AddCarrier"));
@@ -22,8 +21,8 @@ const Users = lazy(() => import("../sharedPages/Users"));
 const PdfTest = lazy(() => import("../components/PdfTest"));
 const UserDetail = lazy(() => import("../pages/admin/UserDetail"));
 const AdminReport = lazy(() => import("../pages/admin/Report"));
-// const Salaries = lazy(() => import("../pages/admin/Salaries"));
-// const SalaryDetails = lazy(() => import("../pages/admin/SalaryDetails"));
+const Salaries = lazy(() => import("../pages/admin/Salaries"));
+const SalaryDetails = lazy(() => import("../pages/admin/SalaryDetails"));
 
 // sales routes
 const Dashboard = lazy(() => import("../pages/sales/Dashboard"));
@@ -55,7 +54,6 @@ const InterviewsDetail = lazy(() => import("../pages/HR/InterviewDetail"));
 const AccountsDashboard = lazy(() => import("../pages/accounts/Dashboard"));
 const Salary = lazy(() => import("../pages/accounts/Salary"));
 const Expenses = lazy(() => import("../pages/accounts/Expenses"));
-
 
 const Routes = () => {
   const { department, designation } = useSelector((state) => state.user.user);
@@ -197,9 +195,8 @@ const Routes = () => {
         <Route path="/users/:id" exact component={UserDetail} />
         <Route path="/reports" exact component={AdminReport} />
         <Route path="/reports/:id" component={Report} />
-        <Route path="/settings" component={MCSeries} />
-        {/* <Route path="/salaries" component={Salaries} /> */}
-        {/* <Route path="/salary/:id" component={SalaryDetails} /> */}
+        <Route path="/salaries" component={Salaries} />
+        <Route path="/salary/:id" component={SalaryDetails} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>
@@ -280,15 +277,17 @@ const Routes = () => {
         <Route path="/" exact>
           <Redirect to="/dashboard" />
         </Route>
-        <Route path="/dashboard" exact component={AccountsDashboard}/>
-        <Route path="/expenses" exact component={Expenses}/>
-        <Route path="/salary" exact component={Salary}/>
+        <Route path="/dashboard" exact component={AccountsDashboard} />
+        <Route path="/expenses" exact component={Expenses} />
+        <Route path="/salary" exact component={Salary} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>
       </Switch>
-    </Suspense> 
-  ):"";
+    </Suspense>
+  ) : (
+    ""
+  );
 };
 
 export default Routes;
