@@ -69,30 +69,18 @@ const TimeLogs = () => {
               <Col></Col>
               <Col className="bold mt-2" md="4"> <span className="depart-label">SalesPerson:</span></Col>
               <Form.Group as={Col} md="5" controlId="validationCustom03">
-                 {/* <MySelect
-                      isMulti={false}
-                      value={saleTime}
-                      onChange={setSaleTime}
-                      options={[
-                        { label: "4", value: "4" },
-                        { label: "5", value: "5" },
-                        { label: "6", value: "6" },
-                        { label: "8", value: "8" },
-                        { label: "9", value: "9" },
-                        { label: "10", value: "10" },
-                      ]}
-                    /> */}
                   <MySelect
                                         value={saleTime}
                                         onChange={setSaleTime}
                                         onInputChange={onMenuChange}
                                         options={[
-                                          { label: "4", value: "4" },
-                                          { label: "5", value: "5" },
-                                          { label: "6", value: "6" },
-                                          { label: "8", value: "8" },
-                                          { label: "9", value: "9" },
-                                          { label: "10", value: "10" },
+                                          { label: "4", value: "16" },
+                                          { label: "5", value: "17" },
+                                          { label: "6", value: "18" },
+                                          { label: "7", value: "19" },
+                                          { label: "8", value: "20" },
+                                          { label: "9", value: "21" },
+                                          { label: "10", value: "22" },
                                         ]}
                   />
                 <Form.Control.Feedback type="invalid">
@@ -111,12 +99,13 @@ const TimeLogs = () => {
                       onChange={setDispatchTime}
                       onInputChange={onMenuChange}
                       options={[
-                        { label: "4", value: "4" },
-                        { label: "5", value: "5" },
-                        { label: "6", value: "6" },
-                        { label: "8", value: "8" },
-                        { label: "9", value: "9" },
-                        { label: "10", value: "10" }
+                        { label: "4", value: "16" },
+                        { label: "5", value: "17" },
+                        { label: "6", value: "18" },
+                        { label: "7", value: "19" },
+                        { label: "8", value: "20" },
+                        { label: "9", value: "21" },
+                        { label: "10", value: "22" },
                       ]}
                     />
                 <Form.Control.Feedback type="invalid">
