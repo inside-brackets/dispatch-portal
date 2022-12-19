@@ -6,14 +6,14 @@ function Adjustments({ adjustments, setAdjustments, error, setError }) {
 
   useEffect(() => {
     if (error) {
-      if (lastDesc.current.value == "") {
+      if (lastDesc.current.value === "") {
         lastDesc.current.classList.remove("border");
         lastDesc.current.classList.add("border-2");
         lastDesc.current.focus();
       } else {
         lastAmount.current.focus();
       }
-      if (lastAmount.current.value == "") {
+      if (lastAmount.current.value === "") {
         lastAmount.current.classList.remove("border");
         lastAmount.current.classList.add("border-2");
       }

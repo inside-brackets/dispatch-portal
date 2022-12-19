@@ -49,7 +49,7 @@ function SalaryDetailsCard({ user, readOnly }) {
   useEffect(() => {
     if (invoices && invoices.length > 0) {
       let total = 0;
-      invoices.map((x, i) => {
+      invoices.forEach((x, i) => {
         total += Number(x.dispatcherFee);
       });
       setGross(total);
@@ -122,8 +122,8 @@ function SalaryDetailsCard({ user, readOnly }) {
     let check = true;
     if (adjustments.length >= 1) {
       if (
-        adjustments[adjustments.length - 1].desc == "" ||
-        adjustments[adjustments.length - 1].amount == ""
+        adjustments[adjustments.length - 1].desc === "" ||
+        adjustments[adjustments.length - 1].amount === ""
       ) {
         check = false;
       }
@@ -200,7 +200,7 @@ function SalaryDetailsCard({ user, readOnly }) {
           setError={setError}
         />
         <h1 className="txt-2 fon-bold mar-b-1">Incentive</h1>
-        {user && user.department == "dispatch" ? (
+        {user && user.department === "dispatch" ? (
           <>
             <DispatchIncentive
               gross={gross}

@@ -25,6 +25,7 @@ function UserCard({ user, readOnly }) {
               <img
                 className="salary-user-img"
                 src={user.profile_image ?? dummy_img}
+                alt="user_image"
               />
               <div className="dis-flex dis-col dis-start">
                 <span className="txt-1 line-1 fon-med mar-b-025 txt-black">
