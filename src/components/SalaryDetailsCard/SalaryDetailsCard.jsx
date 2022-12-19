@@ -9,7 +9,7 @@ import DispatchIncentive from "./Incentives";
 import IncentiveDispatchSlots from "./Slots";
 import IncentiveDispatchInvoices from "./Invoices";
 
-function SalaryDetailsCard({ user, readOnly }) {
+function SalaryDetailsCard({ user, readOnly, year, month }) {
   const [error, setError] = useState(false);
   const [base, setBase] = useState(0);
   const [adjustments, setAdjustments] = useState([]);
@@ -144,7 +144,7 @@ function SalaryDetailsCard({ user, readOnly }) {
   return (
     <Card className="p-32 border">
       <Card.Body className="p-0">
-        {user && <UserCard user={user} readOnly={readOnly} />}
+        {user && <UserCard user={user} readOnly={readOnly} month={month} />}
         <h1 className="txt-2 fon-bold mar-b-1">Overview</h1>
         <div className="mar-b-2 dis-flex dis-row dis-between">
           <div className="dis-flex dis-col">

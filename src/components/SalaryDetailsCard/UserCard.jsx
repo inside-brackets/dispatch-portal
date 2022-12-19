@@ -4,11 +4,11 @@ import moment from "moment";
 
 import dummy_img from "../../assets/images/taut.png";
 
-function UserCard({ user, readOnly }) {
-  const [month, setMonth] = useState(
+function UserCard({ user, readOnly, month }) {
+  const [selectedMonth, setSelectedMonth] = useState(
     new Date(
       new Date().getFullYear(),
-      new Date().getMonth() - 1,
+      month,
       new Date().getDate()
     ).toLocaleString("default", {
       month: "long",
@@ -80,7 +80,7 @@ function UserCard({ user, readOnly }) {
                   Month:
                 </span>
                 <span className="txt-1 line-1 fon-reg mar-b-025 txt-grey">
-                  {month ?? "-"}
+                  {selectedMonth ?? "-"}
                 </span>
               </div>
               <div>

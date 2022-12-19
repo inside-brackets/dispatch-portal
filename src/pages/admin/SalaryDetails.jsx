@@ -7,7 +7,7 @@ import SalaryDetailsCard from "../../components/SalaryDetailsCard/SalaryDetailsC
 
 function SalaryDetails() {
   const [user, setUser] = useState(null);
-  const { id } = useParams();
+  const { year, month, id } = useParams();
 
   useEffect(() => {
     axios.get(`/getuser/` + id).then(({ data }) => {
@@ -17,7 +17,16 @@ function SalaryDetails() {
 
   return (
     <Row>
-      <Col>{user && <SalaryDetailsCard user={user} readOnly={false} />}</Col>
+      <Col>
+        {user && (
+          <SalaryDetailsCard
+            user={user}
+            readOnly={false}
+            year={year}
+            month={month}
+          />
+        )}
+      </Col>
     </Row>
   );
 }

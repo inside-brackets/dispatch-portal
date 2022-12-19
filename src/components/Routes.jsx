@@ -196,7 +196,7 @@ const Routes = () => {
         <Route path="/reports" exact component={AdminReport} />
         <Route path="/reports/:id" component={Report} />
         <Route path="/salaries" component={Salaries} />
-        <Route path="/salary/:id" component={SalaryDetails} />
+        <Route path="/salary/:year/:month/:id" component={SalaryDetails} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>
