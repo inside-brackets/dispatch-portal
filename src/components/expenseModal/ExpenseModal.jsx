@@ -1,12 +1,11 @@
 import React, {useState,useEffect } from "react";
-import { Col, Row, Form, Button, Spinner } from "react-bootstrap";
-import MySelect from "../UI/MySelect";
+import { Col, Row, Form, Button} from "react-bootstrap";
 import CreatableSelect from 'react-select/creatable';
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const ExpenseModal = ({defaultValue, onSuccess }) => {
-    console.log(defaultValue?._id,"")
+    console.log(defaultValue,"")
   const [state, setState] = useState();
   const [validated, setValidated] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -15,7 +14,7 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
     label,
     value: label.toLowerCase().replace(/\W/g, ''),
   });
-  const defaultOptions = [  ];
+  const defaultOptions = [];
 
   useEffect(async() => {
     let {data} = await axios.get('/accounts/expense/categories')
@@ -24,24 +23,19 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
         defaultOptions.push(value)
     })
   })
-
-
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState(defaultOptions);
-  const [value, setValue] = useState();
-
- 
-
-
+  const [value, setValue] = useState({
+    label: defaultValue?.category,value: defaultValue?.category
+  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
 
-    if (form.checkValidity() === false) {
+    if (!(form.checkValidity() === true)) {
       setValidated(true);
-
       return;
     }
     setLoading(true);
@@ -91,7 +85,7 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
       setIsLoading(false);
       setOptions((prev) => [...prev, newOption]);
       setValue(newOption);
-    }, 1000);
+    }, 100);
   };
 
   return (
@@ -112,7 +106,9 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
               type="number"
             />
           </Form.Group>
-
+          <Form.Control.Feedback type="invalid">
+                      Please Enter Amount.
+                    </Form.Control.Feedback>
 
         </Col>
        <Col md={6}>
