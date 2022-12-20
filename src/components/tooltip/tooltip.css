@@ -1,5 +1,8 @@
 .tooltips{
     background-color: var(--main-color-blue) !important;
-    padding: 4px !important;
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+    padding-top: 1px !important;
+    padding-bottom: 4px !important;
     border-radius: 6px !important;
   }
