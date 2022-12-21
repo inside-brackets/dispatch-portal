@@ -12,6 +12,7 @@ const Table = (props) => {
   );
   const [currPage, setCurrPage] = useState(0);
   const [totalLength, setTotalLength] = useState(0);
+  const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(null);
@@ -70,6 +71,7 @@ const Table = (props) => {
               return temp;
             });
             setTotalLength(res.data.length);
+            setSum(res.data.total)
             setLoading(false);
           })
           .catch((err) => {
@@ -125,6 +127,7 @@ const Table = (props) => {
           }
 
           return (
+            <>
             <Col md={3} className="mb-2">
               <Form.Label className="text-capitalize">{key}</Form.Label>
               <Select
@@ -141,10 +144,27 @@ const Table = (props) => {
                 options={props.filter[key]}
               />
             </Col>
-          );
+            {props.total?
+                      (<>
+                      <Col md={4}></Col>
+                      <Col md={2} className="mb-2">
+                      <Form.Group>
+                        <Form.Label className="text-capitalize">
+                          Total
+                        </Form.Label>
+                        <Form.Control
+                        readOnly
+                        type="number"
+                        value={sum?sum:0}
+                        >
+          
+                        </Form.Control>
+                      </Form.Group>
+                    </Col></>):null
+        }
+         </> );
         })}
       </Row>
-
       <div
         className={`table-wrapper ${
           props.overflowHidden ? "overflow__hidden" : ""

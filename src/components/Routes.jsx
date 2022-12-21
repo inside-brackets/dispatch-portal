@@ -6,6 +6,7 @@ import { socket } from "..";
 import useHttp from "../hooks/use-https";
 import Loader from "react-loader-spinner";
 
+
 // admin routes
 const Invoice = lazy(() => import("../pages/admin/Invoice"));
 const AddCarrier = lazy(() => import("../pages/admin/AddCarrier"));
@@ -49,6 +50,12 @@ const DispatchInvoices = lazy(() => import("../pages/dispatch/Invoices"));
 const HRDashboard = lazy(() => import("../pages/HR/Dashboard"));
 const Interviews = lazy(() => import("../pages/HR/Interviews"));
 const InterviewsDetail = lazy(() => import("../pages/HR/InterviewDetail"));
+
+//Accounts
+const AccountsDashboard = lazy(() => import("../pages/accounts/Dashboard"));
+const Salary = lazy(() => import("../pages/accounts/Salary"));
+const Expenses = lazy(() => import("../pages/accounts/Expenses"));
+
 
 const Routes = () => {
   const { department, designation } = useSelector((state) => state.user.user);
@@ -256,9 +263,32 @@ const Routes = () => {
         </Route>
       </Switch>
     </Suspense>
-  ) : (
-    ""
-  );
+  ) : department === "accounts" ? (
+    <Suspense
+      fallback={
+        <div className="spreadsheet__loader">
+          <Loader
+            type="MutatingDots"
+            color="#349eff"
+            height={100}
+            width={100}
+          />
+        </div>
+      }
+    >
+      <Switch>
+        <Route path="/" exact>
+          <Redirect to="/dashboard" />
+        </Route>
+        <Route path="/dashboard" exact component={AccountsDashboard}/>
+        <Route path="/expenses" exact component={Expenses}/>
+        <Route path="/salary" exact component={Salary}/>
+        <Route path="*">
+          <h1>Not found</h1>
+        </Route>
+      </Switch>
+    </Suspense> 
+  ):"";
 };
 
 export default Routes;

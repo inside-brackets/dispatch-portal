@@ -1,0 +1,8 @@
+.action_button_expenses_wrapper{
+    display: flex;
+    align-items: center;
+justify-content: center;
+  }
+.action_btn_expenses_edit{
+  margin-left: 12px;
+}
