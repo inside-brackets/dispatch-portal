@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Col, Row, Card } from "react-bootstrap";
-import moment from "moment";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -34,9 +33,14 @@ const MONTHS = [
 const Salaries = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() - 1);
+  const [refresh, setRefresh] = useState(null);
 
   const history = useHistory();
   const { company: selectedCompany } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    setRefresh(Math.random());
+  }, [year, month]);
 
   const generateSalary = (id) => {
     history.push("/salary/" + year + "/" + month + "/" + id);
@@ -45,13 +49,12 @@ const Salaries = () => {
   const customerTableHead = [
     "#",
     "User Name",
-    "Phone #",
+    "Phone",
     "Email",
     "Designation",
     "Department",
-    "Joining Date",
-    "Basic Salary",
-    "Last Paid",
+    "Salary",
+    "Paid",
     "",
   ];
   const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -59,14 +62,13 @@ const Salaries = () => {
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
-      <td>{item.user_name}</td>
-      <td>{item.phone_number ? item.phone_number : "N/A"}</td>
-      <td>{item.email_address ? item.email_address : "N/A"}</td>
+      <td>{item.userName}</td>
+      <td>{item.phoneNo ? item.phoneNo : "N/A"}</td>
+      <td>{item.email ? item.email : "N/A"}</td>
       <td>{item.designation}</td>
       <td>{item.department}</td>
-      <td>{moment(item.joining_date).format("ll")}</td>
       <td>{item.salary}</td>
-      <td>{item.lastPaid ? moment(item.date).format("MMMM") : "N/A"}</td>
+      <td>{item.paid ? "Yes" : "No"}</td>
       <td>
         <Button type="view" onClick={() => generateSalary(item._id)}>
           Generate
@@ -124,7 +126,7 @@ const Salaries = () => {
                 headData={customerTableHead}
                 renderHead={(item, index) => renderHead(item, index)}
                 api={{
-                  url: `/salary/get/salaries`,
+                  url: `/salary/get/salaries/${year}/${month}`,
                   body: {
                     company: selectedCompany.value,
                   },
@@ -137,6 +139,7 @@ const Salaries = () => {
                   ],
                 }}
                 renderBody={(item, index) => renderBody(item, index)}
+                refresh={refresh}
               />
             </Card.Body>
           </Card>

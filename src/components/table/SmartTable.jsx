@@ -17,6 +17,7 @@ const Table = (props) => {
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [reRender, setReRender] = useState(false);
   let pages = 1;
   let range = [];
 
@@ -32,6 +33,22 @@ const Table = (props) => {
     getData();
     // eslint-disable-next-line
   }, [search, filter, currPage, endDate]);
+
+  useEffect(() => {
+    setBodyData([]);
+    setReRender(true);
+    setTimeout(() => {
+      setReRender(false);
+    }, 500);
+    // eslint-disable-next-line
+  }, [props.refresh]);
+
+  useEffect(() => {
+    if (reRender) {
+      getData();
+    }
+    // eslint-disable-next-line
+  }, [reRender]);
 
   const selectPage = (page) => {
     setCurrPage(page);
