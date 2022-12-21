@@ -101,7 +101,7 @@ const TargetDisplay = ({ designation }) => {
             </CircularProgressbarWithChildren>
           </div>
           <span className="days-label">{daysLeft} days left.</span>
-          {designation === "manager" && (
+          {(designation === "manager" || "admin") && (
             <div className="set-target-div">
               <span className="curr-target-label">
                 Current Target: <strong>{target}</strong>
@@ -113,7 +113,7 @@ const TargetDisplay = ({ designation }) => {
           )}
         </Card.Body>
       </Card>
-      {designation === "manager" && (
+      {(designation === "manager" || "admin") && (
         <Modal show={showModal} onHide={() => setShowModal(false)}>
           <Modal.Header>
             <Modal.Title>Change Target</Modal.Title>

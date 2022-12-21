@@ -110,6 +110,16 @@ border-color: none !important;
 border-bottom: 2px solid #ced4da !important ;
 box-shadow: none !important;;
 }
+.content_text{
+  border-radius: 1px !important;
+  border: 1px solid #ced4da !important ;
+}
+.content_text:focus{
+border-radius: 1px !important;
+border-color: none !important;
+border-bottom: 2px solid #ced4da !important ;
+box-shadow: none !important;;
+}
 
 .editorClassName{
   border: 1px solid #ced4da !important;

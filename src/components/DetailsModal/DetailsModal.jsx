@@ -10,7 +10,7 @@ export default function DetailsModal(props) {
   const [today, setToday] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const modalSwitch = props.mSwitch;
-
+console.log(props.users,"props.users====>")
   useEffect(() => {
     removeDuplicates();
   }, [props.users, today]);
@@ -29,6 +29,7 @@ export default function DetailsModal(props) {
   }, [users]);
 
   const removeDuplicates = () => {
+    console.log(props.users,'props.users======>')
     if (modalSwitch) {
       setLoading(true);
       if (props.users[today.getMonth()]) {
@@ -38,6 +39,7 @@ export default function DetailsModal(props) {
         }
         temp = [...new Set(temp)];
         setData(temp);
+        console.log(data,"data=====>")
         setUsers([]);
       }
     } else {
@@ -47,6 +49,7 @@ export default function DetailsModal(props) {
 
   const fetchDetails = () => {
     for (let i = 0; i < data.length; i++) {
+      console.log(data[i],"data[i]===")
       if (data[i]) {
         axios.get(`/getuser/${data[i]}`).then((res) => {
           const didnotpick = props.users[today.getMonth()].filter(

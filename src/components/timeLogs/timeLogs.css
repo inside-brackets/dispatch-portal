@@ -6,12 +6,6 @@
   border-top-right-radius: var(--border-radius) !important;
   padding: 1rem 1rem !important;
 }
-.progress-wrapper {
-  margin: 2rem auto;
-  margin-bottom: 11px;
-  width: 210px;
-  height: 210px;
-}
 .label-txt {
   font-size: 32px;
 }
@@ -24,16 +18,16 @@
   font-weight: bold;
   color: gray;
 }
-.CircularProgressbar-trail {
-  stroke: var(--second-bg) !important;
+.bold{
+  font-weight: bold;
 }
-.set-target-div {
-  padding: 0 0.5rem;
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
+.depart-label{
+  font-size: 16px;
+}
+.btn-timelog{
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  justify-content: flex-end;
+  margin-top: 17px;
 }
 .curr-target-label {
   font-size: 1rem;
@@ -41,14 +35,7 @@
   font-weight: 400;
   color: var(--txt-color);
 }
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
 .load-icon {
   margin-left: -0.25rem;
   margin-right: 0.75rem;
@@ -57,4 +44,11 @@
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+.time-Text{
+  margin-top: 7px;
+  display: flex;
+  font-size: 21px;
+  margin-left: -16px;
+  justify-content: space-between;
 }

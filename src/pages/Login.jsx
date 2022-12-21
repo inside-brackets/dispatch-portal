@@ -54,7 +54,18 @@ const Login = () => {
           const userToken = loginResponse.data.userToken;
           localStorage.setItem("user", userToken);
           const user = jwtDecode(userToken);
-
+          if(user){
+            if(!(user.department==='admin')&&!(user.department==='HR')){
+              await axios({
+                url: `/logintime`,
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: {
+                  employee:user._id
+                },
+              });
+            }
+          }
           if (user) {
             dispatch(
               userActions.login({

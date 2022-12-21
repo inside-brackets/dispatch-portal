@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col,Button } from "react-bootstrap";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
@@ -8,6 +8,8 @@ import DashboardUserCard from "../../components/DashboardUserCard";
 import axios from "axios";
 import moment from "moment";
 import StatusCard from "../../components/status-card/StatusCard";
+import DetailsLoginModal from "../../components/detailLoginModal/DetailsLoginModal";
+import LateLoginCard from "../../components/lateLoginCard/LateLoginCard";
 
 const headData = ["#", "User Name", "Time"];
 const renderHead = (item, index) => <th key={index}>{item}</th>;
@@ -29,6 +31,9 @@ const Dashboard = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
+  const [lateUsers, setLateUsers] = useState([]);
+  const [today, setToday] = useState(new Date());
+  const [show, setShow] = useState(false);
   const [departmentalDistribution, setDepartmentalDistribution] = useState([
     { icon: "bx bxs-group" },
     { icon: "bx bx-id-card" },
@@ -128,6 +133,43 @@ const Dashboard = () => {
       .catch((err) => console.error(err));
   }, [selectedCompany.value]);
 
+  const headDataLate = [
+ "Name",
+ "Department",
+ "Late"
+  ];
+  
+  const renderHeadLate = (item, index) => <th key={index}>{item}</th>;
+let sales,dispatcher
+  useEffect(async()=>{
+    await axios.get(`/settings/timelogin`).then(({ data }) => {
+      data.map((data) =>{
+        if(data.department==="sales"){
+          sales = data.loginTime
+          // setSalesTime(data.loginTime)
+        }else if(data.department==="dispatcher"){
+          dispatcher=data.loginTime
+          // setDispatchTime(data.loginTime)
+        }
+      })
+  
+    })
+    axios.post('/logintime/getlogins',{
+      sales:sales,
+      dispatcher:dispatcher,
+      month:today.getMonth(),
+    }).then((res) => {
+      setLateUsers(res.data.splice(0,5).sort((a, b) => b.late - a.late))
+   })
+  },[])
+  const renderBodyLate = (item, index) => (
+      <tr key={index}>
+      <td>{item?.user_name[0]}</td>
+      <td>{item?.department[0]}</td>
+      <td>{item?.late}</td>
+      </tr>
+      )
+
   return (
     <>
       <Row className="my-4">
@@ -173,6 +215,7 @@ const Dashboard = () => {
             renderBody={(item, index) => renderBody(item, index)}
           />
         </Col>
+        {/*  */}
         <Col>
           <Row>
             <h2>Departmental Distribution</h2>
@@ -204,6 +247,22 @@ const Dashboard = () => {
           </Row>
         </Col>
       </Row>
+      <Row>
+      <Col md={4}>
+          <LateLoginCard
+            title="Late-Comer"
+            headData={headDataLate}
+            renderHead={(item, index) => renderHeadLate(item, index)}
+            data={lateUsers}
+            renderBody={(item, index) => renderBodyLate(item, index)}
+          />
+        </Col>
+      </Row>
+
+      <DetailsLoginModal
+        show={show}
+        onHide={() => setShow(false)}
+      />
     </>
   );
 };
