@@ -18,8 +18,8 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
     value: label.toLowerCase().replace(/\W/g, ''),
   });
   
-  const defaultOptions = [];
   useEffect(async() => {
+    const defaultOptions = [];
     let {data} = await axios.get('/accounts/expense/categories')
     data.map((category) =>{
         let value = createOption(category)
