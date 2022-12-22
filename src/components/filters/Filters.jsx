@@ -5,6 +5,7 @@ import './filters.css'
 import qs from "qs"
 import queryString from 'query-string';
 import {useHistory,useLocation} from 'react-router-dom'
+import { encode, decode } from 'js-base64';
 
 const Filters = (props) => {
     console.log(props.filter,"props.filter")
@@ -21,10 +22,18 @@ const Filters = (props) => {
     let params1 = queryString.parse(location.search)
     
     console.log(params1,"params1==>")
+    
+ 
+    console.log(window.location.href,"window.location==>")
+    const url = new URL(window.location.href);
+    console.log(url.search);                // "?a=~&b=%7E"
+    console.log(url.searchParams.get('status').split(','),"get"); // "~"
+    // console.log(url.searchParams.get('b')); // "~"
 
-
-
-
+    let en = encode({name:"name"})
+    console.log(en,"en==>")
+let de =decode(en)
+console.log(de,"dec==>")
 
     // const searchParams = new URLSearchParams("key1=value1&key2=value2");
 // Create a test URLSearchParams object
@@ -62,10 +71,24 @@ for (const key of searchParams) {
             setReset(false)
 
         }else{
-            let query = qs.stringify({ search:`${e.target.search.value}`,start:`${startDate}`,end:`${endDate}`,filter: filter })
+            const searchParams = new URLSearchParams();
+            let searchObj = {}
+            if(props.placeholder){
+                searchObj["search"]=e.target.search.value
+            }
+            if(props.filter.status){
+                searchObj["status"]=filter.status.map((item)=>item.value)
+            }
+            console.log(searchObj,"searchObj====>");
+            const search = { search:`${e.target.search.value}`,start:`${startDate}`,end:`${endDate}`,status:["cleared","cancel","okay"],person:["p1","p2","p3"] };
+            Object.keys(searchObj).forEach(key => searchParams.append(key, searchObj[key]));
+
+            console.log(searchParams.toString(),"searchParams.toString()");
+            // let query = qs.stringify({ search:`${e.target.search.value}`,start:`${startDate}`,end:`${endDate}`,filter:{status:["cleared","cancel","okay"],person:["p1","p2","p3"]} })
             history.push({
                 pathname: location.pathname,
-                search: query
+                // search: query
+                search: `${searchParams.toString()}`
               })
             }
        

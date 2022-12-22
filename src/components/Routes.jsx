@@ -55,6 +55,7 @@ const AccountsDashboard = lazy(() => import("../pages/accounts/Dashboard"));
 const Expenses = lazy(() => import("../pages/accounts/Expenses"));
 const Salaries = lazy(() => import("../pages/admin/Salaries"));
 const SalaryDetails = lazy(() => import("../pages/admin/SalaryDetails"));
+// const FilterTest = lazy(() => import("../pages/accounts/FilterTest"));
 
 const Routes = () => {
   const { department, designation } = useSelector((state) => state.user.user);
@@ -317,6 +318,7 @@ const Routes = () => {
         <Route path="/profile" component={Profile} />
         <Route path="/salaries" component={Salaries} />
         <Route path="/salary/:year/:month/:id" component={SalaryDetails} />
+        {/* <Route path="/filtertest" exact component={FilterTest}/> */}
         <Route path="*">
           <h1>Not found</h1>
         </Route>
