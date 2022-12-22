@@ -31,6 +31,15 @@ const Expenses = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [expenseId,setExpenseId] = useState();
 
+  const defaultOptions = [ ];
+  useEffect(async() => {
+    let {data} = await axios.get('/accounts/expense/categories')
+    data.map((category) =>{
+        let value = createOption(category)
+        defaultOptions.push(value)
+    })
+  })
+  
   const getYears = () => {
     const YEAR = new Date().getFullYear();
     const STARTING_YEAR = 2022;
@@ -68,16 +77,7 @@ const Expenses = () => {
     label,
     value: label.toLowerCase().replace(/\W/g, ''),
   });
-  const defaultOptions = [  ];
-
-  useEffect(async() => {
-    let {data} = await axios.get('/accounts/expense/categories')
-    data.map((category) =>{
-        let value = createOption(category)
-        defaultOptions.push(value)
-    })
-  })
-
+ 
   const deleteExpense =async (id)=>{
     try{
     await axios.delete(`/accounts/expense/${id}`)
