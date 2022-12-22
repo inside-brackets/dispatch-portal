@@ -1,36 +1,32 @@
 import React, {useState,useEffect } from "react";
-import { Col, Row, Form, Button, Spinner } from "react-bootstrap";
-import MySelect from "../UI/MySelect";
+import { Col, Row, Form, Button} from "react-bootstrap";
 import CreatableSelect from 'react-select/creatable';
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const ExpenseModal = ({defaultValue, onSuccess }) => {
-    console.log(defaultValue?._id,"")
-  const [state, setState] = useState();
   const [validated, setValidated] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [options, setOptions] = useState();
+  const [value, setValue] = useState({
+    label: defaultValue?.category,value: defaultValue?.category
+  });
 
   const createOption = (label) => ({
     label,
     value: label.toLowerCase().replace(/\W/g, ''),
   });
-  const defaultOptions = [  ];
-
+  
   useEffect(async() => {
+    const defaultOptions = [];
     let {data} = await axios.get('/accounts/expense/categories')
     data.map((category) =>{
         let value = createOption(category)
         defaultOptions.push(value)
     })
-  })
-
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [options, setOptions] = useState(defaultOptions);
-  const [value, setValue] = useState();
-
- 
+    setOptions(defaultOptions)
+  },[])
 
 
 
@@ -39,9 +35,8 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
     event.stopPropagation();
     const form = event.currentTarget;
 
-    if (form.checkValidity() === false) {
+    if (!(form.checkValidity() === true)) {
       setValidated(true);
-
       return;
     }
     setLoading(true);
@@ -91,7 +86,7 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
       setIsLoading(false);
       setOptions((prev) => [...prev, newOption]);
       setValue(newOption);
-    }, 1000);
+    }, 100);
   };
 
   return (
@@ -108,24 +103,16 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
               name="amount"
               min={0}
               defaultValue={defaultValue ? defaultValue.amount : null}
-            //   onChange={handleChange}
               type="number"
             />
           </Form.Group>
-
+          <Form.Control.Feedback type="invalid">
+                      Please Enter Amount.
+                    </Form.Control.Feedback>
 
         </Col>
        <Col md={6}>
        <Form.Label>Category</Form.Label>
-       {/* <MySelect
-              isMulti={false}
-            //   value={selectedCarrierStatus}
-            //   onChange={setSelectedCarrierStatus}
-              options={[
-                { label: "item1", value: "item1" },
-                { label: "item2 ", value: "item2" },
-              ]}
-            /> */}
 
 <CreatableSelect
       isClearable
@@ -148,7 +135,6 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
               aria-label="With textarea"
               type="text"
               placeholder="Description"
-            //   onChange={handleChange}
               defaultValue={defaultValue ? defaultValue.desc : null}
               name="desc"
             />
@@ -158,18 +144,9 @@ const ExpenseModal = ({defaultValue, onSuccess }) => {
     <Row className="mt-3">
             <Col md="6">
               <Button
-            //    disabled={loading} 
+               disabled={loading} 
                type="submit">
                 {" "}
-                {/* {loading && ( */}
-                  {/* <Spinner
-                    as="span"
-                    animation="grow"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  /> */}
-                {/* )} */}
                 Submit
               </Button>
             </Col>

@@ -150,7 +150,7 @@ const Table = (props) => {
                       <Col md={2} className="mb-2">
                       <Form.Group>
                         <Form.Label className="text-capitalize">
-                          Total
+                         {props.total }
                         </Form.Label>
                         <Form.Control
                         readOnly
