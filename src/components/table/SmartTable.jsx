@@ -72,6 +72,7 @@ const Table = (props) => {
   const getData = () => {
     if (!bodyData[`page${currPage}`]) {
       if (props.api) {
+        console.log(props.api.body ,"...props.api.body",filter,"filter,",startDate,"startDate",endDate,"endDate")
         setLoading(true);
         axios
           .post(`${props.api.url}/?search=${search}`, {
