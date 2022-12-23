@@ -27,7 +27,10 @@ const Filters = (props) => {
     console.log(window.location.href,"window.location==>")
     const url = new URL(window.location.href);
     console.log(url.search);                // "?a=~&b=%7E"
-    console.log(url.searchParams.get('status').split(','),"get"); // "~"
+    
+    // console.log(url.searchParams.get('status').split(','),"get")
+    
+    ; // "~"
     // console.log(url.searchParams.get('b')); // "~"
 
     let en = encode({name:"name"})
