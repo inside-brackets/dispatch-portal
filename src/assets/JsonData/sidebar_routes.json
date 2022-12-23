@@ -108,6 +108,11 @@
       "display_name": "Report",
       "route": "/reports",
       "icon": "bx bxs-report"
+    },
+    {
+      "display_name": "Salaries",
+      "route": "/salaries",
+      "icon": "bx bxs-wallet"
     }
   ],
   "dispatch": {

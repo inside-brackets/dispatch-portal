@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from "react";
 
-function Adjustments({ adjustments, setAdjustments, error, setError }) {
+function Adjustments({
+  adjustments,
+  setAdjustments,
+  error,
+  setError,
+  readOnly,
+}) {
   const lastDesc = useRef(null);
   const lastAmount = useRef(null);
 
@@ -84,22 +90,26 @@ function Adjustments({ adjustments, setAdjustments, error, setError }) {
                 />
               </div>
             </div>
-            <div className="dis-flex dis-center p-l-1 cur-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                onClick={(e) => handleRemove(e, i)}
-              >
-                <path
-                  d="M14.25,2.25a12,12,0,1,0,12,12A12,12,0,0,0,14.25,2.25Zm-2.117,8.578a.923.923,0,1,0-1.3,1.3l2.117,2.117-2.117,2.117a.923.923,0,1,0,1.3,1.3l2.117-2.117,2.117,2.117a.923.923,0,1,0,1.3-1.3L15.555,14.25l2.117-2.117a.923.923,0,1,0-1.3-1.3L14.25,12.945Z"
-                  transform="translate(-2.25 -2.25)"
-                  fill="#dc2626"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </div>
+            {readOnly ? (
+              <></>
+            ) : (
+              <div className="dis-flex dis-center p-l-1 cur-pointer">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  onClick={(e) => handleRemove(e, i)}
+                >
+                  <path
+                    d="M14.25,2.25a12,12,0,1,0,12,12A12,12,0,0,0,14.25,2.25Zm-2.117,8.578a.923.923,0,1,0-1.3,1.3l2.117,2.117-2.117,2.117a.923.923,0,1,0,1.3,1.3l2.117-2.117,2.117,2.117a.923.923,0,1,0,1.3-1.3L15.555,14.25l2.117-2.117a.923.923,0,1,0-1.3-1.3L14.25,12.945Z"
+                    transform="translate(-2.25 -2.25)"
+                    fill="#dc2626"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            )}
           </div>
         );
       })}

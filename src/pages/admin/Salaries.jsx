@@ -70,8 +70,13 @@ const Salaries = () => {
       <td>{item.salary}</td>
       <td>{item.paid ? "Yes" : "No"}</td>
       <td>
-        <Button type="view" onClick={() => generateSalary(item._id)}>
-          Generate
+        <Button
+          type="view"
+          variant={item.paid ? "success" : "primary"}
+          style={{ minWidth: "5.125rem", width: "100%" }}
+          onClick={() => generateSalary(item._id)}
+        >
+          {item.paid ? "View" : "Generate"}
         </Button>
       </td>
     </tr>
