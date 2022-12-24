@@ -1,11 +1,14 @@
 import Filters from "../../components/filters/Filters";
 import Table from "../../components/table/SmartTable2";
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button} from "react-bootstrap";
 import axios from "axios";
+import Form from 'react-bootstrap/Form';
 import EditButton from "../../components/UI/EditButton";
 import MyModal from "../../components/modals/MyModal";
 import ExpenseModal from "../../components/expenseModal/ExpenseModal";
+import DeleteConfirmation from "../../components/modals/DeleteConfirmation";
+import TooltipCustom from "../../components/tooltip/TooltipCustom";
 import "../../assets/css/accounts/expenses.css"
 import { toast } from "react-toastify";
 
@@ -20,27 +23,67 @@ const renderHead = (item, index) => <th key={index}>{item}</th>;
 
 const PAGE_SIZE = 10;
 
-const FilterTest = () => {
+const Expenses = () => {
   const [showModal, setShowModal] = useState(false);
   const [defaultValue, setDefaultValue] = useState(null);
   const [rerenderTable, setRerenderTable] = useState(null);
-  const createOption = (label) => ({
-    label,
-    value: label.toLowerCase().replace(/\W/g, ''),
-  });
-  const defaultOptions = [  ];
-
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [expenseId,setExpenseId] = useState();
+  const [render,setRender]=useState(Math.random());
+  const[location, setLocation] = useState()
+  const defaultOptions = [ ];
   useEffect(async() => {
-    let {data} = await axios.get('/accounts/expense/categories')
+    setLocation(window.location)
+    let {data} = await axios.get('/filter/expense/categories')
     data.map((category) =>{
         let value = createOption(category)
         defaultOptions.push(value)
     })
   })
+  
+  const getYears = () => {
+    const YEAR = new Date().getFullYear();
+    const STARTING_YEAR = 2022;
+    const years = Array.from(
+      new Array(YEAR - STARTING_YEAR + 1),
+      (val, index) => index + STARTING_YEAR
+    );
+    return years;
+  };
+  const MONTHS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
+  const submitDeleteExpense = async () => {
+    deleteExpense(expenseId);
+    setDeleteModal(false)
+      }
+    const deleteExpenseBtn = (item)=>{
+      setDeleteModal(true)
+      setExpenseId(item)
+      }
+
+  const createOption = (label) => ({
+    label,
+    value: label.toLowerCase().replace(/\W/g, ''),
+  });
+ 
   const deleteExpense =async (id)=>{
     try{
-    await axios.delete(`/accounts/expense/${id}`)
+    await axios.delete(`/filter/expense/${id}`)
     setRerenderTable(Math.random());
     toast.success("Expense deleted");
     }catch(err){
@@ -48,7 +91,6 @@ const FilterTest = () => {
     }
   }
   const renderBody = (item, index, currPage) =>  {
-    console.log(item,"items")
  return (
     <tr key={index}>
       <td>{index + 1 + currPage * PAGE_SIZE}</td>
@@ -57,16 +99,23 @@ const FilterTest = () => {
       <td>{item.category}</td>
       <td>
       <div className="action_button_expenses_wrapper">
-        <div    className="action_btn_expenses_delete">
+      <TooltipCustom
+                          text="Delete Expense"
+                          id="expenseDelete"
+                        ></TooltipCustom>
+        <div     className="action_btn_expenses_delete" data-tip data-for="expenseDelete">
       <EditButton
-   
-                type="delete"
-                onClick={() => {
-                  deleteExpense(item._id);
-                }}
+                 type="delete"
+                 onClick={() => {
+                 deleteExpenseBtn(item._id)
+                  }}
               />
               </div>
-              <div  className="action_btn_expenses_edit"> 
+              <TooltipCustom
+                          text="Edit Expense"
+                          id="expenseEdit"
+                        ></TooltipCustom>
+              <div  className="action_btn_expenses_edit" data-tip data-for="expenseEdit"> 
         <EditButton
           type="edit"
           onClick={() => {
@@ -79,14 +128,47 @@ const FilterTest = () => {
       </td>
     </tr>
   )};
-  var body = {};
+  var body = {
+    month: month,
+    year: year,
+  };
 
   return (
     <Row>
-      <Row className="m-3">
-        <Col md={3}></Col>
-        <Col md={5}></Col>
-        <Col md={4}>
+      <Row className="card-Heaing-Wrapper mb-2">
+        <Col md={2}>
+        <Form.Group controlId="formBasicSelect" className="years-Wrapper">
+        <Form.Label>Years</Form.Label>
+        <Form.Control
+          as="select"
+          value={year}
+          onChange={(e) =>{ setYear(e.target.value); setRerenderTable(Math.random())}}>
+              {getYears().map((y, i) => (
+              <option key={i} value={y}>
+                {y}
+              </option>
+            ))}
+        </Form.Control>
+      </Form.Group>
+        </Col>
+        <Col md={2}>
+        <Form.Group controlId="formBasicSelect">
+        <Form.Label>Month</Form.Label>
+        <Form.Control
+          as="select"
+          value={month}
+          
+          onChange={(e)=>{ setMonth(e.target.value); setRerenderTable(Math.random()) }}>
+            {MONTHS.map((y, i) => (
+              <option key={i} value={i}>
+                {y}
+              </option>
+            ))}
+        </Form.Control>
+      </Form.Group>
+        </Col>
+        <Col md={4}></Col>
+        <Col md={4} className="add-Expense-Btn">
             <Button
               onClick={() => {
                 setShowModal(true);
@@ -105,11 +187,14 @@ const FilterTest = () => {
           { label: "pending ", value: "pending" },
         ],
         person: [
-          { label: "okay", value: "okay" },
-          { label: "okay ", value: "okay" },
-          { label: "okay ", value: "okay" },
+          { label: "okay1", value: "okay1" },
+          { label: "okay2", value: "okay2" },
+          { label: "okay3", value: "okay3" },
         ],
+        category: defaultOptions
       }}
+      render={render}
+      setRender={setRender}
       />
       <div className="card">
         <div className="card__body">
@@ -120,19 +205,19 @@ const FilterTest = () => {
             headData={customerTableHead}
             renderHead={(item, index) => renderHead(item, index)}
             api={{
-              url: `/accounts/expense/getall`,
+              url: `/filter/expense/getall`,
               body,
             }}
             placeholder={"Description"}
             filter={{
-              category: defaultOptions
+              // category: defaultOptions
             }}
             renderBody={(item, index, currPage) =>
               renderBody(item, index, currPage)
             }
             total="Total"
-            // renderExportData={(data) => renderExportData(data)}
-            // exportData
+            render={render}
+            location={location}
           />
         </div>
       </div>
@@ -155,8 +240,15 @@ const FilterTest = () => {
           }}
         />
       </MyModal>
+      <DeleteConfirmation
+                showModal={deleteModal}
+                confirmModal={submitDeleteExpense}
+                hideModal={() => setDeleteModal(false)}
+                message={"Are you Sure to want to delete Expense?"}
+                title="Delete Confirmation"
+              />
     </Row>
   );
 };
 
-export default FilterTest;
+export default Expenses;
