@@ -48,8 +48,17 @@ function SalaryDetailsCard({
             month: month,
           },
         }).then(({ data }) => {
+          console.log(data);
           setInvoices(data);
         });
+      }
+      if (user.department === "sales") {
+        axios
+          .get(`/salary/invoice/${year}/${month}/${user._id}`)
+          .then(({ data }) => {
+            console.log(data);
+            setInvoices(data);
+          });
       }
     }
   }, [year, month, user, readOnly]);
@@ -82,7 +91,12 @@ function SalaryDetailsCard({
   }, [adjustments]);
 
   useEffect(() => {
-    calculateIncentive();
+    if (user.department === "dispatch") {
+      calculateIncentive();
+    }
+    if (user.department === "sales") {
+      calculateSalesIncentive();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, gross]);
 
@@ -134,6 +148,10 @@ function SalaryDetailsCard({
         }
       }
     }
+  };
+
+  const calculateSalesIncentive = () => {
+    setIncentive(roundNumber(0.15 * gross));
   };
 
   const handleClick = () => {
@@ -244,7 +262,8 @@ function SalaryDetailsCard({
           readOnly={readOnly}
         />
         <h1 className="txt-2 fon-bold mar-b-1">Incentive</h1>
-        {user && user.department === "dispatch" ? (
+        {user &&
+        (user.department === "dispatch" || user.department === "sales") ? (
           <>
             <Incentives
               gross={gross}
@@ -253,25 +272,35 @@ function SalaryDetailsCard({
               setExcRate={setExcRate}
               readOnly={readOnly}
             />
-            <hr />
-            <h1 className="txt-2 fon-bold mar-b-1">Breakdown</h1>
-            <div className="mar-b-2">
-              <h1 className="txt-125 fon-bold mar-b-1">Slot 1</h1>
-              {user && (
-                <Slots slot={user.dispatch_salary_slots.first} cut={slotOne} />
-              )}
-              <h1 className="txt-125 fon-bold mar-b-1">Slot 2</h1>
-              {user && (
-                <Slots slot={user.dispatch_salary_slots.second} cut={slotTwo} />
-              )}
-              <h1 className="txt-125 fon-bold mar-b-1">Slot 3</h1>
-              {user && (
-                <Slots
-                  slot={user.dispatch_salary_slots.third}
-                  cut={slotThree}
-                />
-              )}
-            </div>
+            {user.department === "dispatch" ? (
+              <>
+                <hr />
+                <h1 className="txt-2 fon-bold mar-b-1">Breakdown</h1>
+                <div className="mar-b-2">
+                  <h1 className="txt-125 fon-bold mar-b-1">Slot 1</h1>
+                  {user && (
+                    <Slots
+                      slot={user.dispatch_salary_slots.first}
+                      cut={slotOne}
+                    />
+                  )}
+                  <h1 className="txt-125 fon-bold mar-b-1">Slot 2</h1>
+                  {user && (
+                    <Slots
+                      slot={user.dispatch_salary_slots.second}
+                      cut={slotTwo}
+                    />
+                  )}
+                  <h1 className="txt-125 fon-bold mar-b-1">Slot 3</h1>
+                  {user && (
+                    <Slots
+                      slot={user.dispatch_salary_slots.third}
+                      cut={slotThree}
+                    />
+                  )}
+                </div>
+              </>
+            ) : null}
             <hr />
             <h1 className="txt-2 fon-bold mar-b-1">Invoices</h1>
             {invoices && <Invoices invoices={invoices} />}

@@ -67,6 +67,7 @@ function Adjustments({
               <input
                 className="w-100 h-36 p-0-1 border border-r-025 txt-875"
                 name="desc"
+                readOnly={readOnly}
                 value={x.desc}
                 ref={lastDesc}
                 onChange={(e) => handleChange(e, i)}
@@ -84,6 +85,7 @@ function Adjustments({
                   type="number"
                   className="w-200 h-36 p-l-4 border border-r-025 num-input"
                   name="amount"
+                  readOnly={readOnly}
                   value={x.amount}
                   ref={lastAmount}
                   onChange={(e) => handleChange(e, i)}

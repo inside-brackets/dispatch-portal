@@ -20,9 +20,7 @@ function DispatchIncentive({
           />
         </div>
         <div className="dis-flex dis-col">
-          <span className="txt-1 line-1 fon-med mar-b-1">
-            Dispatcher Cut ($)
-          </span>
+          <span className="txt-1 line-1 fon-med mar-b-1">Employee Cut ($)</span>
           <input
             className="w-200 h-36 p-0-1 border border-r-025 bg-smoke no-input"
             readOnly
@@ -51,7 +49,7 @@ function DispatchIncentive({
         </div>
         <div className="dis-flex dis-col">
           <span className="txt-1 line-1 fon-med mar-b-1">
-            Dispatcher Cut (PKR)
+            Employee Cut (PKR)
           </span>
           <input
             className="w-200 h-36 p-0-1 border border-r-025 bg-smoke no-input"
