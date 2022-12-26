@@ -33,6 +33,7 @@ const MONTHS = [
 const Salaries = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() - 1);
+  const [months, setMonths] = useState([]);
   const [refresh, setRefresh] = useState(null);
 
   const history = useHistory();
@@ -41,6 +42,25 @@ const Salaries = () => {
   useEffect(() => {
     setRefresh(Math.random());
   }, [year, month]);
+
+  useEffect(() => {
+    generateArray();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [year]);
+
+  const generateArray = async () => {
+    const today = new Date();
+
+    if (year < today.getFullYear()) {
+      setMonths(MONTHS);
+    } else {
+      setMonths(MONTHS.slice(0, today.getMonth()));
+    }
+
+    if (month >= today.getMonth()) {
+      setMonth(today.getMonth() - 1);
+    }
+  };
 
   const generateSalary = (id) => {
     history.push("/salary/" + year + "/" + month + "/" + id);
@@ -114,7 +134,7 @@ const Salaries = () => {
             className="form-select"
             onChange={(e) => setMonth(e.target.value)}
           >
-            {MONTHS.slice(0, new Date().getMonth()).map((y, i) => (
+            {months.map((y, i) => (
               <option key={i} value={i}>
                 {y}
               </option>

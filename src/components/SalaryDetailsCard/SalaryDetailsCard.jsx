@@ -48,7 +48,6 @@ function SalaryDetailsCard({
             month: month,
           },
         }).then(({ data }) => {
-          console.log(data);
           setInvoices(data);
         });
       }
@@ -56,7 +55,6 @@ function SalaryDetailsCard({
         axios
           .get(`/salary/invoice/${year}/${month}/${user._id}`)
           .then(({ data }) => {
-            console.log(data);
             setInvoices(data);
           });
       }
