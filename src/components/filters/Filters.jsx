@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import { useHistory, useLocation } from 'react-router-dom'
 import { encode, decode } from 'js-base64';
 import { useEffect } from "react";
+import { DateRangePicker } from "react-date-range";
 
 const Filters = (props) => {
   const [filter, setFilter] = useState(Object.keys(props.filter).reduce((pre, curr) => ((pre[curr] = []), pre), {}));
@@ -16,34 +17,97 @@ const Filters = (props) => {
   const [searchIn, setSearchIn] = useState("");
   const location = useLocation()
   let history = useHistory();
-
+  const [startDateRange, setStartDateRange] = useState(new Date());
+  const [endDateRange, setEndDateRange] = useState(new Date());
+  const selectionDate = {
+    startDate: startDateRange,
+    endDate: endDateRange,
+    key: "Selection",
+  };
   useEffect(() => {
-    const url = new URL(window.location.href);
-    let filterValue
-    let query = url.search?.slice(1)?.split("&");
-    let queryArr = query.map((item) => { return item.split("=") })
-    for (let i = 0; i < queryArr.length; i++) {
-      if (queryArr[i][0] === "search") {
-        let search = queryArr[i][1]
-        setSearchIn(search)
-      } else if (queryArr[i][0] === "start") {
-        let start = queryArr[i][1]
-        setStartDate(start)
-      }
-      else if (queryArr[i][0] === "end") {
-        let end = queryArr[i][1]
-        setEndDate(end)
-      }
-      else {
-        filterValue = queryArr[i][1]?.split("%2C").map((item) => { return { label: item, value: item } })
-        setFilter((oldValue) => {
-          const temp = { ...oldValue };
-          temp[queryArr[i][0]] = filterValue;
-          return temp;
-        });
-      }
+    const url = new URL(window.location.href).searchParams;
+    if(url.get("search")){
+      let search = url.get("search")
+      setSearchIn(search)
     }
-  }, [])
+    if (url.get("start")) {
+          let start = url.get("start")
+          setStartDate(start)
+        }
+    if (url.get("end")) {
+              let end = url.get("end")
+              setEndDate(end)
+            }
+    if(url.get("category")){
+      let filterValue = url.get("category")?.split(",")
+      let filterArr = props.filter?.category
+      let originalValue = filterArr?.map((item) => { return item.value })
+      const found = originalValue?.filter(word => filterValue.includes(word)).map((item) => { return { label: item, value: item } });
+      console.log(found,"check===>")
+      setFilter((oldValue) => {
+              const temp = { ...oldValue };
+              temp["category"] = found;
+              return temp;
+            });
+    }
+
+    // console.log(url.)
+    // let filterValue
+
+
+//////////////  Old Code //////////////////////////////////
+    // let query = url.search?.slice(1)?.split("&");
+    // let queryArr = query.map((item) => { return item.split("=") })
+
+    // for (let i = 0; i < queryArr.length; i++) {
+    //   if (queryArr[i][0] === "search") {
+    //     let search = queryArr[i][1]
+    //     setSearchIn(search)
+    //   } else if (queryArr[i][0] === "start") {
+    //     let start = queryArr[i][1]
+    //     setStartDate(start)
+    //   }
+    //   else if (queryArr[i][0] === "end") {
+    //     let end = queryArr[i][1]
+    //     setEndDate(end)
+    //   }
+    //   else {        
+    //     let oriArr = props.filter.category
+    //     let originalValue = oriArr?.map((item) => { return item.value }) 
+    //     console.log(originalValue,"orginalvalue")
+    //     let  filterValue = queryArr[i][1]?.split("%2C").map((item) => { return { label: item, value: item } })
+    //     let  filterArray = []
+    //     filterArray = queryArr[i][1]?.split("%2C").map((item) => { return item })
+    //     console.log(filterArray,"filterArray")
+
+    //     // const found = originalValue.find(element => (filterArray.includes(element)));
+
+    //     const found = originalValue?.filter(word => filterArray.includes(word));
+    //     console.log(found,"found")
+    //     // console.log(filterArray,"filterArray===>")
+
+    //     // let value = queryArr[i][1]
+    //     // let check = filterValue?.map((item)=>{item.value.includes(props.filter?.category.map((item)=>{return item.value}))})
+    //     // let check  = filter
+    //     // console.log(check,"check====>")
+    //     // console.log(filterValue)
+    //     setFilter((oldValue) => {
+    //       const temp = { ...oldValue };
+    //       temp[queryArr[i][0]] = filterValue;
+    //       return temp;
+    //     });
+    //   }
+    // }
+
+
+
+
+
+//////////////  Old Code //////////////////////////////////
+
+
+
+  }, [props.filter])
 
   const filterData = (value, key) => {
     setFilter((oldValue) => {
@@ -101,7 +165,10 @@ const Filters = (props) => {
   const resetHandler = () => {
     setReset(true)
   }
-
+  const handleSelection = (ranges) => {
+    setStartDateRange(ranges.Selection.startDate);
+    setEndDateRange(ranges.Selection.endDate);
+  };
   return (
     <>
       <Row>
@@ -123,7 +190,15 @@ const Filters = (props) => {
                     />
                   </Form.Group>
                 </Col>
-
+                <DateRangePicker
+                  ranges={[selectionDate]}
+                  //   minDate={new Date()}
+                  showMonthAndYearPickers={false}
+                  rangeColors={["#FD5861"]}
+                  direction="horizontal"
+                  onChange={handleSelection}
+                  fixedHeight={false}
+                />
                 {Object.keys(props.filter).map((key, index) => {
                   if (key === "date_range") {
                     return (
