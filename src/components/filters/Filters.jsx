@@ -7,7 +7,6 @@ import queryString from 'query-string';
 import { useHistory, useLocation } from 'react-router-dom'
 import { encode, decode } from 'js-base64';
 import { useEffect } from "react";
-import { DateRangePicker } from "react-date-range";
 
 const Filters = (props) => {
   const [filter, setFilter] = useState(Object.keys(props.filter).reduce((pre, curr) => ((pre[curr] = []), pre), {}));
@@ -17,13 +16,6 @@ const Filters = (props) => {
   const [searchIn, setSearchIn] = useState("");
   const location = useLocation()
   let history = useHistory();
-  const [startDateRange, setStartDateRange] = useState(new Date());
-  const [endDateRange, setEndDateRange] = useState(new Date());
-  const selectionDate = {
-    startDate: startDateRange,
-    endDate: endDateRange,
-    key: "Selection",
-  };
   useEffect(() => {
     const url = new URL(window.location.href).searchParams;
     if(url.get("search")){
@@ -43,7 +35,6 @@ const Filters = (props) => {
       let filterArr = props.filter?.category
       let originalValue = filterArr?.map((item) => { return item.value })
       const found = originalValue?.filter(word => filterValue.includes(word)).map((item) => { return { label: item, value: item } });
-      console.log(found,"check===>")
       setFilter((oldValue) => {
               const temp = { ...oldValue };
               temp["category"] = found;
@@ -165,10 +156,6 @@ const Filters = (props) => {
   const resetHandler = () => {
     setReset(true)
   }
-  const handleSelection = (ranges) => {
-    setStartDateRange(ranges.Selection.startDate);
-    setEndDateRange(ranges.Selection.endDate);
-  };
   return (
     <>
       <Row>
@@ -190,15 +177,6 @@ const Filters = (props) => {
                     />
                   </Form.Group>
                 </Col>
-                <DateRangePicker
-                  ranges={[selectionDate]}
-                  //   minDate={new Date()}
-                  showMonthAndYearPickers={false}
-                  rangeColors={["#FD5861"]}
-                  direction="horizontal"
-                  onChange={handleSelection}
-                  fixedHeight={false}
-                />
                 {Object.keys(props.filter).map((key, index) => {
                   if (key === "date_range") {
                     return (
