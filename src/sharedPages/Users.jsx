@@ -13,6 +13,7 @@ import Badge from "../components/badge/Badge";
 import user_image from "../assets/images/taut.png";
 import Select from "react-select";
 import TooltipCustom from "../components/tooltip/TooltipCustom";
+import departments_map from "../assets/JsonData/departments_map.json";
 
 const Users = () => {
   const [users, setUsers] = useState("");
@@ -86,8 +87,8 @@ const Users = () => {
           </Row>
         </td>
         <td>{item.email_address ? item.email_address : "N/A"}</td>
-        <td>{item.designation}</td>
-        <td>{item.department}</td>
+        <td>{departments_map.designations[item.designation] ?? "N/A"}</td>
+        <td>{departments_map.departments[item.department] ?? "N/A"}</td>
         <td>{moment(item.joining_date).format("ll")}</td>
         <td>
           <Badge type={status_map[item.u_status]} content={item.u_status} />
