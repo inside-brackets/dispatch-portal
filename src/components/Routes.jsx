@@ -45,6 +45,8 @@ const MyTrucks = lazy(() => import("../pages/dispatch/MyTrucks"));
 const CarrierReport = lazy(() => import("../pages/dispatch/CarrierReport"));
 const Report = lazy(() => import("../pages/dispatch/Report"));
 const DispatchInvoices = lazy(() => import("../pages/dispatch/Invoices"));
+// Dispatcher Manager routes
+const DMDashboard = lazy(() => import("../pages/dispatchManager/DashboardDM"));
 
 // HR
 const HRDashboard = lazy(() => import("../pages/HR/Dashboard"));
@@ -206,6 +208,32 @@ const Routes = () => {
       </Switch>
     </Suspense>
   ) : department === "dispatch" ? (
+    designation === "manager" ? (
+      <Suspense
+        fallback={
+          <div className="spreadsheet__loader">
+            <Loader
+              type="MutatingDots"
+              color="#349eff"
+              height={100}
+              width={100}
+            />
+          </div>
+        }
+      >
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to="/dashboard" />
+          </Route>
+          <Route path="/dashboard" exact component={DMDashboard} />
+          <Route path="/invoices" component={Invoice} />
+          <Route path="/loads" component={Loads} />
+          <Route path="*">
+            <h1>Not found</h1>
+          </Route>
+        </Switch>
+      </Suspense>
+    ) :(
     <Suspense
       fallback={
         <div className="spreadsheet__loader">
@@ -234,7 +262,7 @@ const Routes = () => {
           <h1>Not found</h1>
         </Route>
       </Switch>
-    </Suspense>
+    </Suspense>)
   ) : department === "HR" ? (
     <Suspense
       fallback={
