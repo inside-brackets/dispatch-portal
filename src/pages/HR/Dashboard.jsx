@@ -164,7 +164,7 @@ let sales,dispatcher
   },[])
   const renderBodyLate = (item, index) => (
       <tr key={index}>
-      <td>{item?.user_name[0]}</td>
+      <td>{item?.user_name[0].length>10?item?.user_name[0].slice(0,16):item?.user_name[0]}</td>
       <td>{item?.department[0]}</td>
       <td>{item?.late}</td>
       </tr>

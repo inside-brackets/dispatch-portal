@@ -226,8 +226,18 @@ const Routes = () => {
             <Redirect to="/dashboard" />
           </Route>
           <Route path="/dashboard" exact component={DMDashboard} />
-          <Route path="/invoices" component={Invoice} />
-          <Route path="/loads" component={Loads} />
+          <Route path="/carriers" exact component={Carriers} />
+        <Route path="/carrierview/:mc" exact component={CarrierView} />
+        <Route path="/carrierview/:mc/:truck" exact component={TruckDetails} />
+        <Route path="/assignsales" exact component={AssignSales} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/loads" component={Loads} />
+        <Route path="/pdf" component={PdfTest} />
+        <Route path="/invoices" component={Invoice} />
+        <Route path="/users" exact component={Users} />
+        <Route path="/users/:id" exact component={UserDetail} />
+        <Route path="/reports" exact component={AdminReport} />
+        <Route path="/reports/:id" component={Report} />
           <Route path="*">
             <h1>Not found</h1>
           </Route>
@@ -311,6 +321,7 @@ const Routes = () => {
         <Route path="/dashboard" exact component={AccountsDashboard}/>
         <Route path="/expenses" exact component={Expenses}/>
         <Route path="/salary" exact component={Salary}/>
+        <Route path="/profile" component={Profile} />
         <Route path="*">
           <h1>Not found</h1>
         </Route>

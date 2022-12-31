@@ -6,8 +6,6 @@ import Table from "react-bootstrap/Table";
 import Loader from "react-loader-spinner";
 
 export default function DetailsLoginModal(props) {
-
-  const [data, setData] = useState([]);
   const [lateUsers, setLateUsers] = useState([]);
   const [today, setToday] = useState(new Date());
   const [salesTime,setSalesTime] = useState();

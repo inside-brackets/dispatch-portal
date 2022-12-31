@@ -16,7 +16,7 @@ const LateLoginCard = ({
     <Card
       style={{
         width: "auto",
-        height: "400px",
+        height: "410px",
         border: "light",
       }}
     >

@@ -7,22 +7,16 @@ import { useSelector, useDispatch } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
-
 const DashboardDM = () => {
-
   const [dispatchers, setdispatchers] = useState({
     active: null,
     pending: null,
     dispatch: null,
   });
-  const [data, setData] = useState(null);
   const [topDispatcher, setTopDispatcher] = useState(null);
   const [lineChart, setLineChart] = useState([]);
-
   const { company: selectedCompany } = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
-
   const lineChartOptions = {
     chart: {
       width: "100%",
@@ -73,7 +67,7 @@ const DashboardDM = () => {
     },
     yaxis: {
       title: {
-        text: "Carriers",
+        text: "Dispatchers",
       },
     },
     legend: {
@@ -90,17 +84,12 @@ const DashboardDM = () => {
   }, []);
 
   const fetchChart = () => {
-    axios.get(`/settings/chart`).then(({ data }) => {
+    axios.get(`/dispatch/dispatch-fee-graph`).then(({ data }) => {
       setLineChart([
         {
-          name: "Appointment",
-          data: data.appointment,
-        },
-        {
-          name: "Registered",
-          data: data.registered,
-        },
-      ]);
+          name: "Dispatchers Fee",
+          data: data.data,
+        }]);
     });
   };
 
@@ -116,16 +105,6 @@ const DashboardDM = () => {
           pending: data.pendingTrucks,
         });
       });
-
-    axios
-      .post(`/admin/top-sales`, {
-        company: selectedCompany.value,
-      })
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => console.log(err));
-
     axios
       .post(`/admin/top-dispatcher`, {
         company: selectedCompany.value,
@@ -219,7 +198,7 @@ const DashboardDM = () => {
                       <tr>
                         <th>#</th>
                         <th>User Name</th>
-                        <th>Total Gross</th>
+                        <th>Total Fee</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -255,7 +234,6 @@ const DashboardDM = () => {
             </Card.Body>
           </Card>
         </Col>
-
       </Row>
     </div>
   );
