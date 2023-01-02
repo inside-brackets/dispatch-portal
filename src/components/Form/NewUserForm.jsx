@@ -84,7 +84,6 @@ const NewUserForm = ({ refreshTable, closeModal }) => {
             company: department === "admin" ? "falcon" : selectedCompany.value,
           })
           .then(({ data }) => {
-            console.log(data);
             refreshTable();
             closeModal();
           })
@@ -110,6 +109,10 @@ const NewUserForm = ({ refreshTable, closeModal }) => {
               placeholder="Enter username"
               onChange={(e) => {
                 setUsername(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  username: "",
+                }));
               }}
               isInvalid={!!errors.username}
               required
@@ -134,7 +137,13 @@ const NewUserForm = ({ refreshTable, closeModal }) => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  password: "",
+                }));
+              }}
               isInvalid={!!errors.password}
               required
             />
@@ -153,7 +162,13 @@ const NewUserForm = ({ refreshTable, closeModal }) => {
             <Form.Control
               as="select"
               value={department}
-              onChange={(e) => setDepartment(e.target.value)}
+              onChange={(e) => {
+                setDepartment(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  department: "",
+                }));
+              }}
               isInvalid={!!errors.department}
               required
             >
@@ -173,7 +188,13 @@ const NewUserForm = ({ refreshTable, closeModal }) => {
             <Form.Control
               as="select"
               value={designation}
-              onChange={(e) => setDesignation(e.target.value)}
+              onChange={(e) => {
+                setDesignation(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  designation: "",
+                }));
+              }}
               isInvalid={!!errors.designation}
               required
             >
@@ -195,7 +216,13 @@ const NewUserForm = ({ refreshTable, closeModal }) => {
               value={salary}
               type="number"
               placeholder="Salary"
-              onChange={(e) => setSalary(Number(e.target.value))}
+              onChange={(e) => {
+                setSalary(Number(e.target.value));
+                setErrors((prev) => ({
+                  ...prev,
+                  salary: "",
+                }));
+              }}
               isInvalid={!!errors.salary}
               required
             />
@@ -209,7 +236,13 @@ const NewUserForm = ({ refreshTable, closeModal }) => {
               value={joiningDate}
               type="date"
               placeholder="Joining date"
-              onChange={(e) => setJoiningDate(e.target.value)}
+              onChange={(e) => {
+                setJoiningDate(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  joinDate: "",
+                }));
+              }}
               isInvalid={!!errors.joinDate}
               required
             />
