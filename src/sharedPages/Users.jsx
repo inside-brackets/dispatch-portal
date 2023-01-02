@@ -50,7 +50,7 @@ const Users = () => {
   ];
   const renderHead = (item, index) => <th key={index}>{item}</th>;
 
-  const closeCloseModel = () => {
+  const closeModal = () => {
     setShowModal(false);
   };
   const addUserHandler = () => {
@@ -184,17 +184,16 @@ const Users = () => {
         <MyModal
           size="lg"
           show={showModal}
-          heading="ADD User"
-          onClose={closeCloseModel}
+          heading="Add new User"
+          onClose={closeModal}
           style={{ width: "auto" }}
         >
           <NewUserForm
-            setShowModal={(data) => {
-              setShowModal(data);
+            refreshTable={() => {
+              setRefresh(Math.random());
               setRerenderTable(Math.random());
             }}
-            data={users}
-            setRefresh={setRefresh}
+            closeModal={closeModal}
           />
         </MyModal>
       </Row>
