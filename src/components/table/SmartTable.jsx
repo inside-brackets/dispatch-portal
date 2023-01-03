@@ -17,6 +17,7 @@ const Table = (props) => {
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [reRender, setReRender] = useState(false);
   let pages = 1;
   let range = [];
 
@@ -32,6 +33,22 @@ const Table = (props) => {
     getData();
     // eslint-disable-next-line
   }, [search, filter, currPage, endDate]);
+
+  useEffect(() => {
+    setBodyData([]);
+    setReRender(true);
+    setTimeout(() => {
+      setReRender(false);
+    }, 500);
+    // eslint-disable-next-line
+  }, [props.refresh]);
+
+  useEffect(() => {
+    if (reRender) {
+      getData();
+    }
+    // eslint-disable-next-line
+  }, [reRender]);
 
   const selectPage = (page) => {
     setCurrPage(page);
@@ -103,13 +120,11 @@ const Table = (props) => {
                     onChange={(e) => setStartDate(e.target.value)}
                     type="date"
                     className="form-control"
-                    
                   />
                 </Col>
                 <Col md={3}>
                   <label>To</label>
                   <input
-                    
                     disabled={!startDate}
                     onChange={(e) => {
                       setEndDate(e.target.value);
@@ -195,7 +210,11 @@ const Table = (props) => {
               {bodyData && props.renderBody ? (
                 <tbody>
                   {bodyData[`page${currPage}`]?.map((item, index) =>
-                    props.renderBody(item, index, currPage)
+                    props.renderBody(
+                      item,
+                      index + currPage * props.limit,
+                      currPage
+                    )
                   )}
                 </tbody>
               ) : null}
@@ -212,8 +231,8 @@ const Table = (props) => {
                       .replace("/", " ")
                       .replace("/", " ")
                       .replace("/", " ")
-                      .replace(/[0-9]/g, "")}
-                    {" "}to show
+                      .replace(/[0-9]/g, "")}{" "}
+                    to show
                   </Alert>
                 </Col>
               </Row>
