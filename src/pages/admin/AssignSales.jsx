@@ -90,6 +90,7 @@ const AssignSales = () => {
 
         body: {
           department: "dispatch",
+          designation:"employee",
           company: selectedCompany.value,
         },
       },
