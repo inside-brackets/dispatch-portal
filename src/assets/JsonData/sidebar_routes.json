@@ -195,7 +195,7 @@
       "icon": "bx bx-user"
     }
   ],
-  "accounts":[
+  "accounts": [
     {
       "display_name": "Dashboard",
       "route": "/dashboard",
@@ -207,9 +207,9 @@
       "icon": "bx bx-dollar-circle"
     },
     {
-      "display_name": "Salary",
-      "route": "/salary",
-      "icon": "bx bx-export"
+      "display_name": "Salaries",
+      "route": "/salaries",
+      "icon": "bx bxs-wallet"
     }
   ]
 }

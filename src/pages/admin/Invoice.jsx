@@ -19,6 +19,7 @@ const invoiceTableHead = [
   "Truck Number",
   "From",
   "To",
+  "Payment Date",
   "Gross",
   "Payable",
   "Status",
@@ -70,17 +71,18 @@ const Invoice = () => {
       <td>{item.truckNumber ? item.truckNumber : "NA"}</td>
 
       <td>
-        {item.startingDate ? moment(item.startingDate).format("ll") : "NA"}
+        {item.startingDate ? moment(item.startingDate).format("MMM DD") : "NA"}
         <br />
-        {item.startingDate ? moment(item.startingDate).format("LT") : "NA"}
+        {item.startingDate ? moment(item.startingDate).format("YYYY") : ""}
       </td>
       <td>
-        {item.endingDate ? moment(item.endingDate).format("ll") : "NA"}
+        {item.endingDate ? moment(item.endingDate).format("MMM DD") : "NA"}
         <br />
-        {item.endingDate ? moment(item.endingDate).format("LT") : "NA"}
+        {item.endingDate ? moment(item.endingDate).format("YYYY") : ""}
       </td>
-      <td>{item.totalGross ? item.totalGross : "NA"}</td>
+      <td>{item.paymentDate ? moment(item.paymentDate).format("ll") : "NA"}</td>
 
+      <td>{item.totalGross ? item.totalGross : "NA"}</td>
       <td>{item.dispatcherFee ? item.dispatcherFee : "NA"}</td>
       <td>
         {item.invoiceStatus ? (

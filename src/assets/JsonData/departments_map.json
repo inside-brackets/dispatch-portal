@@ -1,0 +1,15 @@
+{
+  "departments": {
+    "admin": "Admin",
+    "accounts": "Accounts",
+    "dispatch": "Dispatch",
+    "sales": "Sales",
+    "HR": "HR"
+  },
+  "designations": {
+    "company": "Company",
+    "employee": "Employee",
+    "manager": "Manager",
+    "team_lead": "Team Lead"
+  }
+}

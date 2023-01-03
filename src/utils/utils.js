@@ -31,3 +31,7 @@ export const getRefreshToken = async (id) => {
   const res = await axios.get(`/refreshToken/${id}`);
   localStorage.setItem("user", res.data);
 };
+
+export const roundNumber = (num) => {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
