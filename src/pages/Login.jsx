@@ -88,7 +88,12 @@ const Login = () => {
                       },
               })
             );
-            dispatch(themeActions.setColor("theme-color-blue"));
+            if(user.company === "alpha"){
+              dispatch(themeActions.setColor("theme-color-red"));
+            
+            }else{
+              dispatch(themeActions.setColor("theme-color-blue"));
+            }
 
             setLoginError(false);
             history.replace(from);

@@ -67,7 +67,7 @@ const DashboardDM = () => {
     },
     yaxis: {
       title: {
-        text: "Dispatchers",
+        text: "Gross",
       },
     },
     legend: {
@@ -87,7 +87,7 @@ const DashboardDM = () => {
     axios.get(`/dispatch/dispatch-fee-graph`).then(({ data }) => {
       setLineChart([
         {
-          name: "Dispatchers Fee",
+          name: "Gross",
           data: data.data,
         }]);
     });
@@ -198,7 +198,7 @@ const DashboardDM = () => {
                       <tr>
                         <th>#</th>
                         <th>User Name</th>
-                        <th>Total Fee</th>
+                        <th>Total Gross</th>
                       </tr>
                     </thead>
                     <tbody>
