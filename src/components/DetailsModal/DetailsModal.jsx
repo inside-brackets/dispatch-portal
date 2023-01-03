@@ -29,7 +29,6 @@ console.log(props.users,"props.users====>")
   }, [users]);
 
   const removeDuplicates = () => {
-    console.log(props.users,'props.users======>')
     if (modalSwitch) {
       setLoading(true);
       if (props.users[today.getMonth()]) {

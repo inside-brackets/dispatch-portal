@@ -116,6 +116,36 @@
         "display_name": "Dashboard",
         "route": "/dashboard",
         "icon": "bx bx-category-alt"
+      },
+      {
+        "display_name": "Assign Sales",
+        "route": "/assignsales",
+        "icon": "bx bx-log-in-circle"
+      },
+      {
+        "display_name": "Carriers",
+        "route": "/carriers",
+        "icon": "bx bxs-truck"
+      },
+      {
+        "display_name": "Users",
+        "route": "/users",
+        "icon": "bx bx-user"
+      },
+      {
+        "display_name": "Invoices",
+        "route": "/invoices",
+        "icon": "bx bx-paper-plane"
+      },
+      {
+        "display_name": "Loads",
+        "route": "/loads",
+        "icon": "bx bx-package"
+      },
+      {
+        "display_name": "Report",
+        "route": "/reports",
+        "icon": "bx bxs-report"
       }
     ],
     "teamlead": [
