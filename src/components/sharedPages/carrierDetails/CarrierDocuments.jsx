@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import Badge from "../../badge/Badge";
 import { useSelector } from "react-redux";
 import "./carrierdetail.css";
-import { Form, Card, Row, Col, Button, Spinner} from "react-bootstrap";
+import { Form, Row, Col, Button, Spinner} from "react-bootstrap";
 const CarrierDocuments = ({setCarrierData }) => {
     const currUser = useSelector((state) => state.user.user);
     const params = useParams();
@@ -263,9 +263,7 @@ const CarrierDocuments = ({setCarrierData }) => {
 
     return (
         <>
-            <Card style={{border:"none"}}>
-                <Card.Body>
-                    <Row>
+                    <Row style={{marginTop:"20px"}}>
                         <Col>
                             <h4>Carrier Documents:</h4>
                             {/* MC FILE START */}
@@ -677,10 +675,6 @@ const CarrierDocuments = ({setCarrierData }) => {
                             {/* Mise Files END*/}
                         </Col>
                     </Row>
-
-
-                </Card.Body>
-            </Card>
         </>
     )
 }

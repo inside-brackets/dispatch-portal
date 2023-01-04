@@ -3,16 +3,13 @@ import { useParams, useHistory } from "react-router-dom";
 import TruckTable from "../../table/TruckTable";
 import TextArea from "../../UI/TextArea";
 import Loader from "react-loader-spinner";
-import BackButton from "../../UI/BackButton";
 import Modal from "../../modals/MyModal";
 import axios from "axios";
-import { Form, Card, Row, Col, Button, Spinner} from "react-bootstrap";
+import { Form,Row,Col,Button,Spinner} from "react-bootstrap";
 import { toast } from "react-toastify";
 import MySelect from "../../UI/MySelect";
-import Badge from "../../badge/Badge";
 import { socket } from "../../../index";
 import { useSelector } from "react-redux";
-import CStatus from "../../../assets/JsonData/status_map.json";
 import "./carrierdetail.css";
 import moment from "moment";
 
@@ -240,29 +237,9 @@ useEffect(()=>{
   };
 
   return (
-    <div className="row">
-      <div className="col">
-        <BackButton onClick={() => history.goBack()} />
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <Card
-            className="truck-detail-card"
-            style={{
-            //   marginLeft: "30px",
-            //   marginRight: "30px",
-              border: "none",
-            }}
-            // style={{ minHeight: "100vh" }}
-          >
-            <Card.Body>
-              <div className="carrier_badge_status">
-                <Badge
-                  type={CStatus[carrier.c_status]}
-                  content={carrier.c_status}
-                />
-              </div>
-              <h1 className="text-center">{carrier.company_name} </h1>
-              <hr />
-              <Row>
+<>
+              <Form noValidate validated={validated} onSubmit={handleSubmit}>
+              <Row style={{marginTop:"23px"}}>
                 <Form.Group as={Col} md="6" controlId="validationCustom03">
                   <Row>
                     <Col>
@@ -832,8 +809,6 @@ useEffect(()=>{
                 </Col>
                 <Col></Col>
               </Row>
-            </Card.Body>
-          </Card>
         </Form>
         <Modal
           show={changeStatus}
@@ -894,14 +869,14 @@ useEffect(()=>{
             <Button type="submit">Submit</Button>
           </Form>
         </Modal>
+        <hr/>
         <TruckTable
           mc={carrier.mc_number}
           trucks={trucks}
           setTrucks={setTrucks}
           disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
         />
-      </div>
-    </div>
+    </>
   );
 };
 

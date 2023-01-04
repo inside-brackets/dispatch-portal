@@ -74,8 +74,9 @@
     margin-left: 54px;
 }
 .carrier_badge_status{
-    display: flex;
-    justify-content: flex-end;
+    position: absolute;
+    right: 27px;
+    top: 38px;
 }
 .invalid_files{
     margin-left: -25px;
