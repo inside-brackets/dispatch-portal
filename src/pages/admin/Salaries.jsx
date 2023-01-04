@@ -5,16 +5,7 @@ import { useHistory } from "react-router-dom";
 
 import Table from "../../components/table/SmartTable";
 
-const getYears = () => {
-  const YEAR = new Date().getFullYear();
-  const STARTING_YEAR = 2022;
-  const years = Array.from(
-    new Array(YEAR - STARTING_YEAR + 1),
-    (val, index) => index + STARTING_YEAR
-  );
-  return years;
-};
-
+const TODAY = new Date();
 const MONTHS = [
   "January",
   "February",
@@ -30,14 +21,37 @@ const MONTHS = [
   "December",
 ];
 
+const getYears = () => {
+  const YEAR = new Date();
+  if (YEAR.getMonth() === 0) {
+    YEAR.setFullYear(YEAR.getFullYear() - 1);
+  }
+  const STARTING_YEAR = 2022;
+  const years = Array.from(
+    new Array(YEAR.getFullYear() - STARTING_YEAR + 1),
+    (val, index) => index + STARTING_YEAR
+  );
+  return years;
+};
+
 const Salaries = () => {
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [month, setMonth] = useState(new Date().getMonth() - 1);
+  const [year, setYear] = useState();
+  const [month, setMonth] = useState();
   const [months, setMonths] = useState([]);
   const [refresh, setRefresh] = useState(null);
 
   const history = useHistory();
   const { company: selectedCompany } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (TODAY.getMonth() === 0) {
+      setYear(TODAY.getFullYear() - 1);
+      setMonth(11);
+    } else {
+      setYear(TODAY.getFullYear());
+      setMonth(TODAY.getMonth() - 1);
+    }
+  }, []);
 
   useEffect(() => {
     setRefresh(Math.random());
@@ -49,16 +63,14 @@ const Salaries = () => {
   }, [year]);
 
   const generateArray = async () => {
-    const today = new Date();
-
-    if (year < today.getFullYear()) {
+    if (year < TODAY.getFullYear()) {
       setMonths(MONTHS);
     } else {
-      setMonths(MONTHS.slice(0, today.getMonth()));
+      setMonths(MONTHS.slice(0, TODAY.getMonth()));
     }
 
-    if (month >= today.getMonth()) {
-      setMonth(today.getMonth() - 1);
+    if (month >= TODAY.getMonth() && TODAY.getMonth() !== 0) {
+      setMonth(TODAY.getMonth() - 1);
     }
   };
 
@@ -146,26 +158,28 @@ const Salaries = () => {
         <Col>
           <Card>
             <Card.Body>
-              <Table
-                limit={10}
-                headData={customerTableHead}
-                renderHead={(item, index) => renderHead(item, index)}
-                api={{
-                  url: `/salary/get/salaries/${year}/${month}`,
-                  body: {
-                    company: selectedCompany.value,
-                  },
-                }}
-                placeholder={"User Name"}
-                filter={{
-                  department: [
-                    { label: "Sales ", value: "sales" },
-                    { label: "Dispatch", value: "dispatch" },
-                  ],
-                }}
-                renderBody={(item, index) => renderBody(item, index)}
-                refresh={refresh}
-              />
+              {year && month && (
+                <Table
+                  limit={10}
+                  headData={customerTableHead}
+                  renderHead={(item, index) => renderHead(item, index)}
+                  api={{
+                    url: `/salary/get/salaries/${year}/${month}`,
+                    body: {
+                      company: selectedCompany.value,
+                    },
+                  }}
+                  placeholder={"User Name"}
+                  filter={{
+                    department: [
+                      { label: "Sales ", value: "sales" },
+                      { label: "Dispatch", value: "dispatch" },
+                    ],
+                  }}
+                  renderBody={(item, index) => renderBody(item, index)}
+                  refresh={refresh}
+                />
+              )}
             </Card.Body>
           </Card>
         </Col>
