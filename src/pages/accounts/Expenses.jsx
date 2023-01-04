@@ -32,13 +32,16 @@ const Expenses = () => {
   const [expenseId,setExpenseId] = useState();
 
   const defaultOptions = [ ];
-  useEffect(async() => {
+  useEffect(() => {
+    async function fetchData(){
     let {data} = await axios.get('/accounts/expense/categories')
     data.map((category) =>{
         let value = createOption(category)
         defaultOptions.push(value)
     })
-  })
+  }
+  fetchData()
+  },[])
   
   const getYears = () => {
     const YEAR = new Date().getFullYear();

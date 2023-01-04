@@ -235,13 +235,12 @@ const clearHanler=()=>{
                     onClose={onrClose}
                     mc={item.mc_number}
                   />
-
                   <MyButton
                     className="appCard-btn"
                     color="primary"
                     buttonText={"Details"}
                     onClick={() => {
-                      history.push(`/appointments/${item.mc_number}`);
+                      history.push(`/carrierview/${item.mc_number}`);
                     }}
                   />
                 </div>
