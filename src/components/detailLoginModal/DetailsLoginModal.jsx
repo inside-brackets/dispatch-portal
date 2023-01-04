@@ -6,15 +6,14 @@ import Table from "react-bootstrap/Table";
 import Loader from "react-loader-spinner";
 
 export default function DetailsLoginModal(props) {
-
-  const [data, setData] = useState([]);
   const [lateUsers, setLateUsers] = useState([]);
   const [today, setToday] = useState(new Date());
   const [salesTime,setSalesTime] = useState();
   const [dispatchTime,setDispatchTime] = useState();
   const [loading, setLoading] = useState(false);
   let sales ,dispatcher
-  useEffect(async()=>{
+  useEffect(()=>{
+    async function fetchData(){
     setLoading(true)
     await axios.get(`/settings/timelogin`).then(({ data }) => {
       data.map((data) =>{
@@ -26,6 +25,7 @@ export default function DetailsLoginModal(props) {
           setDispatchTime(data.loginTime)
         }
       })
+
     })
 
     axios.post('/logintime/getlogins',{
@@ -36,6 +36,8 @@ export default function DetailsLoginModal(props) {
       setLateUsers(res.data.sort((a, b) => b.late - a.late))
       setLoading(false);
    })
+  }
+  fetchData()
   },[])
 
 console.log(lateUsers)

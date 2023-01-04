@@ -122,7 +122,8 @@ const Routes = () => {
           <Route path="/users/:id" exact component={UserDetail} />
           {/* <Route path="/spread_sheet" component={SpreadSheet} /> */}
           <Route path="/appointments" exact component={Appointments} />
-          <Route path="/appointments/:mc" component={AppointmentDetail} />
+          <Route path="/carrierview/:mc" component={CarrierView} />
+          <Route path="/carrierdocument/:mc" exact component={CarrierView} />
           <Route path="/dialer" component={Dialer} />
           <Route path="/settings" component={MCSeries} />
           <Route path="/profile" component={Profile} />
@@ -152,8 +153,8 @@ const Routes = () => {
           <Route path="/spread_sheet" component={SpreadSheet} />
           <Route path="/appointments" exact component={Appointments} />
           <Route path="/appointments_old/:mc" component={AppointmentDetail} />
-          <Route path="/appointments/:mc" component={CarrierView} />
           <Route path="/carrierview/:mc" component={CarrierView} />
+          <Route path="/carrierdocument/:mc" exact component={CarrierView} />
           <Route path="/dialer" component={Dialer} />
           <Route path="/profile" component={Profile} />
           <Route path="*">
@@ -184,6 +185,7 @@ const Routes = () => {
         <Route path="/searchcarrier" exact component={SearchCarrier} />
         <Route path="/addcarrier/:mc" component={AddCarrier} />
         <Route path="/carrierview/:mc" exact component={CarrierView} />
+        <Route path="/carrierdocument/:mc" exact component={CarrierView} />
         <Route path="/carrierview/:mc/:truck" exact component={TruckDetails} />
         <Route path="/assignsales" exact component={AssignSales} />
         <Route path="/profile" component={Profile} />
