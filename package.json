@@ -20,6 +20,7 @@
     "emailjs-com": "^3.2.0",
     "howler": "^2.2.3",
     "html2canvas": "^1.4.1",
+    "js-base64": "^3.7.3",
     "jspdf": "^2.5.1",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
