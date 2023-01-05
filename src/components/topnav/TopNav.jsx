@@ -28,7 +28,6 @@ const Topnav = () => {
     localStorage.removeItem("counters");
     cookies.remove("user");
   };
-  console.log(user,"user================================>")
   const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
     useDropzone({});
   const files = acceptedFiles.map((file) => (
