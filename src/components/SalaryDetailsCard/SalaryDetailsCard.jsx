@@ -280,6 +280,7 @@ function SalaryDetailsCard({
                     <Slots
                       slot={user.dispatch_salary_slots.first}
                       cut={slotOne}
+                      prev={null}
                     />
                   )}
                   <h1 className="txt-125 fon-bold mar-b-1">Slot 2</h1>
@@ -287,6 +288,7 @@ function SalaryDetailsCard({
                     <Slots
                       slot={user.dispatch_salary_slots.second}
                       cut={slotTwo}
+                      prev={user.dispatch_salary_slots.first}
                     />
                   )}
                   <h1 className="txt-125 fon-bold mar-b-1">Slot 3</h1>
@@ -294,6 +296,7 @@ function SalaryDetailsCard({
                     <Slots
                       slot={user.dispatch_salary_slots.third}
                       cut={slotThree}
+                      prev={user.dispatch_salary_slots.second}
                     />
                   )}
                 </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-function IncentiveDispatchSlots({ slot, cut }) {
+function IncentiveDispatchSlots({ slot, cut, prev }) {
   return (
     <>
       <div className="dis-flex dis-row dis-between mar-b-1">
@@ -11,7 +11,7 @@ function IncentiveDispatchSlots({ slot, cut }) {
           <input
             className="w-200 h-36 p-0-1 border border-r-025 bg-smoke no-input"
             readOnly
-            value={slot.lower_bound ?? "-"}
+            value={slot.lower_bound ?? prev.upper_bound}
           />
         </div>
         <div className="dis-flex dis-col">
