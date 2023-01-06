@@ -4,15 +4,30 @@ import downIcon from "../../assets/images/carrierIssues/ExpandButtonDown.png"
 import { Card, Row, Col, Button } from 'react-bootstrap'
 import './accordion.css'
 import Message from '../message/Message';
+import StatusDropdown from '../statusDropdown/StatusDropdown';
+const clickOutsideRef = (content_ref, toggle_ref, setStatusChange) => {
+  document.addEventListener("mousedown", (e) => {
+    // user click toggle
+    if (toggle_ref.current && toggle_ref.current.contains(e.target)) {
+    } else {
+      // user click outside toggle and content
+      if (content_ref.current && !content_ref.current.contains(e.target)) {
+        setStatusChange("");
+      }
+    }
+  });
+};
 const Accordion = ({ title, content, status, index }) => {
   const [isActive, setIsActive] = useState(false);
-  const listRef = useRef(null);
-  const [currentChat, setCurrentChat] = useState(true);
+  const dropdown_toggle_el = useRef(null);
+  const dropdown_content_el = useRef(null);
+  const [currentChat, setCurrentChat] = useState(false);
   const [messages, setMessages] = useState([]);
   const [file, setFile] = useState(null);
+  const [statusChange,setStatusChange] = useState(false)
   const [newMessage, setNewMessage] = useState("");
-  const messagesEndRef = useRef(null)
   const scrollRef = useRef();
+  clickOutsideRef(dropdown_content_el, dropdown_toggle_el, setStatusChange);
   const fileName = [
     { name: "Chat.png" }, { name: "Recording.png" }, { name: "Voilation.png" },
   ]
@@ -36,6 +51,7 @@ const Accordion = ({ title, content, status, index }) => {
     },
   ]
   const handleSubmit =(e)=>{
+    setCurrentChat(true)
     e.preventDefault()
 
     let newMsg = {
@@ -45,20 +61,13 @@ const Accordion = ({ title, content, status, index }) => {
     setMessages([...messages,newMsg])
     setNewMessage("")
   }
+  const statusChangeHandler =()=>{
+    setStatusChange(!statusChange)
+  }
   useEffect(()=>{
     setMessages(messagesarray)
   },[])
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-  useEffect(() => {
-    // window.scrollTo(0, scrollRef.current?.offsetTop);
-    // scrollRef.current?.scrollTo(0,200);
-    // scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    // scrollRef.current?.scrollToBottom();
-    // scrollToBottom()
-    // listRef.current?.lastElementChild?.scrollIntoView();
-  }, [messages]);
+
   return (
     <>
       <Card className="accordion_card_wrapper" style={{ backgroundColor: "#fafafa" }}>
@@ -71,7 +80,9 @@ const Accordion = ({ title, content, status, index }) => {
               </div>
 
               <div className="status_wrapper">
-                <div className="status_wrapper_item"><div className="status_wrapper_item_name">Status</div><div className={`status_wrapper_item_value ${status === "Open" ? 'status_open' : 'status_closed'}`} >{status}</div></div>
+                <div className="status_wrapper_item"><div className="status_wrapper_item_name">Status</div><div className={`status_wrapper_item_value ${status === "Open" ? 'status_open' : 'status_closed'}`} onClick={statusChangeHandler} ref={dropdown_toggle_el}>
+                  {statusChange && <div className={`status_dropdown ${status === "Open" ? 'status_dropdown_close' :'status_dropdown_open'}`} ref={dropdown_content_el} >{status === "Open" ? 'Close' : 'Open'}</div>}
+                  {status}</div></div>
                 <div className="status_wrapper_item"><div className="status_wrapper_item_name">Dispatcher</div><div className="status_wrapper_item_value">John Doe</div></div>
                 <div className="status_wrapper_item"><div className="status_wrapper_item_name">{status === "Open" ? 'Opened' : 'Closed'}</div><div className="status_wrapper_item_value">3 Days ago</div></div>
               </div>
@@ -131,7 +142,13 @@ const Accordion = ({ title, content, status, index }) => {
                                      
                                   </div>
                                   <div  /> 
-                                  <form className="shareBottom">
+                                </>
+                              ) : (
+                                <span className="noConversationText">
+                                  Start Conversation...
+                                </span>
+                              )}
+                                    <form className={`shareBottom ${currentChat===false?'noCon':''}`}>
                                     <div className="input_button_wrapper">
                                     <div className="input_send_wrapper">
                                       <textarea type="text" placeholder='Type here...' className="input_send_message"
@@ -153,6 +170,7 @@ const Accordion = ({ title, content, status, index }) => {
                                     <div>
                                       <button type="submit" 
                                       className="shareButton"
+                                      disabled={newMessage.length ===0?true:false}
                                       onClick={handleSubmit}
                                       >
                                         Send
@@ -162,12 +180,6 @@ const Accordion = ({ title, content, status, index }) => {
                                     </div>
                                     </div>
                                   </form>
-                                </>
-                              ) : (
-                                <span className="noConversationText">
-                                  Open a conversation to start a chat.
-                                </span>
-                              )}
                             </div>
                           </div>
 

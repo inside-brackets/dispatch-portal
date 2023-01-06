@@ -86,13 +86,41 @@ flex-direction: row;
     font-weight: 400;
 }
 .status_wrapper_item_value{
+    position: relative;
     font-size: 16px;
     font-weight: 500;
 }
+.status_dropdown{
+    position:absolute;
+    top: 21px;
+    right: -7px;
+   
+    background-color: whitesmoke;
+    padding: 5px;
+    padding-left: 11px;
+    padding-right: 11px;
+    border-radius: 4px;
+    color: red;
+    font-size: 17px;
+    cursor:pointer;
+    box-shadow: 2px 7px 15px -6px rgb(0 0 0 / 36%);
+}
+.status_dropdown:hover{
+    background: #f2efef;
+}
+.status_dropdown_open{
+    color:green !important
+}
+.status_dropdown_close{
+    color:red !important
+}
+
 .status_open{
     color: green;
+    cursor:pointer;
 }
 .status_closed{
+    cursor:pointer;
     color:red
 }
 .navigate_btn{
@@ -196,27 +224,6 @@ flex-direction: row;
     align-items: center;
     justify-content: space-between;
   }
-  
-  .chatMessageInput {
-    width: 80%;
-    height: 90px;
-    padding: 10px;
-  }
-  
-  .chatSubmitButton {
-    width: 70px;
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: teal;
-    color: white;
-  }
-  
-  .chatOnline {
-    flex: 3;
-  }
-  
   .chatMenuWrapper,
   .chatBoxWrapper,
   .chatOnlineWrapper {
@@ -230,6 +237,10 @@ flex-direction: row;
     font-size: 50px;
     color: rgb(224, 220, 220);
     cursor: default;
+  }
+  .noCon{
+    margin-top: 18rem;
+
   }
   
   @media screen and (max-width: 768px) {
@@ -346,24 +357,6 @@ flex-direction: row;
   }
   .shareButtonI{
     font-size: 34px !important;
-  }
-  
-  .shareImgContainer{
-    padding: 0 20px 10px 20px;
-    position: relative;
-  }
-  
-  .shareImg{
-    width: 100%;
-    object-fit: cover;
-  }
-  
-  .shareCancelImg{
-    position: absolute;
-    top: 0;
-    right: 20px;
-    cursor: pointer;
-    opacity: 0.7;
   }
   .input_send_message{
     box-sizing:border-box;
