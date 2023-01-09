@@ -1,0 +1,395 @@
+.accordion_card_wrapper{
+    background-color: #f5f5f5 !important;
+    padding: 0px !important;
+    border-radius: 40px !important;
+    padding-left: 9px !important;
+    padding-right: 19px !important;
+}
+.accordion-item{
+    background-color: #fafafa;
+}
+.accordion_header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.accordion_title_wrapper{
+display:flex;
+flex-direction: row;
+}
+.accordion_title_wrapper_item{
+    width: 27vw;
+    display: flex;
+    flex-direction: column;
+    margin-left: 17px;
+   
+}
+.accordion_body_hidden{
+    /* transition: all 2s ease-out; */
+    /* animation-name: example;
+    animation-duration: 2s;
+    animation-delay: -1s; */
+    
+    /* transition: height 3s; */
+    display: none;
+}
+.accordion_body_show{
+    /* transition: all 2s ease-out; */
+    display:block;
+    /* animation-name: example;
+    animation-duration: 2s;
+    animation-delay: -1s; */
+    /* transition: height 3s; */
+}
+@keyframes example {
+    0%   {height: 20px;}
+    25%  {height:30px}
+    50%  {height: 40px;}
+    75%  {height: 50px;}
+    100% {height: 118;}
+  }
+.ticket_title{
+    font-family:"Roboto-Medium, Roboto";
+    font-weight:700;
+    font-size:16px
+}
+.ticket_desc{
+    font-family:"RobotoCondensed-Medium, Roboto";
+    font-weight:"500";
+}
+.ticket_counter{
+    color: white;
+    height: 48px;
+    width: 48px;
+    border-radius: 100%;
+    background-color: var(--main-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    font-family: 'Roboto-Bold, Roboto';
+}
+.status_wrapper{
+    display: flex;
+}
+.status_wrapper_item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 26px;
+    margin-right: 26px;
+}
+.status_wrapper_item_name{
+    font-size: 10px;
+    font-weight: 400;
+}
+.status_wrapper_item_value{
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+}
+.status_dropdown{
+    position:absolute;
+    top: 21px;
+    right: -7px;
+   
+    background-color: whitesmoke;
+    padding: 1px;
+    padding-left: 11px;
+    padding-right: 11px;
+    border-radius: 4px;
+    color: red;
+    font-size: 17px;
+    cursor:pointer;
+    box-shadow: 2px 7px 15px -6px rgb(0 0 0 / 36%);
+}
+.status_dropdown:hover{
+    background: #f2efef;
+}
+.status_dropdown_open{
+    color:green !important
+}
+.status_dropdown_close{
+    color:red !important
+}
+
+.status_open{
+    color: green;
+    cursor:pointer;
+}
+.status_closed{
+    cursor:pointer;
+    color:red
+}
+.navigate_btn{
+    cursor: pointer;
+    margin-top:11px;
+    transition: all 2s ease-out;
+}
+
+
+/* Two Cards Start */
+.accordion_hr{
+    padding-top: 12px;
+    padding-left: 12px;
+    padding-right: 6px;
+}
+.accordion_content{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.inner_card_heading{
+    font-weight:500;
+    font-size:20px;
+    font-family:"Roboto-Medium, Roboto";
+}
+.accordion_attachment{
+  height: 250px;
+}
+.inner_card_heading_attchment{
+  font-weight:600;
+  font-size:14px;
+  font-family:"Roboto-Medium, Roboto";
+}
+.issue_all_files_wrapper{
+  height: 147px;
+  overflow-y:scroll;
+}
+.issue_files_wrapper{
+    height: 118px;
+    overflow-y: scroll;
+}
+.issue_files_item_wrapper{
+    display: flex;
+    align-items: center;
+}
+.issue_title{
+    font-weight: 800;
+}
+.issue_desc{
+    margin-top: 10px;
+    height: 118px;
+    overflow-y: scroll;
+}
+.issue_desc_wrapper{
+  height:147px;
+  overflow-y: scroll;
+}
+.issue_file_icon{
+    color:black;
+}
+.issue_file_name{
+    margin-left: 5px;
+    font-weight: 300;
+    font-size: 12px;
+}
+/* Two Cards End */
+
+/* Message Start */
+.messages_wrapper{
+    height: 355px;
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+
+}
+/* Message End */
+
+/* Chat Box Start */
+.messenger {
+    height: calc(100vh - 70px);
+    display: flex;
+  }
+  
+  .chatMenu {
+    flex: 3.5;
+  }
+  
+  .chatMenuInput {
+    width: 90%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid gray;
+  }
+  
+  .chatBox {
+    flex: 5.5;
+  }
+  
+  .chatBoxWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .chatBoxTop {
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 10px;
+  }
+  
+  .chatBoxBottom {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chatMenuWrapper,
+  .chatBoxWrapper,
+  .chatOnlineWrapper {
+    padding: 10px;
+    height: 100%;
+  }
+  
+  .noConversationText {
+    position: absolute;
+    top: 10%;
+    font-size: 50px;
+    color: rgb(224, 220, 220);
+    cursor: default;
+  }
+  .noCon{
+    margin-top: 18rem;
+
+  }
+  
+  @media screen and (max-width: 768px) {
+    .chatMenu {
+      flex: 1;
+    }
+  
+    .chatMenuInput {
+      display: none;
+    }
+  
+    .chatBox{
+      flex: 10;
+    }
+  
+    .chatOnline{
+      flex: 1px;
+    }
+  }
+  
+/* Chat Box End */
+
+/* Share  Field Start */
+.share {
+    width: 100%;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+    box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  }
+  
+  .shareWrapper {
+    padding: 10px;
+  }
+  
+  .shareTop {
+    display: flex;
+    align-items: center;
+  }
+  
+  .shareProfileImg {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .shareInput {
+    border: none;
+    width: 80%;
+  }
+  
+  .shareInput:focus {
+    outline: none;
+  }
+  
+  .shareHr {
+    margin: 20px;
+  }
+  
+  .shareBottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .input_send_wrapper{
+    position: relative;
+  }
+  .shareOptions{
+      display: flex;
+      position: absolute;
+      top: 13px;
+      right: 75px;
+  }
+  
+  .shareOption{
+      display: flex;
+      align-items: center;
+      margin-right: 15px;
+      cursor: pointer;
+  }
+  
+  .shareIcon{
+      font-size: 18px;
+      margin-right: 3px;
+  }
+  
+  .shareOptionText{
+      font-size: 14px;
+      font-weight: 500;
+  }
+  
+  .shareButton{
+    background: var(--main-color);
+    border-radius: 999px;
+    box-shadow: var(--main-color) 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;
+    margin-left: 15px;
+  }
+  .shareButtonI{
+    font-size: 34px !important;
+  }
+  .input_send_message{
+    box-sizing:border-box;
+    outline:none;
+    transition:.3s;
+    border: 2px solid #aaa;
+    border-radius: 18px;
+    padding: 9px;
+    width: 53rem;
+    padding-right: 36px;
+  }
+  .input_send_message:focus{
+        border-color:dodgerBlue;
+        box-shadow:0 0 8px 0 dodgerBlue;
+  }
+/* Share  Field End */
+
+.input_button_wrapper{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
