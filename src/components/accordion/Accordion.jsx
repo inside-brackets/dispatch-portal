@@ -21,7 +21,7 @@ const Accordion = ({ title, content, status, index }) => {
   const [isActive, setIsActive] = useState(false);
   const dropdown_toggle_el = useRef(null);
   const dropdown_content_el = useRef(null);
-  const [currentChat, setCurrentChat] = useState(false);
+  const [currentChat, setCurrentChat] = useState(true);
   const [messages, setMessages] = useState([]);
   const [file, setFile] = useState(null);
   const [statusChange,setStatusChange] = useState(false)
@@ -99,12 +99,18 @@ const Accordion = ({ title, content, status, index }) => {
                     <div className="inner_card_heading">Issues</div>
                     <hr />
                     <div className="issue_title">{title}</div>
+                    <div className="issue_desc_wrapper">
                     <div className="issue_desc">
                       {content}
                     </div>
+                    </div>
                   </Card.Body></Card></Col>
                   <Col md="3"><Card className="accordion_attachment">
-                    <Card.Body><div className="inner_card_heading">Attachements</div>
+                    <Card.Body>
+                      <div className="inner_card_heading">Attachements</div>
+                      <hr />
+                      <div className="issue_all_files_wrapper">
+                      <div className="inner_card_heading_attchment">Ticket Files</div>
                       <hr />
                       <div className="issue_files_wrapper">
                         {fileName.map((item) => {
@@ -117,6 +123,21 @@ const Accordion = ({ title, content, status, index }) => {
                             </>
                           )
                         })}
+                      </div>
+                      <div className="inner_card_heading_attchment">Conversation Files</div>
+                      <hr />
+                      <div className="issue_files_wrapper">
+                        {fileName.map((item) => {
+                          return (
+                            <>
+                              <div className="issue_files_item_wrapper">
+                                <div><i className="bx bx-import action-button issue_file_icon"></i></div>
+                                <div className="issue_file_name">{item.name}</div>
+                              </div>
+                            </>
+                          )
+                        })}
+                      </div>
                       </div>
                     </Card.Body></Card></Col></Row>
 

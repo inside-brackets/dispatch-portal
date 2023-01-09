@@ -63,7 +63,7 @@ flex-direction: row;
     height: 48px;
     width: 48px;
     border-radius: 100%;
-    background-color: #007bff;
+    background-color: var(--main-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -96,7 +96,7 @@ flex-direction: row;
     right: -7px;
    
     background-color: whitesmoke;
-    padding: 5px;
+    padding: 1px;
     padding-left: 11px;
     padding-right: 11px;
     border-radius: 4px;
@@ -146,7 +146,16 @@ flex-direction: row;
     font-family:"Roboto-Medium, Roboto";
 }
 .accordion_attachment{
-    height: 250px;
+  height: 250px;
+}
+.inner_card_heading_attchment{
+  font-weight:600;
+  font-size:14px;
+  font-family:"Roboto-Medium, Roboto";
+}
+.issue_all_files_wrapper{
+  height: 147px;
+  overflow-y:scroll;
 }
 .issue_files_wrapper{
     height: 118px;
@@ -163,6 +172,10 @@ flex-direction: row;
     margin-top: 10px;
     height: 118px;
     overflow-y: scroll;
+}
+.issue_desc_wrapper{
+  height:147px;
+  overflow-y: scroll;
 }
 .issue_file_icon{
     color:black;
@@ -334,9 +347,9 @@ flex-direction: row;
   }
   
   .shareButton{
-    background: #5E5DF0;
+    background: var(--main-color);
     border-radius: 999px;
-    box-shadow: #5E5DF0 0 10px 20px -10px;
+    box-shadow: var(--main-color) 0 10px 20px -10px;
     box-sizing: border-box;
     color: #FFFFFF;
     cursor: pointer;

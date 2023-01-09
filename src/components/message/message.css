@@ -19,31 +19,32 @@
 .messageText{
     padding: 10px;
     border-radius: 20px;
-    background-color: #1877f2;
+    background-color:var(--main-color);
     color: white;
-    max-width: 430px;
 }
-.nameMessageWrapper{
+.nameContentWrapper{
     display: flex;
     flex-direction: column;
+    
+}
+.nameMessageWrapper{
+    display: flex;   
 }
 .personName{
-    margin-bottom: 0px !important;
-    font-weight: 400;
+    font-size: 16px;
+    padding-bottom: 1px;
+    font-weight: 700;
+}
+.messageTime{
     color: #aeaeae;
-    font-weight: 300;
-    font-family: system-ui;
+    margin-bottom: 0px !important;
+    margin-left: 8px;
+    font-weight: 400;
+    font-size: 11px;
 }
 .messageBottom{
-    font-size: 11px;
-    margin-top: -11px;
-}
-
-.message.own{
-    align-items: flex-end;
-}
-
-.message.own .messageText{
-    background-color: rgb(245, 241, 241);
-    color: black;
+    display:flex;
+    justify-content:flex-start;
+    margin-left:10px;
+    align-items: center;
 }
