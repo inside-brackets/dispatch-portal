@@ -1,5 +1,5 @@
 import { Row, Col, Card } from "react-bootstrap";
-const FormContainer = ({ title, size, children }) => {
+const FormContainer = ({ title, size, children, addClass }) => {
   if (!size) {
     size = 6;
   }
@@ -10,7 +10,7 @@ const FormContainer = ({ title, size, children }) => {
     >
       <Col md={size}>
         {title ? (
-          <Card>
+          <Card className={addClass}>
             <Card.Body>
               <Card.Title as="h2" className="text-center">
                 {title}
