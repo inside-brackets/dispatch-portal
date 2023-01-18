@@ -22,7 +22,7 @@
   --main-color-blue: #3a67c8;
   --second-color-blue: #59a4e9;
 
-  --main-color-red: #c0353a ;
+  --main-color-red: #c0353a;
   --second-color-red: #ff4a6b;
 
   --main-color-cyan: #10d4d2;
@@ -45,7 +45,7 @@
   margin: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 i {
@@ -116,6 +116,10 @@ textarea:focus {
   background-color: var(--main-bg) !important;
   box-shadow: var(--box-shadow) !important;
   border-radius: var(--border-radius) !important;
+}
+
+.noShadow {
+  box-shadow: none !important;
 }
 
 .overflow__hidden {
@@ -232,7 +236,7 @@ textarea:focus {
   margin-top: 20%;
   margin-left: 40%;
 }
-.appointment__loader{
+.appointment__loader {
   margin-top: 20%;
   display: flex;
   justify-content: center;
@@ -420,6 +424,6 @@ th {
   margin-left: -7rem;
 }
 
-.b{
+.b {
   font-weight: bold;
 }

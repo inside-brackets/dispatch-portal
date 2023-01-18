@@ -3,10 +3,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userActions } from "../store/user";
 import { themeActions } from "../store/theme";
-import { Col, Row, Form, Image, Button, Spinner } from "react-bootstrap";
+import { Col, Row, Form, Button, Spinner } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
-import logo from "../assets/images/logo_login.png";
-import logo2 from "../assets/images/White-Christmas.png";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwtDecode from "jwt-decode";
@@ -54,14 +52,14 @@ const Login = () => {
           const userToken = loginResponse.data.userToken;
           localStorage.setItem("user", userToken);
           const user = jwtDecode(userToken);
-          if(user){
-            if(!(user.department==='admin')&&!(user.department==='HR')){
+          if (user) {
+            if (!(user.department === "admin") && !(user.department === "HR")) {
               await axios({
                 url: `/logintime`,
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 data: {
-                  employee:user._id
+                  employee: user._id,
                 },
               });
             }
@@ -88,10 +86,9 @@ const Login = () => {
                       },
               })
             );
-            if(user.company === "alpha"){
+            if (user.company === "alpha") {
               dispatch(themeActions.setColor("theme-color-red"));
-            
-            }else{
+            } else {
               dispatch(themeActions.setColor("theme-color-blue"));
             }
 
@@ -127,12 +124,19 @@ const Login = () => {
     }
   };
   return (
-    <>
-      <Row className="vh-100 vw-100" style={{ backgroundColor: "#ebf2fa" }}>
+    <div
+      style={{
+        background: "url('/background.png')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+    >
+      <Row className="vh-100 vw-100">
         <Col md={6}>
-          <FormContainer size="4" title="Login">
+          <FormContainer size="4" title="Login" addClass="noShadow">
             <Form>
-              <Row style={{ margin: "10px" }}>
+              <Row style={{ margin: "16px" }}>
                 <Form.Label>Username:</Form.Label>
                 <Form.Control
                   type="text"
@@ -141,7 +145,7 @@ const Login = () => {
                 />
               </Row>
 
-              <Row style={{ margin: "10px" }}>
+              <Row style={{ margin: "16px" }}>
                 <Form.Label>Password:</Form.Label>
                 <Form.Control
                   type="password"
@@ -155,11 +159,11 @@ const Login = () => {
                 />
               </Row>
               {loginError.status && (
-                <Form.Text style={{ color: "red", margin: "10px" }}>
+                <Form.Text style={{ color: "red", margin: "16px" }}>
                   {loginError.msg}
                 </Form.Text>
               )}
-              <Row style={{ margin: "10px" }} className="mt-4">
+              <Row style={{ margin: "16px" }} className="mt-4">
                 <Button disabled={loading} onClick={handleLogin}>
                   {loading && (
                     <Spinner
@@ -176,22 +180,6 @@ const Login = () => {
             </Form>
           </FormContainer>
         </Col>
-        <Col
-          md={6}
-          className={`${
-            process.env.REACT_APP_FALCON === "true" ? "" : "logo-inside"
-          }`}
-        >
-          <Image
-            className={`justify-content-start align-items-center ${
-              process.env.REACT_APP_FALCON === "true"
-                ? "vh-100 vw-100"
-                : "logo-inside-ml"
-            }`}
-            src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
-            fluid
-          />
-        </Col>
       </Row>
       {unAuthorized.status && (
         <div style={{ position: "absolute", top: "0px", width: "100%" }}>
@@ -200,7 +188,7 @@ const Login = () => {
           </Message>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
