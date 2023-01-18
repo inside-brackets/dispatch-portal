@@ -4,8 +4,13 @@ import ReactTooltip from "react-tooltip";
 import './tooltip.css'
 const tooltip = (props) => {
   return (<>
-    <ReactTooltip id={`${props.id}`} place="top" effect="solid" className="tooltips" arrowColor="none" style={{backgroundColor:"#fa1b23 "}} offset={{top:props.top || 0, left: props.left || 0,right:props.right || 0}}>
-    {props.text}
+    <ReactTooltip id={`${props.id}`} place="top" effect="solid" className="tooltips"
+     arrowColor="false"
+    //  arrowColor="#fa1b23"
+    //  style={{backgroundColor:"#fa1b23 "}} 
+     content="hello world"
+     offset={{top:props.top || -6, left: props.left || 0,right:props.right || 0}}>
+   <span> {props.text}</span>
   </ReactTooltip>
   </>
   )

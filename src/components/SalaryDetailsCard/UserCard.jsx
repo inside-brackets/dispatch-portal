@@ -1,19 +1,10 @@
 import React, { useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import moment from "moment";
 
 import dummy_img from "../../assets/images/taut.png";
 
-function UserCard({ user, readOnly }) {
-  const [month, setMonth] = useState(
-    new Date(
-      new Date().getFullYear(),
-      new Date().getMonth() - 1,
-      new Date().getDate()
-    ).toLocaleString("default", {
-      month: "long",
-    })
-  );
+function UserCard({ user, readOnly, year, month }) {
+  const [selectedMonth, setSelectedMonth] = useState(new Date(year, month, 1));
 
   return (
     <>
@@ -25,6 +16,7 @@ function UserCard({ user, readOnly }) {
               <img
                 className="salary-user-img"
                 src={user.profile_image ?? dummy_img}
+                alt="user_image"
               />
               <div className="dis-flex dis-col dis-start">
                 <span className="txt-1 line-1 fon-med mar-b-025 txt-black">
@@ -58,35 +50,33 @@ function UserCard({ user, readOnly }) {
             <div className="dis-flex dis-col">
               <div>
                 <span className="txt-1 line-1 fon-med mar-b-025 mar-r-075 txt-black">
-                  Status:
+                  Year:
                 </span>
                 <span className="txt-1 line-1 fon-reg mar-b-025 txt-grey">
-                  {user.u_status}
+                  {selectedMonth.getFullYear() ?? "-"}
                 </span>
               </div>
               <div>
                 <span className="txt-1 line-1 fon-med mar-r-075 txt-black">
-                  Joined Date:
+                  Month:
                 </span>
                 <span className="txt-1 line-1 fon-reg txt-grey">
-                  {moment(user.joining_date).format("ll")}
+                  {selectedMonth.toLocaleString("default", {
+                    month: "long",
+                  }) ?? "-"}
                 </span>
               </div>
             </div>
             <div className="dis-flex dis-col">
               <div>
-                <span className="txt-1 line-1 fon-med mar-b-025 mar-r-075 txt-black">
-                  Month:
-                </span>
-                <span className="txt-1 line-1 fon-reg mar-b-025 txt-grey">
-                  {month ?? "-"}
-                </span>
-              </div>
-              <div>
                 <span className="txt-1 line-1 fon-med mar-r-075 txt-black">
                   Salary:
                 </span>
-                <span className="txt-1 line-1 fon-reg txt-grey">
+                <span
+                  className={`txt-1 line-1 fon-reg ${
+                    readOnly ? "txt-green" : "txt-red"
+                  }`}
+                >
                   {readOnly ? "Paid" : "Unpaid"}
                 </span>
               </div>

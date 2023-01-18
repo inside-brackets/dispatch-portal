@@ -76,7 +76,8 @@ const CarrierReport = ({
   }
   const reactToPrintContent = React.useCallback(() => {
     return ref.current;
-  }, [ref.current]);
+  }, []);
+  // Unnecessary dependency: 'ref.current'. Mutable values like 'ref.current' aren't valid dependencies because mutating them doesn't re-render the component.
 
   const handlePrint = useReactToPrint({
     content: reactToPrintContent,

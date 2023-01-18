@@ -7,7 +7,11 @@
   {
     "icon": "bx bx-cog",
     "content": "Settings",
-    "to": "/"
+    "to": "/settings"
+  },
+  {
+    "icon": "bx bx-message-alt-check",
+    "content": "Feedback"
   },
   {
     "icon": "bx bx-log-out-circle bx-rotate-180",

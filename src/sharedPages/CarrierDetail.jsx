@@ -257,8 +257,7 @@ const CarrierDetail = () => {
       );
     }
     const { data: url } = await axios(
-      `/s3url/carrier_documents/${carrier.mc_number}.${
-        onSelectedMcFile.type.split("/")[1]
+      `/s3url/carrier_documents/${carrier.mc_number}.${onSelectedMcFile.type.split("/")[1]
       }`
     );
     axios.put(url, onSelectedMcFile).then(() => {
@@ -292,8 +291,7 @@ const CarrierDetail = () => {
     }
     setInsuranceLoader(true);
     const { data: url } = await axios(
-      `/s3url/carrier_documents/${carrier.mc_number}.${
-        onSelectedInsuranceFile.type.split("/")[1]
+      `/s3url/carrier_documents/${carrier.mc_number}.${onSelectedInsuranceFile.type.split("/")[1]
       }`
     );
     axios.put(url, onSelectedInsuranceFile).then(() => {
@@ -326,8 +324,7 @@ const CarrierDetail = () => {
     }
     setNoaLoader(true);
     const { data: url } = await axios(
-      `/s3url/carrier_documents/${carrier.mc_number}.${
-        onSelectedNoaFile.type.split("/")[1]
+      `/s3url/carrier_documents/${carrier.mc_number}.${onSelectedNoaFile.type.split("/")[1]
       }`
     );
     axios.put(url, onSelectedNoaFile).then(() => {
@@ -361,8 +358,7 @@ const CarrierDetail = () => {
     }
     setW9Loader(true);
     const { data: url } = await axios(
-      `/s3url/carrier_documents/${carrier.mc_number}.${
-        onSelectedW9File.type.split("/")[1]
+      `/s3url/carrier_documents/${carrier.mc_number}.${onSelectedW9File.type.split("/")[1]
       }`
     );
     axios.put(url, onSelectedW9File).then(() => {
@@ -392,8 +388,7 @@ const CarrierDetail = () => {
   const handleSubmitMisc = async (e) => {
     setMiscLoader(true);
     const { data: url } = await axios(
-      `/s3url/carrier_documents/${carrier.mc_number}.${
-        selectedMiscFile.type.split("/")[1]
+      `/s3url/carrier_documents/${carrier.mc_number}.${selectedMiscFile.type.split("/")[1]
       }`
     );
     await axios.put(url, selectedMiscFile);
@@ -530,6 +525,7 @@ const CarrierDetail = () => {
                         placeholder="Phone #"
                         name="phone_number"
                         required
+                        readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                         defaultValue={carrier ? carrier.phone_number : ""}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -551,6 +547,7 @@ const CarrierDetail = () => {
                         required
                         name="email"
                         defaultValue={carrier ? carrier.email : ""}
+                        readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide a valid email.
@@ -583,6 +580,7 @@ const CarrierDetail = () => {
                     placeholder="Comment.."
                     defaultValue={carrier ? carrier.comment : ""}
                     name="Comment:"
+                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   />
                 </Form.Group>
                 <Form.Group as={Col} md="3" controlId="validationCustom03">
@@ -592,14 +590,14 @@ const CarrierDetail = () => {
                     defaultValue={
                       carrier.appointment
                         ? moment(new Date(carrier.appointment)).format(
-                            "YYYY-MM-DDTHH:mm"
-                          )
+                          "YYYY-MM-DDTHH:mm"
+                        )
                         : ""
                     }
                     name="appointment"
+                    disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please provide a valid Owner name.
                   </Form.Control.Feedback>
                 </Form.Group>
               </Row>
@@ -653,6 +651,7 @@ const CarrierDetail = () => {
                       name="owner_name"
                       required
                       defaultValue={carrier ? carrier.owner_name : ""}
+                      readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid Owner name.
@@ -668,6 +667,7 @@ const CarrierDetail = () => {
                       defaultValue={
                         carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
                       }
+                      readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid entity.
@@ -682,6 +682,7 @@ const CarrierDetail = () => {
                       defaultValue={carrier ? carrier.tax_id_number : ""}
                       name="tax_id"
                       required
+                      readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                     />
                     <Form.Control.Feedback type="invalid">
                       Please provide a valid Tax Id.
@@ -691,6 +692,7 @@ const CarrierDetail = () => {
                 <Row className="my-3">
                   <Col md={4}>
                     <MySelect
+                      isDisabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                       isMulti={false}
                       value={selectedPayment}
                       onChange={setSelectedPayment}
@@ -723,6 +725,7 @@ const CarrierDetail = () => {
                               ? carrier.factoring.name
                               : ""
                           }
+                          readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                           required={
                             selectedPayment.value === "factoring" ? true : false
                           }
@@ -749,6 +752,7 @@ const CarrierDetail = () => {
                           required={
                             selectedPayment.value === "factoring" ? true : false
                           }
+                          readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Address.
@@ -775,6 +779,7 @@ const CarrierDetail = () => {
                           required={
                             selectedPayment.value === "factoring" ? true : false
                           }
+                          readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Agent's Name.
@@ -799,6 +804,7 @@ const CarrierDetail = () => {
                           required={
                             selectedPayment.value === "factoring" ? true : false
                           }
+                          readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Agent's Email.
@@ -822,6 +828,7 @@ const CarrierDetail = () => {
                           required={
                             selectedPayment.value === "factoring" ? true : false
                           }
+                          readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                         />
                         <Form.Control.Feedback type="invalid">
                           Please provide a valid Phone Number.
@@ -844,6 +851,7 @@ const CarrierDetail = () => {
                       carrier && carrier.insurance ? carrier.insurance.name : ""
                     }
                     required
+                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Company's Name.
@@ -861,6 +869,7 @@ const CarrierDetail = () => {
                     }
                     placeholder="Address"
                     required
+                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Address.
@@ -880,6 +889,7 @@ const CarrierDetail = () => {
                         : ""
                     }
                     required
+                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Agent's Name.
@@ -898,6 +908,7 @@ const CarrierDetail = () => {
                         : ""
                     }
                     required
+                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Agent's Email.
@@ -915,6 +926,7 @@ const CarrierDetail = () => {
                         : ""
                     }
                     required
+                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Phone Number.
@@ -978,10 +990,10 @@ const CarrierDetail = () => {
                       onSelectedMcFile && carrier.mc_file
                         ? "update file"
                         : carrier.mc_file
-                        ? "select file to update"
-                        : onSelectedMcFile
-                        ? "upload file"
-                        : "select file to upload"
+                          ? "select file to update"
+                          : onSelectedMcFile
+                            ? "upload file"
+                            : "select file to upload"
                     }
                     id="mcfile"
                   ></TooltipCustom>
@@ -989,7 +1001,7 @@ const CarrierDetail = () => {
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="mcfile">
                       <Button
-                        disabled={!onSelectedMcFile || mcLoader}
+                        disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : !onSelectedMcFile || mcLoader}
                         className=""
                         onClick={handleUploadMcFile}
                       >
@@ -1049,10 +1061,10 @@ const CarrierDetail = () => {
                       onSelectedNoaFile && carrier.noa_file
                         ? "update file"
                         : carrier.noa_file
-                        ? "select file to update"
-                        : onSelectedNoaFile
-                        ? "upload file"
-                        : "select file to upload"
+                          ? "select file to update"
+                          : onSelectedNoaFile
+                            ? "upload file"
+                            : "select file to upload"
                     }
                     id="noafile"
                   ></TooltipCustom>
@@ -1060,7 +1072,7 @@ const CarrierDetail = () => {
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="noafile">
                       <Button
-                        disabled={!onSelectedNoaFile || noaLoader}
+                        disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : !onSelectedNoaFile || noaLoader}
                         className="action_button"
                         onClick={handleUploadNoaFile}
                       >
@@ -1093,7 +1105,8 @@ const CarrierDetail = () => {
                 <Col md={2}>
                   <h4 className="fileHeading"> W9 </h4>
                 </Col>
-                <Form.Group as={Col} md={4} className="file__input__contaier">
+                <Form.Group as={Col} md={4} className="file__input__contaier"
+                >
                   <Form.Label className="file_input_label">
                     {carrier.w9_file ? (
                       <Badge type="success" content="Uploaded" />
@@ -1115,10 +1128,10 @@ const CarrierDetail = () => {
                       onSelectedW9File && carrier.w9_file
                         ? "update file"
                         : carrier.w9_file
-                        ? "select file to update"
-                        : onSelectedW9File
-                        ? "upload file"
-                        : "select file to upload"
+                          ? "select file to update"
+                          : onSelectedW9File
+                            ? "upload file"
+                            : "select file to upload"
                     }
                     id="w9file"
                   ></TooltipCustom>
@@ -1126,7 +1139,8 @@ const CarrierDetail = () => {
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="w9file">
                       <Button
-                        disabled={!onSelectedW9File || w9Loader}
+                        disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : !onSelectedW9File || w9Loader}
+
                         className="action_button"
                         onClick={handleUploadW9File}
                       >
@@ -1184,10 +1198,10 @@ const CarrierDetail = () => {
                       onSelectedInsuranceFile && carrier.insurance_file
                         ? "update file"
                         : carrier.insurance_file
-                        ? "select file to update"
-                        : onSelectedInsuranceFile
-                        ? "upload file"
-                        : "select file to upload"
+                          ? "select file to update"
+                          : onSelectedInsuranceFile
+                            ? "upload file"
+                            : "select file to upload"
                     }
                     id="insurancefile"
                   ></TooltipCustom>
@@ -1195,7 +1209,7 @@ const CarrierDetail = () => {
                   <div className="actions_button_wrapper">
                     <div data-tip data-for="insurancefile">
                       <Button
-                        disabled={!onSelectedInsuranceFile || insuranceLoader}
+                        disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : !onSelectedInsuranceFile || insuranceLoader}
                         className="action_button"
                         onClick={handleUploadInsuranceFile}
                       >
@@ -1252,6 +1266,7 @@ const CarrierDetail = () => {
                               <Button
                                 variant="danger"
                                 onClick={() => setDeleteModal(file)}
+                                disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                               >
                                 Delete File
                               </Button>
@@ -1283,6 +1298,7 @@ const CarrierDetail = () => {
                     onClick={() => {
                       setShowMicsModal(true);
                     }}
+                    disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                   >
                     Add Misc
                   </Button>
@@ -1361,12 +1377,12 @@ const CarrierDetail = () => {
                 <hr />
                 <Col md={9}>
                   <Button
-                    disabled={!closeCheck ? loaderButton : false}
+                    disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : !closeCheck ? loaderButton : false}
                     onClick={
                       currUser.department === "sales"
                         ? () => {
-                            setCloseCheck(false);
-                          }
+                          setCloseCheck(false);
+                        }
                         : ""
                     }
                     variant="success"
@@ -1375,14 +1391,14 @@ const CarrierDetail = () => {
                   >
                     {!closeCheck
                       ? loaderButton && (
-                          <Spinner
-                            as="span"
-                            animation="grow"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />
-                        )
+                        <Spinner
+                          as="span"
+                          animation="grow"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                      )
                       : null}
                     {currUser.department === "sales"
                       ? "Save"
@@ -1397,6 +1413,7 @@ const CarrierDetail = () => {
                         size="lg"
                         variant="danger"
                         onClick={openModal}
+                        disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
                       >
                         Reject
                       </Button>
@@ -1404,18 +1421,18 @@ const CarrierDetail = () => {
                         size="lg"
                         type="submit"
                         onClick={closeHandler}
-                        disabled={closeCheck ? loaderButton : false}
+                        disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : closeCheck ? loaderButton : false}
                       >
                         {closeCheck
                           ? loaderButton && (
-                              <Spinner
-                                as="span"
-                                animation="grow"
-                                size="sm"
-                                role="status"
-                                aria-hidden="true"
-                              />
-                            )
+                            <Spinner
+                              as="span"
+                              animation="grow"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                            />
+                          )
                           : null}
                         Close Sale
                       </Button>
@@ -1463,6 +1480,15 @@ const CarrierDetail = () => {
               ]}
             />
           </Form>
+          <div className="status_wrapper">
+          <p><span className="status_labal">Appointment:</span><span className="status_text"> Contract in progress by salesperson</span></p>
+          <p><span className="status_labal">Registered:</span><span className="status_text"> Active carriers who are in contract with us</span></p>
+          <p><span className="status_labal">Rejected:</span><span className="status_text"> Reached by the salesperson but were not interested.</span></p>
+          <p><span className="status_labal">Didnotpick:</span><span className="status_text"> Reached by salesperson but didn't pick the call.</span></p>
+          <p><span className="status_labal">Unassigned:</span> <span className="status_text">No salesperson assigned yet</span></p>
+          <p><span className="status_labal">Deactivate:</span> <span className="status_text">Were working with us but have left us now.</span></p>
+          </div>
+
         </Modal>
 
         <Modal
@@ -1493,6 +1519,7 @@ const CarrierDetail = () => {
           mc={carrier.mc_number}
           trucks={trucks}
           setTrucks={setTrucks}
+          disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
         />
       </div>
     </div>

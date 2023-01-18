@@ -12,10 +12,12 @@ const Table = (props) => {
   );
   const [currPage, setCurrPage] = useState(0);
   const [totalLength, setTotalLength] = useState(0);
+  const [sum, setSum] = useState(0);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [reRender, setReRender] = useState(false);
   let pages = 1;
   let range = [];
 
@@ -31,6 +33,22 @@ const Table = (props) => {
     getData();
     // eslint-disable-next-line
   }, [search, filter, currPage, endDate]);
+
+  useEffect(() => {
+    setBodyData([]);
+    setReRender(true);
+    setTimeout(() => {
+      setReRender(false);
+    }, 500);
+    // eslint-disable-next-line
+  }, [props.refresh]);
+
+  useEffect(() => {
+    if (reRender) {
+      getData();
+    }
+    // eslint-disable-next-line
+  }, [reRender]);
 
   const selectPage = (page) => {
     setCurrPage(page);
@@ -54,6 +72,7 @@ const Table = (props) => {
   const getData = () => {
     if (!bodyData[`page${currPage}`]) {
       if (props.api) {
+        console.log(props.api.body ,"...props.api.body",filter,"filter,",startDate,"startDate",endDate,"endDate")
         setLoading(true);
         axios
           .post(`${props.api.url}/?search=${search}`, {
@@ -70,6 +89,7 @@ const Table = (props) => {
               return temp;
             });
             setTotalLength(res.data.length);
+            setSum(res.data.total)
             setLoading(false);
           })
           .catch((err) => {
@@ -101,13 +121,11 @@ const Table = (props) => {
                     onChange={(e) => setStartDate(e.target.value)}
                     type="date"
                     className="form-control"
-                    
                   />
                 </Col>
                 <Col md={3}>
                   <label>To</label>
                   <input
-                    
                     disabled={!startDate}
                     onChange={(e) => {
                       setEndDate(e.target.value);
@@ -125,6 +143,7 @@ const Table = (props) => {
           }
 
           return (
+            <>
             <Col md={3} className="mb-2">
               <Form.Label className="text-capitalize">{key}</Form.Label>
               <Select
@@ -141,10 +160,27 @@ const Table = (props) => {
                 options={props.filter[key]}
               />
             </Col>
-          );
+            {props.total?
+                      (<>
+                      <Col md={4}></Col>
+                      <Col md={2} className="mb-2">
+                      <Form.Group>
+                        <Form.Label className="text-capitalize">
+                         {props.total }
+                        </Form.Label>
+                        <Form.Control
+                        readOnly
+                        type="number"
+                        value={sum?sum:0}
+                        >
+          
+                        </Form.Control>
+                      </Form.Group>
+                    </Col></>):null
+        }
+         </> );
         })}
       </Row>
-
       <div
         className={`table-wrapper ${
           props.overflowHidden ? "overflow__hidden" : ""
@@ -175,7 +211,11 @@ const Table = (props) => {
               {bodyData && props.renderBody ? (
                 <tbody>
                   {bodyData[`page${currPage}`]?.map((item, index) =>
-                    props.renderBody(item, index, currPage)
+                    props.renderBody(
+                      item,
+                      index + currPage * props.limit,
+                      currPage
+                    )
                   )}
                 </tbody>
               ) : null}
@@ -192,7 +232,7 @@ const Table = (props) => {
                       .replace("/", " ")
                       .replace("/", " ")
                       .replace("/", " ")
-                      .replace(/[0-9]/g, "")}
+                      .replace(/[0-9]/g, "")}{" "}
                     to show
                   </Alert>
                 </Col>

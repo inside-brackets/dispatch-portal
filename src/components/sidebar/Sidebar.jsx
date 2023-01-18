@@ -31,6 +31,8 @@ const Sidebar = (props) => {
       ? "SERVICES "
       : department.toLowerCase() === "sales"
       ? "MARKETING"
+      :department.toLowerCase() === "accounts"?
+      "Accounts"
       : department.toUpperCase();
 
   const sidebarItems =
@@ -56,6 +58,7 @@ const Sidebar = (props) => {
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>
+      <div className="sidebar-wrapper">
       <div className="sidebar-items">
         {sidebarItems.map((item, index) => {
           return (
@@ -65,9 +68,12 @@ const Sidebar = (props) => {
               key={index}
             >
               <SidebarItem title={item.display_name} icon={item.icon} />
+              
             </NavLink>
           );
         })}
+      </div>
+
       </div>
     </div>
   );

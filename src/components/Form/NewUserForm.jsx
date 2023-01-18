@@ -1,127 +1,94 @@
-import axios from "axios";
-
 import { useState, useEffect } from "react";
 import { Form, Col, Row, Button } from "react-bootstrap";
+import axios from "axios";
 import bcrypt from "bcryptjs";
 import { useSelector } from "react-redux";
-import Select from "react-select";
-import { socket } from "../../index";
+
 import Table from "react-bootstrap/Table";
 
-const NewUserForm = ({
-  data,
-  defaultValue,
-  setShowModal,
-  setEditModal,
-  setRefresh,
-  interview,
-}) => {
+const NewUserForm = ({ refreshTable, closeModal }) => {
   const [validated, setValidated] = useState(false);
-  const [usernameIsValid, setUsernameIsValid] = useState(null);
-  const [buttonLoader, setButtonLoader] = useState(false);
-  const [userName, setUserName] = useState(
-    defaultValue ? defaultValue.user_name : null
-  );
-  const [password, setPassword] = useState(
-    defaultValue ? defaultValue.password : null
-  );
-  const [department, setDepartment] = useState(
-    defaultValue ? defaultValue.department : "sales"
-  );
-  const [designation, setDesignation] = useState(
-    defaultValue ? defaultValue.designation : "Employee"
-  );
-  const [salary, setSalary] = useState(
-    defaultValue ? defaultValue.salary : 30000
-  );
-  const [joiningDate, setJoiningDate] = useState(
-    defaultValue ? new Date(defaultValue.joining_date) : null
-  );
-  const [userStatus, setUserStatus] = useState(
-    defaultValue
-      ? {
-          label: defaultValue.u_status,
-          value: defaultValue.u_status,
-        }
-      : null
-  );
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const [username, setUsername] = useState("");
+  const [availability, setAvailability] = useState(false);
+  const [password, setPassword] = useState("");
+  const [department, setDepartment] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [salary, setSalary] = useState(30000);
+  const [joiningDate, setJoiningDate] = useState(null);
+
   const { company: selectedCompany, user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (userName) {
+    if (username.length > 0) {
       const indentifier = setTimeout(async () => {
-        if (userName !== defaultValue?.user_name) {
-          const response = await axios.post(`/getusers`, {
-            user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
-          });
-          setUsernameIsValid(response.data.length === 0);
-        } else {
-          setUsernameIsValid(true);
-        }
+        const response = await axios.post(`/getusers`, {
+          user_name: username.replace(/\s+/g, " ").trim().toLowerCase(),
+        });
+        setAvailability(response.data.length === 0);
       }, 500);
       return () => {
         clearTimeout(indentifier);
       };
     }
-  }, [userName, defaultValue]);
+  }, [username]);
 
-  const handleReset = async () => {
-    const pass = "12345";
-    const reHash = await bcrypt.hash(pass, 8);
+  const validateForm = () => {
+    let voilations = {};
 
-    await axios
-      .post(`/updateuser/${defaultValue._id}`, {
-        password: reHash,
-      })
-      .then((response) => {
-        setRefresh(Math.random());
-      });
+    if (!availability) {
+      voilations.username = "Please enter a unique Username!";
+    }
+    if (password.length === 0) {
+      voilations.password = "Please enter a Password!";
+    }
+    if (department.length === 0) {
+      voilations.department = "Please select a Department!";
+    }
+    if (designation.length === 0) {
+      voilations.designation = "Please select a Designation!";
+    }
+    if (salary === 0) {
+      voilations.salary = "Please enter a Salary!";
+    }
+    if (!joiningDate) {
+      voilations.joinDate = "Please enter Joining Date!";
+    }
+
+    return voilations;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    setValidated(true);
+    const voilations = validateForm();
 
-    const hash = await bcrypt.hash(password, 8);
+    if (Object.keys(voilations).length > 0) {
+      setErrors(voilations);
+    } else {
+      setValidated(true);
+      const hash = await bcrypt.hash(password, 8);
 
-    if (form.checkValidity() === true) {
-      if (defaultValue && !interview) {
-        setButtonLoader(true);
-        await axios
-          .post(`/updateuser/${defaultValue._id}`, {
-            user_name: userName.replace(/\s+/g, " ").trim(),
-            joining_date: new Date(joiningDate),
-            salary,
-            designation,
-            department,
-            u_status: userStatus.value,
-          })
-          .then((response) => {
-            if (response.data.u_status === "fired") {
-              socket.emit("user-fired", `${defaultValue._id}`);
-            }
-            setRefresh(Math.random());
-            setEditModal(false);
-          });
-      } else if (usernameIsValid) {
-        setButtonLoader(true);
+      if (form.checkValidity()) {
+        setLoading(true);
         await axios
           .post(`/admin/createuser`, {
-            user_name: userName.replace(/\s+/g, " ").trim().toLowerCase(),
+            user_name: username.replace(/\s+/g, " ").trim().toLowerCase(),
             password: hash,
-            joining_date: new Date(joiningDate),
-            salary,
-            designation,
             department,
+            designation,
+            salary,
+            joining_date: new Date(joiningDate),
             company: department === "admin" ? "falcon" : selectedCompany.value,
-            ...defaultValue,
           })
-          .then((response) => {
-            setRefresh(Math.random());
-            setShowModal(false);
+          .then(({ data }) => {
+            refreshTable();
+            closeModal();
           })
-          .catch((err) => {console.log(err);
+          .catch((err) => {
+            console.log(err);
           });
       }
     }
@@ -129,164 +96,167 @@ const NewUserForm = ({
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <Row className="m-3">
-        <Form.Group as={Col} md="6">
-          <Form.Label>User Name</Form.Label>
-          <Form.Control
-            className={`${
-              userName && !usernameIsValid ? "invalid is-invalid" : ""
-            } no__feedback shadow-none`}
-            value={userName}
-            onChange={(e) => {
-              setUserName(e.target.value);
-            }}
-            type="text"
-            placeholder="Enter username"
-          />
-          {usernameIsValid && userName && (
-            <Form.Text style={{ color: "green" }}>
-              Username is available!
-            </Form.Text>
-          )}
-          {usernameIsValid === false && userName && (
-            <Form.Text style={{ color: "red" }}>
-              Whoops! username already exists.
-            </Form.Text>
-          )}
-        </Form.Group>
-        {defaultValue && !interview ? (
-          <Button
-            as={Col}
-            md="3"
-            className="mt-4 ms-5"
-            style={{
-              height: "45px",
-              borderRadius: "30px",
-              display: "inline-flex",
-              alignItems: "center ",
-            }}
-            onClick={handleReset}
-          >
-            <i className="bx bx-reset"></i>
-            Reset Password
-          </Button>
-        ) : (
-          <Form.Group as={Col} md="6">
+      <Row className="justify-content-center">
+        <Row className="m-3">
+          <Form.Group as={Col} md={6}>
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              className={`${
+                username.length > 0 && !availability ? "invalid is-invalid" : ""
+              }`}
+              value={username}
+              type="text"
+              placeholder="Enter username"
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  username: "",
+                }));
+              }}
+              isInvalid={!!errors.username}
+              required
+            />
+            {username.length > 0 && availability && (
+              <Form.Text style={{ color: "green" }}>
+                Username is available!
+              </Form.Text>
+            )}
+            {username.length > 0 && !availability && (
+              <Form.Text style={{ color: "red" }}>
+                Whoops! username already exists.
+              </Form.Text>
+            )}
+            <Form.Control.Feedback type="invalid">
+              {errors.username}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md={6}>
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  password: "",
+                }));
+              }}
+              isInvalid={!!errors.password}
               required
             />
             <Form.Control.Feedback type="invalid">
-              Please provide a valid password.
+              {errors.password}
             </Form.Control.Feedback>
           </Form.Group>
-        )}
+        </Row>
       </Row>
-      <Row
-        className={`justify-content-center ${
-          department === "dispatch" ? "" : "mb-3"
-        }`}
-      >
+      <Row className="justify-content-center mb-3">
         <Row className="m-3">
-          {!defaultValue && <hr />}
-          <h3>Company Info</h3>
-          <Form.Group as={Col} md="6">
+          <hr />
+          <h3 style={{ fontSize: "18px" }}>Additional Info</h3>
+          <Form.Group as={Col} md={6}>
             <Form.Label>Department</Form.Label>
             <Form.Control
               as="select"
               value={department}
-              onChange={(e) => setDepartment(e.target.value)}
+              onChange={(e) => {
+                setDepartment(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  department: "",
+                }));
+              }}
+              isInvalid={!!errors.department}
               required
             >
-              <option value={null}>Select Department</option>
+              <option value="">Select Department</option>
               <option value="sales">Sales</option>
               <option value="dispatch">Dispatch</option>
-              {/* <option value="accounts">Accounts</option> */}
+              <option value="accounts">Accounts</option>
               <option value="HR">HR</option>
               {user.department !== "HR" && <option value="admin">Admin</option>}
             </Form.Control>
-
             <Form.Control.Feedback type="invalid">
-              Please provide a valid city.
+              {errors.department}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="6">
+          <Form.Group as={Col} md={6}>
             <Form.Label>Designation</Form.Label>
             <Form.Control
               as="select"
               value={designation}
-              onChange={(e) => setDesignation(e.target.value)}
+              onChange={(e) => {
+                setDesignation(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  designation: "",
+                }));
+              }}
+              isInvalid={!!errors.designation}
               required
             >
-              <option value={null}>Select Designation</option>
+              <option value="">Select Designation</option>
               <option value="company">Company</option>
               <option value="manager">Manager</option>
               <option value="team_lead">Team Lead</option>
               <option value="employee">Employee</option>
             </Form.Control>
             <Form.Control.Feedback type="invalid">
-              Please provide a valid Designation.
+              {errors.designation}
             </Form.Control.Feedback>
           </Form.Group>
         </Row>
-        <Row className="m-3">
-          <Form.Group as={Col} md="6">
+        <Row>
+          <Form.Group as={Col} md={6}>
             <Form.Label>Basic Salary</Form.Label>
             <Form.Control
+              value={salary}
               type="number"
               placeholder="Salary"
-              value={salary}
-              disabled={user._id === defaultValue?._id}
-              onChange={(e) => setSalary(e.target.value)}
+              onChange={(e) => {
+                setSalary(Number(e.target.value));
+                setErrors((prev) => ({
+                  ...prev,
+                  salary: "",
+                }));
+              }}
+              isInvalid={!!errors.salary}
               required
             />
             <Form.Control.Feedback type="invalid">
-              Please provide a valid Salary.
+              {errors.salary}
             </Form.Control.Feedback>
           </Form.Group>
-          {!defaultValue || interview ? (
-            <Form.Group as={Col} md="6">
-              <Form.Label>Joining Date</Form.Label>
-              <Form.Control
-                type="date"
-                placeholder="Joining date"
-                value={joiningDate}
-                onChange={(e) => setJoiningDate(e.target.value)}
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid Date.
-              </Form.Control.Feedback>
-            </Form.Group>
-          ) : (
-            <Form.Group as={Col} md="6">
-              <Form.Label>User Status</Form.Label>
-              <Select
-                label="Region"
-                value={userStatus}
-                onChange={setUserStatus}
-                options={[
-                  { label: "Active", value: "active" },
-                  { label: "Fired", value: "fired" },
-                  { label: "Inactive", value: "inactive" },
-                ]}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid Date.
-              </Form.Control.Feedback>
-            </Form.Group>
-          )}
+          <Form.Group as={Col} md={6}>
+            <Form.Label>Joining Date</Form.Label>
+            <Form.Control
+              value={joiningDate}
+              type="date"
+              placeholder="Joining date"
+              onChange={(e) => {
+                setJoiningDate(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  joinDate: "",
+                }));
+              }}
+              isInvalid={!!errors.joinDate}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.joinDate}
+            </Form.Control.Feedback>
+          </Form.Group>
         </Row>
       </Row>
       {department === "dispatch" && (
-        <Row className="mb-3 justify-content-center">
+        <Row className="justify-content-center mb-3">
           <Row className="m-3">
             <hr />
-            <h3 className="mb-3">Default Salary Slots</h3>
+            <h3 style={{ fontSize: "18px" }}>Default Salary Slots</h3>
             <Table hover>
               <thead>
                 <tr>
@@ -324,15 +294,10 @@ const NewUserForm = ({
           </Row>
         </Row>
       )}
-      {defaultValue ? (
-        <Button disabled={buttonLoader} type="submit">
-          Edit form
-        </Button>
-      ) : (
-        <Button disabled={buttonLoader} type="submit">
-          Submit form
-        </Button>
-      )}
+      <hr />
+      <Button disabled={loading} type="submit">
+        Add User
+      </Button>
     </Form>
   );
 };
