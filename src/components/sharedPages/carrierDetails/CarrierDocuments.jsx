@@ -594,7 +594,7 @@ const CarrierDocuments = ({setCarrierData }) => {
                                 showModal={deleteModal}
                                 confirmModal={submitDeleteMisc}
                                 hideModal={() => setDeleteModal(false)}
-                                message={"Are you Sure to want to delete File?"}
+                                message={"Are you Sure want to delete File?"}
                                 title="Delete Confirmation"
                             />
                             <Row className="add-misc-btn">
