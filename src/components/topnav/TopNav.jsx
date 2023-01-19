@@ -40,7 +40,7 @@ const Topnav = () => {
     for (let i = 0; i < acceptedFiles.length; i++) {
       const { data: url } = await axios(
         `/s3url/email_documents/${user?.user_name
-        }.${acceptedFiles[0].type.split("/")[1]}`
+        }.${acceptedFiles[i].type.split("/")[1]}`
       );
       await axios.put(url, acceptedFiles[i]);
       arr[i] = `${url.split("?")[0]} `;
