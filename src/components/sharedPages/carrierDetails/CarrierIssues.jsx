@@ -34,7 +34,6 @@ const CarrierIssues = () => {
         let id = data._id
         console.log(id)
         setCarrierId(id)
-        console.log(carrierId, "carrierIdgetCarrier=====>")
         fetchResponse(id)
       }
     }
@@ -45,25 +44,19 @@ const CarrierIssues = () => {
     setError(false)
     let { data } = await axios.post('/ticket/get/all', { carrier: id })
     if(data){
+      console.log(data,"data,Of get all ticket")
       setOpenTickets(data.open.tickets)
       setClosedTickets(data.closed.tickets)
       setIsLoading(false)
     }else{
       setError(true)
     }
-    console.log(data, "response=======>")
-    console.log(carrierId, "carrierId=====>")
-
   }
-  // useEffect(()=>{
-
-  // },[])
   const submitHandler = async (e) => {
     const form = e.currentTarget;
     if (form.checkValidity()) {
       setLoader(true)
       e.preventDefault();
-
       let arr = [];
       for (let i = 0; i < acceptedFiles.length; i++) {
         const { data: url } = await axios(
@@ -81,7 +74,6 @@ const CarrierIssues = () => {
           title: e.target.title.value,
           desc: e.target.desc.value,
           carrier:carrierId, 
-          // carrier: "61d2dad435744218249b66e6",
           dispatcher: currUser._id,
           files: arr
         })
@@ -127,7 +119,7 @@ const CarrierIssues = () => {
           {openTickets?.map((item, index) => {
             console.log(openTickets, "opentickets")
             return (
-              <Accordion title={item.title} desc={item.desc} dispatcherName={item.dispatcher.user_name} createdAt={item.createdAt} files={item.files} id={item._id}  key={index} ticketNo={item.ticketNo}  status={item.status} fetchResponse={fetchResponse}  />
+              <Accordion title={item.title} desc={item.desc} dispatcherName={item?.dispatcher?.user_name} createdAt={item.createdAt} files={item.files} id={item._id}  key={index} ticketNo={item.ticketNo}  status={item.status} fetchResponse={fetchResponse}  />
             )
           })
           }

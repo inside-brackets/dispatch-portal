@@ -251,6 +251,13 @@ flex-direction: row;
     font-size: 50px;
     color: rgb(224, 220, 220);
     cursor: default;
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 10px;
+  }
+  .file_name_no_msg{
+    position: absolute;
+    top: 69%;
   }
   .noCon{
     margin-top: 18rem;
@@ -393,7 +400,7 @@ flex-direction: row;
   .textarea_wrapper{
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    /* flex-direction: column; */
     gap:5px
   }
 /* Share  Field End */

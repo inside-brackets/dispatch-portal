@@ -6,138 +6,43 @@ import './accordion.css'
 import Message from '../message/Message';
 import { format } from "timeago.js";
 import ChangeTicketStatusModal from "../modals/ChangeTicketStatusModal"
-import StatusDropdown from '../statusDropdown/StatusDropdown';
-import { toast } from "react-toastify";
 import { useParams } from "react-router";
 import axios from 'axios';
 import { useSelector } from "react-redux";
-import { socket,initiateSocket } from "../../index";
-
-const clickOutsideRef = (content_ref, toggle_ref, setStatusChange) => {
-  document.addEventListener("mousedown", (e) => {
-    // user click toggle
-    if (toggle_ref.current && toggle_ref.current.contains(e.target)) {
-    } else {
-      // user click outside toggle and content
-      if (content_ref.current && !content_ref.current.contains(e.target)) {
-        setStatusChange("");
-      }
-    }
-  });
-};
+import { socket, initiateSocket } from "../../index";
 const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, ticketNo, fetchResponse }) => {
   const currUser = useSelector((state) => state.user.user);
-  // console.log(currUser, "currUser====>")
   const [isActive, setIsActive] = useState(false);
-  const dropdown_toggle_el = useRef(null);
-  const dropdown_content_el = useRef(null);
-  const [currentChat, setCurrentChat] = useState(true);
+  const [currentChat, setCurrentChat] = useState(false);
   const [messages, setMessages] = useState([]);
   const [msgFile, setMsgFile] = useState(false);
-  const [statusChange, setStatusChange] = useState(false)
   const [statusChangeModal, setStatusChangeModal] = useState(false)
   const [newMessage, setNewMessage] = useState("");
   const [loader, setLoader] = useState(false)
   const [chatFiles, setChatFiles] = useState([]);
-  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [arrivalMessage, setArrivalMessage] = useState([]);
   const params = useParams()
-  const scrollRef = useRef();
   const [fileList, setFileList] = useState(null);
-
-  const rooms = ['A', 'B', 'C'];
-  const [room, setRoom] = useState(rooms[0]);
-
   let msgFiles = fileList ? [...fileList] : [];
-  // setMsgFile(msgFiles)
-  clickOutsideRef(dropdown_content_el, dropdown_toggle_el, setStatusChange);
-  const fileName = [
-    { name: "Chat.png" }, { name: "Recording.png" }, { name: "Voilation.png" },
-  ]
-  const notify = (msg) =>
-    toast.info(msg, {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-
-    useEffect(() => {
-      if (id) initiateSocket(id);
-      // socket.emit('join', id);
-    // socket.on("getMessage", (data) => {
+  useEffect(() => {
+    if (id) initiateSocket(id);
     socket.on("send-message", (data) => {
-      console.log(data,"getMessage==================================>")
       setArrivalMessage(data);
-      // setMessages([...messages, data]);
+      setCurrentChat(true)
     });
-  },[id])
+  }, [id])
   useEffect(() => {
     arrivalMessage &&
-    setMessages((prev) => [...prev, arrivalMessage]);
-    //   currentChat?.members.includes(arrivalMessage.sender) &&
-      
+      setMessages((prev) => [...prev, arrivalMessage]);
+      console.log(arrivalMessage,"arrival message")
+
+    let attach = arrivalMessage?.attachments
+    if (attach && attach.length > 0) {
+      setChatFiles((prev) => [...prev].concat(attach))
+    }
   }, [arrivalMessage]);
-  const messagesarray = [
-    {
-      text: " Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, deleniti enim iusto explicabo numquam voluptatibus odit doloremque perferendis id eius mollitia eos ducimus repellat sapiente, itaque accusamus architecto, earum nisi?",
-      own: true,
-      attachments: [
-        {
-          name: "Recording.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording2.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording3.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording2.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording3.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording2.png",
-          url: "https://klsdfjklsdfj"
-        },
-        {
-          name: "Recording3.png",
-          url: "https://klsdfjklsdfj"
-        },
-      ]
-    },
-    {
-      text: " Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, deleniti enim iusto explicabo numquam voluptatibus odit doloremque perferendis id eius mollitia eos ducimus repellat sapiente, itaque accusamus architecto, earum nisiLorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, deleniti enim iusto explicabo numquam voluptatibus odit doloremque perferendis id eius mollitia eos ducimus repellat sapiente, itaque accusamus architecto, earum nisi?",
-      own: false
-    },
-    {
-      text: " Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, deleniti enim iusto explicabo numquam voluptatibus odit doloremque perferendis id eius mollitia eos ducimus repellat sapiente, itaque accusamus architecto, earum nisiLorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, deleniti enim iusto explicabo numquam voluptatibus odit doloremque perferendis id eius mollitia eos ducimus repellat sapiente, itaque accusamus architecto, earum nisi?",
-      own: false
-    },
-    {
-      text: " Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, deleniti enim iusto explicabo numquam voluptatibus odit doloremque perferendis id eius mollitia eos ducimus repellat sapiente, itaque accusamus architecto, earum nisiLorem ipsum dolor sit amet, consectetur adipisicing elit. Magni, deleniti enim iusto explicabo numquam voluptatibus odit doloremque perferendis id eius mollitia eos ducimus repellat sapiente, itaque accusamus architecto, earum nisi?",
-      own: true
-    },
-  ]
-  const handleSubmit = async (e,r,nm) => {
-    console.log(r,nm,"rrrrrrrrrrrnmmmmmmmmmmmmmmmm")
+
+  const handleSubmit = async (e, r) => {
     setCurrentChat(true)
     setLoader(true)
     e.preventDefault()
@@ -151,7 +56,6 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
           }.${fileList[i].type.split("/")[1]
           }`
         );
-
         await axios.put(url, fileList[i]);
         arr[i] = {
           name: fileList[i].name,
@@ -159,13 +63,6 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
         }
       }
     }
-    // console.log(chatFiles, "chatFiles")
-    // console.log(arr, "arrof files")
-    // arr.forEach((file) =>{
-    //   setChatFiles([...chatFiles,file])
-    // })
-
-    setChatFiles([...chatFiles].concat(arr))
     let createMsg
     try {
       createMsg = await axios.post('/ticket/create/message', {
@@ -175,17 +72,7 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
         message: newMessage,
         attachments: arr,
       })
-      let msg = createMsg.data.messages.slice(-1)[0]
-      let newMsg = {
-        id: id,
-        isAttachment: attachment,
-        attachments: msg.attachments, isAttachment: msg.attachments, message: msg.message, sender: {
-          user_name: currUser.user_name,
-          profile_image: currUser?.profile_image
-        }, timestamp: msg.timestamp, _id: msg._id
-      }
-      socket.emit("send-message", {newMsg,r});
-      setMessages([...messages, newMsg])
+      socket.emit("send-message", { newMsg: createMsg.data, r });
     }
     catch (err) {
       console.log(err.message)
@@ -195,14 +82,7 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
     setNewMessage("")
     setLoader(false)
   }
-  const statusChangedropdown = () => {
-    setStatusChange(!statusChange)
-  }
   const changeStatusHandler = async () => {
-    // axios.post('/ticket/update/status',{
-    //   id:id,
-    //   status:"closed"
-    // })
     setStatusChangeModal(true)
   }
   let getCarrier = async () => {
@@ -223,16 +103,14 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
   useEffect(() => {
     let getMessages = async () => {
       let { data } = await axios.post('/ticket/get/messages', { id: id, })
-      console.log(data)
+      if(data.messages.length > 0){
+        setCurrentChat(true)
+      }
       setMessages(data.messages)
       setChatFiles(data.chatFiles)
     }
     getMessages()
   }, [id])
-  const handleFileChange = (e) => {
-    setFileList(e.target.files);
-    setMsgFile(true)
-  }
   return (
     <>
       <Card className="accordion_card_wrapper" style={{ backgroundColor: "#fafafa" }}>
@@ -245,20 +123,18 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
               </div>
 
               <div className="status_wrapper">
-                <div className="status_wrapper_item"><div className="status_wrapper_item_name">Status</div><div className={`status_wrapper_item_value ${status === "open" ? 'status_open' : 'status_closed'}`} onClick={statusChangedropdown} ref={dropdown_toggle_el}>
-                  {/* {statusChange && <div className={`status_dropdown ${status === "open" ? 'status_dropdown_close' : 'status_dropdown_open'}`} ref={dropdown_content_el} onClick={changeStatusHandler} >{status === "open" ? 'Close' : "Open"}</div>} */}
+                <div className="status_wrapper_item"><div className="status_wrapper_item_name">Status</div>
                   <Dropdown>
                     <Dropdown.Toggle variant="success" className={`btn-sm ${status === "open" ? null : 'btn-danger'}`} id="dropdown-basic">
                       {status}
                     </Dropdown.Toggle>
-
+                    {currUser.department === "dispatch" || currUser.department === "admin" ?(<>
                     <Dropdown.Menu className="dropDown_menu">
                       <Dropdown.Item onClick={changeStatusHandler} className={`dropDown_item ${status === "open" ? 'status_dropdown_close' : 'status_dropdown_open'}`}>{status === "open" ? 'Close' : "Open"}</Dropdown.Item>
                     </Dropdown.Menu>
+                    </>)
+                    :null}
                   </Dropdown>
-                  {/* {status} */}
-                </div>
-
                 </div>
                 <div className="status_wrapper_item"><div className="status_wrapper_item_name">Dispatcher</div><div className="status_wrapper_item_value">{dispatcherName}</div></div>
                 <div className="status_wrapper_item"><div className="status_wrapper_item_name">{status === "open" ? 'Opened' : 'Closed'}</div><div className="status_wrapper_item_value">{format(createdAt)}</div></div>
@@ -267,7 +143,6 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
                 <img className="" src={isActive ? upIcon : downIcon} alt="navigate icon" />
               </div>
             </div>
-            {/* {isActive && <> */}
             <div className={`${!isActive ? 'accordion_body_hidden' : 'accordion_body_show'}`}>
               <div className="accordion_hr"><hr /></div>
               <div className="accordion_content">
@@ -309,7 +184,7 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
                               <>
                                 <div className="issue_files_item_wrapper">
                                   <div><a href={item.url}><i className="bx bx-import action-button issue_file_icon"></i></a></div>
-                                  <div className="issue_file_name">{item?.name.length > 20 ? item?.name.slice(0, 13) + '...' + item?.name.slice(-6) : item.name}</div>
+                                  <div className="issue_file_name">{item?.name?.length > 20 ? item?.name.slice(0, 13) + '...' + item?.name.slice(-6) : item.name}</div>
                                 </div>
                               </>
                             )
@@ -332,47 +207,44 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
                                 <>
                                   <div className="chatBoxTop" >
                                     {messages?.map((m) => (
-                                      <div ref={scrollRef}>
-                                        {/* <Message  /> */}
-                                        <Message message={m}/>
+                                      // <div ref={scrollRef}>
+                                      <div>
+                                        <Message message={m} />
                                       </div>
                                     ))}
-
                                   </div>
                                   <div />
                                 </>
                               ) : (
-                                <span className="noConversationText">
+                                <div className="noConversationText">
+                                {/* <div className="chatBoxTop"> */}
                                   Start Conversation...
-                                </span>
+                                </div>
                               )}
-                                    {msgFile ? <div key={id} className="textarea_wrapper">
-                                      {msgFiles.map((file, i) => (
-                                        <div key={i}>
-                                          {file.name}
-                                        </div>
-                                      ))}
-                                    </div> : null}
+                              {msgFile ? <div key={id} className={`textarea_wrapper ${messages?.length > 0?null:"file_name_no_msg" }`}>
+                                {msgFiles.map((file, i) => (
+                                  <div key={i}>
+                                    {file.name}
+                                  </div>
+                                ))}
+                              </div> : null}
                               <form className={`shareBottom ${currentChat === false ? 'noCon' : ''}`}>
-
                                 <div className="input_button_wrapper">
                                   <div className="input_send_wrapper">
                                     <textarea type="text" placeholder='Type here...' className="input_send_message"
                                       onChange={(e) => setNewMessage(e.target.value)}
                                       value={newMessage}
-                                      minlength={3}
+                                      minLength={3}
                                     />
                                   </div>
                                   <div className="shareOptions">
-
-                                    <label htmlFor="file" className="shareOption">
+                                    <label htmlFor={id} className="shareOption">
                                       <i className="bx bx-link-alt action-button shareButtonI "></i>
                                       <input
                                         style={{ display: "none" }}
                                         type="file"
-                                        id="file"
+                                        id={id}
                                         multiple
-                                        // onChange={handleFileChange}
                                         onChange={(e) => {
                                           setFileList(e.target.files);
                                           setMsgFile(true)
@@ -383,38 +255,20 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
                                   <div>
                                     <button type="submit"
                                       className="shareButton"
-                                      disabled={newMessage?.length < 3 ? true : loader ? true : false}
-                                      onClick={(e)=>{handleSubmit(e,id, newMessage)}}
-                                    >
-                                      {/* {loader ? (
-                <Spinner
-                  as="span"
-                  animation="grow"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              )
-                : null} */}
+                                      disabled={newMessage?.length < 3 ? true : loader ? true : status === "open"? false:true}
+                                      onClick={(e) => { handleSubmit(e, id, newMessage) }}>
                                       Send
-                                      {/* <i className="bx bx-send action-button shareButtonI "></i> */}
                                     </button>
-
                                   </div>
                                 </div>
                               </form>
                             </div>
                           </div>
-
-
-                          {/* </div> */}
                         </div>
                       </div>
                     </Card.Body>
                   </Card>
                 </div>
-
-
                 {/* Messanger Card End */}
               </div>
             </div>
