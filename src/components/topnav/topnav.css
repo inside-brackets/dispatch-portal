@@ -55,6 +55,13 @@
 .topnav__right-item ~ .topnav__right-item {
   margin-left: 30px;
 }
+.topnav__right-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
 
 .notification-item {
   display: flex;
