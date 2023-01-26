@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useParams } from "react-router";
 import { toast } from "react-toastify";
+import {socket} from "../../../index.js"
 const CarrierIssues = () => {
   const currUser = useSelector((state) => state.user.user);
   const [show, setShow] = useState()
@@ -32,7 +33,6 @@ const CarrierIssues = () => {
       setIsLoading(true)
       if (data) {
         let id = data._id
-        console.log(id)
         setCarrierId(id)
         fetchResponse(id)
       }
@@ -44,7 +44,6 @@ const CarrierIssues = () => {
     setError(false)
     let { data } = await axios.post('/ticket/get/all', { carrier: id })
     if(data){
-      console.log(data,"data,Of get all ticket")
       setOpenTickets(data.open.tickets)
       setClosedTickets(data.closed.tickets)
       setIsLoading(false)
@@ -70,6 +69,7 @@ const CarrierIssues = () => {
         }
       }
       try {
+        let createNotification
         let createTicket = await axios.post('/ticket/create', {
           title: e.target.title.value,
           desc: e.target.desc.value,
@@ -82,6 +82,41 @@ const CarrierIssues = () => {
           setLoader(false)
           setShow(false)
           toast.success("Ticket created successfully");
+
+          console.log(createTicket,"createtickt data===========>")
+          let getUsers = async (id) => {
+            let { data } = await axios.post('/ticket/get/users', { id: id, })
+            if(data){
+              let userArr = []
+              for (let i in data){
+                if(i.toString()==="admins"){
+                  let arr = data[i]
+                  userArr = userArr.concat(arr)
+                }else if(i.toString()==="others"){
+                let arr = data[i]
+                userArr = userArr.concat(arr)
+                }else if(i.toString() === "managers"){
+                  let arr = data[i]
+                  userArr = userArr.concat(arr.sales)
+                  userArr = userArr.concat(arr.dispatch)
+                }
+              }
+              let arr = userArr.filter(i => i!==currUser._id)
+              console.log(arr,"arr-------------<>")
+              createNotification = await axios.post('/notification/create',{
+                text:`New Ticket from ${currUser.user_name} and mc ${params.mc}`,
+              icon:"created",
+              ticket:id,
+              users:arr
+              })
+              socket.emit("send-notification",{userArr:arr,notificationdata:createNotification.data})
+              // setNotificationsUsers(arr)
+            }
+            // setChatFiles(data.chatFiles)
+          }
+          getUsers(createTicket.data._id)
+
+          
         }
       } catch (error) {
         setLoader(false)
@@ -92,6 +127,9 @@ const CarrierIssues = () => {
       setValidated(true);
     }
   }
+  // useEffect(() => {
+
+  // }, [id])
   // if (isLoading && !error) {
   //   return (
   //     <div className="spreadsheet__loader">
@@ -117,7 +155,6 @@ const CarrierIssues = () => {
         <h5>Opened Tickets({openTickets?.length})</h5>
         <div className="issue_accordion">
           {openTickets?.map((item, index) => {
-            console.log(openTickets, "opentickets")
             return (
               <Accordion title={item.title} desc={item.desc} dispatcherName={item?.dispatcher?.user_name} createdAt={item.createdAt} files={item.files} id={item._id}  key={index} ticketNo={item.ticketNo}  status={item.status} fetchResponse={fetchResponse}  />
             )

@@ -15,6 +15,7 @@ import Cookies from "universal-cookie";
 import { useDropzone } from "react-dropzone";
 import emailjs from 'emailjs-com';
 import axios from 'axios'
+import Notifications from '../notifications/Notifications'
 
 const cookies = new Cookies();
 
@@ -157,8 +158,12 @@ const Topnav = () => {
           </span>
         </div>
       </div>
+
       <div className="topnav__right">
         <div className="topnav__right-item">
+        <div>
+        <Notifications/>
+      </div>
           {/* dropdown here */}
           <Dropdown
             customToggle={() => renderUserToggle(curr_user)}
@@ -195,7 +200,6 @@ const Topnav = () => {
                 name="subject"
               />
             </Form.Group>
-
             <Form.Group className="mb-3 content_group" controlId="content">
               <Form.Label className="content_label">
                 Content *
@@ -207,7 +211,6 @@ const Topnav = () => {
                 name="textarea"
                 rows={8}
               />
-
             </Form.Group>
             <Form.Group className="mb-3 upload_file_group" controlId="deactivate_carrier">
               <div {...getRootProps({ className: "dropzone" })}>
@@ -219,8 +222,6 @@ const Topnav = () => {
                 // onChange={drop}
                 />
                 <div className="text-center upload_drap_wrapper">
-
-
                   <button type="button" className="butn">
                     UPLOAD
                   </button>
@@ -257,6 +258,7 @@ const Topnav = () => {
           </Form>
 
         </FeedBackModal>
+
         <div className="topnav__right-item">
           <ThemeMenu />
         </div>
