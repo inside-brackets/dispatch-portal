@@ -255,14 +255,14 @@ flex-direction: row;
     overflow-y: scroll;
     padding-right: 10px;
   }
-  .file_name_no_msg{
+  /* .file_name_no_msg{
     position: absolute;
     top: 69%;
   }
   .noCon{
     margin-top: 18rem;
 
-  }
+  } */
   
   @media screen and (max-width: 768px) {
     .chatMenu {
@@ -356,7 +356,7 @@ flex-direction: row;
   
   .shareButton{
     background: var(--main-color);
-    border-radius: 999px;
+    border-radius: 0.375rem;
     box-shadow: var(--main-color) 0 10px 20px -10px;
     box-sizing: border-box;
     color: #FFFFFF;
@@ -388,9 +388,9 @@ flex-direction: row;
     outline:none;
     transition:.3s;
     border: 2px solid #aaa;
-    border-radius: 18px;
-    padding: 9px;
-    width: 53rem;
+    border-radius: 0.375rem;
+    padding: 11px;
+    width: 63rem;
     padding-right: 36px;
   }
   .input_send_message:focus{

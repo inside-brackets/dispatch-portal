@@ -67,7 +67,7 @@
   .notifications_container{
     display: flex;
     flex-direction: column;
-    height: 144px;
+    height: 283px;
     overflow-y: scroll;
     min-width: 319px;
   }
@@ -75,6 +75,9 @@
     display: flex;
     gap: 18px;
     margin-top: 10px;
+  }
+  .notifications_items:hover{
+    background-color: aliceblue;
   }
   .notification_item_text{
     font-size: 12px;

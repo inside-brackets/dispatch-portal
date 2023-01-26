@@ -726,7 +726,8 @@ useEffect(()=>{
                   </Row>
                 </>
               )}
-              <Row
+              {!(currUser.department === "sales" && !(carrier.c_status === "appointment")) ?
+              (<Row
                 className="justify-content-between"
                 style={{ marginTop: "10px" }}
               >
@@ -808,7 +809,8 @@ useEffect(()=>{
                   )}
                 </Col>
                 <Col></Col>
-              </Row>
+              </Row>)
+              :null}
         </Form>
         <Modal
           show={changeStatus}

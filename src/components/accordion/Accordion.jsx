@@ -21,6 +21,7 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
   const [loader, setLoader] = useState(false)
   const [chatFiles, setChatFiles] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState([]);
+  const [notificationsUsers,setNotificationsUsers] = useState([])
   const params = useParams()
   const [fileList, setFileList] = useState(null);
   let msgFiles = fileList ? [...fileList] : [];
@@ -34,14 +35,11 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
   useEffect(() => {
     arrivalMessage &&
       setMessages((prev) => [...prev, arrivalMessage]);
-      console.log(arrivalMessage,"arrival message")
-
     let attach = arrivalMessage?.attachments
     if (attach && attach.length > 0) {
       setChatFiles((prev) => [...prev].concat(attach))
     }
   }, [arrivalMessage]);
-
   const handleSubmit = async (e, r) => {
     setCurrentChat(true)
     setLoader(true)
@@ -62,8 +60,10 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
           url: `${url.split("?")[0]}`
         }
       }
+      setFileList(null)
     }
     let createMsg
+    let createNotification
     try {
       createMsg = await axios.post('/ticket/create/message', {
         id: id,
@@ -72,7 +72,16 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
         message: newMessage,
         attachments: arr,
       })
+      createNotification = await axios.post('/notification/create',{
+        text:`Ticket #${ticketNo} message from ${currUser.user_name} and mc ${params.mc}`,
+      icon:"message",
+      ticket:id,
+      users:notificationsUsers
+      }
+      )
       socket.emit("send-message", { newMsg: createMsg.data, r });
+      socket.emit("send-notification",{userArr:notificationsUsers,notificationdata:createNotification.data})
+
     }
     catch (err) {
       console.log(err.message)
@@ -88,8 +97,17 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
   let getCarrier = async () => {
     let { data } = await axios.post(`/getcarrier`, { mc_number: params.mc, })
     if (data) {
-      let id = data._id
-      fetchResponse(id)
+      let idd = data._id
+      fetchResponse(idd)
+
+      let createNotification = await axios.post('/notification/create',{
+        text:`Ticket #${ticketNo} ${status === "open" ? "closed" : 'reopen'} against ${data.salesman.user_name } and mc ${data.mc_number}`,
+        icon:`${status === "open" ? "closed" : 'created'}`,
+        ticket:id,
+        users:notificationsUsers
+        }
+          )
+        socket.emit("send-notification",{userArr:notificationsUsers,notificationdata:createNotification.data})
     }
   }
   const submitstatusChange = async () => {
@@ -110,6 +128,31 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
       setChatFiles(data.chatFiles)
     }
     getMessages()
+  }, [id])
+  useEffect(() => {
+    let getUsers = async () => {
+      let { data } = await axios.post('/ticket/get/users', { id: id, })
+      if(data){
+        let userArr = []
+        for (let i in data){
+          if(i.toString()==="admins"){
+            let arr = data[i]
+            userArr = userArr.concat(arr)
+          }else if(i.toString()==="others"){
+          let arr = data[i]
+          userArr = userArr.concat(arr)
+          }else if(i.toString() === "managers"){
+            let arr = data[i]
+            userArr = userArr.concat(arr.sales)
+            userArr = userArr.concat(arr.dispatch)
+          }
+        }
+        let arr = userArr.filter(i => i!==currUser._id)
+        setNotificationsUsers(arr)
+      }
+      // setChatFiles(data.chatFiles)
+    }
+    getUsers()
   }, [id])
   return (
     <>
@@ -195,8 +238,8 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
 
                 {/* Messanger Card Start */}
                 <div>
-                  <Card>
-                    <Card.Body>
+                  <Card >
+                    <Card.Body style={{paddingBottom: "0px"}}>
                       <div className="inner_card_heading">Discussion</div>
                       <hr />
                       <div>
@@ -221,14 +264,20 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
                                   Start Conversation...
                                 </div>
                               )}
-                              {msgFile ? <div key={id} className={`textarea_wrapper ${messages?.length > 0?null:"file_name_no_msg" }`}>
+                              
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                      {msgFile ? <div key={id} className="textarea_wrapper">
                                 {msgFiles.map((file, i) => (
                                   <div key={i}>
                                     {file.name}
                                   </div>
                                 ))}
                               </div> : null}
-                              <form className={`shareBottom ${currentChat === false ? 'noCon' : ''}`}>
+                              <form className="shareBottom">
                                 <div className="input_button_wrapper">
                                   <div className="input_send_wrapper">
                                     <textarea type="text" placeholder='Type here...' className="input_send_message"
@@ -262,14 +311,11 @@ const Accordion = ({ title, desc, status, dispatcherName, createdAt, files, id, 
                                   </div>
                                 </div>
                               </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </Card.Body>
                   </Card>
                 </div>
                 {/* Messanger Card End */}
+                
               </div>
             </div>
           </div>
