@@ -41,12 +41,10 @@ const Notifications = () => {
 
     useEffect(() => {
         socket.emit("addUser", currUser._id);
-        console.log('addUserin socket ====================>')
     }, [currUser, socket])
 
     useEffect(() => {
         socket.on("get-notification", (data) => {
-            console.log(data, "get notfication======================>")
             setArrivalNotificaton(data)
             sound.play();
         });
@@ -64,7 +62,6 @@ const Notifications = () => {
             })
             if (data) {
                 let count = data.new
-                console.log(count, "count===========>")
                 if (count > 0) {
                     setNewNotifications(true)
                 } else {
