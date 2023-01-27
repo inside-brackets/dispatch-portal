@@ -23,7 +23,7 @@ const UserDetail = lazy(() => import("../pages/admin/UserDetail"));
 const AdminReport = lazy(() => import("../pages/admin/Report"));
 
 // sales routes
-const Dashboard = lazy(() => import("../pages/sales/Dashboard"));
+const SDashboard = lazy(() => import("../pages/sales/Dashboard"));
 const SpreadSheet = lazy(() => import("../pages/sales/SpreadSheet"));
 const Appointments = lazy(() => import("../pages/sales/Appointments"));
 const AppointmentDetail = lazy(() =>
@@ -42,6 +42,7 @@ const MyTrucks = lazy(() => import("../pages/dispatch/MyTrucks"));
 const CarrierReport = lazy(() => import("../pages/dispatch/CarrierReport"));
 const Report = lazy(() => import("../pages/dispatch/Report"));
 const DispatchInvoices = lazy(() => import("../pages/dispatch/Invoices"));
+const DDashboard = lazy(() => import("../pages/dispatch/Dashboard"));
 // Dispatcher Manager routes
 const DMDashboard = lazy(() => import("../pages/dispatchManager/DashboardDM"));
 
@@ -151,7 +152,7 @@ const Routes = () => {
           <Route path="/" exact>
             <Redirect to="/dashboard" />
           </Route>
-          <Route path="/dashboard" exact component={Dashboard} />
+          <Route path="/dashboard" exact component={SDashboard} />
           <Route path="/spread_sheet" component={SpreadSheet} />
           <Route path="/appointments" exact component={Appointments} />
           <Route path="/appointments_old/:mc" component={AppointmentDetail} />
@@ -254,7 +255,7 @@ const Routes = () => {
         <Route path="/" exact>
           <Redirect to="/dashboard" />
         </Route>
-        <Route path="/dashboard" exact component={Dashboard} />
+        <Route path="/dashboard" exact component={DDashboard} />
         <Route path="/mytrucks" exact component={MyTrucks} />
         <Route path="/trucks/:mc/:truck?" component={TruckDetail} />
         <Route path="/profile" component={Profile} />

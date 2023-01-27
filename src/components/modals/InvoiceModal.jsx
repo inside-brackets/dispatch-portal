@@ -105,7 +105,12 @@ const InvoiceModal = ({
       dispatcherFee: dispatchFee,
       mc_number: invoice.mc_number,
       truck_number: invoice.truckNumber,
+      sales:invoice.sales
     });
+
+    
+
+
     setInvoices((prev) => {
       return prev.map((item) => (item._id === res.data._id ? res.data : item));
     });
