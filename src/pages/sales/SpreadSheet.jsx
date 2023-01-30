@@ -85,6 +85,10 @@ const Customers = () => {
                     { label: "Registered", value: "registered" },
                     { label: "Deactivated ", value: "deactivated" },
                   ],
+                  "registered within": [
+                    { label: "30 days", value: "30days" },
+                    { label: "60 days", value: "60days" },
+                  ],
                 }}
                 renderBody={(item, index, currPage) =>
                   renderBody(item, index, currPage)

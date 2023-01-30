@@ -119,6 +119,11 @@ const Carriers = () => {
                     // { label: "active", value: "active" },
                     // { label: "inactive", value: "inactive" },
                   ],
+
+                  "registered within": [
+                    { label: "30 days", value: "30days" },
+                    { label: "60 days", value: "60days" },
+                  ],
                 }}
                 renderBody={(item, index, currPage) =>
                   renderBody(item, index, currPage)
