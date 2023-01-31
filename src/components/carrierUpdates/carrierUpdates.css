@@ -35,7 +35,8 @@
 
 .c_u_items_wrapper {
     margin-top: 32px;
-    height: 374px;
+    /* height: 374px; */
+    height: 390px;;
     overflow-y: scroll;
 }
 
@@ -56,7 +57,7 @@
     justify-content: center;
 }
 .c_u_item_text{
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
 }
 .c_u_item_time{

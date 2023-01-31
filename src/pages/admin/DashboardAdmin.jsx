@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
+import CarrierUpdates from "../../components/carrierUpdates/CarrierUpdates";
 
 const DashboardAdmin = () => {
 
@@ -225,7 +226,8 @@ const DashboardAdmin = () => {
           </Row>
         </Col>
       </Row>
-      <Row>
+      <Row style={{marginTop:"22px"}}>
+        <Col> <CarrierUpdates /> </Col>
         <Col>
           <Card
             style={{

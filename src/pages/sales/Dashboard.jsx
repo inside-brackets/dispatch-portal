@@ -13,7 +13,7 @@ const Dashboard = () => {
   const { company: selectedCompany, user } = useSelector((state) => state.user);
   useEffect(() => {
     axios
-      .post(`/admin/top-sales`, {
+      .post(`/admin/total-trucks`, {
         company: selectedCompany.value,
       })
       .then((res) => {
@@ -32,7 +32,6 @@ const Dashboard = () => {
           {user.department === "sales" ? (
             <TargetDisplay designation={user.designation} />
           ) : null}
-
         </Col>
       </Row>
       <Row>
@@ -40,26 +39,25 @@ const Dashboard = () => {
           <CarrierUpdates/>
         </Col>
         <Col md={4}>
-          <Card
+        <Card
             style={{
               width: "auto",
-              height: "465px",
+              height: "480px",
               border: "light",
             }}
+            className="leaderboard_card"
           >
             <Card.Body>
-              <Card.Title>LeaderBoard</Card.Title>
-              <hr />
               {!data || data.length === 0 ? (
-                <>Not Enough Data to show</>
+                <div className="mt-4">Not Enough Data to show</div>
               ) : (
-                <div>
-                  <table >
+                <div className="tableFixHead_leaderboard">
+                  <table>
                     <thead>
                       <tr>
                         <th>#</th>
                         <th>User Name</th>
-                        <th>Total Gross</th>
+                        <th>Total sales</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -72,7 +70,7 @@ const Dashboard = () => {
                             <td className="text-capitalize">
                               {item.user_name}
                             </td>
-                            <td>{item.total}</td>
+                            <td>{item.totaltrucks}</td>
                           </tr>
                         );
                       })}
@@ -81,6 +79,22 @@ const Dashboard = () => {
                 </div>
               )}
             </Card.Body>
+            <div className="leaderboard_title">
+              <Card className="card_leaderboard_title">
+                <Card.Body>
+                  <div className="leaderboard_header_wrapper">
+                    <div>
+                      <i className={`bx bx-bar-chart`}></i>
+                    </div>
+                    <div>
+                      <span className="leaderboard_header_text">
+                        LeaderBoard
+                      </span>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            </div>
           </Card>
         </Col>
         <Col md={4}><UsClock /></Col>
