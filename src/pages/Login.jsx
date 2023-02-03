@@ -126,7 +126,10 @@ const Login = () => {
   return (
     <div
       style={{
-        background: "url('/background.png')",
+        background:
+          process.env.REACT_APP_FALCON === "true"
+            ? "url('/background.png')"
+            : "url('/background2.jpg')",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
