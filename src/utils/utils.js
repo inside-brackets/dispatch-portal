@@ -35,3 +35,13 @@ export const getRefreshToken = async (id) => {
 export const roundNumber = (num) => {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 };
+
+export const checkPaying = (carrier) => {
+  let paying = false;
+  if (carrier.trucks.length > 0) {
+    carrier.trucks.forEach((truck) => {
+      if (truck.t_status === "active") paying = true;
+    });
+  }
+  return paying;
+};
