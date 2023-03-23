@@ -59,6 +59,7 @@ const AssignSales = () => {
     });
     setButtonLoader(null);
     dispatch(salesActions.set(newCarriers));
+    toast.success("Carrier assigned successfully!")
   };
   useEffect(() => {
     const transformData = (data) => {
