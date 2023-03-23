@@ -17,6 +17,14 @@ if(process.env.REACT_APP_DEV==="true"){
 }else{
  socket = io(ENV.backend_base_url);
 }
+ const initiateSocket = (room) => {
+  if(process.env.REACT_APP_DEV==="true"){
+    socket = io(process.env.REACT_APP_BACKEND_URL);
+  }else{
+   socket = io(ENV.backend_base_url);
+  }
+  if (socket && room) socket.emit('join', room);
+}
 document.title = "Dispatch Portal";
 
 ReactDOM.render(
@@ -30,4 +38,4 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-export { socket };
+export { socket,initiateSocket };

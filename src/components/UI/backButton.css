@@ -2,8 +2,8 @@
   background-color: var(--main-color);
   color: var(--txt-white);
   width: 50px;
-  margin-top: 25px;
-  margin-left: 50px;
+  margin-top: -3px;
+  margin-left: 0px;
   height: 50px;
   position: absolute;
   border-radius: var(--border-radius);
@@ -13,6 +13,7 @@
 }
 .truck-back-button{
   margin-left: 2rem !important;
+  margin-top: 1rem!important;
 }
 .back-button:hover {
   transform: scale(1.1) !important;

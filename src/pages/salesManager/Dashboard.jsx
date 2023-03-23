@@ -12,6 +12,7 @@ import DetailsModal from "../../components/DetailsModal/DetailsModal";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
 import "./Dashboard.css";
+import CarrierUpdates from "../../components/carrierUpdates/CarrierUpdates";
 
 const Dashboard = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
@@ -277,6 +278,11 @@ const Dashboard = () => {
               />
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+      <Row className="mt-4">
+        <Col md={4}>
+              <CarrierUpdates/>
         </Col>
       </Row>
       <DetailsModal

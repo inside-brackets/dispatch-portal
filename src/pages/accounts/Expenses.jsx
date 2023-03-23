@@ -28,17 +28,22 @@ const Expenses = () => {
   const [rerenderTable, setRerenderTable] = useState(null);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
+  const [defaultOptions,setDefaultOptions] = useState([])
   const [deleteModal, setDeleteModal] = useState(false);
   const [expenseId,setExpenseId] = useState();
 
-  const defaultOptions = [ ];
-  useEffect(async() => {
+  useEffect(() => {
+    async function fetchData(){
+      const defaultOption = [ ];
     let {data} = await axios.get('/accounts/expense/categories')
     data.map((category) =>{
         let value = createOption(category)
-        defaultOptions.push(value)
+        defaultOption.push(value)
     })
-  })
+    setDefaultOptions(defaultOption)
+  }
+  fetchData()
+  },[])
   
   const getYears = () => {
     const YEAR = new Date().getFullYear();
