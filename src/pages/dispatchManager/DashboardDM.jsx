@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import MySelect from "../../components/UI/MySelect";
 import { userActions } from "../../store/user";
 import { themeActions } from "../../store/theme";
+import CarrierUpdates from "../../components/carrierUpdates/CarrierUpdates";
 const DashboardDM = () => {
   const [dispatchers, setdispatchers] = useState({
     active: null,
@@ -178,6 +179,7 @@ const DashboardDM = () => {
             </Col>
           </Row>
       <Row>
+     
       <Col>
           <Card
             style={{
@@ -222,17 +224,22 @@ const DashboardDM = () => {
             </Card.Body>
           </Card>
         </Col>
-      <Col>
+      <Col md={8}>
           <Card>
             <Card.Body style={{ padding: "0" }}>
               <Chart
                 options={lineChartOptions}
                 series={lineChart}
                 type="line"
-                height={250}
+                height={430}
               />
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+      <Row className="mt-4">
+      <Col md={4}>
+        <CarrierUpdates/>
         </Col>
       </Row>
     </div>

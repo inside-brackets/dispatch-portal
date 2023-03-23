@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import { Button, Col, Row } from "react-bootstrap";
-import Select from "react-select";
 import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import axios from "axios";
 import MySelect from "../UI/MySelect";

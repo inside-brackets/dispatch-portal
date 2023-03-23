@@ -1,0 +1,10 @@
+.issue_wrapper{
+    margin-top: 28px;
+}
+.issue_accordion{
+    margin-top:20px
+}
+.create_issue_btn{
+    display:flex;
+    justify-content:flex-end
+}

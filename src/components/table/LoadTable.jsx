@@ -115,10 +115,10 @@ const LoadTable = ({ truck_number, carrier, className }) => {
   return (
     <div>
       <Row>
-        <Col md="9">
+        <Col md="8">
           <h2>Loads:</h2>
         </Col>
-        <Col md="3" className="text-center mb-4">
+        <Col md="4" className="text-center mb-4">
           <BButton
             variant="success"
             size="lg"
