@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import TruckTable from "../../table/TruckTable";
 import TextArea from "../../UI/TextArea";
@@ -12,6 +12,8 @@ import { socket } from "../../../index";
 import { useSelector } from "react-redux";
 import "./carrierdetail.css";
 import moment from "moment";
+import NewSalePDF from "../../createPdf/NewSalePDF";
+import { useReactToPrint } from "react-to-print";
 
 const CarrierDetails = ({ carrierData }) => {
   const currUser = useSelector((state) => state.user.user);
@@ -22,6 +24,7 @@ const CarrierDetails = ({ carrierData }) => {
   const [carrier, setCarrier] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [dModal, setdModal] = useState();
+  const [printModal, setPrintModal] = useState();
   const [error, setError] = useState(false);
   const [validated, setValidated] = useState(false);
   const [loaderButton, setLoaderButton] = useState(false);
@@ -32,6 +35,16 @@ const CarrierDetails = ({ carrierData }) => {
   const [salesperson, setSalesperson] = useState();
   const [selectedCarrierStatus, setSelectedCarrierStatus] = useState("");
   const [selectedSalesperson, setSelectedSalesperson] = useState();
+
+  const ref = useRef();
+  const reactToPrintContent = React.useCallback(() => {
+    return ref.current;
+  }, []);
+  const handlePrint = useReactToPrint({
+    content: reactToPrintContent,
+    documentTitle: "AwesomeFileName",
+    removeAfterPrint: true,
+  });
 
   useEffect(() => {
     setIsLoading(true);
@@ -80,10 +93,9 @@ const CarrierDetails = ({ carrierData }) => {
   }, [company.value]);
   useEffect(() => {
     if (carrierData) {
-      setCarrier(carrierData)
-
+      setCarrier(carrierData);
     }
-  }, [carrierData])
+  }, [carrierData]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -175,17 +187,16 @@ const CarrierDetails = ({ carrierData }) => {
         .put(`/updatecarrier/${params.mc}`, upObj)
         .then((response) => {
           toast.success(closeCheck ? "Carrier Registered" : "Carrier Saved");
-           if (carrier.c_status !== response.data.c_status  ) {
-            if(response.data.c_status === "registered"){
-              socket.emit('carriers-updates', {
+          if (carrier.c_status !== response.data.c_status) {
+            if (response.data.c_status === "registered") {
+              socket.emit("carriers-updates", {
                 _id: response.data._id,
                 change: selectedCarrierStatus.value,
                 createdAt: new Date(),
                 saleperson: response.data.salesman.user_name,
-                carrier: response.data.company_name
-              })
+                carrier: response.data.company_name,
+              });
             }
-           
           }
           setCarrier(response.data);
           setLoaderButton(false);
@@ -306,7 +317,12 @@ const CarrierDetails = ({ carrierData }) => {
                   placeholder="Phone #"
                   name="phone_number"
                   required
-                  readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                  readOnly={
+                    currUser.department === "sales" &&
+                    !(carrier.c_status === "appointment")
+                      ? true
+                      : false
+                  }
                   defaultValue={carrier ? carrier.phone_number : ""}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -328,7 +344,12 @@ const CarrierDetails = ({ carrierData }) => {
                   required
                   name="email"
                   defaultValue={carrier ? carrier.email : ""}
-                  readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                  readOnly={
+                    currUser.department === "sales" &&
+                    !(carrier.c_status === "appointment")
+                      ? true
+                      : false
+                  }
                 />
                 <Form.Control.Feedback type="invalid">
                   Please provide a valid email.
@@ -361,7 +382,12 @@ const CarrierDetails = ({ carrierData }) => {
               placeholder="Comment.."
               defaultValue={carrier ? carrier.comment : ""}
               name="Comment:"
-              readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+              readOnly={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : false
+              }
             />
           </Form.Group>
           <Form.Group as={Col} md="3" controlId="validationCustom03">
@@ -371,15 +397,19 @@ const CarrierDetails = ({ carrierData }) => {
               defaultValue={
                 carrier.appointment
                   ? moment(new Date(carrier.appointment)).format(
-                    "YYYY-MM-DDTHH:mm"
-                  )
+                      "YYYY-MM-DDTHH:mm"
+                    )
                   : ""
               }
               name="appointment"
-              disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+              disabled={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : false
+              }
             />
-            <Form.Control.Feedback type="invalid">
-            </Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
           </Form.Group>
         </Row>
         {currUser.department === "admin" && (
@@ -411,9 +441,7 @@ const CarrierDetails = ({ carrierData }) => {
                   <TextArea
                     style={{ width: "500px" }}
                     placeholder="Dispatcher's Comments"
-                    defaultValue={
-                      carrier ? carrier.dispatcher_comment : ""
-                    }
+                    defaultValue={carrier ? carrier.dispatcher_comment : ""}
                   />
                 </Form.Group>
               </Col>
@@ -432,7 +460,12 @@ const CarrierDetails = ({ carrierData }) => {
                 name="owner_name"
                 required
                 defaultValue={carrier ? carrier.owner_name : ""}
-                readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                readOnly={
+                  currUser.department === "sales" &&
+                  !(carrier.c_status === "appointment")
+                    ? true
+                    : false
+                }
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a valid Owner name.
@@ -448,7 +481,12 @@ const CarrierDetails = ({ carrierData }) => {
                 defaultValue={
                   carrier.dispatcher_fee ? carrier.dispatcher_fee : 0
                 }
-                readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                readOnly={
+                  currUser.department === "sales" &&
+                  !(carrier.c_status === "appointment")
+                    ? true
+                    : false
+                }
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a valid entity.
@@ -463,7 +501,12 @@ const CarrierDetails = ({ carrierData }) => {
                 defaultValue={carrier ? carrier.tax_id_number : ""}
                 name="tax_id"
                 required
-                readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                readOnly={
+                  currUser.department === "sales" &&
+                  !(carrier.c_status === "appointment")
+                    ? true
+                    : false
+                }
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a valid Tax Id.
@@ -473,7 +516,12 @@ const CarrierDetails = ({ carrierData }) => {
           <Row className="my-3">
             <Col md={4}>
               <MySelect
-                isDisabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                isDisabled={
+                  currUser.department === "sales" &&
+                  !(carrier.c_status === "appointment")
+                    ? true
+                    : false
+                }
                 isMulti={false}
                 value={selectedPayment}
                 onChange={setSelectedPayment}
@@ -491,22 +539,21 @@ const CarrierDetails = ({ carrierData }) => {
             <div>
               <h4>Factoring Details:</h4>
               <Row className="my-3">
-                <Form.Group
-                  as={Col}
-                  md="4"
-                  controlId="validationCustom03"
-                >
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Company's Name:</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Company's Name"
                     name="f_name"
                     defaultValue={
-                      carrier && carrier.factoring
-                        ? carrier.factoring.name
-                        : ""
+                      carrier && carrier.factoring ? carrier.factoring.name : ""
                     }
-                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                    readOnly={
+                      currUser.department === "sales" &&
+                      !(carrier.c_status === "appointment")
+                        ? true
+                        : false
+                    }
                     required={
                       selectedPayment.value === "factoring" ? true : false
                     }
@@ -515,11 +562,7 @@ const CarrierDetails = ({ carrierData }) => {
                     Please provide a valid Company's Name.
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group
-                  as={Col}
-                  md="4"
-                  controlId="validationCustom03"
-                >
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Address:</Form.Label>
                   <Form.Control
                     type="text"
@@ -533,7 +576,12 @@ const CarrierDetails = ({ carrierData }) => {
                     required={
                       selectedPayment.value === "factoring" ? true : false
                     }
-                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                    readOnly={
+                      currUser.department === "sales" &&
+                      !(carrier.c_status === "appointment")
+                        ? true
+                        : false
+                    }
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Address.
@@ -542,11 +590,7 @@ const CarrierDetails = ({ carrierData }) => {
               </Row>
 
               <Row className="my-3">
-                <Form.Group
-                  as={Col}
-                  md="4"
-                  controlId="validationCustom03"
-                >
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Agent's Name:</Form.Label>
                   <Form.Control
                     type="text"
@@ -560,18 +604,19 @@ const CarrierDetails = ({ carrierData }) => {
                     required={
                       selectedPayment.value === "factoring" ? true : false
                     }
-                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                    readOnly={
+                      currUser.department === "sales" &&
+                      !(carrier.c_status === "appointment")
+                        ? true
+                        : false
+                    }
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Agent's Name.
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group
-                  as={Col}
-                  md="4"
-                  controlId="validationCustom03"
-                >
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Agent's Email:</Form.Label>
                   <Form.Control
                     type="email"
@@ -585,17 +630,18 @@ const CarrierDetails = ({ carrierData }) => {
                     required={
                       selectedPayment.value === "factoring" ? true : false
                     }
-                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                    readOnly={
+                      currUser.department === "sales" &&
+                      !(carrier.c_status === "appointment")
+                        ? true
+                        : false
+                    }
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Agent's Email.
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group
-                  as={Col}
-                  md="4"
-                  controlId="validationCustom03"
-                >
+                <Form.Group as={Col} md="4" controlId="validationCustom03">
                   <Form.Label>Phone Number:</Form.Label>
                   <Form.Control
                     type="number"
@@ -609,7 +655,12 @@ const CarrierDetails = ({ carrierData }) => {
                     required={
                       selectedPayment.value === "factoring" ? true : false
                     }
-                    readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                    readOnly={
+                      currUser.department === "sales" &&
+                      !(carrier.c_status === "appointment")
+                        ? true
+                        : false
+                    }
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a valid Phone Number.
@@ -632,7 +683,12 @@ const CarrierDetails = ({ carrierData }) => {
                 carrier && carrier.insurance ? carrier.insurance.name : ""
               }
               required
-              readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+              readOnly={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : false
+              }
             />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Company's Name.
@@ -644,13 +700,16 @@ const CarrierDetails = ({ carrierData }) => {
               type="text"
               name="i_address"
               defaultValue={
-                carrier && carrier.insurance
-                  ? carrier.insurance.address
-                  : ""
+                carrier && carrier.insurance ? carrier.insurance.address : ""
               }
               placeholder="Address"
               required
-              readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+              readOnly={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : false
+              }
             />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Address.
@@ -665,12 +724,15 @@ const CarrierDetails = ({ carrierData }) => {
               placeholder="Agent's Name"
               name="i_agent_name"
               defaultValue={
-                carrier && carrier.insurance
-                  ? carrier.insurance.agent_name
-                  : ""
+                carrier && carrier.insurance ? carrier.insurance.agent_name : ""
               }
               required
-              readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+              readOnly={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : false
+              }
             />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Agent's Name.
@@ -689,7 +751,12 @@ const CarrierDetails = ({ carrierData }) => {
                   : ""
               }
               required
-              readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+              readOnly={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : false
+              }
             />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Agent's Email.
@@ -702,12 +769,15 @@ const CarrierDetails = ({ carrierData }) => {
               placeholder="Phone Number"
               name="i_phone_number"
               defaultValue={
-                carrier && carrier.insurance
-                  ? carrier.insurance.phone_no
-                  : ""
+                carrier && carrier.insurance ? carrier.insurance.phone_no : ""
               }
               required
-              readOnly={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+              readOnly={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : false
+              }
             />
             <Form.Control.Feedback type="invalid">
               Please provide a valid Phone Number.
@@ -738,20 +808,30 @@ const CarrierDetails = ({ carrierData }) => {
             </Row>
           </>
         )}
-        {!(currUser.department === "sales" && !(carrier.c_status === "appointment")) ?
-          (<Row
+        {!(
+          currUser.department === "sales" &&
+          !(carrier.c_status === "appointment")
+        ) ? (
+          <Row
             className="justify-content-between"
             style={{ marginTop: "10px" }}
           >
             <hr />
             <Col md={9}>
               <Button
-                disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : !closeCheck ? loaderButton : false}
+                disabled={
+                  currUser.department === "sales" &&
+                  !(carrier.c_status === "appointment")
+                    ? true
+                    : !closeCheck
+                    ? loaderButton
+                    : false
+                }
                 onClick={
                   currUser.department === "sales"
                     ? () => {
-                      setCloseCheck(false);
-                    }
+                        setCloseCheck(false);
+                      }
                     : ""
                 }
                 variant="success"
@@ -760,21 +840,29 @@ const CarrierDetails = ({ carrierData }) => {
               >
                 {!closeCheck
                   ? loaderButton && (
-                    <Spinner
-                      as="span"
-                      animation="grow"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />
-                  )
+                      <Spinner
+                        as="span"
+                        animation="grow"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    )
                   : null}
-                {currUser.department === "sales"
-                  ? "Save"
-                  : "Update Carrier"}
+                {currUser.department === "sales" ? "Save" : "Update Carrier"}
               </Button>
             </Col>
             <Col md={3} className="d-flex justify-content-end">
+              <Button
+                variant="info"
+                style={{ float: "right", marginRight: "5px" }}
+                // onClick={handlePrint}
+                onClick={() => {
+                  setPrintModal(true);
+                }}
+              >
+                Print
+              </Button>
               {currUser.department === "sales" && (
                 <>
                   <Button
@@ -782,26 +870,39 @@ const CarrierDetails = ({ carrierData }) => {
                     size="lg"
                     variant="danger"
                     onClick={openModal}
-                    disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+                    disabled={
+                      currUser.department === "sales" &&
+                      !(carrier.c_status === "appointment")
+                        ? true
+                        : false
+                    }
                   >
                     Reject
                   </Button>
+
                   <Button
                     size="lg"
                     type="submit"
                     onClick={closeHandler}
-                    disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : closeCheck ? loaderButton : false}
+                    disabled={
+                      currUser.department === "sales" &&
+                      !(carrier.c_status === "appointment")
+                        ? true
+                        : closeCheck
+                        ? loaderButton
+                        : false
+                    }
                   >
                     {closeCheck
                       ? loaderButton && (
-                        <Spinner
-                          as="span"
-                          animation="grow"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      )
+                          <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                        )
                       : null}
                     Close Sale
                   </Button>
@@ -821,8 +922,8 @@ const CarrierDetails = ({ carrierData }) => {
               )}
             </Col>
             <Col></Col>
-          </Row>)
-          : null}
+          </Row>
+        ) : null}
       </Form>
       <Modal
         show={changeStatus}
@@ -849,14 +950,45 @@ const CarrierDetails = ({ carrierData }) => {
           />
         </Form>
         <div className="status_wrapper_c_d">
-          <p><span className="status_labal">Appointment:</span><span className="status_text"> Contract in progress by salesperson</span></p>
-          <p><span className="status_labal">Registered:</span><span className="status_text"> Active carriers who are in contract with us</span></p>
-          <p><span className="status_labal">Rejected:</span><span className="status_text"> Reached by the salesperson but were not interested.</span></p>
-          <p><span className="status_labal">Didnotpick:</span><span className="status_text"> Reached by salesperson but didn't pick the call.</span></p>
-          <p><span className="status_labal">Unassigned:</span> <span className="status_text">No salesperson assigned yet</span></p>
-          <p><span className="status_labal">Deactivate:</span> <span className="status_text">Were working with us but have left us now.</span></p>
+          <p>
+            <span className="status_labal">Appointment:</span>
+            <span className="status_text">
+              {" "}
+              Contract in progress by salesperson
+            </span>
+          </p>
+          <p>
+            <span className="status_labal">Registered:</span>
+            <span className="status_text">
+              {" "}
+              Active carriers who are in contract with us
+            </span>
+          </p>
+          <p>
+            <span className="status_labal">Rejected:</span>
+            <span className="status_text">
+              {" "}
+              Reached by the salesperson but were not interested.
+            </span>
+          </p>
+          <p>
+            <span className="status_labal">Didnotpick:</span>
+            <span className="status_text">
+              {" "}
+              Reached by salesperson but didn't pick the call.
+            </span>
+          </p>
+          <p>
+            <span className="status_labal">Unassigned:</span>{" "}
+            <span className="status_text">No salesperson assigned yet</span>
+          </p>
+          <p>
+            <span className="status_labal">Deactivate:</span>{" "}
+            <span className="status_text">
+              Were working with us but have left us now.
+            </span>
+          </p>
         </div>
-
       </Modal>
 
       <Modal
@@ -883,13 +1015,32 @@ const CarrierDetails = ({ carrierData }) => {
           <Button type="submit">Submit</Button>
         </Form>
       </Modal>
+      <Modal
+        size="xl"
+        show={printModal}
+        heading="Print"
+        fullscreen={true}
+        onClose={() => {
+          setPrintModal(false);
+        }}
+      >
+        <NewSalePDF carrier={carrier} />
+      </Modal>
       <hr />
       <TruckTable
         mc={carrier.mc_number}
         trucks={trucks}
         setTrucks={setTrucks}
-        disabled={currUser.department === "sales" && !(carrier.c_status === "appointment") ? true : false}
+        disabled={
+          currUser.department === "sales" &&
+          !(carrier.c_status === "appointment")
+            ? true
+            : false
+        }
       />
+      {/* <div ref={ref} style={{display: printModal?"block":"none"}} >
+        <NewSalePDF carrier={carrier} />
+      </div> */}
     </>
   );
 };
