@@ -853,6 +853,16 @@ const CarrierDetails = ({ carrierData }) => {
               </Button>
             </Col>
             <Col md={3} className="d-flex justify-content-end">
+              <Button
+                variant="info"
+                style={{ float: "right", marginRight: "5px" }}
+                // onClick={handlePrint}
+                onClick={() => {
+                  setPrintModal(true);
+                }}
+              >
+                Print
+              </Button>
               {currUser.department === "sales" && (
                 <>
                   <Button
@@ -869,14 +879,7 @@ const CarrierDetails = ({ carrierData }) => {
                   >
                     Reject
                   </Button>
-                  <Button
-                    variant="info"
-                    style={{ float: "right", marginRight: "5px" }}
-                    // onClick={handlePrint}
-                    onClick={()=>{setPrintModal(true)}}
-                  >
-                    Print
-                  </Button>
+
                   <Button
                     size="lg"
                     type="submit"
