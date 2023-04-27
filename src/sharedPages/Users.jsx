@@ -165,8 +165,8 @@ const Users = () => {
                 filter={{
                   department: [
                     { label: "sales", value: "sales" },
-                    // { label: "dispatch", value: "dispatch" },
-                    // { label: "HR", value: "HR" },
+                    { label: "dispatch", value: "dispatch" },
+                    { label: "HR", value: "HR" },
                   ],
                   status: [
                     { label: "Fired ", value: "fired" },

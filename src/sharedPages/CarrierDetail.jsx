@@ -102,9 +102,9 @@ useEffect(() => {
       <Tab eventKey="documents" title="Documents">
         <CarrierDocuments  carrierData={carrierData} setCarrierData={setCarrierData} />
       </Tab>
-      {/* <Tab eventKey="issues" title="Issues">
+      <Tab eventKey="issues" title="Issues">
         <CarrierIssues />
-      </Tab> */}
+      </Tab>
     </Tabs>
     </Card.Body>
     </Card>
