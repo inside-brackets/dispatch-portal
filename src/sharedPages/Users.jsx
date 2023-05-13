@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+// import axios from "axios";
+import { useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Table from "../components/table/SmartTable";
 import EditButton from "../components/UI/EditButton";
@@ -16,8 +16,8 @@ import TooltipCustom from "../components/tooltip/TooltipCustom";
 import departments_map from "../assets/JsonData/departments_map.json";
 
 const Users = () => {
-  const [users, setUsers] = useState("");
-  const [refresh, setRefresh] = useState(null);
+  // const [users, setUsers] = useState("");
+  // const [refresh, setRefresh] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [rerenderTable, setRerenderTable] = useState(null);
   const [filter, setFilter] = useState({
@@ -28,15 +28,15 @@ const Users = () => {
   const { company: selectedCompany } = useSelector((state) => state.user);
   const departments = useSelector((state) => state.user);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const { data } = await axios.post(`/getusers`, {
-        company: selectedCompany.value,
-      });
-      setUsers(data);
-    };
-    fetchUsers();
-  }, [refresh, selectedCompany]);
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     const { data } = await axios.post(`/getusers`, {
+  //       company: selectedCompany.value,
+  //     });
+  //     setUsers(data);
+  //   };
+  //   fetchUsers();
+  // }, [refresh, selectedCompany]);
 
   const customerTableHead = [
     "#",
@@ -190,7 +190,7 @@ const Users = () => {
         >
           <NewUserForm
             refreshTable={() => {
-              setRefresh(Math.random());
+              // setRefresh(Math.random());
               setRerenderTable(Math.random());
             }}
             closeModal={closeModal}
