@@ -38,6 +38,7 @@ const Dialer = () => {
     { label: "Truck down", value: "Truck down" },
     { label: "Do not call me", value: "Do not call me" },
     { label: "Working in a Contract", value: "Working in a Contract" },
+    { label: "Unauthorized", value: "Unauthorized" },
     { label: "Other", value: "" },
   ];
   const handleChange = (text, index) => {
@@ -46,7 +47,6 @@ const Dialer = () => {
       index,
     });
   };
-
 
   // make appointment
   const onConfirm = async () => {
@@ -325,11 +325,12 @@ const Dialer = () => {
             >
               <div className="d-flex justify-content-center align-items-center">
                 <div>
-                <i className="bx bxs-phone-outgoing"> :</i>{" "}
+                  <i className="bx bxs-phone-outgoing"> :</i>{" "}
                 </div>
-                <div><span className="counter_text">{counter}</span>
+                <div>
+                  <span className="counter_text">{counter}</span>
                 </div>
-                </div>
+              </div>
             </div>
           </div>
         </div>
