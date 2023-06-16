@@ -10,7 +10,7 @@ import { change } from "../../store/appointment";
 import axios from "axios";
 import "../../assets/css/sales/dialerCard.css";
 import TextArea from "../../components/UI/TextArea";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 
 const Dialer = () => {
   const { user } = useSelector((state) => state.user);
@@ -21,6 +21,7 @@ const Dialer = () => {
   const [rmodal, setrModal] = useState();
   const [modal, setModal] = useState();
   const [carrier, setCarrier] = useState(null);
+  const [carrierHistory, setCarrierHistory] = useState(null);
   const [refresh, setrefresh] = useState(false);
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);
@@ -148,6 +149,14 @@ const Dialer = () => {
   }, [fetchCarriers, refresh, user]);
 
   useEffect(() => {
+    if (carrier) {
+      axios.get(`/history/carrier/${carrier.mc_number}`).then(({ data }) => {
+        setCarrierHistory(data);
+      });
+    }
+  }, [carrier]);
+
+  useEffect(() => {
     let counterObj = JSON.parse(localStorage.getItem("counters"));
     var timeOut = 1000;
 
@@ -158,11 +167,7 @@ const Dialer = () => {
       setCounter(counterObj.counter);
       const timer = setTimeout(() => {
         let temp = new Date();
-        let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(
-          17,
-          0,
-          0
-        );
+        let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(17, 0, 0);
         setCounter(counterObj.counter);
         // set Date today 5 pm and set count field to 0
         localStorage.setItem(
@@ -180,11 +185,7 @@ const Dialer = () => {
         .get(`/sales/fetch-counter/${user._id}`)
         .then((res) => {
           let temp = new Date();
-          let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(
-            17,
-            0,
-            0
-          );
+          let reset = new Date(temp.setDate(temp.getDate() + 1)).setHours(17, 0, 0);
 
           // set Date today 5 pm and set count field to 0
           localStorage.setItem(
@@ -223,16 +224,14 @@ const Dialer = () => {
     return (
       <div className="spreadsheet__loader">
         <h2 style={{ color: "green" }}>No more Carriers.</h2>
-        <p style={{ fontSize: "18px", marginBottom: "4px" }}>
-          Possible reasons:
-        </p>
+        <p style={{ fontSize: "18px", marginBottom: "4px" }}>Possible reasons:</p>
         <p style={{ margin: 0 }}>1. Current query returned no result.</p>
         <p>2. No callable carriers right now.</p>
       </div>
     );
 
   return (
-    <div className="row justify-content-center ">
+    <div className="d-flex justify-content-center ">
       <div className="col-5">
         <DialerCard
           title={carrier.company_name}
@@ -319,10 +318,7 @@ const Dialer = () => {
         justify-content-center align-items-center mt-5"
         >
           <div className="col-6">
-            <div
-              className="card "
-              style={{ width: "160px", marginLeft: "2.7vw" }}
-            >
+            <div className="card " style={{ width: "160px", marginLeft: "2.7vw" }}>
               <div className="d-flex justify-content-center align-items-center">
                 <div>
                   <i className="bx bxs-phone-outgoing"> :</i>{" "}
@@ -334,90 +330,93 @@ const Dialer = () => {
             </div>
           </div>
         </div>
-        {/* {modal && ( */}
-        <Modal
-          show={modal}
-          heading="Make Appointment"
-          disabled={loading}
-          onConfirm={onConfirm}
-          onClose={onClose}
-        >
-          <form action="">
-            <Input
-              type="datetime-local"
-              label="Call back time:"
-              defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
-              ref={appointmentRef}
-            />
-            <TextArea
-              name="Comment:"
-              placeholder="Comment here..."
-              ref={commentRef}
-            />
-
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            ></div>
-          </form>
-        </Modal>
-        {/* )} */}
-        <Modal
-          show={rmodal}
-          heading="Reject Carrier"
-          onConfirm={onrConfirm}
-          disabled={loading}
-          onClose={onrClose}
-        >
-          <form>
-            {options.map((option, index) => {
-              return (
-                <div className="my-3 align-items-center d-flex">
-                  <input
-                    type="radio"
-                    style={{
-                      height: "25px",
-                      width: "25px",
-                    }}
-                    checked={defaultComment?.index === index}
-                    onChange={(e) => handleChange(option.value, index)}
-                  />
-                  <label
-                    onClick={(e) => handleChange(option.value, index)}
-                    className="mx-3"
-                  >
-                    {option.label}
-                  </label>
-                </div>
-              );
-            })}
-            <TextArea
-              name="Comment:"
-              style={{
-                display:
-                  defaultComment?.index === options.length - 1 ? "" : "none",
-              }}
-              placeholder="Comment here..."
-              ref={commentrRef}
-              value={defaultComment?.text}
-              onChange={(e) =>
-                setDefaultComment({ ...defaultComment, text: e.target.value })
-              }
-            />
-
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            ></div>
-          </form>
-        </Modal>
       </div>
+      {carrierHistory?.dialed ? (
+        <Card className="history-card">
+          <Card.Body>
+            <Card.Title>History:</Card.Title>
+            <hr />
+            <Card.Text>
+              <span style={{ fontWeight: "bold" }}>Dialed</span>:{" "}
+              {`${carrierHistory.dialed} time${carrierHistory.dialed > 1 ? "s" : ""}`}
+            </Card.Text>
+            {carrierHistory.rejectedInfo && (
+              <>
+                <Card.Title style={{ color: "red" }}>Rejected Info:</Card.Title>
+                <Card.Body>
+                  <Card.Text>
+                    <span style={{ fontWeight: "bold" }}>REASON</span>: {carrier.comment}
+                    <br />
+                    <br />
+                    <span style={{ fontWeight: "bold" }}>REJECTED BY</span>:{" "}
+                    {carrierHistory.rejectedInfo.user.user_name ?? "Unknown"}
+                  </Card.Text>
+                </Card.Body>
+              </>
+            )}
+          </Card.Body>
+        </Card>
+      ):null}
+
+      <Modal show={modal} heading="Make Appointment" disabled={loading} onConfirm={onConfirm} onClose={onClose}>
+        <form action="">
+          <Input
+            type="datetime-local"
+            label="Call back time:"
+            defaultValue={moment(new Date()).format("YYYY-MM-DDTHH:mm")}
+            ref={appointmentRef}
+          />
+          <TextArea name="Comment:" placeholder="Comment here..." ref={commentRef} />
+
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          ></div>
+        </form>
+      </Modal>
+      <Modal show={rmodal} heading="Reject Carrier" onConfirm={onrConfirm} disabled={loading} onClose={onrClose}>
+        <form>
+          {options.map((option, index) => {
+            return (
+              <div className="my-3 align-items-center d-flex">
+                <input
+                  type="radio"
+                  style={{
+                    height: "25px",
+                    width: "25px",
+                  }}
+                  checked={defaultComment?.index === index}
+                  onChange={(e) => handleChange(option.value, index)}
+                />
+                <label onClick={(e) => handleChange(option.value, index)} className="mx-3">
+                  {option.label}
+                </label>
+              </div>
+            );
+          })}
+          <TextArea
+            name="Comment:"
+            style={{
+              display: defaultComment?.index === options.length - 1 ? "" : "none",
+            }}
+            placeholder="Comment here..."
+            ref={commentrRef}
+            value={defaultComment?.text}
+            onChange={(e) => setDefaultComment({ ...defaultComment, text: e.target.value })}
+          />
+
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          ></div>
+        </form>
+      </Modal>
     </div>
   );
 };
