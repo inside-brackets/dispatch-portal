@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tab, Tabs, Card } from "react-bootstrap";
 import CarrierDetails from "../components/sharedPages/carrierDetails/CarrierDetails";
 import CarrierDocuments from "../components/sharedPages/carrierDetails/CarrierDocuments";
-// import CarrierIssues from "../components/sharedPages/carrierDetails/CarrierIssues";
+import CarrierIssues from "../components/sharedPages/carrierDetails/CarrierIssues";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import CStatus from "../assets/JsonData/status_map.json";

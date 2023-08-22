@@ -40,6 +40,7 @@ const CarrierDetails = ({ carrierData }) => {
   const reactToPrintContent = React.useCallback(() => {
     return ref.current;
   }, []);
+  
   const handlePrint = useReactToPrint({
     content: reactToPrintContent,
     documentTitle: "AwesomeFileName",
@@ -200,7 +201,7 @@ const CarrierDetails = ({ carrierData }) => {
               });
             }
           }
-          if (selectedCarrierStatus.value == "deactivate") {
+          if (selectedCarrierStatus.value === "deactivate") {
             socket.emit("deactivate-carrier", `${params.mc}`);
           }
           setCarrier(response.data);
