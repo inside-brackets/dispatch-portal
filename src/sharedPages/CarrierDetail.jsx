@@ -83,34 +83,19 @@ const CarrierDetail = () => {
         <Card.Body>
           <BackButton onClick={() => history.goBack()} />
           <div className="carrier_badge_status">
-            <Badge
-              type={CStatus[carrier.c_status]}
-              content={carrier.c_status}
-            />
+            <Badge type={CStatus[carrier.c_status]} content={carrier.c_status} />
           </div>
           <h1 className="text-center">{carrier.company_name} </h1>
-          <Tabs
-            id="carrierView"
-            activeKey={key}
-            onSelect={onSelectHandler}
-            justify
-            style={{ marginTop: "29px" }}
-          >
+          <Tabs id="carrierView" activeKey={key} onSelect={onSelectHandler} justify style={{ marginTop: "29px" }}>
             <Tab eventKey="details" title="Carrier Detail">
-              <CarrierDetails
-                carrierData={carrierData}
-                setCarrierData={setCarrierData}
-              />
+              <CarrierDetails carrierData={carrierData} setCarrierData={setCarrierData} />
             </Tab>
             <Tab eventKey="documents" title="Documents">
-              <CarrierDocuments
-                carrierData={carrierData}
-                setCarrierData={setCarrierData}
-              />
+              <CarrierDocuments carrierData={carrierData} setCarrierData={setCarrierData} />
             </Tab>
-            {/* <Tab eventKey="issues" title="Issues">
-        <CarrierIssues />
-      </Tab> */}
+            <Tab eventKey="issues" title="Issues">
+              <CarrierIssues />
+            </Tab>
           </Tabs>
         </Card.Body>
       </Card>
