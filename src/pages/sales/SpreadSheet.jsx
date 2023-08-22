@@ -84,6 +84,7 @@ const Customers = () => {
                     { label: "Appointment ", value: "appointment" },
                     { label: "Registered", value: "registered" },
                     { label: "Deactivated ", value: "deactivated" },
+                    { label: "Rejected ", value: "rejected" },
                   ],
                   "registered within": [
                     { label: "30 days", value: "30days" },

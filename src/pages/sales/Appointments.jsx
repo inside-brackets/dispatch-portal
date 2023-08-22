@@ -6,11 +6,12 @@ import Modal from "../../components/modals/MyModal";
 import TextArea from "../../components/UI/TextArea";
 import Loader from "react-loader-spinner";
 import { useSelector } from "react-redux";
-import { Card ,Button} from "react-bootstrap";
 import axios from "axios";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
+import Badge from "../../components/badge/Badge";
 import moment from "moment";
 import "../../assets/css/sales/appointmentCards.css";
+import { toast } from "react-toastify";
 
 const Appointments = (props) => {
   const { _id: currUserId } = useSelector((state) => state.user.user);
@@ -18,9 +19,12 @@ const Appointments = (props) => {
   const [currentmc, setCurrentMC] = useState();
   const { isLoading, error: httpError, sendRequest: fetchCarrier } = useHttp();
   const [savedCarriers, setSavedCarries] = useState([]);
-  const [onClear,setOnClear] = useState()
-  const [inValue,setInValue]= useState('')
+  const [onClear, setOnClear] = useState();
+  const [inValue, setInValue] = useState("");
   const history = useHistory();
+
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
   //changes//
   const onConfirm = (mc) => {
     setCurrentMC(mc);
@@ -55,14 +59,26 @@ const Appointments = (props) => {
   //changes//
   useEffect(() => {
     const transformData = (data) => {
-      setOnClear(data)
+      setOnClear(data);
       if (data === null) {
         return;
       }
       data.sort((a, b) => {
         return new Date(b.appointment) - new Date(a.appointment);
       });
+
+      const staleAppointments = data.map(
+        (c) => new Date(c.updatedAt) < threeMonthsAgo
+      ).length;
       setCarriersList(data);
+
+      if (staleAppointments) {
+        toast.warning(
+          `You have ${staleAppointments} unavailing appointment${
+            staleAppointments > 1 ? "s" : ""
+          }. Be sure to clear out your clutter.`
+        );
+      }
     };
     fetchCarrier(
       {
@@ -78,102 +94,104 @@ const Appointments = (props) => {
   }, [fetchCarrier, currUserId]);
 
   //search
-const clearHanler=()=>{
-  setCarriersList(onClear);
-  setSavedCarries((prev) => {
-    const temp_list = prev;
-    return temp_list.filter((carrier) => carrier.mc_number !== currentmc);
-  });
-  setInValue('')
-}
+  const clearHanler = () => {
+    setCarriersList(onClear);
+    setSavedCarries((prev) => {
+      const temp_list = prev;
+      return temp_list.filter((carrier) => carrier.mc_number !== currentmc);
+    });
+    setInValue("");
+  };
 
   const search = (e) => {
     if (e.key === "Enter") {
       var searchValue = inValue.trim();
-      if(searchValue.length!== 0){
-      const searched = carriersList.filter((carrier) => {
-        if (!isNaN(searchValue)) {
-          return carrier.mc_number === parseInt(inValue.trim());
-        } else {
-          searchValue = searchValue.toLowerCase();
-          if (
-            carrier.company_name
-              .toLowerCase()
-              .includes(searchValue.toLowerCase())
-          ) {
-            return true;
+      if (searchValue.length !== 0) {
+        const searched = carriersList.filter((carrier) => {
+          if (!isNaN(searchValue)) {
+            return carrier.mc_number === parseInt(inValue.trim());
+          } else {
+            searchValue = searchValue.toLowerCase();
+            if (
+              carrier.company_name
+                .toLowerCase()
+                .includes(searchValue.toLowerCase())
+            ) {
+              return true;
+            }
+            return false;
           }
-          return false;
+        });
+        if (searched.length !== 0) {
+          setSavedCarries(carriersList);
+          setCarriersList(searched);
         }
-      });
-      if (searched.length !== 0) {
-        setSavedCarries(carriersList);
-        setCarriersList(searched);
-      } else 
-      // if(savedCarriers.length !== 0)
-      {
-        setCarriersList(savedCarriers);
-        setSavedCarries([]);
+        // if(savedCarriers.length !== 0)
+        else {
+          setCarriersList(savedCarriers);
+          setSavedCarries([]);
+        }
       }
-    }
     }
   };
 
-  const body = (carrier) => (
-    <Row>
-      <Col>
-        <h5>MC: </h5>
-      </Col>
-      <Col>
-        <h6> {carrier.mc_number}</h6>
-      </Col>
+  const body = (carrier) => {
+    return (
       <Row>
         <Col>
-          <h5>Phone:</h5>{" "}
+          <h5>MC: </h5>
         </Col>
         <Col>
-          <h6>{carrier.phone_number}</h6>
+          <h6> {carrier.mc_number}</h6>
         </Col>
-      </Row>
-      <Row>
-        <h5>Email:</h5>
         <Row>
-          <h6>
-            {carrier.email?.length >= 19
-              ? `${carrier.email
-                  .substring(0, Math.min(carrier.email.length, 19))
-                  .trim()}...`
-              : carrier.email}
-          </h6>
+          <Col>
+            <h5>Phone:</h5>{" "}
+          </Col>
+          <Col>
+            <h6>{carrier.phone_number}</h6>
+          </Col>
         </Row>
-      </Row>
-      <Row>
-        <Col>
-          <h5>Comment:</h5>{" "}
-        </Col>
-        <div
-          style={{
-            overflow: "hidden",
-          }}
-        >
-          <Row
-            style={{
-              maxHeight: 37,
-              minHeight: 37,
-            }}
-          >
-            <h6 className="text-muted">
-              {carrier.comment?.length >= 35
-                ? `${carrier.comment
-                    .substring(0, Math.min(carrier.comment.length, 35))
+        <Row>
+          <h5>Email:</h5>
+          <Row>
+            <h6>
+              {carrier.email?.length >= 19
+                ? `${carrier.email
+                    .substring(0, Math.min(carrier.email.length, 19))
                     .trim()}...`
-                : carrier.comment}
+                : carrier.email}
             </h6>
           </Row>
-        </div>
+        </Row>
+        <Row>
+          <Col>
+            <h5>Comment:</h5>{" "}
+          </Col>
+          <div
+            style={{
+              overflow: "hidden",
+            }}
+          >
+            <Row
+              style={{
+                maxHeight: 37,
+                minHeight: 37,
+              }}
+            >
+              <h6 className="text-muted">
+                {carrier.comment?.length >= 35
+                  ? `${carrier.comment
+                      .substring(0, Math.min(carrier.comment.length, 35))
+                      .trim()}...`
+                  : carrier.comment}
+              </h6>
+            </Row>
+          </div>
+        </Row>
       </Row>
-    </Row>
-  );
+    );
+  };
   var appointmentList = (
     <div className="appointment__loader">
       <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
@@ -210,7 +228,10 @@ const clearHanler=()=>{
                     height: "15px",
                   }}
                 >
-                  {item.company_name}
+                  {item.company_name}{" "}
+                  {new Date(item.updatedAt) < threeMonthsAgo && (
+                    <Badge type="warning" content="Stale Appointment" />
+                  )}
                 </Card.Title>
                 <hr />
                 <Card.Text className="">{body(item)}</Card.Text>
@@ -263,11 +284,13 @@ const clearHanler=()=>{
             icon="bx bx-search"
             value={inValue}
             onKeyDown={search}
-            onChange={event => setInValue(event.target.value)}
+            onChange={(event) => setInValue(event.target.value)}
           />
         </div>
         <div className="col-md-4 mt-4">
-        <Button onClick={clearHanler} size="lg">Clear</Button>
+          <Button onClick={clearHanler} size="lg">
+            Clear
+          </Button>
         </div>
       </div>
       {appointmentList}

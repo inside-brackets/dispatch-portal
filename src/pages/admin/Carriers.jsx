@@ -111,6 +111,10 @@ const Carriers = () => {
                     { label: "Registered", value: "registered" },
                     { label: "Deactivated ", value: "deactivated" },
                     { label: "In Progress ", value: "inprogress" },
+                    {
+                      label: "Dangling Appointments",
+                      value: "dangling_appointment",
+                    },
                   ],
 
                   trucks: [

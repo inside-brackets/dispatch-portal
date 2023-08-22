@@ -49,12 +49,20 @@
   height: auto;
 }
 
-.tags-wrapper{
+.tags-wrapper {
   margin-bottom: 2%;
   min-width: 445px;
   max-width: 445px;
 }
 
-.tags{
+.tags {
   font-size: small;
+}
+
+.history-card {
+  position: absolute;
+  top: 150px;
+  right: 100px;
+  width: 300px;
+
 }
