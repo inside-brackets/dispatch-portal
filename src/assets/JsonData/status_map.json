@@ -9,5 +9,6 @@
   "hired":"success",
   "scheduled":"primary",
   "pending-decision":"yellow",
-  "inprogress":"inprogress"
+  "inprogress":"inprogress",
+  "dangling_appointment": "dangling"
 }

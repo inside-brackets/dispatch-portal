@@ -3,6 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useSelector } from "react-redux";
 import { Form, Button } from "react-bootstrap";
+import Switch from "react-switch";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -17,11 +18,10 @@ function MCSeries() {
     isCustom: false,
     customFrom: 1,
     customTo: 999,
+    includeRejected: false
   });
   const [leads, setLeads] = useState(0);
-  const [refTime, setRefTime] = useState(
-    new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-  );
+  const [refTime, setRefTime] = useState(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
   const [isDirty, setIsDirty] = useState(false);
   const [animate, setAnimate] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,6 +54,11 @@ function MCSeries() {
       setSeries((prevState) => ({
         ...prevState,
         customTo: Number(e.target.value),
+      }));
+    } else if (e.currentTarget.id === "rejectedCheckbox"){
+      setSeries((prevState) => ({
+        ...prevState,
+        includeRejected: !prevState.includeRejected,
       }));
     }
   };
@@ -92,9 +97,7 @@ function MCSeries() {
     });
     setAnimate(false);
     setIsDirty(false);
-    setRefTime(
-      new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    );
+    setRefTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
   };
 
   const handleFreeResource = async (e) => {
@@ -136,12 +139,7 @@ function MCSeries() {
                   />
                 </Form.Group>
                 <Form.Group controlId="customCheckbox" className="mt-3">
-                  <Form.Check
-                    type="checkbox"
-                    label="Custom"
-                    onChange={handleChange}
-                    checked={series.isCustom}
-                  />
+                  <Form.Check type="checkbox" label="Custom" onChange={handleChange} checked={series.isCustom} />
                 </Form.Group>
                 <Form.Group className="disp-flex">
                   <Form.Label className="mr-right">Range:</Form.Label>
@@ -169,12 +167,10 @@ function MCSeries() {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="mt-3 disp-flex"
-                  disabled={!isDirty}
-                >
+                <Form.Group controlId="rejectedCheckbox" className="mt-3">
+                  <Form.Check type="checkbox" label="Include Rejected Leads" onChange={handleChange} checked={series.includeRejected} />
+                </Form.Group>
+                <Button variant="primary" type="submit" className="mt-3 disp-flex" disabled={!isDirty}>
                   {isSubmitting && (
                     <svg
                       className="load-icon"
@@ -207,21 +203,14 @@ function MCSeries() {
               <Form className="mt-3 mb-3">
                 <Form.Group className="disp-flex">
                   <Form.Label className="mr-right">Available Leads:</Form.Label>
-                  <Form.Control
-                    size="sm"
-                    className="w-6rem"
-                    placeholder={leads}
-                    readOnly={true}
-                  />
+                  <Form.Control size="sm" className="w-6rem" placeholder={leads} readOnly={true} />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width={24}
                     height={24}
-                    className={`mr-left-right refresh-btn ${
-                      animate ? `refresh` : ``
-                    }`}
+                    className={`mr-left-right refresh-btn ${animate ? `refresh` : ``}`}
                     onClick={handleRefresh}
                   >
                     <path
@@ -232,40 +221,40 @@ function MCSeries() {
                   </svg>
                 </Form.Group>
                 <span className="time-text">Last refreshed: {refTime}</span>
-                <Form.Group className="mt-4">
-                  <Button
-                    variant="secondary"
-                    className="sec-btn disp-flex"
-                    onClick={handleFreeResource}
-                    disabled={refresh}
-                  >
-                    {refresh && (
-                      <svg
-                        className="load-icon"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        width={20}
-                        height={20}
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    )}
-                    Free Resources
-                  </Button>
-                </Form.Group>
+                  <Form.Group className="mt-4">
+                    <Button
+                      variant="secondary"
+                      className="sec-btn disp-flex"
+                      onClick={handleFreeResource}
+                      disabled={refresh}
+                    >
+                      {refresh && (
+                        <svg
+                          className="load-icon"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          width={20}
+                          height={20}
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      )}
+                      Free Resources
+                    </Button>
+                  </Form.Group>
               </Form>
             </div>
           </div>
@@ -273,11 +262,11 @@ function MCSeries() {
         <Col sm={12} md={8} lg={6} xl={4}>
           <TargetDisplay designation={user.designation} />
         </Col>
-        {user.department==="admin" &&
-        <Col sm={12} md={8} lg={6} xl={4}>
-          <TimeLogs designation={user.designation} />
-        </Col>}
-
+        {user.department === "admin" && (
+          <Col sm={12} md={8} lg={6} xl={4}>
+            <TimeLogs designation={user.designation} />
+          </Col>
+        )}
       </Row>
     </div>
   );

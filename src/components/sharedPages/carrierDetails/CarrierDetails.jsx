@@ -23,7 +23,7 @@ const CarrierDetails = ({ carrierData }) => {
   const params = useParams();
   const [carrier, setCarrier] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [dModal, setdModal] = useState();
+  const [rejectModal, setRejectModal] = useState();
   const [printModal, setPrintModal] = useState();
   const [error, setError] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -96,6 +96,7 @@ const CarrierDetails = ({ carrierData }) => {
       setCarrier(carrierData);
     }
   }, [carrierData]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -111,6 +112,7 @@ const CarrierDetails = ({ carrierData }) => {
         });
       }
     }
+
     const bypass = selectedCarrierStatus.value !== "registered";
     if (bypass || form.checkValidity() === true) {
       setLoaderButton(true);
@@ -132,7 +134,7 @@ const CarrierDetails = ({ carrierData }) => {
       if (currUser.department === "admin") {
         upObj["salesman"] = selectedSalesperson?.value;
       }
-      if (selectedCarrierStatus.value === "registered") {
+      if (selectedCarrierStatus.value === "deactivated") {
         if (
           !carrier.mc_file ||
           !carrier.noa_file ||
@@ -198,6 +200,9 @@ const CarrierDetails = ({ carrierData }) => {
               });
             }
           }
+          if (selectedCarrierStatus.value == "deactivate") {
+            socket.emit("deactivate-carrier", `${params.mc}`);
+          }
           setCarrier(response.data);
           setLoaderButton(false);
         })
@@ -215,22 +220,43 @@ const CarrierDetails = ({ carrierData }) => {
     }
   };
 
-  const openModal = () => {
-    setdModal(true);
+  const RejectCallBackHandler = () => {
+    if (carrier.c_status === "rejected") {
+      axios
+        .put(`/updatecarrier/${params.mc}`, {
+          c_status: "appointment",
+        })
+        .then(({ data }) => {
+          setCarrier((prev) => {
+            return {
+              ...prev,
+              c_status: data.c_status,
+            };
+          });
+          toast.success('Carrier status updated to "appointment"');
+        });
+    } else {
+      setRejectModal(true);
+    }
   };
 
-  const deactivateHandler = async (event) => {
+  const rejectCarrier = (event) => {
     event.preventDefault();
-    await axios.put(`/updatecarrier/${params.mc}`, {
-      c_status: "deactivated",
-      comment: event.target.deactivate.value,
-    });
-    socket.emit("deactivate-carrier", `${params.mc}`);
-    setdModal(false);
-
-    setTimeout(() => {
-      history.push("/appointments");
-    }, 2000);
+    axios
+      .put(`/updatecarrier/${params.mc}`, {
+        c_status: "rejected",
+        comment: event.target.reject.value,
+      })
+      .then(({ data }) => {
+        setCarrier((prev) => {
+          return {
+            ...prev,
+            c_status: data.c_status,
+          };
+        });
+        setRejectModal(false);
+        toast.success('Carrier status updated to "rejected"');
+      });
   };
 
   if (isLoading && !error) {
@@ -808,122 +834,112 @@ const CarrierDetails = ({ carrierData }) => {
             </Row>
           </>
         )}
-        {!(
-          currUser.department === "sales" &&
-          !(carrier.c_status === "appointment")
-        ) ? (
-          <Row
-            className="justify-content-between"
-            style={{ marginTop: "10px" }}
-          >
-            <hr />
-            <Col md={9}>
-              <Button
-                disabled={
-                  currUser.department === "sales" &&
-                  !(carrier.c_status === "appointment")
-                    ? true
-                    : !closeCheck
-                    ? loaderButton
-                    : false
-                }
-                onClick={
-                  currUser.department === "sales"
-                    ? () => {
-                        setCloseCheck(false);
-                      }
-                    : ""
-                }
-                variant="success"
-                size="lg"
-                type="submit"
-              >
-                {!closeCheck
-                  ? loaderButton && (
-                      <Spinner
-                        as="span"
-                        animation="grow"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    )
-                  : null}
-                {currUser.department === "sales" ? "Save" : "Update Carrier"}
-              </Button>
-            </Col>
-            <Col md={3} className="d-flex justify-content-end">
-              <Button
-                variant="info"
-                style={{ float: "right", marginRight: "5px" }}
-                // onClick={handlePrint}
-                onClick={() => {
-                  setPrintModal(true);
-                }}
-              >
-                Print
-              </Button>
-              {currUser.department === "sales" && (
-                <>
-                  <Button
-                    style={{ float: "right", marginRight: "5px" }}
-                    size="lg"
-                    variant="danger"
-                    onClick={openModal}
-                    disabled={
-                      currUser.department === "sales" &&
-                      !(carrier.c_status === "appointment")
-                        ? true
-                        : false
-                    }
-                  >
-                    Reject
-                  </Button>
 
-                  <Button
-                    size="lg"
-                    type="submit"
-                    onClick={closeHandler}
-                    disabled={
-                      currUser.department === "sales" &&
-                      !(carrier.c_status === "appointment")
-                        ? true
-                        : closeCheck
-                        ? loaderButton
-                        : false
+        <Row className="justify-content-between" style={{ marginTop: "10px" }}>
+          <hr />
+          <Col md={9}>
+            <Button
+              disabled={
+                currUser.department === "sales" &&
+                !(carrier.c_status === "appointment")
+                  ? true
+                  : !closeCheck
+                  ? loaderButton
+                  : false
+              }
+              onClick={
+                currUser.department === "sales"
+                  ? () => {
+                      setCloseCheck(false);
                     }
-                  >
-                    {closeCheck
-                      ? loaderButton && (
-                          <Spinner
-                            as="span"
-                            animation="grow"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />
-                        )
-                      : null}
-                    Close Sale
-                  </Button>
-                </>
-              )}
-              {currUser.department === "admin" && (
-                <>
-                  {" "}
-                  <Button
-                    style={{ float: "right" }}
-                    size="lg"
-                    onClick={changestatusHandler}
-                  >
-                    Change Status
-                  </Button>
-                </>
-              )}
-            </Col>
-            <Col></Col>
-          </Row>
-        ) : null}
+                  : ""
+              }
+              variant="success"
+              size="lg"
+              type="submit"
+            >
+              {!closeCheck
+                ? loaderButton && (
+                    <Spinner
+                      as="span"
+                      animation="grow"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  )
+                : null}
+              {currUser.department === "sales" ? "Save" : "Update Carrier"}
+            </Button>
+          </Col>
+          <Col md={3} className="d-flex justify-content-end">
+            <Button
+              variant="info"
+              style={{ float: "right", marginRight: "5px" }}
+              // onClick={handlePrint}
+              onClick={() => {
+                setPrintModal(true);
+              }}
+            >
+              Print
+            </Button>
+            {currUser.department === "sales" && (
+              <>
+                <Button
+                  style={{ float: "right", marginRight: "5px" }}
+                  size="lg"
+                  variant={
+                    carrier.c_status === "appointment" ? "danger" : "warning"
+                  }
+                  onClick={RejectCallBackHandler}
+                  // disabled={
+                  //   !(carrier.c_status === "appointment") ? true : false
+                  // }
+                >
+                  {carrier.c_status === "appointment" ? "Reject" : "Call Back"}
+                </Button>
+
+                <Button
+                  size="lg"
+                  type="submit"
+                  onClick={closeHandler}
+                  disabled={
+                    !(carrier.c_status === "appointment")
+                      ? true
+                      : closeCheck
+                      ? loaderButton
+                      : false
+                  }
+                >
+                  {closeCheck
+                    ? loaderButton && (
+                        <Spinner
+                          as="span"
+                          animation="grow"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                        />
+                      )
+                    : null}
+                  Close Sale
+                </Button>
+              </>
+            )}
+            {currUser.department === "admin" && (
+              <>
+                <Button
+                  style={{ float: "right" }}
+                  size="lg"
+                  onClick={changestatusHandler}
+                >
+                  Change Status
+                </Button>
+              </>
+            )}
+          </Col>
+          <Col></Col>
+        </Row>
       </Form>
       <Modal
         show={changeStatus}
@@ -992,18 +1008,18 @@ const CarrierDetails = ({ carrierData }) => {
       </Modal>
 
       <Modal
-        show={dModal}
-        heading="Deactivate Carrier"
+        show={rejectModal}
+        heading="Reject Carrier"
         onClose={() => {
-          setdModal(false);
+          setRejectModal(false);
         }}
       >
-        <Form onSubmit={deactivateHandler}>
-          <Form.Group className="mb-3" controlId="deactivate_carrier">
+        <Form onSubmit={rejectCarrier}>
+          <Form.Group className="mb-3" controlId="reject_carrier">
             <Form.Control
               placeholder="Comment here"
               as="textarea"
-              name="deactivate"
+              name="reject"
               rows={5}
               style={{
                 borderRadius: "15px",
