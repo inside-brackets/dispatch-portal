@@ -847,13 +847,11 @@ const CarrierDetails = ({ carrierData }) => {
                   ? loaderButton
                   : false
               }
-              onClick={
-                currUser.department === "sales"
-                  ? () => {
-                      setCloseCheck(false);
-                    }
-                  : ""
-              }
+              onClick={() => {
+                  if (currUser.department === "sales"){
+                    setCloseCheck(true);
+                  }
+              }}
               variant="success"
               size="lg"
               type="submit"
