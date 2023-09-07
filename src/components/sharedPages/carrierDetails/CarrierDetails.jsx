@@ -847,11 +847,6 @@ const CarrierDetails = ({ carrierData }) => {
                   ? loaderButton
                   : false
               }
-              onClick={() => {
-                  if (currUser.department === "sales"){
-                    setCloseCheck(true);
-                  }
-              }}
               variant="success"
               size="lg"
               type="submit"
@@ -883,19 +878,25 @@ const CarrierDetails = ({ carrierData }) => {
             </Button>
             {currUser.department === "sales" && (
               <>
-                <Button
+              {carrier.c_status === "appointment" ? (
+                  <Button
                   style={{ float: "right", marginRight: "5px" }}
                   size="lg"
-                  variant={
-                    carrier.c_status === "appointment" ? "danger" : "warning"
-                  }
+                  variant="danger"
                   onClick={RejectCallBackHandler}
-                  // disabled={
-                  //   !(carrier.c_status === "appointment") ? true : false
-                  // }
                 >
-                  {carrier.c_status === "appointment" ? "Reject" : "Call Back"}
+                  Reject
                 </Button>
+              ) : carrier.c_status === "rejected" ? (
+                <Button
+                style={{ float: "right", marginRight: "5px" }}
+                size="lg"
+                variant="warning"
+                onClick={RejectCallBackHandler}
+              >
+                Call Back
+              </Button>
+              ) : ""}
 
                 <Button
                   size="lg"
