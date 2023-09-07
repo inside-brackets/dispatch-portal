@@ -67,7 +67,7 @@ const Appointments = (props) => {
         return new Date(b.appointment) - new Date(a.appointment);
       });
 
-      const staleAppointments = data.map(
+      const staleAppointments = data.filter(
         (c) => new Date(c.updatedAt) < threeMonthsAgo
       ).length;
       setCarriersList(data);
