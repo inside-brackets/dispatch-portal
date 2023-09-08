@@ -123,6 +123,8 @@ const CarrierDetails = ({ carrierData }) => {
         tax_id_number: event.target.tax_id.value,
         dispatcher_fee: event.target.dispatch_fee.value,
         appointment: new Date(event.target.appointment.value),
+        comment: event.target.comment.value,
+        dispatcher_comment: event.target.dispatcher_comment?.value,
         insurance: {
           name: event.target.i_company_name.value,
           address: event.target.i_address.value,
@@ -407,7 +409,7 @@ const CarrierDetails = ({ carrierData }) => {
               style={{ width: "500px" }}
               placeholder="Comment.."
               defaultValue={carrier ? carrier.comment : ""}
-              name="Comment:"
+              name="comment"
               readOnly={
                 currUser.department === "sales" &&
                 !(carrier.c_status === "appointment")
@@ -467,6 +469,7 @@ const CarrierDetails = ({ carrierData }) => {
                   <TextArea
                     style={{ width: "500px" }}
                     placeholder="Dispatcher's Comments"
+                    name="dispatcher_comment"
                     defaultValue={carrier ? carrier.dispatcher_comment : ""}
                   />
                 </Form.Group>
