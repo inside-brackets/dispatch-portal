@@ -162,11 +162,7 @@ const BasicInformation = ({ user }) => {
           <Row className="justify-content-center mt-5">
             <Col md={3}>
               <p
-                style={{
-                  color: "blue",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
+                className="link"
                 onClick={() => setShowModal(true)}
               >
                 Change Password

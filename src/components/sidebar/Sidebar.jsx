@@ -7,15 +7,19 @@ import { useSelector } from "react-redux";
 const SidebarItem = (props) => {
   const active = props.active ? "active" : "";
   const { carriers } = useSelector((state) => state.sales);
+  const { appointments } = useSelector((state) => state.manageAppointments);
 
-  const count = carriers.length;
+  const badges = {
+    "Assign Sales": carriers.length,
+    "Manage Leads": appointments.length,
+  }
   return (
     <div className="sidebar__item">
       <div className={`sidebar__item-inner ${active}`}>
         <i className={props.icon}></i>
         <span>{props.title}</span>
-        {props.title === "Assign Sales" && count !== 0 ? (
-          <span className="dropdown__toggle-badge">{count}</span>
+        {badges[props.title] ? (
+          <span className="dropdown__toggle-badge">{badges[props.title]}</span>
         ) : (
           ""
         )}

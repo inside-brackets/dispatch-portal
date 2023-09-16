@@ -75,6 +75,16 @@
       "icon": "bx bx-category-alt"
     },
     {
+      "display_name": "Assign Sales",
+      "route": "/assignsales",
+      "icon": "bx bx-log-in-circle"
+    },
+    {
+      "display_name": "Manage Leads",
+      "route": "/manageappointments",
+      "icon": "bx bx-ghost"
+    },
+    {
       "display_name": "Carriers",
       "route": "/carriers",
       "icon": "bx bxs-truck"
@@ -101,6 +111,11 @@
         "display_name": "Assign Sales",
         "route": "/assignsales",
         "icon": "bx bx-log-in-circle"
+      },
+      {
+        "display_name": "Manage Leads",
+        "route": "/manageappointments",
+        "icon": "bx bx-ghost"
       },
       {
         "display_name": "Carriers",

@@ -2,6 +2,7 @@ import React, { useEffect, useState, Suspense, lazy } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../store/sales";
+import { manageAppointmentsActions } from "../store/manageAppointments";
 import { socket } from "..";
 import useHttp from "../hooks/use-https";
 import Loader from "react-loader-spinner";
@@ -13,6 +14,7 @@ const AddCarrier = lazy(() => import("../pages/admin/AddCarrier"));
 const CarrierView = lazy(() => import("../sharedPages/CarrierDetail"));
 const DashboardAdmin = lazy(() => import("../pages/admin/DashboardAdmin"));
 const AssignSales = lazy(() => import("../pages/admin/AssignSales"));
+const ManageAppointments = lazy(() => import("../sharedPages/ManageAppointments"));
 const Carriers = lazy(() => import("../pages/admin/Carriers"));
 const SearchCarrier = lazy(() => import("../pages/admin/SearchCarrier"));
 const Loads = lazy(() => import("../pages/admin/Loads"));
@@ -91,6 +93,24 @@ const Routes = () => {
           },
         },
         transformData
+      );
+
+      const setDanglingAppointments = (data) => {
+        dispatch(manageAppointmentsActions.set(data));
+      }
+
+      fetchCarriers(
+        {
+          url: `/getcarriers`,
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+
+          body: {
+            c_status: "dangling_appointment",
+            company: selectedCompany.value,
+          },
+        },
+        setDanglingAppointments
       );
     }
   }, [dispatch, department, fetchCarriers, refresh, selectedCompany]);
@@ -190,6 +210,7 @@ const Routes = () => {
         <Route path="/carrierview/:mc?" exact component={CarrierView} />
         <Route path="/carrierview/:mc/:truck" exact component={TruckDetails} />
         <Route path="/assignsales" exact component={AssignSales} />
+        <Route path="/manageappointments" exact component={ManageAppointments} />
         <Route path="/profile" component={Profile} />
         <Route path="/loads" component={Loads} />
         <Route path="/pdf" component={PdfTest} />
@@ -227,6 +248,7 @@ const Routes = () => {
         <Route path="/carrierview/:mc" exact component={CarrierView} />
         <Route path="/carrierview/:mc/:truck" exact component={TruckDetails} />
         <Route path="/assignsales" exact component={AssignSales} />
+        <Route path="/manageappointments" exact component={ManageAppointments} />
         <Route path="/profile" component={Profile} />
         <Route path="/loads" component={Loads} />
         <Route path="/pdf" component={PdfTest} />
