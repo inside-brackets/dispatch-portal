@@ -37,12 +37,13 @@ const Carriers = () => {
       color = "blue";
     }
     const flag = checkPaying(item);
+    console.log(currPage, index)
     return (
       <tr
         key={index}
         onClick={() => history.push(`/carrierview/${item.mc_number}`)}
       >
-        <td>{index + 1 + currPage * 10}</td>
+        <td>{index+1}</td>
         <td>{item.mc_number}</td>
         <td>
           {flag ? (
