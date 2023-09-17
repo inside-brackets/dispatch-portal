@@ -34,7 +34,7 @@ const CarrierDetails = ({ carrierData }) => {
   const [statusChanged, setStatusChanged] = useState();
   const [salesperson, setSalesperson] = useState();
   const [selectedCarrierStatus, setSelectedCarrierStatus] = useState("");
-  const [selectedSalesperson, setSelectedSalesperson] = useState();
+  const [selectedSalesperson, setSelectedSalesperson] = useState(null);
 
   const ref = useRef();
   const reactToPrintContent = React.useCallback(() => {
@@ -135,6 +135,9 @@ const CarrierDetails = ({ carrierData }) => {
       };
       if (currUser.department === "admin") {
         upObj["salesman"] = selectedSalesperson?.value;
+        if (selectedSalesperson){
+          upObj["manually_assigned"] = true;
+        }
       }
       if (selectedCarrierStatus.value === "deactivated") {
         if (
