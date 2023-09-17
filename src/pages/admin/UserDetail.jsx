@@ -1,32 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Card,
-  Form,
-  Alert,
-  Tab,
-  Tabs,
-  Button,
-} from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
+import { getDanglingAppointments } from "../../store/manageAppointments";
+import { Row, Col, Card, Form, Alert, Tab, Tabs, Button } from "react-bootstrap";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import moment from "moment";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Legend,
-  Label,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Label } from "recharts";
 
 import Documents from "../Documents";
 import Badge from "../../components/badge/Badge";
@@ -46,12 +26,14 @@ const UserDetailPage = ({ user, callBack }) => {
   const [loading, setLoading] = useState(false);
   const [editable, setEditable] = useState(false);
   const [usernameIsValid, setUsernameIsValid] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [stats, setStats] = useState([]);
   const [show, setShow] = useState(false);
 
   const { department } = useSelector((state) => state.user.user);
+
+  const dispatch = useDispatch();
 
   const handleChange = (evt) => {
     const value = evt.target.value;
@@ -112,21 +94,11 @@ const UserDetailPage = ({ user, callBack }) => {
         change: ["rejected", "registered", "appointment"],
       })
       .then((res) => {
-        const rejected = res.data.filter(
-          (carrier) => carrier.change === "rejected"
-        );
-        const registered = res.data.filter(
-          (carrier) => carrier.change === "registered"
-        );
-        const appointment = res.data.filter(
-          (carrier) => carrier.change === "appointment"
-        );
+        const rejected = res.data.filter((carrier) => carrier.change === "rejected");
+        const registered = res.data.filter((carrier) => carrier.change === "registered");
+        const appointment = res.data.filter((carrier) => carrier.change === "appointment");
 
-        if (
-          rejected.length === 0 &&
-          registered.length === 0 &&
-          appointment.length === 0
-        ) {
+        if (rejected.length === 0 && registered.length === 0 && appointment.length === 0) {
           setMessage(`Not enough data to show in graph`);
         } else {
           setData([
@@ -208,18 +180,23 @@ const UserDetailPage = ({ user, callBack }) => {
 
   const COLORS = ["#00FF00", "#FF0000", "#FFFF00"];
   useEffect(() => {
-    if (state.user_name) {
-      const indentifier = setTimeout(async () => {
-        const response = await axios.post(`/getusers`, {
-          user_name: state.user_name.replace(/\s+/g, " ").trim().toLowerCase(),
-        });
-        if (state.user_name !== response.data[0]?.user_name) setShowError(true);
-        setUsernameIsValid(response.data.length === 0);
-      }, 500);
-      return () => {
-        clearTimeout(indentifier);
-      };
-    }
+    const indentifier = setTimeout(async () => {
+      if (state.user_name) {
+        if (state.user_name !== user.user_name) {
+          const response = await axios.post(`/getusers`, {
+            user_name: state.user_name.replace(/\s+/g, " ").trim().toLowerCase(),
+          });
+          const data = response.data;
+          setShowError(true);
+          setUsernameIsValid(data.length === 0);
+        } else {
+          setShowError(false);
+        }
+      }
+    }, 500);
+    return () => {
+      clearTimeout(indentifier);
+    };
   }, [state.user_name]);
 
   useEffect(() => {
@@ -259,12 +236,7 @@ const UserDetailPage = ({ user, callBack }) => {
                   <Form.Label>User Name</Form.Label>
                   <Form.Control
                     className={`${
-                      showError &&
-                      editable &&
-                      state.user_name &&
-                      !usernameIsValid
-                        ? "invalid is-invalid"
-                        : ""
+                      showError && editable && state.user_name && !usernameIsValid ? "invalid is-invalid" : ""
                     } no__feedback shadow-none`}
                     value={state.user_name}
                     onChange={handleChange}
@@ -273,30 +245,19 @@ const UserDetailPage = ({ user, callBack }) => {
                     placeholder="Enter username"
                     name="user_name"
                   />
-                  {editable &&
-                  showError &&
-                  usernameIsValid !== null &&
-                  usernameIsValid ? (
-                    <Form.Text style={{ color: "green" }}>
-                      Username is available!
-                    </Form.Text>
+                  {editable && showError && usernameIsValid ? (
+                    <Form.Text style={{ color: "green" }}>Username is available!</Form.Text>
                   ) : (
                     editable &&
                     showError &&
                     usernameIsValid === false && (
-                      <Form.Text style={{ color: "red" }}>
-                        Whoops! username already exists.
-                      </Form.Text>
+                      <Form.Text style={{ color: "red" }}>Whoops! username already exists.</Form.Text>
                     )
                   )}
 
                   <Row>
                     <Col md={2}>
-                      <Badge
-                        className="rounded-0 mt-4"
-                        type={status_map[user.u_status]}
-                        content={user.u_status}
-                      />
+                      <Badge className="rounded-0 mt-4" type={status_map[user.u_status]} content={user.u_status} />
                     </Col>
                   </Row>
                 </Form.Group>
@@ -317,13 +278,7 @@ const UserDetailPage = ({ user, callBack }) => {
                 </Form.Group>
                 <Form.Group as={Col} md="6">
                   <Form.Label>Last name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    readOnly
-                    value={user.last_name}
-                    placeholder="Last name"
-                    name="last_name"
-                  />
+                  <Form.Control type="text" readOnly value={user.last_name} placeholder="Last name" name="last_name" />
                 </Form.Group>
 
                 <Form.Group as={Col} md="6">
@@ -338,13 +293,7 @@ const UserDetailPage = ({ user, callBack }) => {
                 </Form.Group>
                 <Form.Group as={Col} md="6">
                   <Form.Label>Address</Form.Label>
-                  <Form.Control
-                    type="text"
-                    readOnly
-                    placeholder="Address"
-                    name="address"
-                    value={user.address}
-                  />
+                  <Form.Control type="text" readOnly placeholder="Address" name="address" value={user.address} />
                 </Form.Group>
                 <Form.Group as={Col} md="6">
                   <Form.Label>Date of Birth</Form.Label>
@@ -352,11 +301,7 @@ const UserDetailPage = ({ user, callBack }) => {
                     type="date"
                     name="date_of_birth"
                     readOnly
-                    Value={
-                      user.date_of_birth
-                        ? moment(user.date_of_birth).format("YYYY-MM-DD")
-                        : ""
-                    }
+                    Value={user.date_of_birth ? moment(user.date_of_birth).format("YYYY-MM-DD") : ""}
                   />
                 </Form.Group>
               </Row>
@@ -378,14 +323,10 @@ const UserDetailPage = ({ user, callBack }) => {
                     <option value="dispatch">Dispatch</option>
                     {/* <option value="accounts">Accounts</option> */}
                     <option value="HR">HR</option>
-                    {user.department !== "HR" && (
-                      <option value="admin">Admin</option>
-                    )}
+                    {user.department !== "HR" && <option value="admin">Admin</option>}
                   </Form.Control>
 
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid Department.
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">Please provide a valid Department.</Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} md="6">
                   <Form.Label>Designation</Form.Label>
@@ -422,11 +363,7 @@ const UserDetailPage = ({ user, callBack }) => {
                     type="date"
                     readOnly={!editable}
                     name="joining_date"
-                    Value={
-                      state.joining_date
-                        ? moment(user.joining_date).format("YYYY-MM-DD")
-                        : ""
-                    }
+                    Value={state.joining_date ? moment(user.joining_date).format("YYYY-MM-DD") : ""}
                     onChange={handleChange}
                   />
                 </Form.Group>
@@ -446,9 +383,7 @@ const UserDetailPage = ({ user, callBack }) => {
                     <option value="inactive">Inactive</option>
                   </Form.Control>
 
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid Status.
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">Please provide a valid Status.</Form.Control.Feedback>
                 </Form.Group>
               </Row>
 
@@ -456,12 +391,7 @@ const UserDetailPage = ({ user, callBack }) => {
                 <Row className="my-5">
                   {editable && (
                     <Col md={2}>
-                      <Button
-                        className="w-100 p-2"
-                        variant="outline-success"
-                        disabled={loading}
-                        type="submit"
-                      >
+                      <Button className="w-100 p-2" variant="outline-success" disabled={loading} type="submit">
                         Save
                       </Button>
                     </Col>
@@ -541,10 +471,7 @@ const UserDetailPage = ({ user, callBack }) => {
                         dataKey="value"
                       >
                         {data.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                         <Label
                           width={30}
@@ -584,12 +511,7 @@ const UserDetailPage = ({ user, callBack }) => {
           )}
         </Col>
       </Row>
-      <DetailsModal
-        show={show}
-        onHide={() => setShow(false)}
-        users={stats}
-        mSwitch={false}
-      />
+      <DetailsModal show={show} onHide={() => setShow(false)} users={stats} mSwitch={false} />
     </>
   );
 };
@@ -615,12 +537,7 @@ function UserDetail() {
       <Loader type="MutatingDots" color="#349eff" height={100} width={100} />
     </div>
   ) : (
-    <Tabs
-      id="controlled-tab-example"
-      activeKey={key}
-      onSelect={(k) => setKey(k)}
-      justify
-    >
+    <Tabs id="controlled-tab-example" activeKey={key} onSelect={(k) => setKey(k)} justify>
       <Tab eventKey="info" title="Basic Information">
         <UserDetailPage user={user} callBack={() => setReCall(Math.random())} />
       </Tab>
