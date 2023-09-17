@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import useHttp from "../../hooks/use-https";
 import MyButton from "../../components/UI/MyButton";
+import MySelect from "../../components/UI/MySelect";
 import Modal from "../../components/modals/MyModal";
 import TextArea from "../../components/UI/TextArea";
 import Loader from "react-loader-spinner";
@@ -21,10 +22,13 @@ const Appointments = (props) => {
   const [savedCarriers, setSavedCarries] = useState([]);
   const [onClear, setOnClear] = useState();
   const [inValue, setInValue] = useState("");
+  const [assignedStatus, setAssignedStatus] = useState({
+    label: "All",
+    value: null,
+  });
+  const [threeMonthsAgo] = useState(new Date().setMonth(new Date().getMonth() - 3))
   const history = useHistory();
 
-  const threeMonthsAgo = new Date();
-  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
   //changes//
   const onConfirm = (mc) => {
     setCurrentMC(mc);
@@ -67,9 +71,7 @@ const Appointments = (props) => {
         return new Date(b.appointment) - new Date(a.appointment);
       });
 
-      const staleAppointments = data.filter(
-        (c) => new Date(c.updatedAt) < threeMonthsAgo
-      ).length;
+      const staleAppointments = data.filter((c) => new Date(c.updatedAt) < threeMonthsAgo).length;
       setCarriersList(data);
 
       if (staleAppointments) {
@@ -80,18 +82,22 @@ const Appointments = (props) => {
         );
       }
     };
+    let body = {
+      salesman: currUserId,
+      c_status: "appointment",
+    };
+    if (assignedStatus.value !== null) {
+      body.manually_assigned = assignedStatus.value;
+    }
     fetchCarrier(
       {
         url: `/getcarriers`,
         method: "POST",
-        body: {
-          salesman: currUserId,
-          c_status: "appointment",
-        },
+        body,
       },
       transformData
     );
-  }, [fetchCarrier, currUserId]);
+  }, [fetchCarrier, currUserId, assignedStatus, threeMonthsAgo]);
 
   //search
   const clearHanler = () => {
@@ -112,11 +118,7 @@ const Appointments = (props) => {
             return carrier.mc_number === parseInt(inValue.trim());
           } else {
             searchValue = searchValue.toLowerCase();
-            if (
-              carrier.company_name
-                .toLowerCase()
-                .includes(searchValue.toLowerCase())
-            ) {
+            if (carrier.company_name.toLowerCase().includes(searchValue.toLowerCase())) {
               return true;
             }
             return false;
@@ -137,58 +139,51 @@ const Appointments = (props) => {
 
   const body = (carrier) => {
     return (
-      <Row>
-        <Col>
+      <Row className="mb-2">
+        <Col md={6} style={{ borderStyle: "groove none none groove" }}>
           <h5>MC: </h5>
         </Col>
-        <Col>
+        <Col md={6} style={{ borderStyle: "groove groove none groove" }}>
           <h6> {carrier.mc_number}</h6>
         </Col>
-        <Row>
-          <Col>
-            <h5>Phone:</h5>{" "}
-          </Col>
-          <Col>
-            <h6>{carrier.phone_number}</h6>
-          </Col>
-        </Row>
-        <Row>
+        <Col md={6} style={{ borderStyle: "groove none none groove" }} class="border-right-0">
+          <h5>Phone:</h5>{" "}
+        </Col>
+        <Col md={6} style={{ borderStyle: "groove groove none groove" }}>
+          <h6>{carrier.phone_number}</h6>
+        </Col>
+
+        <Col md={6} style={{ borderStyle: "groove none none groove" }}>
+          <h5>Assigned by Manager?</h5>{" "}
+        </Col>
+        <Col md={6} style={{ borderStyle: "groove groove none groove" }}>
+          <h6>{carrier.manually_assigned ? "Yes" : "No"}</h6>
+        </Col>
+        <Col md={4} style={{ borderStyle: "groove none none groove" }}>
           <h5>Email:</h5>
-          <Row>
-            <h6>
-              {carrier.email?.length >= 19
-                ? `${carrier.email
-                    .substring(0, Math.min(carrier.email.length, 19))
-                    .trim()}...`
-                : carrier.email}
-            </h6>
-          </Row>
-        </Row>
-        <Row>
-          <Col>
-            <h5>Comment:</h5>{" "}
-          </Col>
-          <div
-            style={{
-              overflow: "hidden",
-            }}
-          >
-            <Row
-              style={{
-                maxHeight: 37,
-                minHeight: 37,
-              }}
-            >
-              <h6 className="text-muted">
-                {carrier.comment?.length >= 35
-                  ? `${carrier.comment
-                      .substring(0, Math.min(carrier.comment.length, 35))
-                      .trim()}...`
-                  : carrier.comment}
-              </h6>
-            </Row>
-          </div>
-        </Row>
+        </Col>
+        <Col md={8} style={{ borderStyle: "groove groove none groove" }}>
+          <h6>{carrier.email}</h6>
+        </Col>
+        <Col md={4} style={{ borderStyle: "groove none groove groove" }}>
+          <h5>Comment:</h5>{" "}
+        </Col>
+
+        <Col
+          md={8}
+          style={{
+            borderStyle: "groove groove groove groove",
+            maxHeight: 60,
+            minHeight: 60,
+            overflow: "hidden",
+          }}
+        >
+          <h6 className="text-muted">
+            {carrier.comment?.length >= 35
+              ? `${carrier.comment.substring(0, Math.min(carrier.comment.length, 60)).trim()}...`
+              : carrier.comment}
+          </h6>
+        </Col>
       </Row>
     );
   };
@@ -218,7 +213,6 @@ const Appointments = (props) => {
   else {
     appointmentList = (
       <div className="row">
-        {" "}
         {carriersList.map((item, index) => (
           <div className="col-4" key={index}>
             <Card className="card-height">
@@ -229,23 +223,14 @@ const Appointments = (props) => {
                   }}
                 >
                   {item.company_name}{" "}
-                  {new Date(item.updatedAt) < threeMonthsAgo && (
-                    <Badge type="warning" content="Stale Appointment" />
-                  )}
+                  {new Date(item.updatedAt) < threeMonthsAgo && <Badge type="warning" content="Stale Appointment" />}
                 </Card.Title>
                 <hr />
                 <Card.Text className="">{body(item)}</Card.Text>
                 <Card.Footer className="card-title">
-                  {
-                    <h5>{`Time: ${moment(new Date(item.appointment)).format(
-                      "llll"
-                    )}`}</h5>
-                  }
+                  {<h5>{`Time: ${moment(new Date(item.appointment)).format("llll")}`}</h5>}
                 </Card.Footer>
-                <div
-                  className="d-flex justify-content-between"
-                  style={{ marginTop: "10px" }}
-                >
+                <div className="d-flex justify-content-between" style={{ marginTop: "10px" }}>
                   <MyButton
                     className="appCard-btn"
                     color="red"
@@ -273,9 +258,9 @@ const Appointments = (props) => {
     );
   }
   return (
-    <div className="row">
-      <div className="row align-items-center mb-3">
-        <div className="col-md-3">
+    <Row>
+      <Row className="align-items-center mb-3">
+        <Col md={3}>
           <label className="mb-2">Search:</label>
           <input
             type="text"
@@ -286,20 +271,39 @@ const Appointments = (props) => {
             onKeyDown={search}
             onChange={(event) => setInValue(event.target.value)}
           />
-        </div>
-        <div className="col-md-4 mt-4">
+        </Col>
+        <Col className="mt-4" md={6}>
           <Button onClick={clearHanler} size="lg">
             Clear
           </Button>
-        </div>
-      </div>
+        </Col>
+        <Col md={3}>
+        <label className="mb-2 ml-1">Filter:</label>
+
+          <MySelect
+            isMulti={false}
+            value={assignedStatus}
+            onChange={setAssignedStatus}
+            options={[
+              {
+                label: "All",
+                value: null,
+              },
+              {
+                label: "Assigned to me",
+                value: true,
+              },
+              // {
+              //   label: "My Appointments",
+              //   value: false,
+              // },
+            ]}
+          />
+        </Col>
+      </Row>
+      <h6>Showing {carriersList.length} appointments</h6>
       {appointmentList}
-      <Modal
-        show={rmodal}
-        heading="Reject Carrier"
-        onConfirm={rejectMC}
-        onClose={onrClose}
-      >
+      <Modal show={rmodal} heading="Reject Carrier" onConfirm={rejectMC} onClose={onrClose}>
         <form>
           <TextArea
             name="Comment:"
@@ -317,7 +321,7 @@ const Appointments = (props) => {
           ></div>
         </form>
       </Modal>
-    </div>
+    </Row>
   );
 };
 
