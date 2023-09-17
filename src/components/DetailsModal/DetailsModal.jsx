@@ -10,7 +10,6 @@ export default function DetailsModal(props) {
   const [today, setToday] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const modalSwitch = props.mSwitch;
-console.log(props.users,"props.users====>")
   useEffect(() => {
     removeDuplicates();
   }, [props.users, today]);

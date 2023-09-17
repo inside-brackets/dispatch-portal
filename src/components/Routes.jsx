@@ -2,7 +2,7 @@ import React, { useEffect, useState, Suspense, lazy } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { salesActions } from "../store/sales";
-import { manageAppointmentsActions } from "../store/manageAppointments";
+import { getDanglingAppointments } from "../store/manageAppointments";
 import { socket } from "..";
 import useHttp from "../hooks/use-https";
 import Loader from "react-loader-spinner";
@@ -95,23 +95,7 @@ const Routes = () => {
         transformData
       );
 
-      const setDanglingAppointments = (data) => {
-        dispatch(manageAppointmentsActions.set(data));
-      }
-
-      fetchCarriers(
-        {
-          url: `/getcarriers`,
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-
-          body: {
-            c_status: "dangling_appointment",
-            company: selectedCompany.value,
-          },
-        },
-        setDanglingAppointments
-      );
+      dispatch(getDanglingAppointments(selectedCompany.value));
     }
   }, [dispatch, department, fetchCarriers, refresh, selectedCompany]);
   return department === "sales" ? (

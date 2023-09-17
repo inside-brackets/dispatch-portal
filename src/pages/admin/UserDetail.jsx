@@ -33,6 +33,8 @@ const UserDetailPage = ({ user, callBack }) => {
 
   const { department } = useSelector((state) => state.user.user);
 
+  const { company: selectedCompany } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
 
   const handleChange = (evt) => {
@@ -62,6 +64,12 @@ const UserDetailPage = ({ user, callBack }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
+    const isFiring = state.u_status === "fired" && user.u_status !== "fired";
+    
+    if (isFiring){
+      const confirm = window.confirm(`This will free all of the resources associated to this user and this action is not reversible. Are you sure you want to fire ${state.user_name}?`);
+      if (!confirm) return;
+    }
 
     if (form.checkValidity() === true) {
       setLoading(true);
@@ -75,9 +83,11 @@ const UserDetailPage = ({ user, callBack }) => {
           u_status: state.u_status,
         })
         .then((response) => {
+          console.log(user.u_status);
           toast.success("Successfully updated user");
-          if (response.data.u_status === "fired") {
+          if (isFiring) {
             socket.emit("user-fired", `${state._id}`);
+            dispatch(getDanglingAppointments(selectedCompany.value));
           }
           setEditable(false);
           setLoading(false);

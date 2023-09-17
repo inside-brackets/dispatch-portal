@@ -102,8 +102,9 @@ function MCSeries() {
 
   const handleFreeResource = async (e) => {
     setRefresh(true);
-    await axios.get(`/free/leads`).catch((error) => {
+    await axios.get(`/free/leads/didnotpick`).catch((error) => {
       if (error.response) {
+        toast.error("Something went wrong!");
       }
     });
     toast.success("Resources freed up!");

@@ -6,7 +6,7 @@ import Loader from "react-loader-spinner";
 import { Button, Spinner, Row, Col } from "react-bootstrap";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { manageAppointmentsActions } from "../store/manageAppointments";
+import { manageAppointmentsActions, getDanglingAppointments } from "../store/manageAppointments";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import moment from "moment";
@@ -52,23 +52,24 @@ const ManageAppointments = () => {
     toast.success("Carrier assigned successfully!");
   };
   useEffect(() => {
-    const transformData = (data) => {
-      dispatch(manageAppointmentsActions.set(data));
-    };
+    // const transformData = (data) => {
+    //   dispatch(manageAppointmentsActions.set(data));
+    // };
 
-    fetchCarriers(
-      {
-        url: `/getcarriers`,
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+    // fetchCarriers(
+    //   {
+    //     url: `/getcarriers`,
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
 
-        body: {
-          c_status: "dangling_appointment",
-          company: selectedCompany.value,
-        },
-      },
-      transformData
-    );
+    //     body: {
+    //       c_status: "dangling_appointment",
+    //       company: selectedCompany.value,
+    //     },
+    //   },
+    //   transformData
+    // );
+    dispatch(getDanglingAppointments(selectedCompany.value));
     fetchSalesmen(
       {
         url: `/getusers`,
@@ -86,12 +87,32 @@ const ManageAppointments = () => {
   }, [fetchSalesmen, fetchCarriers, dispatch, selectedCompany]);
 
   const assignAllHandler = () => {
-    //   TODO make request to assign all carriers to selected salesman
-  }
+    const confirm = window.confirm(`This action is not reversible. Are you sure to want to assign these appointments to ${selectedSalesman.label}?`)
+    
+    if (!confirm) return
+
+    axios.put("/admin/assign/danglingappoitments", {
+      salesman: selectedSalesman.value,
+    }).then((res) => {
+        dispatch(manageAppointmentsActions.set([]));
+        toast.success(`Appointments assigned to ${selectedSalesman.label} successfully!`);
+    }).catch((err) => {
+        toast.error("Something went wrong!");
+    })
+  };
 
   const freeAllDanglingAppointments = () => {
-    //   TODO make request to free all dangling appointments
-  }
+    const confirm = window.confirm("This action is not reversible. Are you sure to want to make these appointments dialable?")
+    
+    if (!confirm) return
+
+    axios.get(`/free/leads/dangling_appointment`).then((res) => {
+        dispatch(manageAppointmentsActions.set([]));
+        toast.success("Dangling appointments freed successfully!");
+    }).catch((err) => {
+        toast.error(err.response.data.message);
+    })
+  };
 
   const renderBody = (item, index) => (
     <tr key={index}>
@@ -129,12 +150,7 @@ const ManageAppointments = () => {
         <h2 style={{ color: "red" }}>ERROR: SERVER MIGHT BE DOWN</h2>
       </div>
     );
-  } else if (appointments === null)
-    return (
-      <div className="spreadsheet__loader">
-        <h2 style={{ color: "green" }}>No more appointments to show.</h2>
-      </div>
-    );
+  }
 
   return (
     <div>
@@ -154,11 +170,21 @@ const ManageAppointments = () => {
           />
         </Col>
         <Col md={8} className="d-flex justify-content-between">
-          <Button className="btn-success m-1" style={{ height: "40px" }} onClick={assignAllHandler} disabled={!selectedSalesman}>
+          <Button
+            className="btn-success m-1"
+            style={{ height: "40px" }}
+            onClick={assignAllHandler}
+            disabled={!selectedSalesman}
+          >
             Assign {selectedSalesman ? `all to ${selectedSalesman.label}` : ""}
           </Button>
-          <Button className="btn-warning m-1" style={{ height: "40px" }} onClick={freeAllDanglingAppointments} disabled={!selectedSalesman}>
-            Free all these appointment for dialing
+          <Button
+            className="btn-warning m-1"
+            style={{ height: "40px" }}
+            onClick={freeAllDanglingAppointments}
+            // disabled={!selectedSalesman}
+          >
+            Free all these appointments for dialing
           </Button>
         </Col>
       </Row>
