@@ -1,0 +1,37 @@
+.badge {
+  padding: 6px 11px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+}
+
+.badge-danger {
+  background-color: var(--main-color-red);
+}
+
+.badge-success {
+  background-color: var(--main-color-green);
+}
+
+.badge-primary {
+  background-color: var(--main-color-blue);
+}
+
+.badge-warning {
+  background-color: var(--second-color-orange);
+}
+.badge-yellow {
+  background-color: rgb(248, 248, 0);
+}
+.badge-brown {
+  background-color: burlywood;
+}
+
+.badge-inprogress {
+  background-color: rgb(248, 248, 141);
+}
+
+.badge-dangling {
+  background-color: rgb(148, 40, 139);
+}

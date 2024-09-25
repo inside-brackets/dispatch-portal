@@ -1,0 +1,54 @@
+.no-pad {
+  padding: 0 !important;
+}
+.crd-header {
+  border-top-left-radius: var(--border-radius) !important;
+  border-top-right-radius: var(--border-radius) !important;
+  padding: 1rem 1rem !important;
+}
+.label-txt {
+  font-size: 32px;
+}
+.secondary-txt {
+  font-size: 24px;
+  color: gray;
+}
+.days-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: gray;
+}
+.bold{
+  font-weight: bold;
+}
+.depart-label{
+  font-size: 16px;
+}
+.btn-timelog{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 17px;
+}
+.curr-target-label {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--txt-color);
+}
+
+.load-icon {
+  margin-left: -0.25rem;
+  margin-right: 0.75rem;
+  color: white;
+  animation: spin 1s linear infinite;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.time-Text{
+  margin-top: 7px;
+  display: flex;
+  font-size: 21px;
+  margin-left: -16px;
+  justify-content: space-between;
+}

@@ -1,0 +1,20 @@
+.action_button_expenses_wrapper{
+    display: flex;
+    align-items: center;
+justify-content: center;
+  }
+.action_btn_expenses_edit{
+  margin-left: 12px;
+}
+.card-Heaing-Wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    
+}
+.years-Wrapper{
+  margin-left: -36px;
+}
+.add-Expense-Btn{
+  margin-right: -54px;
+}

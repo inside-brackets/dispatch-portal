@@ -1,0 +1,10 @@
+.late-comer-title-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+.detail-Btn{
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--main-color-blue);
+}

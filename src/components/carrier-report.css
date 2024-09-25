@@ -1,0 +1,48 @@
+.main-heading {
+    font-size: 48px;
+    font-weight: bolder;
+    margin-top: 15px;
+}
+.second-heading{
+    font-size: 36px;
+    font-weight: bolder;
+}
+.loaded-miles{
+    font-size: 24px;
+    font-weight: bold;
+    color:#00FF00;
+}
+
+.deadhead-miles{
+    font-size: 24px;
+    font-weight: bold;
+    color:#D32F2F;
+}
+
+.total-miles{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.major-details{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.text-area {
+width: 100%;
+font-size: 24px;
+padding: 15px;
+height: 123px;}
+
+.text-area2 {
+    width: 100%;
+    font-size: 24px;
+    padding: 15px;
+    height: 150px;}
+
+.sub-heading {
+    font-weight: 900;
+    font-size:medium;
+    font-size: 20px;
+}

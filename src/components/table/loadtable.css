@@ -1,0 +1,33 @@
+.table__row__edit {
+  margin-top: -10px;
+  text-align: center;
+  font-size: 25px;
+  color: var(--txt-color);
+}
+.table__row__edit:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  color: var(--txt-white);
+}
+
+.edit__class {
+  display: flex;
+  justify-content: space-between;
+  width: 76px;
+  align-items: center;
+
+}
+.edit__classUser{
+  display: flex;
+  justify-content: space-between;
+  width: 76px;
+  align-items: center;
+}
+.tooltips{
+  background-color: #fa1b23 !important;
+}
+
+.load_table{
+  width: 98.5% !important;
+  margin-left:11px !important
+}

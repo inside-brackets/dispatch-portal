@@ -1,0 +1,21 @@
+.card-title{
+    padding: 0;
+}
+
+.card-body{
+    padding: 0.1rem 0.5rem !important;
+}
+
+.card-text{
+    margin-bottom: 0rem !important;
+}
+
+/* .card-height{
+    height: 337px;
+    border: light;
+} */
+
+.appCard-btn{
+    height: 35px;
+    min-width: 130px;
+}

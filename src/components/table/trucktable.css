@@ -1,0 +1,77 @@
+.table__row__delete {
+  text-align: center;
+  font-size: 25px;
+  color: var(--txt-color);
+}
+.table__row__edit {
+  margin-top: -10px;
+  /* padding-left: 20px; */
+  text-align: center;
+  font-size: 25px;
+  color: var(--txt-color);
+}
+.table__row__delete:hover,
+.table__row__edit:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  color: var(--txt-white);
+}
+.table__row__delete:active {
+  opacity: 60%;
+  transform: scale(0.9);
+}
+
+.edit__class {
+  display: flex;
+  align-items: flex-start;
+  /* flex-direction: column; */
+  /* justify-content: space-between; */
+  /* height: 50px; */
+}
+
+/* .truck-detail {
+  margin: 0 30px 0 30px;
+} */
+.actionbuttonWrapper{
+  display: flex;
+  align-items: flex-start;
+}
+
+.add-truck-scroll{
+  height: 630px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.action_button_truck_wrapper{
+  display: flex;
+}
+
+.action_button_truck:disabled{
+  background-color: transparent;
+  border: none;
+  opacity: .5;
+}
+
+.action_button_truck:hover{
+  background-color: transparent;
+  border: none;
+}
+.action_button_truck:focus{
+  background-color: transparent;
+  border: none;
+}
+.action_button_truck:active{
+  background-color: transparent !important;
+
+  border: none !important;
+}
+.action_button_truck{
+  background-color: transparent;
+  border: none;
+}
+.action_button_truck_wrapper{
+  display: flex;
+  align-items: center;
+  margin-left: 28px;
+  margin-right: -7rem;
+}

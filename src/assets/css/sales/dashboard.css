@@ -1,0 +1,43 @@
+.leaderboard_title {
+    width: 92%;
+    position: absolute;
+    top: -53px;
+    left: 17px;
+    color: white
+}
+.card_leaderboard_title {
+    margin-bottom: 0px !important;
+    padding: 0px !important;
+    background-color: var(--main-color) !important;
+}
+.card_leaderboard_title>span {
+    font-family: "Roboto", sans-serif !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+.leaderboard_header_wrapper {
+    display: flex;
+    align-items: center;
+    gap:11px
+}
+
+.leaderboard_header_text {
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.leaderboard_card{
+    position: relative;
+}
+.tableFixHead_leaderboard{
+    margin-top: 22px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 407px;
+}
+  .tableFixHead_leaderboard thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }

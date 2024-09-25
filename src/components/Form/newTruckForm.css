@@ -1,0 +1,21 @@
+.truckModal {
+  overflow: "scroll";
+}
+.error-text {
+  color: red;
+}
+
+.input5 {
+  text-size-adjust: 20px;
+  margin: 0px 0px 20px 0px;
+  display: flex;
+  flex-direction: column;
+}
+.btn-add-load{
+  position:absolute;
+  bottom: 2;
+}
+.btn-edit-load{
+  position:absolute;
+  bottom: 2;
+}

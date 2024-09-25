@@ -1,0 +1,7 @@
+{
+  "empty": "warning",
+  "booked": "yellow",
+  "ongoing": "primary",
+  "canceled": "danger",
+  "delivered": "success"
+}

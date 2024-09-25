@@ -1,0 +1,20 @@
+.select {
+  font-size: large;
+  color: var(--text-color);
+}
+.select:hover {
+  color: black;
+}
+
+.icon {
+  position: absolute;
+  margin: 15px 0 0 240px;
+  font-size: 20px;
+  z-index: 1;
+}
+.assign__sale {
+  width: 150px;
+}
+.__input{
+  padding:3px
+}

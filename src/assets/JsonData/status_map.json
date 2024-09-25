@@ -1,0 +1,14 @@
+{
+  "appointment": "yellow",
+  "registered": "success",
+  "deactivated": "danger",
+  "active":"success",
+  "inactive":"yellow",
+  "fired":"danger",
+  "rejected":"danger",
+  "hired":"success",
+  "scheduled":"primary",
+  "pending-decision":"yellow",
+  "inprogress":"inprogress",
+  "dangling_appointment": "dangling"
+}

@@ -1,0 +1,68 @@
+.dialer__card {
+  display: flex;
+  justify-content: flex-start !important;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 500px;
+  height: auto;
+  border-radius: var(--border-radius);
+  background-color: var(--main-bg);
+  box-shadow: var(--box-shadow);
+  margin-top: 5vh;
+}
+
+.dialer__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: auto;
+  height: auto;
+  position: relative;
+  padding: 0 25px 0 25px;
+}
+.dialer__header {
+  box-sizing: border-box;
+  width: 100%;
+  height: 10vh;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  border-bottom: 2px solid rgba(119, 119, 119, 0.2);
+  padding: 10px;
+}
+
+.appointment__detail {
+  width: 100%;
+  margin: 0 0 10% 0;
+  height: 250vh !important;
+}
+
+.appointment__detail .dialer__body {
+  width: 100%;
+  height: 100%;
+}
+
+.profile__detail {
+  height: auto;
+}
+
+.tags-wrapper {
+  margin-bottom: 2%;
+  min-width: 445px;
+  max-width: 445px;
+}
+
+.tags {
+  font-size: small;
+}
+
+.history-card {
+  position: absolute;
+  top: 150px;
+  right: 100px;
+  width: 300px;
+
+}
