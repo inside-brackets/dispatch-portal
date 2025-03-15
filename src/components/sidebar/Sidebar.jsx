@@ -46,19 +46,6 @@ const Sidebar = (props) => {
 
   return (
     <div className="sidebar">
-      {/* <div
-        className={
-          process.env.REACT_APP_FALCON === "true"
-            ? `sidebar__logo_falcon`
-            : "sidebar__logo"
-        }
-      >
-        <img
-          className="logo img-fluid"
-          src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
-          alt="company logo"
-        />
-      </div> */}
       <center>
         <div className="sidebar__department">{`${sidebarHeading} PORTAL`}</div>
       </center>

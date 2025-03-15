@@ -147,10 +147,7 @@ const App = () => {
             userActions.login({
               user,
               company: {
-                label:
-                  process.env.REACT_APP_FALCON === "true"
-                    ? "Elite Dispatch Service"
-                    : "Company B",
+                label: "Company B",
                 value: "elite",
               },
             })
@@ -164,17 +161,11 @@ const App = () => {
             company:
               user.company === "alpha"
                 ? {
-                    label:
-                      process.env.REACT_APP_FALCON === "true"
-                        ? "Alpha Dispatch Service"
-                        : "Company A",
+                    label: "Company A",
                     value: "alpha",
                   }
                 : {
-                    label:
-                      process.env.REACT_APP_FALCON === "true"
-                        ? "Elite Dispatch Service"
-                        : "Company B",
+                    label: "Company B",
                     value: "elite",
                   },
           })
