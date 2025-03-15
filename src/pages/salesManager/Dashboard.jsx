@@ -75,7 +75,7 @@ const Dashboard = () => {
         setStats((prevState) => ({
           ...prevState,
           activeTrucks: data.activeTrucks,
-        }));
+        })).catch((err) => console.log(err));;
       });
     axios.get(`/count/active/sales`).then(({ data }) => {
       setStats((prevState) => ({
