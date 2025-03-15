@@ -117,7 +117,7 @@ const DashboardAdmin = () => {
           appointment: data.appointments,
           active: data.activeTrucks,
           pending: data.pendingTrucks,
-        });
+        }).catch((err) => console.log(err));
       });
 
     axios
