@@ -201,17 +201,11 @@ const Dashboard = () => {
             }}
             options={[
               {
-                label:
-                  process.env.REACT_APP_FALCON === "true"
-                    ? "Elite Dispatch Service"
-                    : "Company B",
+                label: "Company B",
                 value: "elite",
               },
               {
-                label:
-                  process.env.REACT_APP_FALCON === "true"
-                    ? "Alpha Dispatch Service"
-                    : "Company A",
+                label: "Company A",
                 value: "alpha",
               },
             ]}

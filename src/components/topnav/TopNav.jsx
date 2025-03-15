@@ -8,8 +8,7 @@ import user_menu from "../../assets/JsonData/user_menus.json";
 import { Form, Button, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import FeedBackModal from "../modals/MyModal";
-import logo from "../../assets/images/logo.png";
-import logo2 from "../../assets/images/White-Christmas.png";
+import logo from "../../assets/images/White-Christmas.png";
 import { useSelector } from "react-redux";
 import Cookies from "universal-cookie";
 import { useDropzone } from "react-dropzone";
@@ -128,16 +127,10 @@ const Topnav = () => {
   return (
     <div className="topnav">
       {/* <SearchBar className="topnav__search" placeholder="Search here..." /> */}
-      <div
-        className={
-          process.env.REACT_APP_FALCON === "true"
-            ? `sidebar__logo_falcon`
-            : "sidebar__logo"
-        }
-      >
+      <div className= "sidebar__logo">
         <img
           className="logo img-fluid"
-          src={process.env.REACT_APP_FALCON === "true" ? logo : logo2}
+          src={ logo }
           alt="company logo"
         />
       </div>

@@ -71,17 +71,11 @@ const Login = () => {
                 company:
                   user.company === "alpha"
                     ? {
-                        label:
-                          process.env.REACT_APP_FALCON === "true"
-                            ? "Alpha Dispatch Service"
-                            : "Company A",
+                        label: "Company A",
                         value: "alpha",
                       }
                     : {
-                        label:
-                          process.env.REACT_APP_FALCON === "true"
-                            ? "Elite Dispatch Service"
-                            : "Company B",
+                        label: "Company B",
                         value: "elite",
                       },
               })
@@ -126,10 +120,7 @@ const Login = () => {
   return (
     <div
       style={{
-        background:
-          process.env.REACT_APP_FALCON === "true"
-            ? "url('/background.png')"
-            : "url('/background2.jpg')",
+        background: "url('/background.jpg')",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
